@@ -1,12 +1,12 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import Routers from "./routes/Routers";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  return <>This is test</>;
+  return (
+    <>
+      <Routers />
+    </>
+  );
 }
 
 export default App;
