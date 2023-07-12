@@ -61,7 +61,7 @@ const AddLayerAndSourceToMap = ({
       },
     };
     map.addLayer(newLayer);
-    map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
+    // map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
   } else {
     const newLayer = {
       id: layerId,
@@ -76,7 +76,7 @@ const AddLayerAndSourceToMap = ({
       },
     };
     map.addLayer(newLayer);
-    map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
+    // map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
   }
 
   // create the new layer object
