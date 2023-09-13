@@ -3,14 +3,11 @@ import AppBar from "../components/AppBar/AppBar";
 import { Button } from "@mui/material";
 import ProjectCard from "../components/ProjectCard/ProjectCard";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 export default function DashBoard() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
