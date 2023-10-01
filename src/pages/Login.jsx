@@ -11,6 +11,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
 
 function Copyright(props) {
   return (
@@ -39,9 +40,16 @@ export default function Login() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get("email"),
+      username: data.get("username"),
       password: data.get("password"),
     });
+    axios
+      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/api-token-auth/`, data)
+      .then((res) => console.log(res, "res"))
+      .catch((error) =>
+        // handle error
+        console.log(error, "Fit bounds didnot work due to error")
+      );
   };
 
   return (
@@ -73,9 +81,9 @@ export default function Login() {
               required
               fullWidth
               id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              label="username"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
