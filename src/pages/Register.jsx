@@ -2,10 +2,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
@@ -44,27 +41,32 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
-  const [openLoginToast, setOpenLoginToast] = useState(false);
+  const [openRegisterErrorToast, setOpenRegisterErrorToast] = useState(false);
+  const [openRegisterSuccessToast, setOpenRegisterSuccessToast] =
+    useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       username: data.get("username"),
+      email: data.get("email"),
       password: data.get("password"),
     });
     axios
-      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/api-token-auth/`, data)
+      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/register/`, data)
       .then(function () {
-        setOpenLoginToast(false);
-        navigate("/dashboard");
+        setOpenRegisterSuccessToast(true);
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
       })
       .catch(() =>
         // handle error
         // console.log(error, "Fit bounds didnot work due to error");
-        setOpenLoginToast(true)
+        setOpenRegisterErrorToast(true)
       );
   };
 
@@ -72,10 +74,10 @@ export default function Login() {
     <ThemeProvider theme={defaultTheme}>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openLoginToast}
+        open={openRegisterErrorToast}
         autoHideDuration={6000}
         // onClose={handleClose}
-        message="Incorrect Credentials"
+        message="Failed to Create User"
         // action={action}
       >
         <Alert
@@ -83,7 +85,23 @@ export default function Login() {
           severity="error"
           sx={{ width: "100%" }}
         >
-          Incorrect Credentials
+          Failed to Create User
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={openRegisterSuccessToast}
+        autoHideDuration={6000}
+        // onClose={handleClose}
+        message="Sucessfully Created User"
+        // action={action}
+      >
+        <Alert
+          //  onClose={handleClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Sucessfully Created User
         </Alert>
       </Snackbar>
       <Container component="main" maxWidth="xs">
@@ -100,7 +118,7 @@ export default function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Log in
+            Register
           </Typography>
           <Box
             component="form"
@@ -112,11 +130,20 @@ export default function Login() {
               margin="normal"
               required
               fullWidth
-              id="email"
+              id="username"
               label="username"
               name="username"
               autoComplete="username"
               autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="email"
+              name="email"
+              autoComplete="email"
             />
             <TextField
               margin="normal"
@@ -128,30 +155,14 @@ export default function Login() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Log In
+              Register
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account?  Register"}
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
