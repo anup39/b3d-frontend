@@ -22,6 +22,10 @@ export default function ProjectCard({ id, name, description, created_at }) {
   const handleViewInMap = () => {
     navigate(`/map/${id}`);
   };
+
+  const handleManageClasses = () => {
+    navigate(`/manage-classes/${id}`);
+  };
   const handleUploadRaster = () => {
     console.log("Upload in Map is clicked");
   };
@@ -91,7 +95,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
               </Grid>
               <Grid item>
                 <Button
-                  // onClick={handleViewInMap}
+                  onClick={handleManageClasses}
                   variant="contained"
                   color="success"
                 >
