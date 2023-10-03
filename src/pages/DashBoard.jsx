@@ -8,9 +8,15 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setProjects } from "../reducers/Project";
+import axios from "axios";
 
 export default function DashBoard() {
+  const dispatch = useDispatch();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const projects = useSelector((state) => state.project.projects);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -19,6 +25,18 @@ export default function DashBoard() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`)
+      .then((res) => {
+        dispatch(setProjects(res.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [dispatch]);
+
   return (
     <div>
       <AppBar />
@@ -89,9 +107,17 @@ export default function DashBoard() {
         </Menu>
       </Box>
       <div>
-        <ProjectCard />
-        <ProjectCard />
-        <ProjectCard />
+        {projects
+          ? projects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                id={project.id}
+                name={project.name}
+                description={project.description}
+                created_at={project.created_at}
+              />
+            ))
+          : null}
       </div>
     </div>
   );

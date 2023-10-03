@@ -3,6 +3,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
+import PropTypes from "prop-types";
 
 const Img = styled("img")({
   margin: "auto",
@@ -11,7 +12,7 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
-export default function ComplexGrid() {
+export default function ComplexGrid({ name, description, created_at }) {
   return (
     <Paper
       sx={{
@@ -33,24 +34,24 @@ export default function ComplexGrid() {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                Standard license
+                {name}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                Full resolution 1920x1080 • JPEG
+                {description}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                ID: 1030114
+                Created On: {created_at}
               </Typography>
             </Grid>
             <Grid item>
               <Typography sx={{ cursor: "pointer" }} variant="body2">
-                Remove
+                View in Map
               </Typography>
             </Grid>
           </Grid>
           <Grid item>
             <Typography variant="subtitle1" component="div">
-              $19.00
+              Upload Raster
             </Typography>
           </Grid>
         </Grid>
@@ -58,3 +59,10 @@ export default function ComplexGrid() {
     </Paper>
   );
 }
+
+ComplexGrid.propTypes = {
+  id: PropTypes.number,
+  name: PropTypes.string,
+  description: PropTypes.string,
+  created_at: PropTypes.string,
+};
