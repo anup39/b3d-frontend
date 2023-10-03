@@ -4,6 +4,8 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Img = styled("img")({
   margin: "auto",
@@ -12,13 +14,22 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
-export default function ComplexGrid({ name, description, created_at }) {
+export default function ProjectCard({ id, name, description, created_at }) {
+  const navigate = useNavigate();
+  const handleViewInMap = () => {
+    console.log("View in Map is clicked");
+    console.log(id, "project id ");
+    navigate("/map");
+  };
+  const handleUploadRaster = () => {
+    console.log("Upload in Map is clicked");
+  };
   return (
     <Paper
       sx={{
         p: 2,
-        margin: "auto",
-        maxWidth: 500,
+        margin: 2,
+        // maxWidth: 500,
         flexGrow: 1,
         backgroundColor: (theme) =>
           theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -27,7 +38,10 @@ export default function ComplexGrid({ name, description, created_at }) {
       <Grid container spacing={2}>
         <Grid item>
           <ButtonBase sx={{ width: 128, height: 128 }}>
-            <Img alt="complex" src="public/avatar.webp" />
+            <Img
+              alt="complex"
+              src="https://cdn-icons-png.flaticon.com/512/4212/4212570.png"
+            />
           </ButtonBase>
         </Grid>
         <Grid item xs={12} sm container>
@@ -44,15 +58,23 @@ export default function ComplexGrid({ name, description, created_at }) {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography sx={{ cursor: "pointer" }} variant="body2">
-                View in Map
-              </Typography>
+              <Button
+                onClick={handleViewInMap}
+                variant="contained"
+                color="success"
+              >
+                View In Map
+              </Button>
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="subtitle1" component="div">
+            <Button
+              onClick={handleUploadRaster}
+              variant="contained"
+              color="error"
+            >
               Upload Raster
-            </Typography>
+            </Button>
           </Grid>
         </Grid>
       </Grid>
@@ -60,7 +82,7 @@ export default function ComplexGrid({ name, description, created_at }) {
   );
 }
 
-ComplexGrid.propTypes = {
+ProjectCard.propTypes = {
   id: PropTypes.number,
   name: PropTypes.string,
   description: PropTypes.string,
