@@ -23,19 +23,28 @@ export default function CategoryStyleForm() {
   const [openCategoryStyleSuccessToast, setOpenCategoryStyleSuccessToast] =
     useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedFillColor, setSelectedFillColor] = useState("#32788f");
+  const [selectedStrokeColor, setSelectedStrokeColor] = useState("#d71414");
 
   const handleCreateCategoryStyle = (event) => {
     event.preventDefault();
-    const nameInput = document.getElementById("name");
-    const descriptionInput = document.getElementById("description");
+    const fillOpacityInput = document.getElementById("fill_opacity");
+    const strokeWidthInput = document.getElementById("stroke_width");
 
-    if (selectedCategoryId !== null) {
+    if (
+      selectedCategoryId !== null &&
+      selectedFillColor !== null &&
+      selectedStrokeColor !== null
+    ) {
       const data = {
-        name: nameInput.value,
-        description: descriptionInput.value,
+        fill: selectedFillColor,
+        fill_opacity: fillOpacityInput.value,
+        stroke: selectedStrokeColor,
+        stroke_width: strokeWidthInput.value,
         category: selectedCategoryId, // Use the selected category ID
         owner: 1,
       };
+      console.log(data, "data");
       axios
         .post(
           `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category-style/`,
@@ -76,6 +85,15 @@ export default function CategoryStyleForm() {
     setIsFormOpen(false);
   };
 
+  const handleFillColorChange = (event) => {
+    const newColor = event.target.value;
+    setSelectedFillColor(newColor);
+  };
+
+  const handleStrokeColorChange = (event) => {
+    const newColor = event.target.value;
+    setSelectedStrokeColor(newColor);
+  };
   return (
     <>
       <Snackbar
@@ -148,33 +166,75 @@ export default function CategoryStyleForm() {
           >
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <TextField
-                  id="name"
-                  name="name"
-                  label="Name"
-                  variant="outlined"
-                  size="small"
-                  InputLabelProps={{ shrink: true }}
-                  required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  id="description"
-                  name="description"
-                  label="Description"
-                  variant="outlined"
-                  size="small"
-                  InputLabelProps={{ shrink: true }}
-                  required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
-                />
-              </Grid>
-              <Grid item xs={12}>
                 <AutoCompleteCustom
                   onItemSelected={(id) => setSelectedCategoryId(id)}
                   category={"category"}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="fill_color"
+                  type="color"
+                  name="fill_color"
+                  label="Fill Color"
+                  variant="outlined"
+                  size="small"
+                  value={selectedFillColor}
+                  onChange={handleFillColorChange}
+                  InputLabelProps={{ shrink: true }}
+                  required
+                  fullWidth // Use fullWidth to make the input occupy the form's width
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="fill_opacity"
+                  type="number"
+                  name="fill_opacity"
+                  label="Fill Opacity"
+                  variant="outlined"
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                  required
+                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  inputProps={{
+                    step: 0.1, // Set the step attribute to control decimal precision
+                    min: 0, // Set the minimum value
+                    max: 1, // Set the maximum value
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="stroke_color"
+                  type="color"
+                  name="stroke_color"
+                  label="Stroke Color"
+                  variant="outlined"
+                  size="small"
+                  value={selectedStrokeColor}
+                  onChange={handleStrokeColorChange}
+                  InputLabelProps={{ shrink: true }}
+                  required
+                  fullWidth // Use fullWidth to make the input occupy the form's width
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="stroke_width"
+                  type="number"
+                  name="stroke_width"
+                  label="Stroke Width"
+                  variant="outlined"
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                  required
+                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  inputProps={{
+                    step: 1, // Set the step attribute to control decimal precision
+                    min: 1, // Set the minimum value
+                    max: 5, // Set the maximum value
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>

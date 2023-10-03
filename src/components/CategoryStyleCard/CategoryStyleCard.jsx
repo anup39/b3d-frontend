@@ -37,7 +37,7 @@ export default function CategoryStyleCard({
           <ButtonBase sx={{ width: 100, height: 100 }}>
             <Img
               alt="complex"
-              src="https://cdn-icons-png.flaticon.com/512/6736/6736258.png "
+              src="https://cdn-icons-png.flaticon.com/512/4643/4643966.png"
             />
           </ButtonBase>
         </Grid>
@@ -90,7 +90,7 @@ CategoryStyleCard.propTypes = {
   id: PropTypes.number,
   full_name: PropTypes.string,
   fill_color: PropTypes.string,
-  fill_opacity: PropTypes.number,
+  fill_opacity: PropTypes.string,
   stroke_color: PropTypes.string,
   stroke_width: PropTypes.number,
   description: PropTypes.string,
