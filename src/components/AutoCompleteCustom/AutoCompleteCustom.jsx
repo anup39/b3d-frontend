@@ -24,7 +24,7 @@ export default function AutoCompleteCustom({ onItemSelected, category }) {
       disablePortal
       id="combo-box-demo"
       options={options}
-      getOptionLabel={(option) => option.name}
+      getOptionLabel={(option) => option.full_name}
       sx={{ width: 300 }}
       renderInput={(params) => (
         <TextField
@@ -38,7 +38,7 @@ export default function AutoCompleteCustom({ onItemSelected, category }) {
       )}
       onChange={(event, newValue) => {
         if (newValue) {
-          setInputValue(newValue.name);
+          setInputValue(newValue.full_name);
           onItemSelected(newValue.id); // Pass the selected ID to the parent component.
         }
       }}

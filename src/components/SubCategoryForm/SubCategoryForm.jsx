@@ -111,7 +111,7 @@ export default function SubCategoryForm() {
         </Alert>
       </Snackbar>
       {/* <Box sx={{ flexGrow: 0 }}> */}
-      <Tooltip title="Open settings">
+      <Tooltip title="Create SubCategory">
         <Button
           onClick={openForm}
           sx={{ marginBottom: "25px" }}

@@ -12,7 +12,13 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
-export default function CategoryCard({ id, name, description, created_at }) {
+export default function CategoryCard({
+  id,
+  name,
+  full_name,
+  description,
+  created_at,
+}) {
   return (
     <Paper
       sx={{
@@ -29,7 +35,7 @@ export default function CategoryCard({ id, name, description, created_at }) {
           <ButtonBase sx={{ width: 100, height: 100 }}>
             <Img
               alt="complex"
-              src="https://cdn-icons-png.flaticon.com/512/718/718970.png"
+              src="https://cdn-icons-png.flaticon.com/512/6736/6736258.png "
             />
           </ButtonBase>
         </Grid>
@@ -37,7 +43,7 @@ export default function CategoryCard({ id, name, description, created_at }) {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {name}
+                {full_name}
               </Typography>
               <Typography variant="body2" gutterBottom>
                 {description}
@@ -56,6 +62,7 @@ export default function CategoryCard({ id, name, description, created_at }) {
 CategoryCard.propTypes = {
   id: PropTypes.number,
   name: PropTypes.string,
+  full_name: PropTypes.string,
   description: PropTypes.string,
   created_at: PropTypes.string,
 };

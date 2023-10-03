@@ -108,7 +108,7 @@ export default function StandardCategoryForm() {
         </Alert>
       </Snackbar>
 
-      <Tooltip title="Open settings">
+      <Tooltip title="Create StandardCategory">
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}

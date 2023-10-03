@@ -12,11 +12,13 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
-export default function SubCategoryCard({
+export default function CategoryStyleCard({
   id,
-  name,
   full_name,
-  description,
+  fill_color,
+  fill_opacity,
+  stroke_color,
+  stroke_width,
   created_at,
 }) {
   return (
@@ -35,7 +37,7 @@ export default function SubCategoryCard({
           <ButtonBase sx={{ width: 100, height: 100 }}>
             <Img
               alt="complex"
-              src="https://cdn-icons-png.flaticon.com/512/9657/9657967.png"
+              src="https://cdn-icons-png.flaticon.com/512/6736/6736258.png "
             />
           </ButtonBase>
         </Grid>
@@ -46,7 +48,32 @@ export default function SubCategoryCard({
                 {full_name}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                {description}
+                <b>
+                  <span>Fill Color: </span>
+                </b>
+                <span style={{ backgroundColor: fill_color }}>
+                  {fill_color}
+                </span>
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                <b>
+                  <span>Fill Opacity: </span>
+                </b>
+                {fill_opacity}
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                <b>
+                  <span>Stroke Color: </span>
+                </b>
+                <span style={{ backgroundColor: stroke_color }}>
+                  {stroke_color}
+                </span>
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                <b>
+                  <span>Stroke Width: </span>
+                </b>
+                {stroke_width}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Created On: {created_at}
@@ -59,10 +86,13 @@ export default function SubCategoryCard({
   );
 }
 
-SubCategoryCard.propTypes = {
+CategoryStyleCard.propTypes = {
   id: PropTypes.number,
-  name: PropTypes.string,
   full_name: PropTypes.string,
+  fill_color: PropTypes.string,
+  fill_opacity: PropTypes.number,
+  stroke_color: PropTypes.string,
+  stroke_width: PropTypes.number,
   description: PropTypes.string,
   created_at: PropTypes.string,
 };

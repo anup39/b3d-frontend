@@ -5,6 +5,7 @@ import Project from "./reducers/Project";
 import StandardCategory from "./reducers/StandardCategory";
 import SubCategory from "./reducers/SubCategory";
 import Category from "./reducers/Category";
+import CategoryStyle from "./reducers/CategoryStyle";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     standardCategory: StandardCategory,
     subCategory: SubCategory,
     category: Category,
+    categoryStyle: CategoryStyle,
   },
 });

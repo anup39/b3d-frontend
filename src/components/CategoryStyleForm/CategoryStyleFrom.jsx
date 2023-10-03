@@ -8,49 +8,63 @@ import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { setProjects } from "../../reducers/Project";
+import { setCategoryStyles } from "../../reducers/CategoryStyle";
+import AutoCompleteCustom from "../AutoCompleteCustom/AutoCompleteCustom";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function ProjectForm() {
+export default function CategoryStyleForm() {
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [openProjectErrorToast, setOpenProjectErrorToast] = useState(false);
-  const [openProjectSuccessToast, setOpenProjectSuccessToast] = useState(false);
+  const [openCategoryStyleErrorToast, setOpenCategoryStyleErrorToast] =
+    useState(false);
+  const [openCategoryStyleSuccessToast, setOpenCategoryStyleSuccessToast] =
+    useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
-  const handleCreateProject = (event) => {
+  const handleCreateCategoryStyle = (event) => {
     event.preventDefault();
     const nameInput = document.getElementById("name");
     const descriptionInput = document.getElementById("description");
-    const data = {
-      name: nameInput.value,
-      description: descriptionInput.value,
-      owner: 1,
-    };
-    axios
-      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, data)
-      .then(() => {
-        setOpenProjectSuccessToast(true);
-        setOpenProjectErrorToast(false);
-        setTimeout(() => {
-          setOpenProjectSuccessToast(false);
-        }, 3000);
-        axios
-          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`)
-          .then((res) => {
-            dispatch(setProjects(res.data));
-          })
-          .catch((error) => {});
-      })
-      .catch((error) => {
-        setOpenProjectErrorToast(true);
-        setOpenProjectSuccessToast(false);
-        setTimeout(() => {
-          setOpenProjectErrorToast(false);
-        }, 3000);
-      });
+
+    if (selectedCategoryId !== null) {
+      const data = {
+        name: nameInput.value,
+        description: descriptionInput.value,
+        category: selectedCategoryId, // Use the selected category ID
+        owner: 1,
+      };
+      axios
+        .post(
+          `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category-style/`,
+          data
+        )
+        .then(() => {
+          setOpenCategoryStyleSuccessToast(true);
+          setOpenCategoryStyleErrorToast(false);
+          setTimeout(() => {
+            setOpenCategoryStyleSuccessToast(false);
+          }, 3000);
+          axios
+            .get(
+              `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category-style/`
+            )
+            .then((res) => {
+              dispatch(setCategoryStyles(res.data));
+            })
+            .catch((error) => {});
+        })
+        .catch((error) => {
+          setOpenCategoryStyleErrorToast(true);
+          setOpenCategoryStyleSuccessToast(false);
+          setTimeout(() => {
+            setOpenCategoryStyleErrorToast(false);
+          }, 3000);
+        });
+    }
+
     closeForm();
   };
 
@@ -66,10 +80,10 @@ export default function ProjectForm() {
     <>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openProjectErrorToast}
+        open={openCategoryStyleErrorToast}
         autoHideDuration={6000}
         // onClose={handleClose}
-        message="Failed to Create Project"
+        message="Failed to Create CategoryStyle"
         // action={action}
       >
         <Alert
@@ -77,15 +91,15 @@ export default function ProjectForm() {
           severity="error"
           sx={{ width: "100%" }}
         >
-          Failed to Create Project
+          Failed to Create CategoryStyle
         </Alert>
       </Snackbar>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openProjectSuccessToast}
+        open={openCategoryStyleSuccessToast}
         autoHideDuration={6000}
         // onClose={handleClose}
-        message="Sucessfully Created Project"
+        message="Sucessfully Created CategoryStyle"
         // action={action}
       >
         <Alert
@@ -93,18 +107,18 @@ export default function ProjectForm() {
           severity="success"
           sx={{ width: "100%" }}
         >
-          Sucessfully Created Project
+          Sucessfully Created CategoryStyle
         </Alert>
       </Snackbar>
 
-      <Tooltip title="Create Project">
+      <Tooltip title="Create CategoryStyle">
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Create Project
+          Create CategoryStyle
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -120,7 +134,7 @@ export default function ProjectForm() {
           }}
         >
           <form
-            onSubmit={handleCreateProject}
+            onSubmit={handleCreateCategoryStyle}
             style={{
               position: "absolute",
               top: "50%",
@@ -155,6 +169,12 @@ export default function ProjectForm() {
                   InputLabelProps={{ shrink: true }}
                   required
                   fullWidth // Use fullWidth to make the input occupy the form's width
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <AutoCompleteCustom
+                  onItemSelected={(id) => setSelectedCategoryId(id)}
+                  category={"category"}
                 />
               </Grid>
               <Grid item xs={12}>
