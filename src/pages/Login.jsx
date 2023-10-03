@@ -31,8 +31,8 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="https://b3d.com/">
+        B3D
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -133,11 +133,11 @@ export default function Login() {
               Log In
             </Button>
             <Grid container>
-              <Grid item xs>
+              {/* <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <Link href="/register" variant="body2">
                   {"Don't have an account?  Register"}

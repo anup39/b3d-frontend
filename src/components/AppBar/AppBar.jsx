@@ -12,11 +12,13 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { useNavigate } from "react-router-dom";
 
-const pages = ["Map", "About", "Contact"];
+const pages = ["Projects", "Classification", "About", "Contact"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Appbar() {
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -27,7 +29,25 @@ function Appbar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (event) => {
+    const page = event.target.innerHTML;
+    if (page.toUpperCase() === "CLASSIFICATION") {
+      navigate("/class");
+    }
+    if (page.toUpperCase() === "PROJECTS") {
+      navigate("/dashboard");
+    }
+    setAnchorElNav(null);
+  };
+
+  const handleCloseNavMenuButton = (event) => {
+    const page = event.target.innerText;
+    if (page.toUpperCase() === "CLASSIFICATION") {
+      navigate("/class");
+    }
+    if (page.toUpperCase() === "PROJECTS") {
+      navigate("/dashboard");
+    }
     setAnchorElNav(null);
   };
 
@@ -117,7 +137,7 @@ function Appbar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={handleCloseNavMenuButton}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}

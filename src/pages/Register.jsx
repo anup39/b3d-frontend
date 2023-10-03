@@ -4,7 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -14,6 +14,7 @@ import { useState } from "react";
 import MuiAlert from "@mui/material/Alert";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Grid from "@mui/material/Grid";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -28,8 +29,8 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="https://b3d.com/">
+        B3D
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -106,7 +107,7 @@ export default function Register() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
+            <HowToRegOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Register
@@ -154,6 +155,18 @@ export default function Register() {
             >
               Register
             </Button>
+            <Grid container>
+              {/* <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid> */}
+              <Grid item>
+                <Link href="/" variant="body2">
+                  {"Back To Login"}
+                </Link>
+              </Grid>
+            </Grid>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
