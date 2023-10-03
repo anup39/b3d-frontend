@@ -8,6 +8,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useSelector, useDispatch } from "react-redux";
 import TransferList from "../components/TransferList/TransferList";
+import { Button, Tooltip } from "@mui/material";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -47,14 +48,27 @@ export default function Classification() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [value, setValue] = useState(0);
+  const [projectName, setProjectName] = useState("");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/${id}/`)
+      .then((res) => {
+        setProjectName(res.data.name);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [id]);
+
   return (
     <>
       <AppBar></AppBar>
+
       <Box
         sx={{
           flexGrow: 1,
@@ -81,16 +95,58 @@ export default function Classification() {
           <Tab label="Category Style" {...a11yProps(3)} />
         </Tabs>
         <TabPanel value={value} index={0}>
-          <TransferList />
+          <Tooltip>
+            <Button
+              sx={{ marginBottom: "25px" }}
+              variant="outlined"
+              color="error"
+            >
+              {projectName}
+            </Button>
+          </Tooltip>
+          <TransferList
+            project_id={parseInt(id)}
+            component={"standard-category"}
+          />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Sub C
+          <Tooltip>
+            <Button
+              sx={{ marginBottom: "25px" }}
+              variant="outlined"
+              color="error"
+            >
+              {projectName}
+            </Button>
+          </Tooltip>
+          <TransferList project_id={parseInt(id)} component={"sub-category"} />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          C
+          <Tooltip>
+            <Button
+              sx={{ marginBottom: "25px" }}
+              variant="outlined"
+              color="error"
+            >
+              {projectName}
+            </Button>
+          </Tooltip>
+          <TransferList project_id={parseInt(id)} component={"category"} />
         </TabPanel>
         <TabPanel value={value} index={3}>
-          C Style
+          <Tooltip>
+            <Button
+              sx={{ marginBottom: "25px" }}
+              variant="outlined"
+              color="error"
+            >
+              {projectName}
+            </Button>
+          </Tooltip>
+          <TransferList
+            project_id={parseInt(id)}
+            component={"category-style"}
+          />
         </TabPanel>
       </Box>
     </>

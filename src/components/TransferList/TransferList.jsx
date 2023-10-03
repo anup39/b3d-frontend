@@ -9,6 +9,8 @@ import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import axios from "axios";
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -22,14 +24,16 @@ function union(a, b) {
   return [...a, ...not(b, a)];
 }
 
-export default function SelectAllTransferList() {
+export default function TransferList({ project_id, component }) {
   const [checked, setChecked] = useState([]);
   const [finalLeft, setFinalLeft] = useState([]);
   const [finalRight, setFinalRight] = useState([]);
-  const [left, setLeft] = useState([]);
-  const [right, setRight] = useState([]);
-  const leftChecked = intersection(checked, left);
-  const rightChecked = intersection(checked, right);
+  const [InitialLeft, setInitialLeft] = useState([]);
+  const [InitialRight, setInitialRight] = useState([]);
+  const leftChecked = intersection(checked, InitialLeft);
+  const rightChecked = intersection(checked, InitialRight);
+
+  console.log(component, "component");
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -55,26 +59,30 @@ export default function SelectAllTransferList() {
   };
 
   const handleCheckedRight = () => {
-    setRight(right.concat(leftChecked));
-    setLeft(not(left, leftChecked));
+    setInitialRight(InitialRight.concat(leftChecked));
+    setInitialLeft(not(InitialLeft, leftChecked));
     setChecked(not(checked, leftChecked));
   };
 
   const handleCheckedLeft = () => {
-    setLeft(left.concat(rightChecked));
-    setRight(not(right, rightChecked));
+    setInitialLeft(InitialLeft.concat(rightChecked));
+    setInitialRight(not(InitialRight, rightChecked));
     setChecked(not(checked, rightChecked));
   };
 
   useEffect(() => {
     // Fetch data from the first API endpoint
-    fetch("http://localhost:8000/api/global-standard-category/")
+    fetch(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-${component}/`)
       .then((response) => response.json())
       .then((data) => {
         const leftList = data.map((item) => item);
 
         // Fetch data from the second API endpoint
-        fetch("http://localhost:8000/api/standard-category/?project=1")
+        fetch(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/${component}/?project=${project_id}`
+        )
           .then((response) => response.json())
           .then((data) => {
             const rightList = data.map((item) => item);
@@ -83,14 +91,17 @@ export default function SelectAllTransferList() {
               (item) =>
                 !rightList.some((rightItem) => rightItem.name === item.name)
             );
+            const filteredRightList = leftList.filter((item) =>
+              rightList.some((rightItem) => rightItem.name === item.name)
+            );
 
-            setFinalLeft(filteredLeftList);
-            setLeft(filteredLeftList);
-            setRight(rightList);
-            setFinalRight(rightList);
+            // setFinalLeft(filteredLeftList);
+            setInitialLeft(filteredLeftList);
+            setInitialRight(filteredRightList);
+            // setFinalRight(rightList);
           });
       });
-  }, []);
+  }, [project_id, component]);
 
   const customList = (title, items) => (
     <Card sx={{ backgroundColor: "#828282" }}>
@@ -128,6 +139,7 @@ export default function SelectAllTransferList() {
         role="list"
       >
         {items.map((value) => {
+          console.log(value, "value");
           const labelId = `transfer-list-all-item-${value}-label`;
 
           return (
@@ -147,7 +159,8 @@ export default function SelectAllTransferList() {
                   }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={value.name} />
+
+              <ListItemText id={labelId} primary={value.full_name} />
             </ListItem>
           );
         })}
@@ -155,32 +168,135 @@ export default function SelectAllTransferList() {
     </Card>
   );
 
-  const handleSave = () => {
-    // Compare current lists with initial lists to track changes
+  //   const handleSave = () => {
+  //     // Compare current lists with initial lists to track changes
 
-    const itemsMovedToRight = finalLeft.filter(
-      (item) => !left.some((leftItem) => leftItem.name === item.name)
-    );
-    const itemsMovedToLeft = finalRight.filter(
-      (item) => !right.some((rightItem) => rightItem.name === item.name)
-    );
+  //     const itemsMovedToRight = finalLeft.filter(
+  //       (item) => !Initialleft.some((leftItem) => leftItem.name === item.name)
+  //     );
+  //     const itemsMovedToLeft = finalRight.filter(
+  //       (item) => !Initialright.some((rightItem) => rightItem.name === item.name)
+  //     );
 
-    console.log("Items moved to second list:");
-    itemsMovedToRight.forEach((item) => {
-      console.log("Name:", item.name);
-      console.log("Description:", item.description);
-    });
+  //     if (component === "standard-category") {
+  //       itemsMovedToRight.forEach((item) => {
+  //         const data = {
+  //           name: item.name,
+  //           description: item.description,
+  //           project: project_id,
+  //           is_display: true,
+  //         };
+  //         axios
+  //           .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/${component}/`, data)
+  //           .then((res) => {
+  //             console.log(res);
+  //           })
+  //           .catch((error) => {
+  //             console.log(error);
+  //           });
+  //       });
 
-    console.log("Items moved to first list:");
-    itemsMovedToLeft.forEach((item) => {
-      console.log("Name:", item.name);
-      console.log("Description:", item.description);
-    });
-  };
+  //       itemsMovedToLeft.forEach((item) => {
+  //         axios
+  //           .delete(
+  //             `${import.meta.env.VITE_API_DASHBOARD_URL}/${component}/${item.id}/`
+  //           )
+  //           .then((res) => {
+  //             console.log(res);
+  //           })
+  //           .catch((error) => {
+  //             console.log(error);
+  //           });
+  //       });
+  //     }
+  //     if (component === "sub-category") {
+  //       itemsMovedToRight.forEach((item) => {
+  //         axios
+  //           .get(
+  //             `${
+  //               import.meta.env.VITE_API_DASHBOARD_URL
+  //             }/standard-category/?project=${project_id}&name=${
+  //               item.standard_category_name
+  //             }`
+  //           )
+  //           .then((res) => {
+  //             const standard_category = res.data[0].id;
+  //             const data = {
+  //               name: item.name,
+  //               description: item.description,
+  //               project: project_id,
+  //               standard_category: standard_category,
+  //               is_display: true,
+  //             };
+  //             axios
+  //               .post(
+  //                 `${import.meta.env.VITE_API_DASHBOARD_URL}/${component}/`,
+  //                 data
+  //               )
+  //               .then((res) => {
+  //                 console.log(res);
+  //               })
+  //               .catch((error) => {
+  //                 console.log(error);
+  //               });
+  //           });
+  //       });
+
+  //       itemsMovedToLeft.forEach((item) => {
+  //         axios
+  //           .delete(
+  //             `${import.meta.env.VITE_API_DASHBOARD_URL}/${component}/${item.id}/`
+  //           )
+  //           .then((res) => {
+  //             console.log(res);
+  //           })
+  //           .catch((error) => {
+  //             console.log(error);
+  //           });
+  //       });
+  //     }
+  //     if (component === "category") {
+  //       itemsMovedToRight.forEach((item) => {
+  //         console.log(item, "item");
+  //         // axios
+  //         //   .get(
+  //         //     `${
+  //         //       import.meta.env.VITE_API_DASHBOARD_URL
+  //         //     }/standard-category/?project=${project_id}&name=${
+  //         //       item.standard_category_name
+  //         //     }`
+  //         //   )
+  //         //   .then((res) => {
+  //         //     const standard_category = res.data[0].id;
+  //         //     const data = {
+  //         //       name: item.name,
+  //         //       description: item.description,
+  //         //       project: project_id,
+  //         //       standard_category: standard_category,
+  //         //       is_display: true,
+  //         //     };
+  //         //     axios
+  //         //       .post(
+  //         //         `${import.meta.env.VITE_API_DASHBOARD_URL}/${component}/`,
+  //         //         data
+  //         //       )
+  //         //       .then((res) => {
+  //         //         console.log(res);
+  //         //       })
+  //         //       .catch((error) => {
+  //         //         console.log(error);
+  //         //       });
+  //         //   });
+  //       });
+  //       itemsMovedToLeft.forEach((item) => {
+  //         console.log(item, "item");
+  //       });
+  //     }
+  //   };
 
   return (
     <Grid container spacing={2} justifyContent="center" alignItems="center">
-      <Grid item>{customList("Choices", left)}</Grid>
+      <Grid item>{customList("Choices", InitialLeft)}</Grid>
       <Grid item>
         <Grid container direction="column" alignItems="center">
           <Button
@@ -205,12 +321,21 @@ export default function SelectAllTransferList() {
           </Button>
         </Grid>
       </Grid>
-      <Grid item>{customList("Chosen", right)}</Grid>
+      <Grid item>{customList("Chosen", InitialRight)}</Grid>
       <Grid item>
-        <Button onClick={handleSave} variant="contained" color="success">
+        <Button
+          // onClick={handleSave}
+          variant="contained"
+          color="success"
+        >
           Save
         </Button>
       </Grid>
     </Grid>
   );
 }
+
+TransferList.propTypes = {
+  project_id: PropTypes.number,
+  component: PropTypes.string,
+};
