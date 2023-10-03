@@ -1,7 +1,4 @@
-import Box from "@mui/material/Box";
-import Menu from "@mui/material/Menu";
 import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
@@ -19,17 +16,9 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function ProjectForm() {
   const dispatch = useDispatch();
-  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [openProjectErrorToast, setOpenProjectErrorToast] = useState(false);
   const [openProjectSuccessToast, setOpenProjectSuccessToast] = useState(false);
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
 
   const handleCreateProject = (event) => {
     event.preventDefault();
@@ -62,7 +51,15 @@ export default function ProjectForm() {
           setOpenProjectErrorToast(false);
         }, 3000);
       });
-    setAnchorElUser(null);
+    closeForm();
+  };
+
+  const openForm = () => {
+    setIsFormOpen(true);
+  };
+
+  const closeForm = () => {
+    setIsFormOpen(false);
   };
 
   return (
@@ -99,34 +96,42 @@ export default function ProjectForm() {
           Sucessfully Created Project
         </Alert>
       </Snackbar>
-      <Box sx={{ flexGrow: 0 }}>
-        <Tooltip title="Open settings">
-          <Button
-            onClick={handleOpenUserMenu}
-            sx={{ margin: "5px" }}
-            variant="contained"
-            color="error"
-          >
-            Create Project
-          </Button>
-        </Tooltip>
-        <Menu
-          sx={{ mt: "50px", maxWidth: "250px" }}
-          id="menu-appbar"
-          anchorEl={anchorElUser}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          open={Boolean(anchorElUser)}
-          onClose={handleCloseUserMenu}
+
+      <Tooltip title="Open settings">
+        <Button
+          onClick={openForm}
+          sx={{ margin: "5px" }}
+          variant="contained"
+          color="error"
         >
-          <MenuItem>
+          Create Project
+        </Button>
+      </Tooltip>
+      {isFormOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0, 0, 0, 0.5)", // Semi-transparent backdrop
+            zIndex: 9999, // Higher z-index to cover other elements
+          }}
+        >
+          <form
+            onSubmit={handleCreateProject}
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "300px", // Adjust the width to your desired size
+              background: "#fff",
+              padding: "20px",
+              zIndex: 10000, // Higher z-index for the form
+            }}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -134,40 +139,50 @@ export default function ProjectForm() {
                   name="name"
                   label="Name"
                   variant="outlined"
-                  fullWidth
                   size="small"
-                  style={{ width: "100%" }}
                   InputLabelProps={{ shrink: true }}
                   required
+                  fullWidth // Use fullWidth to make the input occupy the form's width
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   id="description"
-                  name="name"
+                  name="description"
                   label="Description"
                   variant="outlined"
-                  fullWidth
                   size="small"
-                  style={{ width: "100%" }}
                   InputLabelProps={{ shrink: true }}
                   required
+                  fullWidth // Use fullWidth to make the input occupy the form's width
                 />
               </Grid>
               <Grid item xs={12}>
                 <Button
-                  onClick={handleCreateProject}
-                  sx={{ margin: "5px" }}
+                  type="submit"
                   variant="contained"
                   color="success"
+                  size="small"
+                  fullWidth // Use fullWidth to make the button occupy the form's width
                 >
                   Done
                 </Button>
               </Grid>
+              <Grid item xs={12}>
+                <Button
+                  onClick={closeForm}
+                  variant="contained"
+                  color="error"
+                  size="small"
+                  fullWidth // Use fullWidth to make the button occupy the form's width
+                >
+                  Close
+                </Button>
+              </Grid>
             </Grid>
-          </MenuItem>
-        </Menu>
-      </Box>
+          </form>
+        </div>
+      )}
     </>
   );
 }
