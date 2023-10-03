@@ -6,9 +6,15 @@ import Box from "@mui/material/Box";
 import { useSelector, useDispatch } from "react-redux";
 import StandardCategoryForm from "../components/StandardCategoryForm/StandardCategoryForm";
 import StandardCategoryCard from "../components/StandardCategoryCard/StandardCategoryCard";
+import SubCategoryForm from "../components/SubCategoryForm/SubCategoryForm";
+import SubCategoryCard from "../components/SubCategoryCard/SubCategoryCard";
+import CategoryForm from "../components/CategoryForm/CategoryForm";
+import CategoryCard from "../components/CategoryCard/CategoryCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { setStandardCategorys } from "../reducers/StandardCategory";
+import { setSubCategorys } from "../reducers/SubCategory";
+import { setCategorys } from "../reducers/Category";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -50,6 +56,8 @@ export default function Classification() {
   const standardCategorys = useSelector(
     (state) => state.standardCategory.standardCategorys
   );
+  const subCategorys = useSelector((state) => state.subCategory.subCategorys);
+  const categorys = useSelector((state) => state.category.categorys);
 
   useEffect(() => {
     axios
@@ -58,6 +66,28 @@ export default function Classification() {
       )
       .then((res) => {
         dispatch(setStandardCategorys(res.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [dispatch]);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`)
+      .then((res) => {
+        dispatch(setSubCategorys(res.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [dispatch]);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
+      .then((res) => {
+        dispatch(setCategorys(res.data));
       })
       .catch((error) => {
         console.log(error);
@@ -111,10 +141,32 @@ export default function Classification() {
             : null}
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Sub Category
+          <SubCategoryForm />
+          {subCategorys
+            ? subCategorys.map((subc) => (
+                <SubCategoryCard
+                  key={subc.id}
+                  id={subc.id}
+                  name={subc.name}
+                  description={subc.description}
+                  created_at={subc.created_at}
+                />
+              ))
+            : null}
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Category
+          <CategoryForm />
+          {categorys
+            ? categorys.map((c) => (
+                <CategoryCard
+                  key={c.id}
+                  id={c.id}
+                  name={c.name}
+                  description={c.description}
+                  created_at={c.created_at}
+                />
+              ))
+            : null}
         </TabPanel>
         <TabPanel value={value} index={3}>
           Category Style
