@@ -50,11 +50,6 @@ export default function Register() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get("username"),
-      email: data.get("email"),
-      password: data.get("password"),
-    });
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/register/`, data)
       .then(function () {
@@ -63,11 +58,7 @@ export default function Register() {
           navigate("/");
         }, 3000);
       })
-      .catch(() =>
-        // handle error
-        // console.log(error, "Fit bounds didnot work due to error");
-        setOpenRegisterErrorToast(true)
-      );
+      .catch(() => setOpenRegisterErrorToast(true));
   };
 
   return (

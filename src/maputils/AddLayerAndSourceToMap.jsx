@@ -85,7 +85,6 @@ const AddLayerAndSourceToMap = ({
 
   if (showPopup) {
     map.on("click", layerId, (e) => {
-      console.log("clicked");
       const features = map.queryRenderedFeatures(e.point);
       if (!features.length) {
         return;

@@ -51,21 +51,13 @@ export default function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get("username"),
-      password: data.get("password"),
-    });
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/api-token-auth/`, data)
       .then(function () {
         setOpenLoginToast(false);
         navigate("/dashboard");
       })
-      .catch(() =>
-        // handle error
-        // console.log(error, "Fit bounds didnot work due to error");
-        setOpenLoginToast(true)
-      );
+      .catch(() => setOpenLoginToast(true));
   };
 
   return (

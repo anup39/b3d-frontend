@@ -32,18 +32,9 @@ export default function ProjectForm() {
   };
 
   const handleCreateProject = (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
-    console.log("here");
-
-    // You can access the input values directly using their IDs
+    event.preventDefault();
     const nameInput = document.getElementById("name");
     const descriptionInput = document.getElementById("description");
-
-    console.log({
-      name: nameInput.value,
-      description: descriptionInput.value,
-      owner: 1,
-    });
     const data = {
       name: nameInput.value,
       description: descriptionInput.value,
@@ -62,9 +53,7 @@ export default function ProjectForm() {
           .then((res) => {
             dispatch(setProjects(res.data));
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch((error) => {});
       })
       .catch((error) => {
         setOpenProjectErrorToast(true);
@@ -72,7 +61,6 @@ export default function ProjectForm() {
         setTimeout(() => {
           setOpenProjectErrorToast(false);
         }, 3000);
-        console.log(error);
       });
     setAnchorElUser(null);
   };

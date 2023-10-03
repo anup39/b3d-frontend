@@ -9,7 +9,7 @@ export default function Routers() {
     <Router>
       <Routes>
         <Route exact path="/" element={<Login />} />
-        <Route exact path="/map" element={<MapSection />} />
+        <Route exact path="/map/:id" element={<MapSection />} />
         <Route exact path="/dashboard" element={<DashBoard />} />
         <Route exact path="/register" element={<Register />} />
       </Routes>

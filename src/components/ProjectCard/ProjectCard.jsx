@@ -17,9 +17,7 @@ const Img = styled("img")({
 export default function ProjectCard({ id, name, description, created_at }) {
   const navigate = useNavigate();
   const handleViewInMap = () => {
-    console.log("View in Map is clicked");
-    console.log(id, "project id ");
-    navigate("/map");
+    navigate(`/map/${id}`);
   };
   const handleUploadRaster = () => {
     console.log("Upload in Map is clicked");
