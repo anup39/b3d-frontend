@@ -175,6 +175,7 @@ export default function SubCategoryForm() {
               <Grid item xs={12}>
                 <AutoCompleteCustom
                   onItemSelected={(id) => setSelectedCategoryId(id)}
+                  category={"standard-category"}
                 />
               </Grid>
               <Grid item xs={12}>

@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 
-export default function AutoCompleteCustom({ onItemSelected }) {
+export default function AutoCompleteCustom({ onItemSelected, category }) {
   const [options, setOptions] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     // Make an API call to fetch the data from the provided endpoint.
     axios
-      .get("http://localhost:8000/api/global-standard-category/")
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-${category}/`)
       .then((response) => {
         setOptions(response.data);
       })
@@ -30,7 +30,7 @@ export default function AutoCompleteCustom({ onItemSelected }) {
         <TextField
           {...params}
           required
-          label="Standard Category"
+          label={category}
           variant="outlined"
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}
@@ -48,4 +48,5 @@ export default function AutoCompleteCustom({ onItemSelected }) {
 
 AutoCompleteCustom.propTypes = {
   onItemSelected: PropTypes.func.isRequired, // Ensure it's a function and required
+  category: PropTypes.string,
 };
