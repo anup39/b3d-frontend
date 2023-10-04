@@ -44,7 +44,6 @@ export default function CategoryStyleForm() {
         category: selectedCategoryId, // Use the selected category ID
         owner: 1,
       };
-      console.log(data, "data");
       axios
         .post(
           `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category-style/`,

@@ -39,7 +39,7 @@ export default function AutoCompleteCustom({ onItemSelected, category }) {
       onChange={(event, newValue) => {
         if (newValue) {
           setInputValue(newValue.full_name);
-          onItemSelected(newValue.id); // Pass the selected ID to the parent component.
+          onItemSelected(newValue.id, newValue.standard_category); // Pass the selected ID to the parent component.
         }
       }}
     />

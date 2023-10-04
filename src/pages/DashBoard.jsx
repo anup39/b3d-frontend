@@ -16,9 +16,6 @@ export default function DashBoard() {
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`)
       .then((res) => {
         dispatch(setProjects(res.data));
-      })
-      .catch((error) => {
-        console.log(error);
       });
   }, [dispatch]);
 

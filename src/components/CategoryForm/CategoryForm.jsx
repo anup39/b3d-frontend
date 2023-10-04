@@ -22,6 +22,8 @@ export default function CategoryForm() {
   const [openCategorySuccessToast, setOpenCategorySuccessToast] =
     useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedStandradCategoryId, setSelectedStandradCategoryId] =
+    useState(null);
 
   const handleCreateCategory = (event) => {
     event.preventDefault();
@@ -33,7 +35,7 @@ export default function CategoryForm() {
         name: nameInput.value,
         description: descriptionInput.value,
         sub_category: selectedCategoryId, // Use the selected category ID
-        owner: 1,
+        standard_category: selectedStandradCategoryId,
       };
       axios
         .post(
@@ -170,7 +172,10 @@ export default function CategoryForm() {
               </Grid>
               <Grid item xs={12}>
                 <AutoCompleteCustom
-                  onItemSelected={(id) => setSelectedCategoryId(id)}
+                  onItemSelected={(id, ids) => {
+                    setSelectedCategoryId(id);
+                    setSelectedStandradCategoryId(ids);
+                  }}
                   category={"sub-category"}
                 />
               </Grid>

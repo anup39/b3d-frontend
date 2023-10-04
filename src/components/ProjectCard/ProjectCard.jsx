@@ -26,9 +26,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
   const handleManageClasses = () => {
     navigate(`/manage-classes/${id}`);
   };
-  const handleUploadRaster = () => {
-    console.log("Upload in Map is clicked");
-  };
+  const handleUploadRaster = () => {};
 
   // const onDrop = (acceptedFiles) => {
   //   // Implement your file upload logic here

@@ -10,6 +10,7 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -69,76 +70,138 @@ export default function TransferList({ project_id, component }) {
 
   useEffect(() => {
     // Fetch data from the first API endpoint
-    fetch(
-      `${
-        import.meta.env.VITE_API_DASHBOARD_URL
-      }/${component}/?project=${project_id}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        const rightList = data.map((item) => item);
-        let global_url = `${
+    axios
+      .get(
+        `${
           import.meta.env.VITE_API_DASHBOARD_URL
-        }/global-${component}/`;
-        if (component === "sub-category") {
-          const uniqueGlobalStandardCategories = [
-            ...new Set(rightList.map((item) => item.global_standard_category)),
-          ];
-          let standardCategoryIds = "empty";
-          if (uniqueGlobalStandardCategories.length > 0) {
-            standardCategoryIds = uniqueGlobalStandardCategories.join(",");
-          }
-          global_url = `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/global-${component}/?standard_category_ids=${standardCategoryIds}`;
-        }
-        if (component === "category") {
-          const uniqueGlobalStandardCategories = [
-            ...new Set(rightList.map((item) => item.global_standard_category)),
-          ];
-          const uniqueGlobalSubCategories = [
-            ...new Set(rightList.map((item) => item.global_sub_category)),
-          ];
-          let standardCategoryIds = "empty";
-          let subCategoryIds = "empty";
-          if (uniqueGlobalStandardCategories.length > 0) {
-            standardCategoryIds = uniqueGlobalStandardCategories.join(",");
-          }
-          if (uniqueGlobalSubCategories.length > 0) {
-            subCategoryIds = uniqueGlobalSubCategories.join(",");
-          }
-          global_url = `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/global-${component}/?standard_category_ids=${standardCategoryIds}&sub_category_ids=${subCategoryIds}`;
-        }
+        }/${component}/?project=${project_id}`
+      )
+      .then((res) => {
+        const rightList = res.data.map((item) => item);
 
-        // Fetch data from the second API endpoint
-        fetch(global_url)
-          .then((response) => response.json())
-          .then((data) => {
-            const leftList = data.map((item) => item);
-            // Filter out items that are already in the rightList from the leftList
+        if (component === "standard-category") {
+          let global_url = `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/global-${component}/`;
+          axios.get(global_url).then((res) => {
+            const leftList = res.data.map((item) => item);
             let filteredLeftList = leftList.filter(
               (item) =>
                 !rightList.some(
                   (rightItem) => rightItem.full_name === item.full_name
                 )
             );
-            if (!rightList.length > 0 && component === "category-style") {
-              filteredLeftList = [];
-            }
-
             const filteredRightList = leftList.filter((item) =>
               rightList.some(
                 (rightItem) => rightItem.full_name === item.full_name
               )
             );
-
             setInitialLeft(filteredLeftList);
             setInitialRight(filteredRightList);
             setFinalLeft(filteredLeftList);
             setFinalRight(filteredRightList);
           });
+        }
+
+        if (component === "sub-category") {
+          axios
+            .get(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/${"standard-category"}/?project=${project_id}`
+            )
+            .then((res) => {
+              const prevList = res.data.map((item) => item);
+              const uniqueGlobalStandardCategories = [
+                ...new Set(
+                  prevList.map((item) => item.global_standard_category)
+                ),
+              ];
+              if (uniqueGlobalStandardCategories.length > 0) {
+                const standardCategoryIds =
+                  uniqueGlobalStandardCategories.join(",");
+                const global_url = `${
+                  import.meta.env.VITE_API_DASHBOARD_URL
+                }/global-${component}/?standard_category_ids=${standardCategoryIds}`;
+                axios.get(global_url).then((res) => {
+                  const leftList = res.data.map((item) => item);
+                  let filteredLeftList = leftList.filter(
+                    (item) =>
+                      !rightList.some(
+                        (rightItem) => rightItem.full_name === item.full_name
+                      )
+                  );
+                  let filteredRightList = leftList.filter((item) =>
+                    rightList.some(
+                      (rightItem) => rightItem.full_name === item.full_name
+                    )
+                  );
+
+                  if (!rightList.length > 0) {
+                    filteredRightList = [];
+                  }
+                  setInitialLeft(filteredLeftList);
+                  setInitialRight(filteredRightList);
+                  setFinalLeft(filteredLeftList);
+                  setFinalRight(filteredRightList);
+                });
+              }
+            });
+        }
+        if (component === "category") {
+          axios
+            .get(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/${"sub-category"}/?project=${project_id}`
+            )
+            .then((res) => {
+              const prevList = res.data.map((item) => item);
+              const uniqueGlobalStandardCategories = [
+                ...new Set(
+                  prevList.map((item) => item.global_standard_category)
+                ),
+              ];
+              if (uniqueGlobalStandardCategories.length > 0) {
+                const standardCategoryIds =
+                  uniqueGlobalStandardCategories.join(",");
+                const uniqueGlobalSubCategories = [
+                  ...new Set(prevList.map((item) => item.global_sub_category)),
+                ];
+                if (uniqueGlobalSubCategories.length > 0) {
+                  const subCategoryIds = uniqueGlobalSubCategories.join(",");
+                  const global_url = `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/global-${component}/?standard_category_ids=${standardCategoryIds}&sub_category_ids=${subCategoryIds}`;
+                  axios.get(global_url).then((res) => {
+                    const leftList = res.data.map((item) => item);
+                    let filteredLeftList = leftList.filter(
+                      (item) =>
+                        !rightList.some(
+                          (rightItem) => rightItem.full_name === item.full_name
+                        )
+                    );
+
+                    let filteredRightList = leftList.filter((item) =>
+                      rightList.some(
+                        (rightItem) => rightItem.full_name === item.full_name
+                      )
+                    );
+
+                    if (!rightList.length > 0) {
+                      filteredRightList = [];
+                    }
+                    setInitialLeft(filteredLeftList);
+                    setInitialRight(filteredRightList);
+                    setFinalLeft(filteredLeftList);
+                    setFinalRight(filteredRightList);
+                  });
+                }
+              }
+            });
+        }
+
+        // Fetch data from the second API endpoint
       });
   }, [project_id, component]);
 
@@ -208,127 +271,137 @@ export default function TransferList({ project_id, component }) {
 
   const handleSave = () => {
     // Compare current lists with initial lists to track changes
+
     const itemsMovedToLeft = finalLeft.filter(
-      (item) => !initialLeft.some((leftItem) => leftItem.name === item.name)
+      (item) =>
+        !initialLeft.some((leftItem) => leftItem.full_name === item.full_name)
     );
     const itemsMovedToRight = finalRight.filter(
-      (item) => !initialRight.some((rightItem) => rightItem.name === item.name)
+      (item) =>
+        !initialRight.some(
+          (rightItem) => rightItem.full_name === item.full_name
+        )
     );
 
-    // if (component === "standard-category") {
-    //   itemsMovedToRight.forEach((item) => {
-    //     const data = {
-    //       name: item.name,
-    //       description: item.description,
-    //       project: project_id,
-    //       is_display: true,
-    //     };
-    //     axios
-    //       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/${component}/`, data)
-    //       .then((res) => {
-    //         console.log(res);
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //   });
-
-    //   itemsMovedToLeft.forEach((item) => {
-    //     axios
-    //       .delete(
-    //         `${import.meta.env.VITE_API_DASHBOARD_URL}/${component}/${item.id}/`
-    //       )
-    //       .then((res) => {
-    //         console.log(res);
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //   });
-    // }
-    // if (component === "sub-category") {
-    //   itemsMovedToRight.forEach((item) => {
-    //     axios
-    //       .get(
-    //         `${
-    //           import.meta.env.VITE_API_DASHBOARD_URL
-    //         }/standard-category/?project=${project_id}&name=${
-    //           item.standard_category_name
-    //         }`
-    //       )
-    //       .then((res) => {
-    //         const standard_category = res.data[0].id;
-    //         const data = {
-    //           name: item.name,
-    //           description: item.description,
-    //           project: project_id,
-    //           standard_category: standard_category,
-    //           is_display: true,
-    //         };
-    //         axios
-    //           .post(
-    //             `${import.meta.env.VITE_API_DASHBOARD_URL}/${component}/`,
-    //             data
-    //           )
-    //           .then((res) => {
-    //             console.log(res);
-    //           })
-    //           .catch((error) => {
-    //             console.log(error);
-    //           });
-    //       });
-    //   });
-
-    //   itemsMovedToLeft.forEach((item) => {
-    //     axios
-    //       .delete(
-    //         `${import.meta.env.VITE_API_DASHBOARD_URL}/${component}/${item.id}/`
-    //       )
-    //       .then((res) => {
-    //         console.log(res);
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //   });
-    // }
-    // if (component === "category") {
-    //   itemsMovedToRight.forEach((item) => {
-    //     console.log(item, "item");
-    //     // axios
-    //     //   .get(
-    //     //     `${
-    //     //       import.meta.env.VITE_API_DASHBOARD_URL
-    //     //     }/standard-category/?project=${project_id}&name=${
-    //     //       item.standard_category_name
-    //     //     }`
-    //     //   )
-    //     //   .then((res) => {
-    //     //     const standard_category = res.data[0].id;
-    //     //     const data = {
-    //     //       name: item.name,
-    //     //       description: item.description,
-    //     //       project: project_id,
-    //     //       standard_category: standard_category,
-    //     //       is_display: true,
-    //     //     };
-    //     //     axios
-    //     //       .post(
-    //     //         `${import.meta.env.VITE_API_DASHBOARD_URL}/${component}/`,
-    //     //         data
-    //     //       )
-    //     //       .then((res) => {
-    //     //         console.log(res);
-    //     //       })
-    //     //       .catch((error) => {
-    //     //         console.log(error);
-    //     //       });
-    //     //   });
-    //   });
-    //   itemsMovedToLeft.forEach((item) => {
-    //     console.log(item, "item");
-    //   });
-    // }
+    if (component === "standard-category") {
+      const project_url = `${
+        import.meta.env.VITE_API_DASHBOARD_URL
+      }/${component}`;
+      if (itemsMovedToRight.length > 0) {
+        itemsMovedToRight.map((item) => {
+          const data = {
+            name: item.name,
+            description: item.description,
+            project: project_id,
+            is_display: true,
+            view_name: item.full_name,
+            global_standard_category: item.id,
+          };
+          axios.post(`${project_url}/`, data).then(() => {});
+        });
+      }
+      if (itemsMovedToLeft.length > 0) {
+        itemsMovedToLeft.map((item) => {
+          axios
+            .get(
+              `${project_url}/?project=${project_id}&view_name=${item.full_name}`
+            )
+            .then((res) => {
+              const id = res.data[0].id;
+              axios.delete(`${project_url}/${id}/`).then(() => {});
+            });
+        });
+      }
+    }
+    if (component === "sub-category") {
+      const project_url = `${
+        import.meta.env.VITE_API_DASHBOARD_URL
+      }/${component}`;
+      if (itemsMovedToRight.length > 0) {
+        itemsMovedToRight.map((item) => {
+          axios
+            .get(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/${"standard-category"}/?project=${project_id}&view_name=${
+                item.standard_category_name
+              }`
+            )
+            .then((res) => {
+              const project_s_c_id = res.data[0].id;
+              const data = {
+                name: item.name,
+                project: project_id,
+                standard_category: project_s_c_id,
+                global_standard_category: item.standard_category,
+                global_sub_category: item.id,
+                description: item.description,
+                is_display: true,
+                view_name: item.full_name,
+              };
+              axios.post(`${project_url}/`, data).then(() => {});
+            });
+        });
+      }
+      if (itemsMovedToLeft.length > 0) {
+        itemsMovedToLeft.map((item) => {
+          axios
+            .get(
+              `${project_url}/?project=${project_id}&view_name=${item.full_name}`
+            )
+            .then((res) => {
+              const id = res.data[0].id;
+              axios.delete(`${project_url}/${id}/`).then(() => {});
+            });
+        });
+      }
+    }
+    if (component === "category") {
+      const project_url = `${
+        import.meta.env.VITE_API_DASHBOARD_URL
+      }/${component}`;
+      if (itemsMovedToRight.length > 0) {
+        itemsMovedToRight.map((item) => {
+          axios
+            .get(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/${"sub-category"}/?project=${project_id}&view_name=${
+                item.sub_category_name
+              }`
+            )
+            .then((res) => {
+              const project_s_c_id = res.data[0].standard_category;
+              const project_sub_c_id = res.data[0].id;
+              const data = {
+                name: item.name,
+                project: project_id,
+                standard_category: project_s_c_id,
+                global_standard_category: item.standard_category,
+                sub_category: project_sub_c_id,
+                global_sub_category: item.sub_category,
+                global_category: item.id,
+                description: item.description,
+                is_display: true,
+                view_name: item.full_name,
+              };
+              axios.post(`${project_url}/`, data).then(() => {});
+            });
+        });
+      }
+      if (itemsMovedToLeft.length > 0) {
+        itemsMovedToLeft.map((item) => {
+          axios
+            .get(
+              `${project_url}/?project=${project_id}&view_name=${item.full_name}`
+            )
+            .then((res) => {
+              const id = res.data[0].id;
+              axios.delete(`${project_url}/${id}/`).then(() => {});
+            });
+        });
+      }
+    }
   };
 
   return (

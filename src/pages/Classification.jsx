@@ -73,9 +73,6 @@ export default function Classification() {
       )
       .then((res) => {
         dispatch(setStandardCategorys(res.data));
-      })
-      .catch((error) => {
-        console.log(error);
       });
   }, [dispatch]);
 
@@ -84,9 +81,6 @@ export default function Classification() {
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`)
       .then((res) => {
         dispatch(setSubCategorys(res.data));
-      })
-      .catch((error) => {
-        console.log(error);
       });
   }, [dispatch]);
 
@@ -95,9 +89,6 @@ export default function Classification() {
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
       .then((res) => {
         dispatch(setCategorys(res.data));
-      })
-      .catch((error) => {
-        console.log(error);
       });
   }, [dispatch]);
 
@@ -106,9 +97,6 @@ export default function Classification() {
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category-style/`)
       .then((res) => {
         dispatch(setCategoryStyles(res.data));
-      })
-      .catch((error) => {
-        console.log(error);
       });
   }, [dispatch]);
 

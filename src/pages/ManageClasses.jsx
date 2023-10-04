@@ -59,9 +59,6 @@ export default function Classification() {
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/${id}/`)
       .then((res) => {
         setProjectName(res.data.name);
-      })
-      .catch((error) => {
-        console.log(error);
       });
   }, [id]);
 
@@ -92,7 +89,6 @@ export default function Classification() {
           <Tab label="Standard Category" {...a11yProps(0)} />
           <Tab label="Sub Category" {...a11yProps(1)} />
           <Tab label="Category" {...a11yProps(2)} />
-          <Tab label="Category Style" {...a11yProps(3)} />
         </Tabs>
         <TabPanel value={value} index={0}>
           <Tooltip>
@@ -132,21 +128,6 @@ export default function Classification() {
             </Button>
           </Tooltip>
           <TransferList project_id={parseInt(id)} component={"category"} />
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-          <Tooltip>
-            <Button
-              sx={{ marginBottom: "25px" }}
-              variant="outlined"
-              color="error"
-            >
-              {projectName}
-            </Button>
-          </Tooltip>
-          <TransferList
-            project_id={parseInt(id)}
-            component={"category-style"}
-          />
         </TabPanel>
       </Box>
     </>
