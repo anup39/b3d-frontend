@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 // import { useDropzone } from "react-dropzone";
-import { useState } from "react";
+// import { useState } from "react";
 
 const Img = styled("img")({
   margin: "auto",
@@ -26,7 +26,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
   const handleManageClasses = () => {
     navigate(`/manage-classes/${id}`);
   };
-  const handleUploadRaster = () => {};
+  // const handleUploadRaster = () => {};
 
   // const onDrop = (acceptedFiles) => {
   //   // Implement your file upload logic here

@@ -13,7 +13,6 @@ const Img = styled("img")({
 });
 
 export default function StandardCategoryCard({
-  id,
   name,
   description,
   created_at,

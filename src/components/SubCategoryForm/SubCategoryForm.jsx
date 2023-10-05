@@ -54,10 +54,9 @@ export default function SubCategoryForm() {
             )
             .then((res) => {
               dispatch(setSubCategorys(res.data));
-            })
-            .catch((error) => {});
+            });
         })
-        .catch((error) => {
+        .catch(() => {
           setOpenSubCategoryErrorToast(true);
           setOpenSubCategorySuccessToast(false);
           setTimeout(() => {

@@ -13,7 +13,6 @@ const Img = styled("img")({
 });
 
 export default function CategoryStyleCard({
-  id,
   full_name,
   fill_color,
   fill_opacity,

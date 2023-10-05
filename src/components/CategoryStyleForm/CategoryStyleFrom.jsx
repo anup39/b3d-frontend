@@ -61,10 +61,9 @@ export default function CategoryStyleForm() {
             )
             .then((res) => {
               dispatch(setCategoryStyles(res.data));
-            })
-            .catch((error) => {});
+            });
         })
-        .catch((error) => {
+        .catch(() => {
           setOpenCategoryStyleErrorToast(true);
           setOpenCategoryStyleSuccessToast(false);
           setTimeout(() => {

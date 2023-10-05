@@ -52,10 +52,9 @@ export default function StandardCategoryForm() {
           )
           .then((res) => {
             dispatch(setStandardCategorys(res.data));
-          })
-          .catch((error) => {});
+          });
       })
-      .catch((error) => {
+      .catch(() => {
         setOpenStandardCategoryErrorToast(true);
         setOpenStandardCategorySuccessToast(false);
         setTimeout(() => {

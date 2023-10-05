@@ -41,10 +41,9 @@ export default function ProjectForm() {
           .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`)
           .then((res) => {
             dispatch(setProjects(res.data));
-          })
-          .catch((error) => {});
+          });
       })
-      .catch((error) => {
+      .catch(() => {
         setOpenProjectErrorToast(true);
         setOpenProjectSuccessToast(false);
         setTimeout(() => {

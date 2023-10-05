@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import { useSelector, useDispatch } from "react-redux";
 import TransferList from "../components/TransferList/TransferList";
 import { Button, Tooltip } from "@mui/material";
 
@@ -46,7 +45,6 @@ function a11yProps(index) {
 
 export default function Classification() {
   const { id } = useParams();
-  const dispatch = useDispatch();
   const [value, setValue] = useState(0);
   const [projectName, setProjectName] = useState("");
 

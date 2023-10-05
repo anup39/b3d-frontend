@@ -13,8 +13,6 @@ const Img = styled("img")({
 });
 
 export default function SubCategoryCard({
-  id,
-  name,
   full_name,
   description,
   created_at,

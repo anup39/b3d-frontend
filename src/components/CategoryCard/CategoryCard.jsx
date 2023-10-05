@@ -12,13 +12,7 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
-export default function CategoryCard({
-  id,
-  name,
-  full_name,
-  description,
-  created_at,
-}) {
+export default function CategoryCard({ full_name, description, created_at }) {
   return (
     <Paper
       sx={{

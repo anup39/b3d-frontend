@@ -1,0 +1,15 @@
+.maplibregl-ctrl-top-left .maplibregl-ctrl {
+    z-index: 999;
+
+
+    div.layers-control-panel {
+        display: none;
+    }
+
+    .open {
+
+        div.layers-control-panel {
+            display: block;
+        }
+    }
+}
