@@ -32,39 +32,77 @@ function Toggle({
       const layerId = String(layer.project) + layer.full_name + "layer";
 
       if (!visible) {
-        const url = `${
-          import.meta.env.VITE_API_MAP_URL
-        }/function_zxy_query_app_polygondata_by_project_category/{z}/{x}/{y}?project=${
-          layer.project
-        }&category=${layer.id}`;
-        const source_layer =
-          "function_zxy_query_app_polygondata_by_project_category";
-        const newSource = {
-          type: "vector",
-          tiles: [url],
-          // promoteId: "id",
-        };
-        map.addSource(sourceId, newSource);
+        if (layer.level === "Project") {
+          // console.log("Project");
+          const url = `${
+            import.meta.env.VITE_API_MAP_URL
+          }/function_zxy_query_app_polygondata_by_project/{z}/{x}/{y}?project=${
+            layer.project
+          }`;
+          const source_layer = "function_zxy_query_app_polygondata_by_project";
+          const newSource = {
+            type: "vector",
+            tiles: [url],
+            // promoteId: "id",
+          };
+          map.addSource(sourceId, newSource);
 
-        const newLayer = {
-          id: layerId,
-          type: "fill",
-          source: sourceId,
-          "source-layer": source_layer,
-          layout: {},
-          paint: {
-            "fill-color": style.fill,
-            "fill-outline-color": style.stroke,
-            // "fill-opacity": [
-            //   "case",
-            //   ["boolean", ["feature-state", "hover"], false],
-            //   1,
-            //   style.fill_opacity,
-            // ],
-            "fill-opacity": parseFloat(style.fill_opacity),
-          },
-        };
-        map.addLayer(newLayer);
+          const newLayer = {
+            id: layerId,
+            type: "fill",
+            source: sourceId,
+            "source-layer": source_layer,
+            layout: {},
+            paint: {
+              "fill-color": "red",
+              "fill-outline-color": "black",
+              // "fill-opacity": [
+              //   "case",
+              //   ["boolean", ["feature-state", "hover"], false],
+              //   1,
+              //   style.fill_opacity,
+              // ],
+              "fill-opacity": 0.5,
+            },
+          };
+          map.addLayer(newLayer);
+        } else {
+          // console.log("category");
+
+          const url = `${
+            import.meta.env.VITE_API_MAP_URL
+          }/function_zxy_query_app_polygondata_by_project_category/{z}/{x}/{y}?project=${
+            layer.project
+          }&category=${layer.id}`;
+          const source_layer =
+            "function_zxy_query_app_polygondata_by_project_category";
+          const newSource = {
+            type: "vector",
+            tiles: [url],
+            // promoteId: "id",
+          };
+          map.addSource(sourceId, newSource);
+
+          const newLayer = {
+            id: layerId,
+            type: "fill",
+            source: sourceId,
+            "source-layer": source_layer,
+            layout: {},
+            paint: {
+              "fill-color": style.fill,
+              "fill-outline-color": style.stroke,
+              // "fill-opacity": [
+              //   "case",
+              //   ["boolean", ["feature-state", "hover"], false],
+              //   1,
+              //   style.fill_opacity,
+              // ],
+              "fill-opacity": parseFloat(style.fill_opacity),
+            },
+          };
+          map.addLayer(newLayer);
+        }
       } else {
         const style = map.getStyle();
         const existingLayer = style.layers.find(

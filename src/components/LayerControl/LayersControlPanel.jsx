@@ -44,18 +44,22 @@ function LayersControlPanel({
       <div>
         {standard_categories.length ? (
           <div className="overlays theme-border-primary">
-            <LayersControlLayerStandard
+            {/* <LayersControlLayerStandard
               map={map}
               expanded={false}
               layer={{
+                level: "Project",
                 name: "All",
+                project: project_id,
+                category: "",
                 view_name: project_name.replace(/ /g, "_").toLowerCase(),
+                full_name: project_name.replace(/ /g, "_").toLowerCase(),
               }}
               key={standard_categories.length + 1}
               sub_categories={sub_categories}
               categories_measuring={categories_measuring}
               style={style}
-            />
+            /> */}
 
             {standard_categories.map((layer, i) => (
               <LayersControlLayerStandard
