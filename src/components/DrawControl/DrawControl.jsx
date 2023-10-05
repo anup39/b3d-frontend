@@ -1,5 +1,7 @@
 import ReactDOM from "react-dom/client";
 import DrawPolygon from "./DrawPolygon";
+import Save from "./Save";
+import Cancel from "./Cancel";
 import { store } from "../../store";
 import { Provider } from "react-redux";
 
@@ -11,6 +13,8 @@ export default class DrawControl {
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
         <DrawPolygon />
+        <Cancel />
+        <Save />
       </Provider>
     );
     return this._container;

@@ -38,7 +38,7 @@ function Toggle({
             style={{
               transform: transform,
               fontSize: "20px",
-              backgroundColor: "grey",
+              backgroundColor: "#1876D1",
             }}
           />
           <Typography>{layer.name}</Typography>

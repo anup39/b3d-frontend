@@ -11,6 +11,7 @@ import {
   setProjectName,
 } from "../reducers/MapCategories";
 import { useDispatch } from "react-redux";
+import CategoryGeomForm from "../components/CategoryGeomForm/CategoryGeomForm";
 
 export default function MapSection() {
   const dispatch = useDispatch();
@@ -57,6 +58,7 @@ export default function MapSection() {
   return (
     <div>
       <AppBar />
+      <CategoryGeomForm project_id={id} />
       <Map refObj={searchRef} project_id={id} />
       <div style={{ position: "absolute", top: "10vh", right: "5vw" }}>
         <Search refObj={searchRef} />
