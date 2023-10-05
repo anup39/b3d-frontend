@@ -9,7 +9,6 @@ function LayersControlLayerCategory({ map, layer }) {
   const [style, setStyle] = useState({});
 
   const updateOpacity = (evt) => {
-    console.log(map, "map");
     setOpacity(parseFloat(evt.target.value));
     const layer_name = layer.view_name;
     map.eachLayer(function (layer) {
@@ -33,12 +32,8 @@ function LayersControlLayerCategory({ map, layer }) {
       )
       .then((response) => {
         const categoryStyle = response.data[0];
-        console.log(categoryStyle);
         setStyle(categoryStyle);
         setOpacity(categoryStyle.fill_opacity);
-      })
-      .catch((error) => {
-        console.log(error);
       });
   }, [layer.id]);
 

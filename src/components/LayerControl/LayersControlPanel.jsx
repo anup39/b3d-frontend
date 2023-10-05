@@ -26,9 +26,6 @@ function LayersControlPanel({
         )
         .then((response) => {
           setStyle(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
         });
     }
   }, [project_id]);

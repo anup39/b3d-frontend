@@ -6,6 +6,7 @@ import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import GeocoderApi from "../maputils/GeocoderApi";
 import PropTypes from "prop-types";
 import LayersControl from "../components/LayerControl/LayerControl";
+import DrawControl from "../components/DrawControl/DrawControl";
 
 export default function Map({ refObj, project_id }) {
   const mapContainer = useRef(null);
@@ -50,6 +51,7 @@ export default function Map({ refObj, project_id }) {
       const layer_control = new LayersControl();
       map.addControl(layer_control, "top-left");
       layer_control.updateProject(project_id);
+      map.addControl(new DrawControl(), "top-left");
     }
   }, [map, project_id]);
 

@@ -19,11 +19,9 @@ function Toggle({
 }) {
   const [transform, setTransform] = useState("rotate(-90deg)");
   const handleClick = () => {
-    // console.log(layer, "layer");
-    // console.log(style, "style");
+    console.log(layer, "layer");
+    console.log(style, "style");
     // console.log(map, "map");
-    console.log(visible, "visible");
-    console.log(component, "componenet");
     if (component == "expand" && !visible) {
       setTransform("rotate(360deg)");
     } else {
