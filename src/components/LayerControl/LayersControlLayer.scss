@@ -2,21 +2,23 @@
     .layers-control-layer {
         clear: both;
 
-        .layer-label {
-            width: auto;
-            position: relative;
-            top: 1px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            display: block;
-            text-align: left;
-            padding-left: 4px;
-            margin-left: 1px;
-            height: 22px;
-            line-height: 22px;
-            padding-top: 1px;
-        }
+        // .layer-label {
+        //     width: auto;
+        //     position: relative;
+        //     // top: 1px;
+        //     white-space: nowrap;
+        //     text-overflow: ellipsis;
+        //     overflow: hidden;
+        //     display: block;
+        //     text-align: left;
+        //     padding-left: 4px;
+        //     margin-left: 40px;
+        //     height: 22px;
+        //     // line-height: 22px;
+        //     // padding-top: 1px;
+        //     font-size: 14px;
+        //     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+        // }
 
         .layer-expanded {
             clear: both;
@@ -72,11 +74,11 @@
         }
 
         &.sub-category {
-            margin-left: 12px;
+            margin-left: 19px;
         }
 
         &.category {
-            margin-left: 20px;
+            margin-left: 40px;
         }
 
     }

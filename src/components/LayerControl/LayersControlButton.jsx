@@ -4,9 +4,21 @@ import LayersControlPanel from "./LayersControlPanel";
 import "./LayersControlButton.scss";
 import IconButton from "@mui/material/IconButton";
 import LayersIcon from "@mui/icons-material/Layers";
+import { useSelector } from "react-redux";
+import { Button } from "@mui/material";
 
-export default function LayersControlButton(props) {
+export default function LayersControlButton({ map, project_id }) {
   const [showPanel, setShowPanel] = useState(false);
+  const categories_measuring = useSelector(
+    (state) => state.mapCategories.categories
+  );
+  const sub_categories = useSelector(
+    (state) => state.mapCategories.sub_categories
+  );
+  const standard_categories = useSelector(
+    (state) => state.mapCategories.standard_categories
+  );
+  const project_name = useSelector((state) => state.mapCategories.project_name);
 
   const handleOpen = () => {
     setShowPanel(true);
@@ -18,30 +30,34 @@ export default function LayersControlButton(props) {
 
   return (
     <div className={showPanel ? "open" : ""}>
+      <Button variant="outlined" color="error">
+        {project_name}
+      </Button>
       <IconButton
-        sx={{ color: "#C62828", backgroundColor: "#FFFFFF" }}
+        sx={{
+          color: "white",
+          backgroundColor: "#9C27B0",
+          marginLeft: "5px",
+          borderRadius: "0",
+        }}
         onClick={handleOpen}
       >
         <LayersIcon />
       </IconButton>
       <LayersControlPanel
-        map={props.map}
-        categories_measuring={props.categories_measuring}
-        sub_categories={props.sub_categories}
-        standard_categories={props.standard_categories}
-        project_name={props.project_name}
-        project_id={props.project_id}
+        map={map}
+        project_id={project_id}
         onClose={handleClose}
+        categories_measuring={categories_measuring}
+        sub_categories={sub_categories}
+        standard_categories={standard_categories}
+        project_name={project_name}
       />
     </div>
   );
 }
 
 LayersControlButton.propTypes = {
-  standard_categories: PropTypes.array,
-  sub_categories: PropTypes.array,
-  categories_measuring: PropTypes.array,
   map: PropTypes.object.isRequired,
-  project_name: PropTypes.string,
-  project_id: PropTypes.number,
+  project_id: PropTypes.string,
 };

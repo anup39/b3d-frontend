@@ -54,10 +54,11 @@ function LayersControlLayerCategory({ map, layer }) {
           layer={layer}
           style={style}
         />
-        <a title={layer.name} className="layer-label">
+        {/* <a title={layer.name} className="layer-label">
           {layer.name}
-        </a>
+        </a> */}
         <input
+          style={{ marginTop: "30px" }}
           type="range"
           min="0"
           max="1"

@@ -1,9 +1,19 @@
 .maplibregl-ctrl-top-left .maplibregl-ctrl {
     z-index: 999;
+    padding: 6px 10px 6px 6px;
+    background: #fff;
+    width: fit-content;
+    min-height: 0px;
+    max-height: 418px;
+    overflow-y: auto;
+    font-size: 14px;
 
 
     div.layers-control-panel {
         display: none;
+        width: 300px;
+
+
     }
 
     .open {

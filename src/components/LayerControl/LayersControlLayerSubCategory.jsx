@@ -20,14 +20,15 @@ function LayersControlLayerSubCategory({
       <div className="layers-control-layer sub-category">
         <>
           <ExpandButton
+            layer={layer}
             expanded={expanded_}
             onExpanded={(value) => {
               setExpanded(value);
             }}
           />
-          <a title={layer.name} className="layer-label">
+          {/* <a title={layer.name} className="layer-label">
             {layer.name}
-          </a>
+          </a> */}
         </>
       </div>
 

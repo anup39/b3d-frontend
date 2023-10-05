@@ -105,7 +105,7 @@ LayersControlPanel.propTypes = {
   sub_categories: PropTypes.array,
   map: PropTypes.object.isRequired,
   project_name: PropTypes.string,
-  project_id: PropTypes.number,
+  project_id: PropTypes.string,
 };
 
 export default LayersControlPanel;

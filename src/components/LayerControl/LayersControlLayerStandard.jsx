@@ -40,11 +40,15 @@ function LayersControlLayerStandard({
             style={style[0]}
           />
         ) : (
-          <ExpandButton expanded={expanded_} onExpanded={onExpanded} />
+          <ExpandButton
+            layer={layer}
+            expanded={expanded_}
+            onExpanded={onExpanded}
+          />
         )}
-        <a title={layer.name} className="layer-label">
+        {/* <a title={layer.name} className="layer-label">
           {layer.name}
-        </a>
+        </a> */}
       </>
 
       {expanded_

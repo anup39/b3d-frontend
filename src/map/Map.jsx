@@ -24,10 +24,6 @@ export default function Map({ refObj, project_id }) {
     window.map_global = map;
     setMap(map);
     map.addControl(new maplibregl.NavigationControl(), "top-right");
-    console.log(project_id);
-    const layer_control = new LayersControl();
-    map.addControl(layer_control, "top-left");
-
     return () => {
       map.remove();
     };
@@ -48,6 +44,14 @@ export default function Map({ refObj, project_id }) {
       });
     }
   }, [map, refObj]);
+
+  useEffect(() => {
+    if (map) {
+      const layer_control = new LayersControl();
+      map.addControl(layer_control, "top-left");
+      layer_control.updateProject(project_id);
+    }
+  }, [map, project_id]);
 
   return <div ref={mapContainer} id="map" className="map" />;
 }
