@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleShowGeomFormPopup } from "../../reducers/DisplaySettings";
 import AutoCompleteMap from "../AutoCompleteMap/AutoCompleteMap";
 import PropTypes from "prop-types";
+import { setWKTGeometry } from "../../reducers/DrawnPolygon";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -47,23 +48,39 @@ export default function CategoryGeomForm({ project_id }) {
               geom: wkt_geometry,
             };
             console.log(data, "data");
-            //   axios
-            //     .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/category/`, data)
-            //     .then(() => {
-            //       setOpenCategoryStyleSuccessToast(true);
-            //       setOpenCategoryStyleErrorToast(false);
-            //       setTimeout(() => {
-            //         setOpenCategoryStyleSuccessToast(false);
-            //       }, 3000);
-            //     })
-            //     .catch(() => {
-            //       setOpenCategoryStyleErrorToast(true);
-            //       setOpenCategoryStyleSuccessToast(false);
-            //       setTimeout(() => {
-            //         setOpenCategoryStyleErrorToast(false);
-            //       }, 3000);
-            //     });
-            closeForm();
+            axios
+              .post(
+                `${import.meta.env.VITE_API_DASHBOARD_URL}/polygon-data/`,
+                data
+              )
+              .then(() => {
+                setOpenCategoryStyleSuccessToast(true);
+                setOpenCategoryStyleErrorToast(false);
+                setTimeout(() => {
+                  setOpenCategoryStyleSuccessToast(false);
+                  closeForm();
+                  if (window.map_global) {
+                    const drawInstance = window.map_global.draw;
+                    drawInstance.deleteAll();
+                    drawInstance.changeMode("simple_select");
+                    dispatch(setWKTGeometry(null));
+                  }
+                }, 3000);
+              })
+              .catch(() => {
+                setOpenCategoryStyleErrorToast(true);
+                setOpenCategoryStyleSuccessToast(false);
+                setTimeout(() => {
+                  setOpenCategoryStyleErrorToast(false);
+                  closeForm();
+                  if (window.map_global) {
+                    const drawInstance = window.map_global.draw;
+                    drawInstance.deleteAll();
+                    drawInstance.changeMode("simple_select");
+                    dispatch(setWKTGeometry(null));
+                  }
+                }, 3000);
+              });
           });
       }
     }
