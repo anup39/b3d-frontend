@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import "./LayersControlPanel.scss";
 import LayersControlLayerStandard from "./LayersControlLayerStandard";
 import axios from "axios";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 function LayersControlPanel({
   map,
@@ -81,7 +82,11 @@ function LayersControlPanel({
   return (
     <div className="layers-control-panel">
       <div>
-        <span className="close-button" onClick={onClose} />
+        {/* <span className="close-button" onClick={onClose} /> */}
+        <HighlightOffIcon
+          className="close-button"
+          onClick={onClose}
+        ></HighlightOffIcon>
         <div className="title">{"Measurings"}</div>
       </div>
       <hr />

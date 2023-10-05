@@ -58,7 +58,7 @@ function LayersControlLayerCategory({ map, layer }) {
           {layer.name}
         </a> */}
         <input
-          style={{ marginTop: "30px" }}
+          style={{ marginTop: "35px" }}
           type="range"
           min="0"
           max="1"
