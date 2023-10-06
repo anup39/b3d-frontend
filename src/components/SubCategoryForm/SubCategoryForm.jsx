@@ -35,7 +35,6 @@ export default function SubCategoryForm() {
         name: nameInput.value,
         description: descriptionInput.value,
         standard_category: selectedCategoryId, // Use the selected category ID
-        owner: 1,
       };
       axios
         .post(

@@ -10,14 +10,17 @@ import axios from "axios";
 export default function DashBoard() {
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.project.projects);
+  const user_id = useSelector((state) => state.auth.user_id);
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`)
+      .get(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/projects/?owner=${user_id}`
+      )
       .then((res) => {
         dispatch(setProjects(res.data));
       });
-  }, [dispatch]);
+  }, [user_id, dispatch]);
 
   return (
     <div>

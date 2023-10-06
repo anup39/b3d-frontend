@@ -17,6 +17,8 @@ import { useState } from "react";
 import MuiAlert from "@mui/material/Alert";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setToken, setUserId, setUserName } from "../reducers/Auth";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -45,6 +47,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [openLoginToast, setOpenLoginToast] = useState(false);
 
@@ -53,7 +56,18 @@ export default function Login() {
     const data = new FormData(event.currentTarget);
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/api-token-auth/`, data)
-      .then(function () {
+      .then(function (res) {
+        const token = res.data.token;
+        const user_id = res.data.user_id;
+        const username = res.data.username;
+        dispatch(setToken(token));
+        dispatch(setUserId(user_id));
+        dispatch(setUserName(username));
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("user_id", user_id);
+        localStorage.setItem("username", username);
+
         setOpenLoginToast(false);
         navigate("/dashboard");
       })
