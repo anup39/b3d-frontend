@@ -6,8 +6,10 @@ import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-// import { useDropzone } from "react-dropzone";
-// import { useState } from "react";
+import Dropzone, { useDropzone } from "react-dropzone";
+import { useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const Img = styled("img")({
   margin: "auto",
@@ -18,36 +20,37 @@ const Img = styled("img")({
 
 export default function ProjectCard({ id, name, description, created_at }) {
   const navigate = useNavigate();
-  // const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const handleViewInMap = () => {
     navigate(`/map/${id}`);
   };
+  const username_ = useSelector((state) => state.auth.username);
 
   const handleManageClasses = () => {
     navigate(`/manage-classes/${id}`);
   };
   // const handleUploadRaster = () => {};
 
-  // const onDrop = (acceptedFiles) => {
-  //   // Implement your file upload logic here
-  //   console.log("Accepted files:", acceptedFiles);
+  const onDrop = (acceptedFiles) => {
+    // Implement your file upload logic here
+    console.log("Accepted files:", acceptedFiles);
 
-  //   // Simulate upload progress for demonstration purposes
-  //   let progress = 0;
-  //   const interval = setInterval(() => {
-  //     if (progress < 100) {
-  //       progress += 10;
-  //       setUploadProgress(progress);
-  //     } else {
-  //       clearInterval(interval);
-  //     }
-  //   }, 500);
-  // };
+    // Simulate upload progress for demonstration purposes
+    let progress = 0;
+    const interval = setInterval(() => {
+      if (progress < 100) {
+        progress += 10;
+        setUploadProgress(progress);
+      } else {
+        clearInterval(interval);
+      }
+    }, 500);
+  };
 
-  // const { getRootProps, getInputProps } = useDropzone({
-  //   onDrop,
-  //   accept: ".tif", // Specify accepted file types (e.g., tif)
-  // });
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: ".tif", // Specify accepted file types (e.g., tif)
+  });
   return (
     <Paper
       sx={{
@@ -103,17 +106,24 @@ export default function ProjectCard({ id, name, description, created_at }) {
             </Grid>
           </Grid>
           <Grid item>
-            {/* <div {...getRootProps()} style={{ display: "inline-block" }}> */}
-            {/* <input {...getInputProps()} /> */}
-            <Button variant="contained" color="error">
-              Upload Raster
-            </Button>
-            {/* </div> */}
-            {/* {uploadProgress > 0 && ( */}
-            {/* <div> */}
-            {/* Uploading: {uploadProgress}% */}
-            {/* </div> */}
-            {/* )} */}
+            <div {...getRootProps()} style={{ display: "inline-block" }}>
+              <input {...getInputProps()} />
+              <Button variant="contained" color="error">
+                Upload Raster
+              </Button>
+            </div>
+            {uploadProgress > 0 && <div>Uploading: {uploadProgress}%</div>}
+            {/* <Dropzone onDrop={onDrop}>
+              {({ getRootProps, getInputProps }) => (
+                <div {...getRootProps()} className="dropzone">
+                  <input {...getInputProps()} />
+                  <p>Upload GeoTiff</p>
+                </div>
+              )}
+            </Dropzone>
+            <div>
+              {uploadProgress > 0 && <p>Upload Progress: {uploadProgress}%</p>}
+            </div> */}
           </Grid>
         </Grid>
       </Grid>

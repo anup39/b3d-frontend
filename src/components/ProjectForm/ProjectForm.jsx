@@ -20,6 +20,7 @@ export default function ProjectForm() {
   const [openProjectErrorToast, setOpenProjectErrorToast] = useState(false);
   const [openProjectSuccessToast, setOpenProjectSuccessToast] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
+  const username_ = useSelector((state) => state.auth.username);
 
   const handleCreateProject = (event) => {
     event.preventDefault();
