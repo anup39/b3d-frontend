@@ -7,6 +7,7 @@ import GeocoderApi from "../maputils/GeocoderApi";
 import PropTypes from "prop-types";
 import LayersControl from "../components/LayerControl/LayerControl";
 import DrawControl from "../components/DrawControl/DrawControl";
+import RasterControl from "../components/RasterControl/RasterControl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { useDispatch } from "react-redux";
@@ -37,18 +38,6 @@ export default function Map({ refObj, project_id }) {
 
     window.map_global = map;
     setMap(map);
-    map.addControl(new maplibregl.NavigationControl(), "top-right");
-    map.addControl(
-      new MaplibreExportControl({
-        PageSize: Size.A3,
-        PageOrientation: PageOrientation.Portrait,
-        Format: Format.PNG,
-        DPI: DPI[96],
-        Crosshair: true,
-        PrintableArea: true,
-      }),
-      "top-right"
-    );
 
     return () => {
       map.remove();
@@ -83,7 +72,6 @@ export default function Map({ refObj, project_id }) {
             .map((coord) => `${coord[0]} ${coord[1]}`)
             .join(", ");
           const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-          console.log(wktCoordinates_final, "wkt geom");
           dispatch(setWKTGeometry(wktCoordinates_final));
         });
         map.on("draw.update", function (event) {
@@ -95,12 +83,11 @@ export default function Map({ refObj, project_id }) {
             .map((coord) => `${coord[0]} ${coord[1]}`)
             .join(", ");
           const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-          console.log(wktCoordinates_final, "wkt geom");
           dispatch(setWKTGeometry(wktCoordinates_final));
         });
       });
     }
-  }, [map]);
+  }, [map, dispatch]);
 
   useEffect(() => {
     if (map) {
@@ -123,6 +110,19 @@ export default function Map({ refObj, project_id }) {
       const layer_control = new LayersControl();
       map.addControl(layer_control, "top-left");
       layer_control.updateProject(project_id);
+      map.addControl(
+        new MaplibreExportControl({
+          PageSize: Size.A3,
+          PageOrientation: PageOrientation.Portrait,
+          Format: Format.PNG,
+          DPI: DPI[96],
+          Crosshair: true,
+          PrintableArea: true,
+        }),
+        "top-right"
+      );
+      map.addControl(new maplibregl.NavigationControl(), "top-right");
+      map.addControl(new RasterControl(), "top-left");
       map.addControl(new DrawControl(), "top-left");
     }
   }, [map, project_id]);

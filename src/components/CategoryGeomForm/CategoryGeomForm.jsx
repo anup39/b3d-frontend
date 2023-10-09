@@ -39,7 +39,6 @@ export default function CategoryGeomForm({ project_id }) {
             }/category/${selectedCategoryId}/`
           )
           .then((res) => {
-            console.log(res.data);
             const data = {
               project: parseInt(project_id),
               standard_category: res.data.standard_category,
@@ -47,7 +46,7 @@ export default function CategoryGeomForm({ project_id }) {
               category: selectedCategoryId, // Use the selected category ID
               geom: wkt_geometry,
             };
-            console.log(data, "data");
+
             axios
               .post(
                 `${import.meta.env.VITE_API_DASHBOARD_URL}/polygon-data/`,

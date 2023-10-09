@@ -58,7 +58,6 @@ function Appbar() {
 
   const handleCloseUserMenu = (event) => {
     if (event.target.innerHTML === "Logout") {
-      console.log("Logout logic");
       localStorage.removeItem("token");
       localStorage.removeItem("user_id");
       localStorage.removeItem("username");

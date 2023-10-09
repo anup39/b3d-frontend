@@ -4,12 +4,11 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
-import { Button } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Dropzone, { useDropzone } from "react-dropzone";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import Dropzone from "react-dropzone";
 
 const Img = styled("img")({
   margin: "auto",
@@ -21,36 +20,64 @@ const Img = styled("img")({
 export default function ProjectCard({ id, name, description, created_at }) {
   const navigate = useNavigate();
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [orthophotos, setOrthophotos] = useState([]);
+
   const handleViewInMap = () => {
     navigate(`/map/${id}`);
   };
-  const username_ = useSelector((state) => state.auth.username);
 
   const handleManageClasses = () => {
     navigate(`/manage-classes/${id}`);
   };
   // const handleUploadRaster = () => {};
+  const handleUploadRaster = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    const formData = new FormData();
+    formData.append("project", id); // Add the project ID
+    formData.append("name", file.name); // Add the file name
+    formData.append("shape_file", file);
 
-  const onDrop = (acceptedFiles) => {
-    // Implement your file upload logic here
-    console.log("Accepted files:", acceptedFiles);
-
-    // Simulate upload progress for demonstration purposes
-    let progress = 0;
-    const interval = setInterval(() => {
-      if (progress < 100) {
-        progress += 10;
-        setUploadProgress(progress);
-      } else {
-        clearInterval(interval);
-      }
-    }, 500);
+    axios
+      .post(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/`,
+        formData,
+        {
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setUploadProgress(percentCompleted);
+          },
+        }
+      )
+      .then(() => {
+        setUploadSuccess(true);
+        axios
+          .get(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/raster-data/?project=${id}`
+          )
+          .then((res) => {
+            setOrthophotos(res.data);
+          });
+      })
+      .catch((error) => {
+        console.error("Error uploading file:", error);
+      });
   };
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: ".tif", // Specify accepted file types (e.g., tif)
-  });
+  useEffect(() => {
+    axios
+      .get(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=${id}`
+      )
+      .then((res) => {
+        setOrthophotos(res.data);
+      });
+  }, [id]);
+
   return (
     <Paper
       sx={{
@@ -105,25 +132,49 @@ export default function ProjectCard({ id, name, description, created_at }) {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item>
-            <div {...getRootProps()} style={{ display: "inline-block" }}>
-              <input {...getInputProps()} />
-              <Button variant="contained" color="error">
-                Upload Raster
+          <Grid item xs>
+            <Tooltip>
+              <Button
+                sx={{ marginBottom: "25px" }}
+                variant="outlined"
+                color="error"
+              >
+                Orthophotos
               </Button>
-            </div>
-            {uploadProgress > 0 && <div>Uploading: {uploadProgress}%</div>}
-            {/* <Dropzone onDrop={onDrop}>
+            </Tooltip>
+            {orthophotos.length > 0
+              ? orthophotos.map((ortho) => (
+                  <Typography
+                    key={ortho.id}
+                    gutterBottom
+                    variant="subtitle1"
+                    component="div"
+                  >
+                    * {ortho.name}
+                  </Typography>
+                ))
+              : null}
+          </Grid>
+
+          <Grid item>
+            <Dropzone
+              onDrop={handleUploadRaster}
+              accept=".tif"
+              maxSize={50000000} // 50 MB
+            >
               {({ getRootProps, getInputProps }) => (
-                <div {...getRootProps()} className="dropzone">
+                <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <p>Upload GeoTiff</p>
+                  <Button variant="contained" color="error" id="uploadButton">
+                    Upload Raster
+                  </Button>
                 </div>
               )}
             </Dropzone>
-            <div>
-              {uploadProgress > 0 && <p>Upload Progress: {uploadProgress}%</p>}
-            </div> */}
+            {uploadProgress > 0 && (
+              <div>Upload Progress: {uploadProgress}%</div>
+            )}
+            {uploadSuccess && <div>File uploaded successfully!</div>}
           </Grid>
         </Grid>
       </Grid>
