@@ -122,7 +122,9 @@ export default function Map({ refObj, project_id }) {
         "top-right"
       );
       map.addControl(new maplibregl.NavigationControl(), "top-right");
-      map.addControl(new RasterControl(), "top-left");
+      const raster_control = new RasterControl();
+      map.addControl(raster_control, "top-left");
+      raster_control.updateProject(project_id);
       map.addControl(new DrawControl(), "top-left");
     }
   }, [map, project_id]);

@@ -8,12 +8,20 @@ export default class RasterControl {
     this._map = map;
     this._container = document.createElement("div");
     this._container.className = "maplibregl-ctrl maplibregl-ctrl-raster";
+
+    return this._container;
+  }
+
+  updateProject(project_id) {
+    this._project_id = project_id;
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        <RasterLayer></RasterLayer>
+        <RasterLayer
+          map={this._map}
+          project_id={this._project_id}
+        ></RasterLayer>
       </Provider>
     );
-    return this._container;
   }
 
   onRemove() {
