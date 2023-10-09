@@ -36,7 +36,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
     const formData = new FormData();
     formData.append("project", id); // Add the project ID
     formData.append("name", file.name); // Add the file name
-    formData.append("shape_file", file);
+    formData.append("tif_file", file);
 
     axios
       .post(
