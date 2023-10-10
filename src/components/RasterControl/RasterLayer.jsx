@@ -60,6 +60,10 @@ export default function RasterLayer({ map, project_id }) {
         minzoom: 0,
         maxzoom: 24,
       });
+      map.moveLayer(
+        `${ortho.uuid}-layer`,
+        "gl-draw-polygon-fill-inactive.cold"
+      );
     } else {
       const style = map.getStyle();
       const existingLayer = style.layers.find(

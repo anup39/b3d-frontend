@@ -24,7 +24,6 @@ export const MapCategories = createSlice({
       state.project_name = action.payload;
     },
     updateCheckedById: (state, action) => {
-      console.log(action.payload, "action");
       const { id, checked } = action.payload;
       const categoryToUpdate = state.categories.find(
         (category) => category.id === id

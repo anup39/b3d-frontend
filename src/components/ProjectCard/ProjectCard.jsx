@@ -160,7 +160,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
             <Dropzone
               onDrop={handleUploadRaster}
               // accept={{ ".tif": "image/tiff" }}
-              maxSize={50000000} // 50 MB
+              maxSize={50000000000} // 50000 MB
             >
               {({ getRootProps, getInputProps }) => (
                 <div {...getRootProps()}>

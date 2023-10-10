@@ -97,6 +97,7 @@ function LayersControlLayerCategory({ map, layer }) {
         },
       };
       map.addLayer(newLayer);
+      map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
     } else {
       const style = map.getStyle();
       const existingLayer = style.layers.find((layer) => layer.id === layerId);

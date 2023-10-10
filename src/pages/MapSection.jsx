@@ -28,8 +28,6 @@ export default function MapSection() {
             `${import.meta.env.VITE_API_DASHBOARD_URL}/category/?project=${id}`
           )
           .then((res) => {
-            // const data = res.data;
-            // console.log(data, "data");
             const data = res.data.map((item) => ({
               ...item,
               checked: false,
