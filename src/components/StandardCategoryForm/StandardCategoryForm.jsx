@@ -31,7 +31,6 @@ export default function StandardCategoryForm() {
     const data = {
       name: nameInput.value,
       description: descriptionInput.value,
-      owner: 1,
     };
     axios
       .post(

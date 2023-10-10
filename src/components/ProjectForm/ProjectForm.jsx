@@ -6,7 +6,7 @@ import { useState } from "react";
 import MuiAlert from "@mui/material/Alert";
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setProjects } from "../../reducers/Project";
 
@@ -19,6 +19,8 @@ export default function ProjectForm() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [openProjectErrorToast, setOpenProjectErrorToast] = useState(false);
   const [openProjectSuccessToast, setOpenProjectSuccessToast] = useState(false);
+  const user_id = useSelector((state) => state.auth.user_id);
+  const username_ = useSelector((state) => state.auth.username);
 
   const handleCreateProject = (event) => {
     event.preventDefault();
@@ -27,7 +29,7 @@ export default function ProjectForm() {
     const data = {
       name: nameInput.value,
       description: descriptionInput.value,
-      owner: 1,
+      owner: user_id,
     };
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, data)
@@ -38,7 +40,11 @@ export default function ProjectForm() {
           setOpenProjectSuccessToast(false);
         }, 3000);
         axios
-          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`)
+          .get(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/projects/?owner=${user_id}`
+          )
           .then((res) => {
             dispatch(setProjects(res.data));
           });

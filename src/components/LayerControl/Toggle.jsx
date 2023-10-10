@@ -1,72 +1,54 @@
 import PropTypes from "prop-types";
 import "./Toggle.scss";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useState } from "react";
+import { Typography } from "@mui/material";
+
 // import axios from "axios";
 
-function Toggle({ layer, map, visible, onVisible, style, trueIcon }) {
+function Toggle({ layer, expanded, onExpanded, component }) {
+  const [transform, setTransform] = useState("rotate(-90deg)");
   const handleClick = () => {
-    console.log(layer, "layer");
-    console.log(style, "style");
-    console.log(map, "map");
-    onVisible(!visible);
+    if (component == "expand" && !expanded) {
+      setTransform("rotate(360deg)");
+    } else {
+      setTransform("rotate(-90deg)");
+    }
+    onExpanded(!expanded);
   };
 
   return (
     <a className="toggle" onClick={handleClick}>
-      {trueIcon === "fa fa-caret-right" || trueIcon === "fa fa-caret-down" ? (
-        <button>E</button>
-      ) : (
-        <input type="checkbox"></input>
-      )}
+      {component === "expand" ? (
+        <div className="layer-row">
+          <ExpandMoreIcon
+            style={{
+              transform: transform,
+              fontSize: "20px",
+              backgroundColor: "#1876D1",
+            }}
+          />
+          <Typography>{layer.name}</Typography>
+        </div>
+      ) : null}
     </a>
   );
 }
 
-Toggle.defaultProps = {
-  trueIcon: "far fa-check-square",
-  falseIcon: "far fa-square",
-};
-
 Toggle.propTypes = {
-  trueIcon: PropTypes.string,
-  falseIcon: PropTypes.string,
-  style: PropTypes.object,
   layer: PropTypes.object,
-  map: PropTypes.object,
-  visible: PropTypes.bool,
-  onVisible: PropTypes.func,
+  expanded: PropTypes.bool,
+  onExpanded: PropTypes.func,
+  component: PropTypes.string,
 };
 
-function Checkbox({ layer, map, visible, onVisible, style }) {
+function ExpandButton({ layer, expanded, onExpanded }) {
   return (
     <Toggle
       layer={layer}
-      map={map}
-      visible={visible}
-      onVisible={onVisible}
-      style={style}
-      trueIcon="far fa-check-square"
-      falseIcon="far fa-square"
-    />
-  );
-}
-
-Checkbox.propTypes = {
-  trueIcon: PropTypes.string,
-  falseIcon: PropTypes.string,
-  style: PropTypes.object,
-  layer: PropTypes.object,
-  map: PropTypes.object,
-  visible: PropTypes.bool,
-  onVisible: PropTypes.func,
-};
-
-function ExpandButton({ expanded, onExpanded }) {
-  return (
-    <Toggle
-      visible={expanded}
-      onVisible={onExpanded}
-      trueIcon="fa fa-caret-down"
-      falseIcon="fa fa-caret-right"
+      component="expand"
+      expanded={expanded}
+      onExpanded={onExpanded}
     />
   );
 }
@@ -74,8 +56,7 @@ function ExpandButton({ expanded, onExpanded }) {
 ExpandButton.propTypes = {
   expanded: PropTypes.bool,
   onExpanded: PropTypes.func,
-  trueIcon: PropTypes.string,
-  falseIcon: PropTypes.string,
+  layer: PropTypes.object,
 };
 
-export { Checkbox, ExpandButton };
+export { ExpandButton };

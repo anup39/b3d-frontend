@@ -2,30 +2,8 @@
     .layers-control-layer {
         clear: both;
 
-        .layer-label {
-            width: auto;
-            position: relative;
-            top: 1px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            display: block;
-            text-align: left;
-            padding-left: 4px;
-            margin-left: 1px;
-            height: 22px;
-            line-height: 22px;
-            padding-top: 1px;
-        }
-
         .layer-expanded {
             clear: both;
-        }
-
-        select,
-        input {
-            height: auto;
-            padding: 4px;
         }
 
         label {
@@ -72,11 +50,11 @@
         }
 
         &.sub-category {
-            margin-left: 12px;
+            margin-left: 19px;
         }
 
         &.category {
-            margin-left: 20px;
+            margin-left: 40px;
         }
 
     }

@@ -13,14 +13,19 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setToken, setUserId, setUserName } from "../../reducers/Auth";
 
 const pages = ["Projects", "Classification", "About", "Contact"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Appbar() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const username = useSelector((state) => state.auth.username);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -51,7 +56,17 @@ function Appbar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (event) => {
+    if (event.target.innerHTML === "Logout") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user_id");
+      localStorage.removeItem("username");
+      dispatch(setToken(""));
+      dispatch(setUserId(""));
+      dispatch(setUserName(""));
+      navigate("/");
+      window.location.reload(true);
+    }
     setAnchorElUser(null);
   };
 
@@ -144,6 +159,7 @@ function Appbar() {
               </Button>
             ))}
           </Box>
+          <Typography>{username}</Typography>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

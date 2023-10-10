@@ -4,4 +4,14 @@
     &:hover {
         background-color: inherit !important;
     }
+
+    .layer-row {
+        display: flex;
+        column-gap: 10px;
+        margin-top: 10px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
 }

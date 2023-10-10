@@ -1,0 +1,2 @@
+1) only invited user can login, admin can create only user
+2) uploading tif

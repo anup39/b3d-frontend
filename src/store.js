@@ -6,6 +6,8 @@ import StandardCategory from "./reducers/StandardCategory";
 import SubCategory from "./reducers/SubCategory";
 import Category from "./reducers/Category";
 import CategoryStyle from "./reducers/CategoryStyle";
+import MapCategories from "./reducers/MapCategories";
+import DrawnPolygon from "./reducers/DrawnPolygon";
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +18,7 @@ export const store = configureStore({
     subCategory: SubCategory,
     category: Category,
     categoryStyle: CategoryStyle,
+    mapCategories: MapCategories,
+    drawnPolygon: DrawnPolygon,
   },
 });

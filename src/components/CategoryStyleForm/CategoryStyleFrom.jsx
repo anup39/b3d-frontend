@@ -42,7 +42,6 @@ export default function CategoryStyleForm() {
         stroke: selectedStrokeColor,
         stroke_width: strokeWidthInput.value,
         category: selectedCategoryId, // Use the selected category ID
-        owner: 1,
       };
       axios
         .post(

@@ -1,25 +1,25 @@
 import ReactDOM from "react-dom/client";
 import LayersControlButton from "./LayersControlButton";
-import { categories } from "./categories";
+import { store } from "../../store";
+import { Provider } from "react-redux";
 
 export default class LayersControl {
   onAdd(map) {
     this._map = map;
     this._container = document.createElement("div");
     this._container.className = "maplibregl-ctrl";
-
-    ReactDOM.createRoot(this._container).render(
-      <LayersControlButton
-        map={this._map}
-        categories_measuring={categories.categories_measuring}
-        sub_categories={categories.sub_categories}
-        standard_categories={categories.standard_categories}
-        project_name="Project One"
-        project_id={1}
-      />
-    );
+    this._project_id = 1;
 
     return this._container;
+  }
+
+  updateProject(project_id) {
+    this._project_id = project_id;
+    ReactDOM.createRoot(this._container).render(
+      <Provider store={store}>
+        <LayersControlButton map={this._map} />
+      </Provider>
+    );
   }
 
   onRemove() {
