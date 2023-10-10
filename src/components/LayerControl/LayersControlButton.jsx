@@ -7,7 +7,7 @@ import LayersIcon from "@mui/icons-material/Layers";
 import { useSelector } from "react-redux";
 import { Button } from "@mui/material";
 
-export default function LayersControlButton({ map, project_id }) {
+export default function LayersControlButton({ map }) {
   const [showPanel, setShowPanel] = useState(false);
   const categories_measuring = useSelector(
     (state) => state.mapCategories.categories
@@ -46,12 +46,10 @@ export default function LayersControlButton({ map, project_id }) {
       </IconButton>
       <LayersControlPanel
         map={map}
-        project_id={project_id}
         onClose={handleClose}
         categories_measuring={categories_measuring}
         sub_categories={sub_categories}
         standard_categories={standard_categories}
-        project_name={project_name}
       />
     </div>
   );
@@ -59,5 +57,4 @@ export default function LayersControlButton({ map, project_id }) {
 
 LayersControlButton.propTypes = {
   map: PropTypes.object.isRequired,
-  project_id: PropTypes.string,
 };

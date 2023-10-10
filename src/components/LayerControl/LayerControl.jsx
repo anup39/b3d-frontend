@@ -17,7 +17,7 @@ export default class LayersControl {
     this._project_id = project_id;
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        <LayersControlButton map={this._map} project_id={this._project_id} />
+        <LayersControlButton map={this._map} />
       </Provider>
     );
   }

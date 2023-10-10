@@ -26,9 +26,6 @@ function LayersControlLayerSubCategory({
               setExpanded(value);
             }}
           />
-          {/* <a title={layer.name} className="layer-label">
-            {layer.name}
-          </a> */}
         </>
       </div>
 

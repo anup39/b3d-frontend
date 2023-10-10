@@ -1,7 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import "./LayersControlLayer.scss";
-import { Checkbox } from "./Toggle";
 import { ExpandButton } from "./Toggle";
 import LayersControlLayerSubCategory from "./LayersControlLayerSubCategory";
 
@@ -11,18 +10,12 @@ function LayersControlLayerStandard({
   layer,
   sub_categories,
   categories_measuring,
-  style,
 }) {
-  const [visible, setVisible] = useState(false);
   const [expanded_, setExpanded] = useState(expanded);
 
   const filtered = sub_categories.filter(
     (obj) => obj.standard_category === layer.id
   );
-
-  const onVisible = (value) => {
-    setVisible(value);
-  };
 
   const onExpanded = (value) => {
     setExpanded(value);
@@ -31,24 +24,11 @@ function LayersControlLayerStandard({
   return (
     <div className="layers-control-layer ">
       <>
-        {layer.name === "All" ? (
-          <Checkbox
-            layer={layer}
-            map={map}
-            visible={visible}
-            onVisible={onVisible}
-            style={style[0]}
-          />
-        ) : (
-          <ExpandButton
-            layer={layer}
-            expanded={expanded_}
-            onExpanded={onExpanded}
-          />
-        )}
-        {/* <a title={layer.name} className="layer-label">
-          {layer.name}
-        </a> */}
+        <ExpandButton
+          layer={layer}
+          expanded={expanded_}
+          onExpanded={onExpanded}
+        />
       </>
 
       {expanded_
@@ -79,7 +59,6 @@ LayersControlLayerStandard.propTypes = {
   map: PropTypes.object.isRequired,
   sub_categories: PropTypes.array,
   categories_measuring: PropTypes.array,
-  style: PropTypes.array,
 };
 
 export default LayersControlLayerStandard;

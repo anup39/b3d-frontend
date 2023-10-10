@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Checkbox } from "./Toggle";
 import axios from "axios";
 import PropTypes from "prop-types";
 
@@ -40,7 +39,7 @@ function LayersControlLayerCategory({ map, layer }) {
   return (
     <div className="layers-control-layer category">
       <div>
-        <Checkbox
+        {/* <Checkbox
           visible={visible}
           onVisible={(value) => {
             setVisible(value);
@@ -48,10 +47,7 @@ function LayersControlLayerCategory({ map, layer }) {
           map={map}
           layer={layer}
           style={style}
-        />
-        {/* <a title={layer.name} className="layer-label">
-          {layer.name}
-        </a> */}
+        /> */}
         <input
           style={{ marginTop: "35px" }}
           type="range"

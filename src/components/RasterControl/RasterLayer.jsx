@@ -24,8 +24,6 @@ export default function RasterLayer({ map, project_id }) {
     setChecked(newChecked);
 
     if (newChecked.length === 2) {
-      console.log("checked");
-
       axios
         .get(
           `${
@@ -63,8 +61,6 @@ export default function RasterLayer({ map, project_id }) {
         maxzoom: 24,
       });
     } else {
-      console.log("uncheked");
-      console.log(ortho);
       const style = map.getStyle();
       const existingLayer = style.layers.find(
         (layer) => layer.id === `${ortho.uuid}-layer`
