@@ -1,2 +1,43 @@
-1) only invited user can login, admin can create only user
-2) uploading tif
+# Octobor 10 
+
+Hello Carsten, 
+
+Here is the link to the web application : 
+
+http://137.135.165.161/
+
+You can login with this credentials :
+
+username  : super_admin
+password : admin
+
+OR you can create a new User form here http://137.135.165.161/register
+
+Things i was working from our last meeting on Octobor 6 , Friday :
+1) Fixed issues where we were unable to see the category geometry in the Map
+2) Issues when unselecting categories for specific project http://137.135.165.161/manage-classes/
+3) Showing list of Geotiffs uploaded to particular project (in DashBoard)
+4) Uploading progress bar for Geotiffs
+5) Smooth Performance  for Geotiffs rendering (still working this week)
+6) Now one project have multiple Geotiffs but it should be uploaded one by one
+7) Changing opacity of geometry in Map
+8) Project deployed to the server (setup)
+
+For uplaoding Geotiff you can test with this file attached below. For Geotiff upload the file must have extension of .tiff
+Only RGB (3 bands , true color ) georefrenced image will work properly. so if you any requirement let me know i will change accordingly . 
+For example if you want 1 band (gray color) to  show im map let me know.
+Also try with some geotiffs and let me know if there is any problem and provide me sample because i have not testes for geotiffs with different projections and  i will test and improve this part this week also.
+
+Things i will do this week from Octobor 10 :
+1) Geotiffs testing with samples (varied projection) and Performance enchancement
+2) categories with able to draw and save for LineString and Point geometry also
+3) Only invited user can login (email invitation)
+4) Different roles : Admin, Editor and view and their functionality as mentioned in PDF version 4 you have shared
+5) Portal:  List or Map view  as mentioned in PDF version 4
+6) And other things mentioned in PDFs
+7) Showing measurings in PDF and Image export
+8) Adding Loader in some part of section so that user know things are processing (enchancement)
+8) 3D will start from next week probably
+
+
+Let me know if you have any changes meanwhile from recent update in server
