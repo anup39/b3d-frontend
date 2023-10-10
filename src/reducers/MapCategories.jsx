@@ -23,6 +23,16 @@ export const MapCategories = createSlice({
     setProjectName: (state, action) => {
       state.project_name = action.payload;
     },
+    updateCheckedById: (state, action) => {
+      console.log(action.payload, "action");
+      const { id, checked } = action.payload;
+      const categoryToUpdate = state.categories.find(
+        (category) => category.id === id
+      );
+      if (categoryToUpdate) {
+        categoryToUpdate.checked = checked;
+      }
+    },
   },
 });
 
@@ -33,6 +43,7 @@ export const {
   setSubCategories,
   setCategories,
   setProjectName,
+  updateCheckedById,
 } = MapCategories.actions;
 
 export default MapCategories.reducer;

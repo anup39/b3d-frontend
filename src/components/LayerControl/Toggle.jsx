@@ -6,15 +6,15 @@ import { Typography } from "@mui/material";
 
 // import axios from "axios";
 
-function Toggle({ layer, visible, onVisible, component }) {
+function Toggle({ layer, expanded, onExpanded, component }) {
   const [transform, setTransform] = useState("rotate(-90deg)");
   const handleClick = () => {
-    if (component == "expand" && !visible) {
+    if (component == "expand" && !expanded) {
       setTransform("rotate(360deg)");
     } else {
       setTransform("rotate(-90deg)");
     }
-    onVisible(!visible);
+    onExpanded(!expanded);
   };
 
   return (
@@ -37,8 +37,8 @@ function Toggle({ layer, visible, onVisible, component }) {
 
 Toggle.propTypes = {
   layer: PropTypes.object,
-  visible: PropTypes.bool,
-  onVisible: PropTypes.func,
+  expanded: PropTypes.bool,
+  onExpanded: PropTypes.func,
   component: PropTypes.string,
 };
 
@@ -47,8 +47,8 @@ function ExpandButton({ layer, expanded, onExpanded }) {
     <Toggle
       layer={layer}
       component="expand"
-      visible={expanded}
-      onVisible={onExpanded}
+      expanded={expanded}
+      onExpanded={onExpanded}
     />
   );
 }
