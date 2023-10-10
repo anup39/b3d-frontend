@@ -8,9 +8,15 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -32,6 +38,9 @@ export default function TransferList({ project_id, component }) {
   const [initialRight, setInitialRight] = useState([]);
   const leftChecked = intersection(checked, finalLeft);
   const rightChecked = intersection(checked, finalRight);
+  const [openCategoryErrorToast, setOpenCategoryErrorToast] = useState(false);
+  const [openCategorySuccessToast, setOpenCategorySuccessToast] =
+    useState(false);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -207,6 +216,38 @@ export default function TransferList({ project_id, component }) {
 
   const customList = (title, items) => (
     <Card sx={{ backgroundColor: "#828282" }}>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={openCategoryErrorToast}
+        autoHideDuration={6000}
+        // onClose={handleClose}
+        message={`Failed to Created ${component}`}
+        // action={action}
+      >
+        <Alert
+          //  onClose={handleClose}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          Failed to Create {component} .
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={openCategorySuccessToast}
+        autoHideDuration={6000}
+        // onClose={handleClose}
+        message={`Sucessfully Created ${component}`}
+        // action={action}
+      >
+        <Alert
+          //  onClose={handleClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Sucessfully Created {component}
+        </Alert>
+      </Snackbar>
       <CardHeader
         sx={{ px: 2, py: 1 }}
         avatar={
@@ -297,7 +338,13 @@ export default function TransferList({ project_id, component }) {
             view_name: item.full_name,
             global_standard_category: item.id,
           };
-          axios.post(`${project_url}/`, data).then(() => {});
+          axios.post(`${project_url}/`, data).then(() => {
+            setOpenCategorySuccessToast(true);
+            setOpenCategoryErrorToast(false);
+            setTimeout(() => {
+              setOpenCategorySuccessToast(false);
+            }, 3000);
+          });
         });
       }
       if (itemsMovedToLeft.length > 0) {
@@ -308,7 +355,22 @@ export default function TransferList({ project_id, component }) {
             )
             .then((res) => {
               const id = res.data[0].id;
-              axios.delete(`${project_url}/${id}/`).then(() => {});
+              axios
+                .delete(`${project_url}/${id}/`)
+                .then(() => {
+                  setOpenCategorySuccessToast(true);
+                  setOpenCategoryErrorToast(false);
+                  setTimeout(() => {
+                    setOpenCategorySuccessToast(false);
+                  }, 3000);
+                })
+                .catch(() => {
+                  setOpenCategoryErrorToast(true);
+                  setOpenCategorySuccessToast(false);
+                  setTimeout(() => {
+                    setOpenCategoryErrorToast(false);
+                  }, 3000);
+                });
             });
         });
       }
@@ -339,7 +401,13 @@ export default function TransferList({ project_id, component }) {
                 is_display: true,
                 view_name: item.full_name,
               };
-              axios.post(`${project_url}/`, data).then(() => {});
+              axios.post(`${project_url}/`, data).then(() => {
+                setOpenCategorySuccessToast(true);
+                setOpenCategoryErrorToast(false);
+                setTimeout(() => {
+                  setOpenCategorySuccessToast(false);
+                }, 3000);
+              });
             });
         });
       }
@@ -351,7 +419,22 @@ export default function TransferList({ project_id, component }) {
             )
             .then((res) => {
               const id = res.data[0].id;
-              axios.delete(`${project_url}/${id}/`).then(() => {});
+              axios
+                .delete(`${project_url}/${id}/`)
+                .then(() => {
+                  setOpenCategorySuccessToast(true);
+                  setOpenCategoryErrorToast(false);
+                  setTimeout(() => {
+                    setOpenCategorySuccessToast(false);
+                  }, 3000);
+                })
+                .catch(() => {
+                  setOpenCategoryErrorToast(true);
+                  setOpenCategorySuccessToast(false);
+                  setTimeout(() => {
+                    setOpenCategoryErrorToast(false);
+                  }, 3000);
+                });
             });
         });
       }
@@ -385,7 +468,13 @@ export default function TransferList({ project_id, component }) {
                 is_display: true,
                 view_name: item.full_name,
               };
-              axios.post(`${project_url}/`, data).then(() => {});
+              axios.post(`${project_url}/`, data).then(() => {
+                setOpenCategorySuccessToast(true);
+                setOpenCategoryErrorToast(false);
+                setTimeout(() => {
+                  setOpenCategorySuccessToast(false);
+                }, 3000);
+              });
             });
         });
       }
@@ -397,7 +486,22 @@ export default function TransferList({ project_id, component }) {
             )
             .then((res) => {
               const id = res.data[0].id;
-              axios.delete(`${project_url}/${id}/`).then(() => {});
+              axios
+                .delete(`${project_url}/${id}/`)
+                .then(() => {
+                  setOpenCategorySuccessToast(true);
+                  setOpenCategoryErrorToast(false);
+                  setTimeout(() => {
+                    setOpenCategorySuccessToast(false);
+                  }, 3000);
+                })
+                .catch(() => {
+                  setOpenCategoryErrorToast(true);
+                  setOpenCategorySuccessToast(false);
+                  setTimeout(() => {
+                    setOpenCategoryErrorToast(false);
+                  }, 3000);
+                });
             });
         });
       }
