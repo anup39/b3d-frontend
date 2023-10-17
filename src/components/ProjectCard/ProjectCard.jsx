@@ -60,7 +60,15 @@ export default function ProjectCard({ id, name, description, created_at }) {
             }/raster-data/?project=${id}`
           )
           .then((res) => {
-            setOrthophotos(res.data);
+            axios
+              .get("http://137.135.165.161:5000/optimize-command")
+              .then(() => {
+                axios
+                  .get("http://137.135.165.161:5000/ingest-command")
+                  .then(() => {
+                    setOrthophotos(res.data);
+                  });
+              });
           });
       })
       .catch((error) => {

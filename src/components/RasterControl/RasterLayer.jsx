@@ -25,17 +25,11 @@ export default function RasterLayer({ map, project_id }) {
 
     if (newChecked.length === 2) {
       axios
-        .get(
-          `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/projects/${project_id}/rasters/${ortho.id}/orthophoto/metadata/`
-        )
+        .get(`http://137.135.165.161:5000/metadata/${ortho.id}/red`)
         .then((res) => {
-          if (res.data.bounds.value) {
-            map.fitBounds([
-              [-107.88857386093723, 38.98669825126662], // southwestern corner of the bounds
-              [-107.8871274949127, 38.98772137388136], // northeastern corner of the bounds
-            ]);
+          if (res.data.bounds) {
+            const bound_box = res.data.bounds;
+            map.fitBounds(bound_box);
           }
         });
 
@@ -44,11 +38,7 @@ export default function RasterLayer({ map, project_id }) {
         // use the tiles option to specify a WMS tile source URL
         // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
         tiles: [
-          `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/projects/${project_id}/rasters/${
-            ortho.id
-          }/orthophoto/tile/{z}/{x}/{y}/`,
+          `http://137.135.165.161:5000/rgb/${ortho.id}/{z}/{x}/{y}.png?r=red&g=green&b=blue&tile_size=[512,512]`,
         ],
         tileSize: 512,
       });
