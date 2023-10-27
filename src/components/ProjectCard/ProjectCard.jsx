@@ -38,6 +38,39 @@ export default function ProjectCard({ id, name, description, created_at }) {
     formData.append("name", file.name); // Add the file name
     formData.append("tif_file", file);
 
+    function checkTaskStatus(taskId, command) {
+      axios
+        .get(`http://137.135.165.161:5005/get_task_status/${taskId}`)
+        .then((res) => {
+          const { status, result, state } = res.data;
+          if (state === "PENDING") {
+            setTimeout(() => checkTaskStatus(taskId, command), 1000);
+          }
+          if (state === "SUCCESS" && command === "optimize") {
+            console.log(state, command);
+            handleIngestTask();
+          }
+        });
+    }
+
+    function handleIngestTask() {
+      axios.get("http://137.135.165.161:5005/ingest-rasters").then((res) => {
+        console.log(res.data, "res data");
+        const taskId = res.data;
+        const component = "ingest";
+        checkTaskStatus(taskId, component);
+      });
+    }
+
+    function handleOptimizeTask() {
+      axios.get("http://137.135.165.161:5005/optimize-rasters").then((res) => {
+        console.log(res.data, "res data");
+        const taskId = res.data;
+        const component = "optimize";
+        checkTaskStatus(taskId, component);
+      });
+    }
+
     axios
       .post(
         `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/`,
@@ -60,15 +93,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
             }/raster-data/?project=${id}`
           )
           .then((res) => {
-            axios
-              .get("http://137.135.165.161:5000/optimize-command")
-              .then(() => {
-                axios
-                  .get("http://137.135.165.161:5000/ingest-command")
-                  .then(() => {
-                    setOrthophotos(res.data);
-                  });
-              });
+            handleOptimizeTask();
           });
       })
       .catch((error) => {
