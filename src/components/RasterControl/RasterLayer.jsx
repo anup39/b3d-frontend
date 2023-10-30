@@ -25,7 +25,7 @@ export default function RasterLayer({ map, project_id }) {
 
     if (newChecked.length === 2) {
       axios
-        .get(`http://137.135.165.161:5000/metadata/${ortho.id}/red`)
+        .get(`http://137.135.165.161:5001/metadata/${ortho.id}/red`)
         .then((res) => {
           if (res.data.bounds) {
             const bound_box = res.data.bounds;
@@ -38,7 +38,7 @@ export default function RasterLayer({ map, project_id }) {
         // use the tiles option to specify a WMS tile source URL
         // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
         tiles: [
-          `http://137.135.165.161:5000/rgb/${ortho.id}/{z}/{x}/{y}.png?r=red&g=green&b=blue&tile_size=[512,512]`,
+          `http://137.135.165.161:5001/rgb/${ortho.id}/{z}/{x}/{y}.png?r=red&g=green&b=blue&tile_size=[512,512]`,
         ],
         tileSize: 512,
       });

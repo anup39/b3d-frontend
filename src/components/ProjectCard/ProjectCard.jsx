@@ -33,42 +33,52 @@ export default function ProjectCard({ id, name, description, created_at }) {
   // const handleUploadRaster = () => {};
   const handleUploadRaster = (acceptedFiles) => {
     const file = acceptedFiles[0];
+    const file_size_mb = (file.size / (1024 * 1024)).toFixed(0);
+
     const formData = new FormData();
     formData.append("project", id); // Add the project ID
     formData.append("name", file.name); // Add the file name
     formData.append("tif_file", file);
+    formData.append("status", "Uploaded");
+    formData.append("file_size", file_size_mb);
 
-    function checkTaskStatus(taskId, command) {
+    // function checkTaskStatus(taskId, command) {
+    //   axios
+    //     .get(`http://137.135.165.161:5005/get_task_status/${taskId}`)
+    //     .then((res) => {
+    //       const { status, result, state } = res.data;
+    //       if (state === "PENDING") {
+    //         setTimeout(() => checkTaskStatus(taskId, command), 1000);
+    //       }
+    //       if (state === "SUCCESS" && command === "optimize") {
+    //         console.log(state, command);
+    //         handleIngestTask();
+    //       }
+    //     });
+    // }
+
+    function handleIngestTask(raster_id) {
       axios
-        .get(`http://137.135.165.161:5005/get_task_status/${taskId}`)
+        .get(`http://137.135.165.161:5005/ingest-rasters/${raster_id}`)
         .then((res) => {
-          const { status, result, state } = res.data;
-          if (state === "PENDING") {
-            setTimeout(() => checkTaskStatus(taskId, command), 1000);
-          }
-          if (state === "SUCCESS" && command === "optimize") {
-            console.log(state, command);
-            handleIngestTask();
-          }
+          console.log(res.data, "res data");
+          // const taskId = res.data;
+          // const component = "ingest";
+          // checkTaskStatus(taskId, component);
         });
     }
 
-    function handleIngestTask() {
-      axios.get("http://137.135.165.161:5005/ingest-rasters").then((res) => {
-        console.log(res.data, "res data");
-        const taskId = res.data;
-        const component = "ingest";
-        checkTaskStatus(taskId, component);
-      });
-    }
-
-    function handleOptimizeTask() {
-      axios.get("http://137.135.165.161:5005/optimize-rasters").then((res) => {
-        console.log(res.data, "res data");
-        const taskId = res.data;
-        const component = "optimize";
-        checkTaskStatus(taskId, component);
-      });
+    function handleOptimizeTask(raster_id) {
+      axios
+        .get(`http://137.135.165.161:5005/optimize-rasters/${raster_id}`)
+        .then((res) => {
+          console.log(res.data, "res data");
+          // const taskId = res.data;
+          // const component = "optimize";
+          // console.log(taskId, component);
+          // checkTaskStatus(taskId, component);
+          handleIngestTask(raster_id);
+        });
     }
 
     axios
@@ -84,8 +94,9 @@ export default function ProjectCard({ id, name, description, created_at }) {
           },
         }
       )
-      .then(() => {
+      .then((res) => {
         setUploadSuccess(true);
+        // handleOptimizeTask(res.data.id);
         axios
           .get(
             `${
@@ -93,7 +104,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
             }/raster-data/?project=${id}`
           )
           .then((res) => {
-            handleOptimizeTask();
+            console.log("Raster file uplaoded : ", res.data);
           });
       })
       .catch((error) => {
