@@ -35,7 +35,7 @@ export default function RasterLayer({ map, project_id }) {
               // use the tiles option to specify a WMS tile source URL
               // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
               tiles: [
-                `${import.meta.env}/tile-async/${
+                `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
                   ortho.id
                 }/{z}/{x}/{y}.png?r=red&g=green&b=blue&tile_size=[512,512]&r_range=[0,255]&g_range=[0,255]&b_range=[0,255]&bounds=[${
                   bounds[0]
