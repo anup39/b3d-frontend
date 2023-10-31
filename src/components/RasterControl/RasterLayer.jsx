@@ -25,35 +25,41 @@ export default function RasterLayer({ map, project_id }) {
 
     if (newChecked.length === 2) {
       axios
-        .get(`http://137.135.165.161:5001/metadata/${ortho.id}/red`)
+        .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${ortho.id}`)
         .then((res) => {
           if (res.data.bounds) {
-            const bound_box = res.data.bounds;
-            map.fitBounds(bound_box);
+            const bounds = res.data.bounds;
+            map.fitBounds(bounds);
+            map.addSource(`${ortho.uuid}-source`, {
+              type: "raster",
+              // use the tiles option to specify a WMS tile source URL
+              // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
+              tiles: [
+                `${import.meta.env}/tile-async/${
+                  ortho.id
+                }/{z}/{x}/{y}.png?r=red&g=green&b=blue&tile_size=[512,512]&r_range=[0,255]&g_range=[0,255]&b_range=[0,255]&bounds=[${
+                  bounds[0]
+                },${bounds[1]},${bounds[2]},${bounds[3]}]`,
+              ],
+              tileSize: 512,
+            });
+
+            map.addLayer({
+              id: `${ortho.uuid}-layer`,
+              type: "raster",
+              source: `${ortho.uuid}-source`,
+              minzoom: 0,
+              maxzoom: 24,
+            });
+            map.moveLayer(
+              `${ortho.uuid}-layer`,
+              "gl-draw-polygon-fill-inactive.cold"
+            );
           }
+        })
+        .catch((err) => {
+          console.log(err);
         });
-
-      map.addSource(`${ortho.uuid}-source`, {
-        type: "raster",
-        // use the tiles option to specify a WMS tile source URL
-        // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
-        tiles: [
-          `http://137.135.165.161:5001/rgb/${ortho.id}/{z}/{x}/{y}.png?r=red&g=green&b=blue&tile_size=[512,512]`,
-        ],
-        tileSize: 512,
-      });
-
-      map.addLayer({
-        id: `${ortho.uuid}-layer`,
-        type: "raster",
-        source: `${ortho.uuid}-source`,
-        minzoom: 0,
-        maxzoom: 24,
-      });
-      map.moveLayer(
-        `${ortho.uuid}-layer`,
-        "gl-draw-polygon-fill-inactive.cold"
-      );
     } else {
       const style = map.getStyle();
       const existingLayer = style.layers.find(

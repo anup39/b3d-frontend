@@ -42,45 +42,6 @@ export default function ProjectCard({ id, name, description, created_at }) {
     formData.append("status", "Uploaded");
     formData.append("file_size", file_size_mb);
 
-    // function checkTaskStatus(taskId, command) {
-    //   axios
-    //     .get(`http://137.135.165.161:5005/get_task_status/${taskId}`)
-    //     .then((res) => {
-    //       const { status, result, state } = res.data;
-    //       if (state === "PENDING") {
-    //         setTimeout(() => checkTaskStatus(taskId, command), 1000);
-    //       }
-    //       if (state === "SUCCESS" && command === "optimize") {
-    //         console.log(state, command);
-    //         handleIngestTask();
-    //       }
-    //     });
-    // }
-
-    function handleIngestTask(raster_id) {
-      axios
-        .get(`http://137.135.165.161:5005/ingest-rasters/${raster_id}`)
-        .then((res) => {
-          console.log(res.data, "res data");
-          // const taskId = res.data;
-          // const component = "ingest";
-          // checkTaskStatus(taskId, component);
-        });
-    }
-
-    function handleOptimizeTask(raster_id) {
-      axios
-        .get(`http://137.135.165.161:5005/optimize-rasters/${raster_id}`)
-        .then((res) => {
-          console.log(res.data, "res data");
-          // const taskId = res.data;
-          // const component = "optimize";
-          // console.log(taskId, component);
-          // checkTaskStatus(taskId, component);
-          handleIngestTask(raster_id);
-        });
-    }
-
     axios
       .post(
         `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/`,
