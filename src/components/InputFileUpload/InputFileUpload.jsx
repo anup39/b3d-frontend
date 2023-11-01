@@ -1,3 +1,4 @@
+import React from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -5,6 +6,15 @@ import { useRef, useState } from "react";
 import { Grid, Typography } from "@mui/material";
 import GeoTIFF, { fromUrl, fromUrls, fromArrayBuffer, fromBlob } from "geotiff";
 import PropTypes from "prop-types";
+import proj4 from "proj4";
+import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
+import epsgDefinitions from "../../maputils/epsgcodes";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -18,11 +28,25 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
+function bytesToMB(bytes) {
+  return (bytes / 1048576).toFixed(2); // Keep two decimal places
+}
+
 export default function InputFileUpload({ onFileUpload }) {
   const fileInputRef = useRef();
   const [fileName, setFileName] = useState("");
+  const [filesize, setFilesize] = useState("");
+  const [projection, setProjection] = useState("");
+  const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
+  const [openrasterErrorMessage, setOpenrasterErrorMessage] = useState("");
 
   const handleFileChange = async (e) => {
+    setOpenrasterErrorToast(false);
+    RemoveSourceAndLayerFromMap(
+      window.mapraster,
+      "geojson-layer",
+      "geojson-source"
+    );
     const file = e.target.files[0];
     if (file && file.type === "image/tiff") {
       const reader = new FileReader();
@@ -30,34 +54,132 @@ export default function InputFileUpload({ onFileUpload }) {
         const arrayBuffer = e.target.result;
         try {
           const tiff = await fromArrayBuffer(arrayBuffer);
-          console.log("Valid GeoTIFF");
           const image = await tiff.getImage();
-          //   console.log(image, "image");
           //   const data = await image.readRasters();
-          //   console.log(data, "data");
           const bbox = image.getBoundingBox();
-          console.log(bbox, "bbox");
+          const geo_Keys = image.geoKeys;
+          console.log(geo_Keys, "geokeys");
+          const source_bbox = {
+            southwest: [bbox[0], bbox[1]], // Replace with actual coordinates
+            northeast: [bbox[2], bbox[3]], // Replace with actual coordinates
+          };
+          const source_epsg = geo_Keys.ProjectedCSTypeGeoKey;
+
+          if (epsgDefinitions.hasOwnProperty(source_epsg)) {
+            console.log(`${source_epsg} exists in epsgDefinitions.`);
+
+            proj4.defs(`EPSG:${source_epsg}`, epsgDefinitions[source_epsg]);
+            proj4.defs("EPSG:4326", epsgDefinitions[4326]);
+
+            const bboxInEPSG4326 = {
+              southwest: proj4(
+                `EPSG:${source_epsg}`,
+                "EPSG:4326",
+                source_bbox.southwest
+              ),
+              northeast: proj4(
+                `EPSG:${source_epsg}`,
+                "EPSG:4326",
+                source_bbox.northeast
+              ),
+            };
+
+            console.log(bboxInEPSG4326);
+
+            const bbox_reprojected = [
+              bboxInEPSG4326.northeast[0],
+              bboxInEPSG4326.northeast[1],
+              bboxInEPSG4326.southwest[0],
+              bboxInEPSG4326.southwest[1],
+            ];
+
+            // Create a GeoJSON polygon feature
+            const geoJSONPolygon = {
+              type: "Feature",
+              geometry: {
+                type: "Polygon",
+                coordinates: [
+                  [
+                    [bbox_reprojected[0], bbox_reprojected[1]],
+                    [bbox_reprojected[2], bbox_reprojected[1]],
+                    [bbox_reprojected[2], bbox_reprojected[3]],
+                    [bbox_reprojected[0], bbox_reprojected[3]],
+                    [bbox_reprojected[0], bbox_reprojected[1]],
+                  ],
+                ],
+              },
+              properties: {},
+            };
+            window.mapraster.addSource("geojson-source", {
+              type: "geojson",
+              data: geoJSONPolygon,
+            });
+
+            window.mapraster.addLayer({
+              id: "geojson-layer",
+              type: "line",
+              source: "geojson-source",
+              layout: {},
+              paint: {
+                "line-color": "red",
+                "line-opacity": 1,
+              },
+            });
+
+            window.mapraster.fitBounds(bbox_reprojected);
+          } else {
+            setOpenrasterErrorToast(true);
+            setOpenrasterErrorMessage(`${source_epsg} cannot be uploaded.`);
+          }
 
           setFileName(file.name);
-
-          console.log(file, "file");
+          const file_size = bytesToMB(file.size);
+          setFilesize(file_size + " " + "MB");
+          setProjection(`EPSG:${source_epsg}`);
 
           if (onFileUpload) {
             onFileUpload(file);
           }
         } catch (error) {
-          console.error("Not a valid GeoTIFF:", error);
-          alert("Please select a valid GeoTIFF file.");
+          setOpenrasterErrorToast(true);
+          setOpenrasterErrorMessage("Please select a valid GeoTIFF file.");
         }
       };
       reader.readAsArrayBuffer(file);
     } else {
-      alert("Please select a TIFF file.");
+      setOpenrasterErrorToast(true);
+      setOpenrasterErrorMessage("Please select a tiff file.");
     }
   };
 
   return (
     <div>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={openrasterErrorToast}
+        autoHideDuration={3000}
+        // onClose={handleClose}
+        message="Failed to Create raster"
+        // action={action}
+      >
+        <Alert
+          //  onClose={handleClose}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {openrasterErrorMessage}
+        </Alert>
+      </Snackbar>
+      <Grid item xs={12}>
+        <Typography variant="body2" gutterBottom>
+          <b>Supported EPSG</b> : 4326, 32613 , 25832
+        </Typography>
+        <p style={{ color: "red" }}>Contact for other projections.</p>
+        <Typography variant="body2" gutterBottom>
+          <b>Acceptable Files</b> : .tif , .tiff
+        </Typography>
+        <p style={{ color: "red" }}>True color (RBG) Band</p>
+      </Grid>
       <Button
         component="label"
         variant="contained"
@@ -74,7 +196,13 @@ export default function InputFileUpload({ onFileUpload }) {
       </Button>
       <Grid item xs={12}>
         <Typography variant="body2" gutterBottom>
-          {fileName}
+          <b>FileName</b> : {fileName}
+        </Typography>
+        <Typography variant="body2" gutterBottom>
+          <b>FileSize</b> : {filesize}
+        </Typography>
+        <Typography variant="body2" gutterBottom>
+          <b>Projection</b>: {projection}
         </Typography>
       </Grid>
     </div>

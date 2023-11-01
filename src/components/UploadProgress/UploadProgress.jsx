@@ -9,7 +9,6 @@ export default function UploadProgress({
   onProgressForm,
   progress,
 }) {
-  console.log(isProgressFormOpen, "on progress form");
   return (
     <>
       {isProgressFormOpen && (

@@ -2,7 +2,7 @@ import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import MuiAlert from "@mui/material/Alert";
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
@@ -10,12 +10,14 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setRasters } from "../../reducers/Raster";
 import InputFileUpload from "../InputFileUpload/InputFileUpload";
+import maplibregl from "maplibre-gl";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 export default function RasterForm({ onProgressForm, onProgressValue }) {
+  const mapContainerRaster = useRef();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
   const [openrasterSuccessToast, setOpenrasterSuccessToast] = useState(false);
@@ -49,6 +51,25 @@ export default function RasterForm({ onProgressForm, onProgressValue }) {
       });
     }
   };
+
+  useEffect(() => {
+    if (isFormOpen) {
+      const map = new maplibregl.Map({
+        container: mapContainerRaster.current,
+        style: `https://api.maptiler.com/maps/satellite/style.json?key=${
+          import.meta.env.VITE_MAPTILER_TOKEN
+        }`,
+        center: [103.8574, 2.2739],
+        zoom: 10,
+      });
+
+      window.mapraster = map;
+
+      return () => {
+        map.remove();
+      };
+    }
+  }, [isFormOpen]);
 
   return (
     <>
@@ -135,6 +156,14 @@ export default function RasterForm({ onProgressForm, onProgressValue }) {
               </Grid>
               <Grid item xs={12}>
                 <InputFileUpload onFileUpload={handleFileUpload} />
+                <Grid item>
+                  <div
+                    style={{ width: "100%", height: "300px" }}
+                    ref={mapContainerRaster}
+                    id="mapraster"
+                    className="mapraster"
+                  />
+                </Grid>
               </Grid>
               <Grid item xs={12}>
                 <Button

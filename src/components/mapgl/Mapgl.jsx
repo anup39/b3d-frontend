@@ -1,7 +1,7 @@
 /// app.js
 import DeckGL from "@deck.gl/react";
 import { LineLayer } from "@deck.gl/layers";
-import Map from "react-map-gl/maplibre";
+import { Map } from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
 import PropTypes from "prop-types";
 import { BitmapLayer } from "@deck.gl/layers";
@@ -55,14 +55,22 @@ export default function Mapgl() {
   });
 
   return (
-    <DeckGL initialViewState={INITIAL_VIEW_STATE} controller={true} layers={[]}>
+    <div style={{ width: "100%", height: "300px" }}>
+      {/* <DeckGL
+        initialViewState={INITIAL_VIEW_STATE}
+        controller={true}
+        layers={[]}
+      > */}
+
       <Map
         mapLib={maplibregl}
         mapStyle={MAP_STYLE}
         reuseMaps
         preventStyleDiffing={true}
       />
-    </DeckGL>
+
+      {/* </DeckGL> */}
+    </div>
   );
 }
 
