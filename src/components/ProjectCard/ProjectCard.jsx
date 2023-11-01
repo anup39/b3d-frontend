@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Dropzone from "react-dropzone";
+import LinearProgressLabel from "../ProgressBar/LinearProgressLabel";
 
 const Img = styled("img")({
   margin: "auto",
@@ -57,7 +58,6 @@ export default function ProjectCard({ id, name, description, created_at }) {
       )
       .then((res) => {
         setUploadSuccess(true);
-        // handleOptimizeTask(res.data.id);
         axios
           .get(
             `${
@@ -147,18 +147,10 @@ export default function ProjectCard({ id, name, description, created_at }) {
                 Orthophotos
               </Button>
             </Tooltip>
-            {orthophotos.length > 0
-              ? orthophotos.map((ortho) => (
-                  <Typography
-                    key={ortho.id}
-                    gutterBottom
-                    variant="subtitle1"
-                    component="div"
-                  >
-                    * {ortho.name}
-                  </Typography>
-                ))
-              : null}
+
+            <Typography gutterBottom variant="subtitle1" component="div">
+              Total Orthophotos: {orthophotos.length}
+            </Typography>
           </Grid>
 
           <Grid item>
@@ -176,10 +168,22 @@ export default function ProjectCard({ id, name, description, created_at }) {
                 </div>
               )}
             </Dropzone>
-            {uploadProgress > 0 && (
-              <div>Upload Progress: {uploadProgress}%</div>
-            )}
-            {uploadSuccess && <div>File uploaded successfully!</div>}
+            {/* {uploadProgress > 0 && ( */}
+            {/* <LinearProgressLabel value={uploadProgress}></LinearProgressLabel> */}
+            {/* )} */}
+            {/* {uploadSuccess && <div>File uploaded successfully!</div>} */}
+
+            <Button
+              sx={{ marginTop: "25px" }}
+              variant="contained"
+              color="success"
+              id="orthoButton"
+              onClick={() => {
+                navigate(`/orthophotos/${id}`);
+              }}
+            >
+              Orthophotos
+            </Button>
           </Grid>
         </Grid>
       </Grid>
