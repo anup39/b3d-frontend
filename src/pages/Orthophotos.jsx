@@ -8,11 +8,23 @@ import { Button, Tooltip } from "@mui/material";
 import RasterCard from "../components/RasterCard/RasterCard";
 import { useSelector } from "react-redux";
 import RasterForm from "../components/RasterForm/RasterForm";
+import UploadProgress from "../components/UploadProgress/UploadProgress";
 
 export default function Orthophotos() {
   const { id } = useParams();
   const [projectName, setProjectName] = useState("");
+  const [isProgressFormOpen, setIsProgressFormOpen] = useState(false);
+  const [progress, setProgress] = useState(0);
+
   //   const rasters = useSelector((state) => state.raster.rasters);
+
+  const onProgressForm = (value) => {
+    setIsProgressFormOpen(value);
+  };
+
+  const onProgressValue = (value) => {
+    setProgress(value);
+  };
 
   const [rasters, setRasters] = useState([]);
 
@@ -62,7 +74,15 @@ export default function Orthophotos() {
         </Tooltip>
       </Box>
 
-      <RasterForm />
+      <RasterForm
+        onProgressForm={onProgressForm}
+        onProgressValue={onProgressValue}
+      />
+      <UploadProgress
+        isProgressFormOpen={isProgressFormOpen}
+        onProgressForm={onProgressForm}
+        progress={progress}
+      />
 
       <div>
         {rasters

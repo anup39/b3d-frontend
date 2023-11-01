@@ -15,7 +15,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function RasterForm() {
+export default function RasterForm({ onProgressForm, onProgressValue }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
   const [openrasterSuccessToast, setOpenrasterSuccessToast] = useState(false);
@@ -39,6 +39,15 @@ export default function RasterForm() {
     const nameInput = document.getElementById("name");
     console.log(nameInput.value, "name input");
     console.log(uploadedFile, "uploaded file ");
+    closeForm();
+    if (onProgressForm) {
+      onProgressForm(true);
+      [10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map((item) => {
+        setTimeout(() => {
+          onProgressValue(item);
+        }, 10000);
+      });
+    }
   };
 
   return (
