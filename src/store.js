@@ -8,12 +8,14 @@ import Category from "./reducers/Category";
 import CategoryStyle from "./reducers/CategoryStyle";
 import MapCategories from "./reducers/MapCategories";
 import DrawnPolygon from "./reducers/DrawnPolygon";
+import Raster from "./reducers/Raster";
 
 export const store = configureStore({
   reducer: {
     displaySettings: DisplaySettings,
     auth: Auth,
     project: Project,
+    raster: Raster,
     standardCategory: StandardCategory,
     subCategory: SubCategory,
     category: Category,

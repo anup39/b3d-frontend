@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { Button } from "@mui/material";
 
 export default function LayersControlButton({ map }) {
-  const [showPanel, setShowPanel] = useState(false);
+  const [showPanel, setShowPanel] = useState(true);
   const categories_measuring = useSelector(
     (state) => state.mapCategories.categories
   );

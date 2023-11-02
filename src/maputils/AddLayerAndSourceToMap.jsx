@@ -35,7 +35,7 @@ const AddLayerAndSourceToMap = ({
       })
       .catch(function (error) {
         // handle error
-        console.log(error, "Fit bounds didnot work due to error");
+        // console.log(error, "Fit bounds didnot work due to error");
       });
   }
 
