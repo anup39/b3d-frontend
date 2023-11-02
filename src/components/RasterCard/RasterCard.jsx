@@ -15,6 +15,10 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
+function bytesToMB(bytes) {
+  return (bytes / 1048576).toFixed(2); // Keep two decimal places
+}
+
 export default function RasterCard({
   id,
   name,
@@ -23,6 +27,9 @@ export default function RasterCard({
   progress,
   created_on,
   task_id,
+  file_name,
+  projection,
+  thubnail,
 }) {
   const navigate = useNavigate();
 
@@ -48,34 +55,39 @@ export default function RasterCard({
       <Grid container spacing={2}>
         <Grid item>
           <ButtonBase sx={{ width: 128, height: 128 }}>
-            <Img alt="complex" src="/raster_sample.png" />
+            <Img alt="complex" src={thubnail} />
           </ButtonBase>
         </Grid>
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {name}
+                <b>Name </b>: {name}
+              </Typography>
+              <Typography gutterBottom variant="subtitle1" component="div">
+                <b>File Name</b> : {file_name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Created On: {created_on}
+                <b>Projection </b>: {projection}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                File size: {file_size} MB
+                <b>File size </b>: {bytesToMB(file_size)} MB
               </Typography>
-
               <Typography variant="body2" color="text.secondary">
-                Task ID: {task_id}
+                <b>Created On </b>: {created_on}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <b>Task ID</b>: {task_id}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                Status: {status}
+                <b>Status </b>: {status}
               </Typography>
               <LinearProgressLabel value={progress}></LinearProgressLabel>
             </Grid>
             <Grid item xs container direction="row" spacing={2}>
               <Grid item>
                 <Button
-                  onClick={handleDelete}
+                  // onClick={handleDelete}
                   variant="contained"
                   color="error"
                 >
@@ -84,7 +96,7 @@ export default function RasterCard({
               </Grid>
               <Grid item>
                 <Button
-                  onClick={handleReprocess}
+                  // onClick={handleReprocess}
                   variant="contained"
                   color="success"
                 >
@@ -107,4 +119,7 @@ RasterCard.propTypes = {
   progress: PropTypes.number,
   created_on: PropTypes.string,
   task_id: PropTypes.string,
+  file_name: PropTypes.string,
+  projection: PropTypes.string,
+  thubnail: PropTypes.string,
 };

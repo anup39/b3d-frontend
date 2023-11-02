@@ -20,8 +20,9 @@ export default function RasterForm({
   project_id,
   onProgressForm,
   onProgressValue,
-  onSetRasters,
+  // onSetRasters,
 }) {
+  // console.log("Form Reloaded");
   const mapContainerRaster = useRef();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
@@ -79,14 +80,14 @@ export default function RasterForm({
 
     const blob_ = createImagePNG(image);
 
-    console.log("project", project_id);
-    console.log("name", nameInput.value);
-    console.log("status", "Uploaded");
-    console.log("file_size", uploadedFile.size);
-    console.log("projection", projection);
-    console.log("tif_file", uploadedFile);
-    console.log("file_name", fileName);
-    console.log(blob_, "image");
+    // console.log("project", project_id);
+    // console.log("name", nameInput.value);
+    // console.log("status", "Uploaded");
+    // console.log("file_size", uploadedFile.size);
+    // console.log("projection", projection);
+    // console.log("tif_file", uploadedFile);
+    // console.log("file_name", fileName);
+    // console.log(blob_, "image");
 
     const formData = new FormData();
     formData.append("project", project_id);
@@ -127,8 +128,9 @@ export default function RasterForm({
             }/raster-data/?project=${project_id}`
           )
           .then((res) => {
-            onSetRasters(res.data);
-            console.log("Raster file uplaoded : ", res.data);
+            // onSetRasters(res.data);
+            window.location.reload();
+            // console.log("Raster file uplaoded : ", res.data);
           });
       })
       .catch((error) => {

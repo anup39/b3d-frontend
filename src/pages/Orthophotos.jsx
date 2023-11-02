@@ -4,16 +4,15 @@ import axios from "axios";
 import AppBar from "../components/AppBar/AppBar";
 import Box from "@mui/material/Box";
 import { Button, Tooltip } from "@mui/material";
-import RasterCard from "../components/RasterCard/RasterCard";
 import RasterForm from "../components/RasterForm/RasterForm";
 import UploadProgress from "../components/UploadProgress/UploadProgress";
+import RasterContainer from "../components/RasterContainer/RasterContainer";
 
 export default function Orthophotos() {
   const { id } = useParams();
   const [projectName, setProjectName] = useState("");
   const [isProgressFormOpen, setIsProgressFormOpen] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [rasters, setRasters] = useState([]);
 
   const onProgressForm = (value) => {
     setIsProgressFormOpen(value);
@@ -23,9 +22,9 @@ export default function Orthophotos() {
     setProgress(value);
   };
 
-  const onSetRasters = (value) => {
-    setRasters(value);
-  };
+  // const onSetRasters = (value) => {
+  //   setRasters(value);
+  // };
 
   useEffect(() => {
     axios
@@ -33,28 +32,6 @@ export default function Orthophotos() {
       .then((res) => {
         setProjectName(res.data.name);
       });
-  }, [id]);
-
-  const fetchData = (id) => {
-    axios
-      .get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=${id}`
-      )
-      .then((res) => {
-        setRasters(res.data);
-      });
-  };
-
-  useEffect(() => {
-    fetchData(id);
-
-    // const interval = setInterval(() => {
-    //   fetchData(id);
-    // }, 5000);
-
-    // return () => {
-    //   clearInterval(interval);
-    // };
   }, [id]);
 
   return (
@@ -89,7 +66,7 @@ export default function Orthophotos() {
         project_id={id}
         onProgressForm={onProgressForm}
         onProgressValue={onProgressValue}
-        onSetRasters={onSetRasters}
+        // onSetRasters={onSetRasters}
       />
       <UploadProgress
         isProgressFormOpen={isProgressFormOpen}
@@ -97,22 +74,7 @@ export default function Orthophotos() {
         progress={progress}
       />
 
-      <div>
-        {rasters
-          ? rasters.map((raster) => (
-              <RasterCard
-                key={raster.id}
-                id={raster.id}
-                name={raster.name}
-                status={raster.status}
-                file_size={raster.file_size}
-                progress={raster.progress}
-                created_on={raster.created_on}
-                task_id={raster.task_id}
-              />
-            ))
-          : null}
-      </div>
+      <RasterContainer id={id}></RasterContainer>
     </>
   );
 }

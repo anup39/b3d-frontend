@@ -1,14 +1,15 @@
 import Grid from "@mui/material/Grid";
-import { useState } from "react";
 import LinearProgressLabel from "../ProgressBar/LinearProgressLabel";
 import { Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import PropTypes from "prop-types";
 
 export default function UploadProgress({
   isProgressFormOpen,
   onProgressForm,
   progress,
 }) {
+  // console.log("progress reloaded");
   return (
     <>
       {isProgressFormOpen && (
@@ -38,7 +39,7 @@ export default function UploadProgress({
           >
             <Grid item xs={12}>
               <Typography variant="body2" gutterBottom>
-                Progress:
+                Uploading ... Please Wait:
               </Typography>
             </Grid>
             <LinearProgressLabel value={progress}></LinearProgressLabel>
@@ -62,3 +63,9 @@ export default function UploadProgress({
     </>
   );
 }
+
+UploadProgress.propTypes = {
+  isProgressFormOpen: PropTypes.bool,
+  progress: PropTypes.number,
+  onProgressForm: PropTypes.func,
+};

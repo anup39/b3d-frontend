@@ -30,7 +30,7 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 function bytesToMB(bytes) {
-  return (bytes / 1048576).toFixed(2); // Keep two decimal places
+  return (bytes / 1048576).toFixed(2);
 }
 
 export default function InputFileUpload({
@@ -46,6 +46,7 @@ export default function InputFileUpload({
   image,
   loaded,
 }) {
+  // console.log("input file reloaded");
   const fileInputRef = useRef();
   const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
   const [openrasterErrorMessage, setOpenrasterErrorMessage] = useState("");
@@ -80,7 +81,7 @@ export default function InputFileUpload({
           //   const data = await image.readRasters();
           const bbox = image_raster.getBoundingBox();
           const geo_Keys = image_raster.geoKeys;
-          console.log(geo_Keys, "geokeys");
+          // console.log(geo_Keys, "geokeys");
           const source_bbox = {
             southwest: [bbox[0], bbox[1]], // Replace with actual coordinates
             northeast: [bbox[2], bbox[3]], // Replace with actual coordinates
