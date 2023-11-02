@@ -37,14 +37,17 @@ export default function RasterContainer({ id }) {
 
   return (
     <div>
-      <Button
-        style={{ left: "50%" }}
-        onClick={handleOpenMap}
-        variant="contained"
-        color="success"
-      >
-        Open Map
-      </Button>
+      {rasters.length > 0 ? (
+        <Button
+          style={{ left: "50%" }}
+          onClick={handleOpenMap}
+          variant="contained"
+          color="success"
+        >
+          Open Map
+        </Button>
+      ) : null}
+
       {rasters
         ? rasters.map((raster) => (
             <RasterCard
