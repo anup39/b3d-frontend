@@ -28,7 +28,7 @@ export default function RasterContainer({ id }) {
 
     const interval = setInterval(() => {
       fetchData(id);
-    }, 45000);
+    }, 10000);
 
     return () => {
       clearInterval(interval);

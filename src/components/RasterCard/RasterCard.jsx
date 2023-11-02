@@ -54,7 +54,7 @@ export default function RasterCard({
     >
       <Grid container spacing={2}>
         <Grid item>
-          <ButtonBase sx={{ width: 128, height: 128 }}>
+          <ButtonBase sx={{ width: 300, height: 200 }}>
             <Img alt="complex" src={thubnail} />
           </ButtonBase>
         </Grid>
