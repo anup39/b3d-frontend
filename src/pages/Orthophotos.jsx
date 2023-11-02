@@ -2,11 +2,9 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AppBar from "../components/AppBar/AppBar";
-import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import { Button, Tooltip } from "@mui/material";
 import RasterCard from "../components/RasterCard/RasterCard";
-import { useSelector } from "react-redux";
 import RasterForm from "../components/RasterForm/RasterForm";
 import UploadProgress from "../components/UploadProgress/UploadProgress";
 
@@ -16,7 +14,6 @@ export default function Orthophotos() {
   const [isProgressFormOpen, setIsProgressFormOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [rasters, setRasters] = useState([]);
-  //   const rasters = useSelector((state) => state.raster.rasters);
 
   const onProgressForm = (value) => {
     setIsProgressFormOpen(value);
@@ -34,7 +31,7 @@ export default function Orthophotos() {
       });
   }, [id]);
 
-  useEffect(() => {
+  const fetchData = (id) => {
     axios
       .get(
         `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=${id}`
@@ -42,6 +39,18 @@ export default function Orthophotos() {
       .then((res) => {
         setRasters(res.data);
       });
+  };
+
+  useEffect(() => {
+    fetchData(id);
+
+    const interval = setInterval(() => {
+      fetchData(id);
+    }, 45000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, [id]);
 
   return (

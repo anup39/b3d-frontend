@@ -71,11 +71,8 @@ export default function InputFileUpload({
           const source_epsg = geo_Keys.ProjectedCSTypeGeoKey;
 
           if (epsgDefinitions.hasOwnProperty(source_epsg)) {
-            console.log(`${source_epsg} exists in epsgDefinitions.`);
-
             proj4.defs(`EPSG:${source_epsg}`, epsgDefinitions[source_epsg]);
             proj4.defs("EPSG:4326", epsgDefinitions[4326]);
-
             const bboxInEPSG4326 = {
               southwest: proj4(
                 `EPSG:${source_epsg}`,
@@ -88,8 +85,6 @@ export default function InputFileUpload({
                 source_bbox.northeast
               ),
             };
-
-            console.log(bboxInEPSG4326);
 
             const bbox_reprojected = [
               bboxInEPSG4326.northeast[0],

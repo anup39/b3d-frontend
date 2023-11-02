@@ -6,9 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import MuiAlert from "@mui/material/Alert";
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
-import { useDispatch } from "react-redux";
 import axios from "axios";
-import { setRasters } from "../../reducers/Raster";
 import InputFileUpload from "../InputFileUpload/InputFileUpload";
 import maplibregl from "maplibre-gl";
 import createMapImage from "../../maputils/createMapImage";
@@ -85,25 +83,39 @@ export default function RasterForm({
     console.log("tif_file", uploadedFile);
     console.log("file_name", fileName);
 
-    // axios
-    //   .post(
-    //     `${import.meta.env.VITE_API_DASHBOARD_URL}/send-email-price/`,
-    //     formData
-    //   )
-    //   .then(() => {})
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-
     closeForm();
     if (onProgressForm) {
       onProgressForm(true);
-      [10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map((item) => {
-        setTimeout(() => {
-          onProgressValue(item);
-        }, 10000);
-      });
     }
+
+    axios
+      .post(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/`,
+        formData,
+        {
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            onProgressValue(percentCompleted);
+          },
+        }
+      )
+      .then((res) => {
+        onProgressValue(true);
+        axios
+          .get(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/raster-data/?project=${project_id}`
+          )
+          .then((res) => {
+            console.log("Raster file uplaoded : ", res.data);
+          });
+      })
+      .catch((error) => {
+        console.error("Error uploading file:", error);
+      });
   };
 
   useEffect(() => {
