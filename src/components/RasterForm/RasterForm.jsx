@@ -11,17 +11,26 @@ import axios from "axios";
 import { setRasters } from "../../reducers/Raster";
 import InputFileUpload from "../InputFileUpload/InputFileUpload";
 import maplibregl from "maplibre-gl";
+import createMapImage from "../../maputils/createMapImage";
+import PropTypes from "prop-types";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function RasterForm({ onProgressForm, onProgressValue }) {
+export default function RasterForm({
+  project_id,
+  onProgressForm,
+  onProgressValue,
+}) {
   const mapContainerRaster = useRef();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
   const [openrasterSuccessToast, setOpenrasterSuccessToast] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [projection, setProjection] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [filesize, setFilesize] = useState("");
 
   const openForm = () => {
     setIsFormOpen(true);
@@ -29,18 +38,63 @@ export default function RasterForm({ onProgressForm, onProgressValue }) {
 
   const closeForm = () => {
     setIsFormOpen(false);
+    setOpenrasterErrorToast(false);
+    setOpenrasterSuccessToast(false);
+    setUploadedFile(null);
+    setProjection("");
+    setFileName("");
+    setFilesize("");
   };
 
   const handleFileUpload = (file) => {
     setUploadedFile(file);
   };
 
+  const onProjection = (value) => {
+    setProjection(value);
+  };
+
+  const onFileName = (value) => {
+    setFileName(value);
+  };
+
+  const onSetFilesize = (value) => {
+    setFilesize(value);
+  };
+
   const handleCreateraster = (event) => {
     event.preventDefault();
-
     const nameInput = document.getElementById("name");
-    console.log(nameInput.value, "name input");
-    console.log(uploadedFile, "uploaded file ");
+    const image_ = createMapImage(window.mapraster);
+    const formData = new FormData();
+    formData.append("project", project_id);
+    formData.append("name", nameInput.value);
+    formData.append("status", "Uploaded");
+    formData.append("screenshot_image", image_, "image.png");
+    formData.append("file_size", uploadedFile.size);
+    formData.append("projection", projection);
+    formData.append("tif_file", uploadedFile);
+    formData.append("file_name", fileName);
+
+    console.log("project", project_id);
+    console.log("name", nameInput.value);
+    console.log("status", "Uploaded");
+    console.log(image_, "image");
+    console.log("file_size", uploadedFile.size);
+    console.log("projection", projection);
+    console.log("tif_file", uploadedFile);
+    console.log("file_name", fileName);
+
+    // axios
+    //   .post(
+    //     `${import.meta.env.VITE_API_DASHBOARD_URL}/send-email-price/`,
+    //     formData
+    //   )
+    //   .then(() => {})
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+
     closeForm();
     if (onProgressForm) {
       onProgressForm(true);
@@ -135,7 +189,7 @@ export default function RasterForm({ onProgressForm, onProgressValue }) {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px", // Adjust the width to your desired size
+              width: "500px", // Adjust the width to your desired size
               background: "#fff",
               padding: "20px",
               zIndex: 10000, // Higher z-index for the form
@@ -155,7 +209,15 @@ export default function RasterForm({ onProgressForm, onProgressValue }) {
                 />
               </Grid>
               <Grid item xs={12}>
-                <InputFileUpload onFileUpload={handleFileUpload} />
+                <InputFileUpload
+                  fileName={fileName}
+                  filesize={filesize}
+                  projection={projection}
+                  onFileUpload={handleFileUpload}
+                  onProjection={onProjection}
+                  onFileName={onFileName}
+                  onSetFilesize={onSetFilesize}
+                />
                 <Grid item>
                   <div
                     style={{ width: "100%", height: "300px" }}
@@ -194,3 +256,9 @@ export default function RasterForm({ onProgressForm, onProgressValue }) {
     </>
   );
 }
+
+RasterForm.propTypes = {
+  project_id: PropTypes.string,
+  onProgressForm: PropTypes.func,
+  onProgressValue: PropTypes.func,
+};

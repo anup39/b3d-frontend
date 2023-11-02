@@ -15,7 +15,7 @@ export default function Orthophotos() {
   const [projectName, setProjectName] = useState("");
   const [isProgressFormOpen, setIsProgressFormOpen] = useState(false);
   const [progress, setProgress] = useState(0);
-
+  const [rasters, setRasters] = useState([]);
   //   const rasters = useSelector((state) => state.raster.rasters);
 
   const onProgressForm = (value) => {
@@ -25,8 +25,6 @@ export default function Orthophotos() {
   const onProgressValue = (value) => {
     setProgress(value);
   };
-
-  const [rasters, setRasters] = useState([]);
 
   useEffect(() => {
     axios
@@ -75,6 +73,7 @@ export default function Orthophotos() {
       </Box>
 
       <RasterForm
+        project_id={id}
         onProgressForm={onProgressForm}
         onProgressValue={onProgressValue}
       />

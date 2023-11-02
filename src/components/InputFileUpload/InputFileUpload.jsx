@@ -32,11 +32,16 @@ function bytesToMB(bytes) {
   return (bytes / 1048576).toFixed(2); // Keep two decimal places
 }
 
-export default function InputFileUpload({ onFileUpload }) {
+export default function InputFileUpload({
+  onFileUpload,
+  onProjection,
+  onFileName,
+  onSetFilesize,
+  projection,
+  fileName,
+  filesize,
+}) {
   const fileInputRef = useRef();
-  const [fileName, setFileName] = useState("");
-  const [filesize, setFilesize] = useState("");
-  const [projection, setProjection] = useState("");
   const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
   const [openrasterErrorMessage, setOpenrasterErrorMessage] = useState("");
 
@@ -132,10 +137,10 @@ export default function InputFileUpload({ onFileUpload }) {
             setOpenrasterErrorMessage(`${source_epsg} cannot be uploaded.`);
           }
 
-          setFileName(file.name);
+          onFileName(file.name);
           const file_size = bytesToMB(file.size);
-          setFilesize(file_size + " " + "MB");
-          setProjection(`EPSG:${source_epsg}`);
+          onSetFilesize(file_size + " " + "MB");
+          onProjection(`EPSG:${source_epsg}`);
 
           if (onFileUpload) {
             onFileUpload(file);
@@ -211,4 +216,10 @@ export default function InputFileUpload({ onFileUpload }) {
 
 InputFileUpload.propTypes = {
   onFileUpload: PropTypes.func,
+  onProjection: PropTypes.func,
+  onFileName: PropTypes.func,
+  onSetFilesize: PropTypes.func,
+  projection: PropTypes.string,
+  fileName: PropTypes.string,
+  filesize: PropTypes.string,
 };
