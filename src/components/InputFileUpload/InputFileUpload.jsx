@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -11,6 +11,7 @@ import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFrom
 import epsgDefinitions from "../../maputils/epsgcodes";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import { takeScreenshot } from "../../maputils/createMapImage";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -37,16 +38,32 @@ export default function InputFileUpload({
   onProjection,
   onFileName,
   onSetFilesize,
+  onDoneLoaded,
+  onImage,
   projection,
   fileName,
   filesize,
+  image,
+  loaded,
 }) {
   const fileInputRef = useRef();
   const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
   const [openrasterErrorMessage, setOpenrasterErrorMessage] = useState("");
 
+  useEffect(() => {
+    if (loaded) {
+      takeScreenshot(window.mapraster).then(function (data) {
+        // console.log(data);
+        // console.log(canvas.toDataURL(), "canvas");
+        onImage(data);
+      });
+    }
+  }, [loaded, onImage]);
+
   const handleFileChange = async (e) => {
     setOpenrasterErrorToast(false);
+    onDoneLoaded(false);
+    onImage();
     RemoveSourceAndLayerFromMap(
       window.mapraster,
       "geojson-layer",
@@ -59,10 +76,10 @@ export default function InputFileUpload({
         const arrayBuffer = e.target.result;
         try {
           const tiff = await fromArrayBuffer(arrayBuffer);
-          const image = await tiff.getImage();
+          const image_raster = await tiff.getImage();
           //   const data = await image.readRasters();
-          const bbox = image.getBoundingBox();
-          const geo_Keys = image.geoKeys;
+          const bbox = image_raster.getBoundingBox();
+          const geo_Keys = image_raster.geoKeys;
           console.log(geo_Keys, "geokeys");
           const source_bbox = {
             southwest: [bbox[0], bbox[1]], // Replace with actual coordinates
@@ -127,6 +144,9 @@ export default function InputFileUpload({
             });
 
             window.mapraster.fitBounds(bbox_reprojected);
+            window.mapraster.on("moveend", function () {
+              onDoneLoaded(true);
+            });
           } else {
             setOpenrasterErrorToast(true);
             setOpenrasterErrorMessage(`${source_epsg} cannot be uploaded.`);
@@ -195,15 +215,34 @@ export default function InputFileUpload({
         />
       </Button>
       <Grid item xs={12}>
-        <Typography variant="body2" gutterBottom>
-          <b>FileName</b> : {fileName}
-        </Typography>
-        <Typography variant="body2" gutterBottom>
-          <b>FileSize</b> : {filesize}
-        </Typography>
-        <Typography variant="body2" gutterBottom>
-          <b>Projection</b>: {projection}
-        </Typography>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>
+            <Typography variant="body2" gutterBottom>
+              <b>FileName</b> : {fileName}
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              <b>FileSize</b> : {filesize}
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              <b>Projection</b>: {projection}
+            </Typography>
+          </div>
+          <div>
+            {image ? (
+              <>
+                <Typography variant="body2" gutterBottom>
+                  <b>Generated Thumbnail</b> :
+                </Typography>
+                <img
+                  style={{ height: "75px", width: "125px" }}
+                  id="screenshot-img"
+                  src={image ? image : ""}
+                  alt="Map Screenshot"
+                ></img>
+              </>
+            ) : null}
+          </div>
+        </div>
       </Grid>
     </div>
   );
@@ -213,8 +252,12 @@ InputFileUpload.propTypes = {
   onFileUpload: PropTypes.func,
   onProjection: PropTypes.func,
   onFileName: PropTypes.func,
+  onDoneLoaded: PropTypes.func,
+  onImage: PropTypes.func,
   onSetFilesize: PropTypes.func,
   projection: PropTypes.string,
   fileName: PropTypes.string,
   filesize: PropTypes.string,
+  image: PropTypes.string,
+  loaded: PropTypes.bool,
 };

@@ -4,10 +4,9 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
-import { Button, Tooltip } from "@mui/material";
+import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import LinearProgressLabel from "../ProgressBar/LinearProgressLabel";
-import { useState } from "react";
 
 const Img = styled("img")({
   margin: "auto",
@@ -16,7 +15,7 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
-export default function ProjectCard({
+export default function RasterCard({
   id,
   name,
   status,
@@ -26,7 +25,6 @@ export default function ProjectCard({
   task_id,
 }) {
   const navigate = useNavigate();
-  const [progress_, setProgress] = useState(100);
 
   const handleDelete = () => {
     navigate(`/map/${id}`);
@@ -101,7 +99,7 @@ export default function ProjectCard({
   );
 }
 
-ProjectCard.propTypes = {
+RasterCard.propTypes = {
   id: PropTypes.number,
   name: PropTypes.string,
   status: PropTypes.string,

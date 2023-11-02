@@ -9,7 +9,7 @@ import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
 import InputFileUpload from "../InputFileUpload/InputFileUpload";
 import maplibregl from "maplibre-gl";
-import createMapImage from "../../maputils/createMapImage";
+import { createImagePNG } from "../../maputils/createMapImage";
 import PropTypes from "prop-types";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -20,6 +20,7 @@ export default function RasterForm({
   project_id,
   onProgressForm,
   onProgressValue,
+  onSetRasters,
 }) {
   const mapContainerRaster = useRef();
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -29,6 +30,8 @@ export default function RasterForm({
   const [projection, setProjection] = useState("");
   const [fileName, setFileName] = useState("");
   const [filesize, setFilesize] = useState("");
+  const [image, setImage] = useState();
+  const [loaded, setLoaded] = useState(false);
 
   const openForm = () => {
     setIsFormOpen(true);
@@ -42,6 +45,8 @@ export default function RasterForm({
     setProjection("");
     setFileName("");
     setFilesize("");
+    setImage();
+    setLoaded(false);
   };
 
   const handleFileUpload = (file) => {
@@ -60,28 +65,38 @@ export default function RasterForm({
     setFilesize(value);
   };
 
+  const onDoneLoaded = (value) => {
+    setLoaded(value);
+  };
+
+  const onImage = (value) => {
+    setImage(value);
+  };
+
   const handleCreateraster = (event) => {
     event.preventDefault();
     const nameInput = document.getElementById("name");
-    const image_ = createMapImage(window.mapraster);
-    const formData = new FormData();
-    formData.append("project", project_id);
-    formData.append("name", nameInput.value);
-    formData.append("status", "Uploaded");
-    formData.append("screenshot_image", image_, "image.png");
-    formData.append("file_size", uploadedFile.size);
-    formData.append("projection", projection);
-    formData.append("tif_file", uploadedFile);
-    formData.append("file_name", fileName);
+
+    const blob_ = createImagePNG(image);
 
     console.log("project", project_id);
     console.log("name", nameInput.value);
     console.log("status", "Uploaded");
-    console.log(image_, "image");
     console.log("file_size", uploadedFile.size);
     console.log("projection", projection);
     console.log("tif_file", uploadedFile);
     console.log("file_name", fileName);
+    console.log(blob_, "image");
+
+    const formData = new FormData();
+    formData.append("project", project_id);
+    formData.append("name", nameInput.value);
+    formData.append("status", "Uploaded");
+    formData.append("screenshot_image", blob_, "image.png");
+    formData.append("file_size", uploadedFile.size);
+    formData.append("projection", projection);
+    formData.append("tif_file", uploadedFile);
+    formData.append("file_name", fileName);
 
     closeForm();
     if (onProgressForm) {
@@ -103,6 +118,8 @@ export default function RasterForm({
       )
       .then((res) => {
         onProgressValue(true);
+        onProgressForm(false);
+        onProgressValue(0);
         axios
           .get(
             `${
@@ -110,6 +127,7 @@ export default function RasterForm({
             }/raster-data/?project=${project_id}`
           )
           .then((res) => {
+            onSetRasters(res.data);
             console.log("Raster file uplaoded : ", res.data);
           });
       })
@@ -222,13 +240,18 @@ export default function RasterForm({
               </Grid>
               <Grid item xs={12}>
                 <InputFileUpload
+                  mapref={mapContainerRaster}
                   fileName={fileName}
                   filesize={filesize}
                   projection={projection}
                   onFileUpload={handleFileUpload}
                   onProjection={onProjection}
+                  onDoneLoaded={onDoneLoaded}
+                  onImage={onImage}
                   onFileName={onFileName}
                   onSetFilesize={onSetFilesize}
+                  image={image}
+                  loaded={loaded}
                 />
                 <Grid item>
                   <div
@@ -246,6 +269,7 @@ export default function RasterForm({
                   color="success"
                   size="small"
                   fullWidth // Use fullWidth to make the button occupy the form's width
+                  disabled={!loaded}
                 >
                   Done
                 </Button>
@@ -273,4 +297,5 @@ RasterForm.propTypes = {
   project_id: PropTypes.string,
   onProgressForm: PropTypes.func,
   onProgressValue: PropTypes.func,
+  onSetRasters: PropTypes.func,
 };

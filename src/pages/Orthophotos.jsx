@@ -23,6 +23,10 @@ export default function Orthophotos() {
     setProgress(value);
   };
 
+  const onSetRasters = (value) => {
+    setRasters(value);
+  };
+
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/${id}/`)
@@ -44,13 +48,13 @@ export default function Orthophotos() {
   useEffect(() => {
     fetchData(id);
 
-    const interval = setInterval(() => {
-      fetchData(id);
-    }, 45000);
+    // const interval = setInterval(() => {
+    //   fetchData(id);
+    // }, 5000);
 
-    return () => {
-      clearInterval(interval);
-    };
+    // return () => {
+    //   clearInterval(interval);
+    // };
   }, [id]);
 
   return (
@@ -85,6 +89,7 @@ export default function Orthophotos() {
         project_id={id}
         onProgressForm={onProgressForm}
         onProgressValue={onProgressValue}
+        onSetRasters={onSetRasters}
       />
       <UploadProgress
         isProgressFormOpen={isProgressFormOpen}
