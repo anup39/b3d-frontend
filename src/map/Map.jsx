@@ -62,10 +62,8 @@ export default function Map({ refObj, project_id }) {
             draw.changeMode("draw_polygon");
           });
 
-        // Other layers are added here
         map.on("draw.create", function (event) {
-          // dispatch(setPriceLayers({ id: 1, checked: false }));
-          const feature = event.features; // Array of newly created features
+          const feature = event.features;
           const geometry = feature[0].geometry;
           const coordinates = geometry.coordinates[0];
           const wktCoordinates = coordinates
@@ -75,8 +73,7 @@ export default function Map({ refObj, project_id }) {
           dispatch(setWKTGeometry(wktCoordinates_final));
         });
         map.on("draw.update", function (event) {
-          // dispatch(setPriceLayers({ id: 1, checked: false }));
-          const feature = event.features; // Array of newly created features
+          const feature = event.features;
           const geometry = feature[0].geometry;
           const coordinates = geometry.coordinates[0];
           const wktCoordinates = coordinates
