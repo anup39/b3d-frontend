@@ -15,8 +15,6 @@ export default function RasterLayer({ map, project_id }) {
             map.fitBounds(bounds);
             map.addSource(`${id}-source`, {
               type: "raster",
-              // use the tiles option to specify a WMS tile source URL
-              // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
               tiles: [
                 `${
                   import.meta.env.VITE_API_RASTER_URL
@@ -37,9 +35,7 @@ export default function RasterLayer({ map, project_id }) {
             map.moveLayer(`${id}-layer`, "gl-draw-polygon-fill-inactive.cold");
           }
         })
-        .catch((err) => {
-          // console.log(err);
-        });
+        .catch(() => {});
     } else {
       const style = map.getStyle();
       const existingLayer = style.layers.find(
