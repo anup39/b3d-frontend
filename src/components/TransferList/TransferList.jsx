@@ -311,8 +311,6 @@ export default function TransferList({ project_id, component }) {
   );
 
   const handleSave = () => {
-    // Compare current lists with initial lists to track changes
-
     const itemsMovedToLeft = finalLeft.filter(
       (item) =>
         !initialLeft.some((leftItem) => leftItem.full_name === item.full_name)

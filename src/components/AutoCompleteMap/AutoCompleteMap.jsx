@@ -13,7 +13,6 @@ export default function AutoCompleteMap({
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    // Make an API call to fetch the data from the provided endpoint.
     axios
       .get(
         `${
@@ -47,7 +46,7 @@ export default function AutoCompleteMap({
       onChange={(event, newValue) => {
         if (newValue) {
           setInputValue(newValue.full_name);
-          onItemSelected(newValue.id, newValue.standard_category); // Pass the selected ID to the parent component.
+          onItemSelected(newValue.id, newValue.standard_category);
         }
       }}
     />
@@ -55,7 +54,7 @@ export default function AutoCompleteMap({
 }
 
 AutoCompleteMap.propTypes = {
-  onItemSelected: PropTypes.func.isRequired, // Ensure it's a function and required
+  onItemSelected: PropTypes.func.isRequired,
   category: PropTypes.string,
   project_id: PropTypes.string,
 };

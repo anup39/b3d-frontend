@@ -4,8 +4,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
 import { Typography } from "@mui/material";
 
-// import axios from "axios";
-
 function Toggle({ layer, expanded, onExpanded, component }) {
   const [transform, setTransform] = useState("rotate(-90deg)");
   const handleClick = () => {

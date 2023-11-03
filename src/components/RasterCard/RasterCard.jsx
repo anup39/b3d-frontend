@@ -16,7 +16,7 @@ const Img = styled("img")({
 });
 
 function bytesToMB(bytes) {
-  return (bytes / 1048576).toFixed(2); // Keep two decimal places
+  return (bytes / 1048576).toFixed(2);
 }
 
 export default function RasterCard({

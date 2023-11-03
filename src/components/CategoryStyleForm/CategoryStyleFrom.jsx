@@ -41,7 +41,7 @@ export default function CategoryStyleForm() {
         fill_opacity: fillOpacityInput.value,
         stroke: selectedStrokeColor,
         stroke_width: strokeWidthInput.value,
-        category: selectedCategoryId, // Use the selected category ID
+        category: selectedCategoryId,
       };
       axios
         .post(
@@ -144,8 +144,8 @@ export default function CategoryStyleForm() {
             left: 0,
             width: "100%",
             height: "100%",
-            background: "rgba(0, 0, 0, 0.5)", // Semi-transparent backdrop
-            zIndex: 9999, // Higher z-index to cover other elements
+            background: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
           }}
         >
           <form
@@ -155,10 +155,10 @@ export default function CategoryStyleForm() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px", // Adjust the width to your desired size
+              width: "300px",
               background: "#fff",
               padding: "20px",
-              zIndex: 10000, // Higher z-index for the form
+              zIndex: 10000,
             }}
           >
             <Grid container spacing={2}>
@@ -180,7 +180,7 @@ export default function CategoryStyleForm() {
                   onChange={handleFillColorChange}
                   InputLabelProps={{ shrink: true }}
                   required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
@@ -193,11 +193,11 @@ export default function CategoryStyleForm() {
                   size="small"
                   InputLabelProps={{ shrink: true }}
                   required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  fullWidth
                   inputProps={{
-                    step: 0.1, // Set the step attribute to control decimal precision
-                    min: 0, // Set the minimum value
-                    max: 1, // Set the maximum value
+                    step: 0.1,
+                    min: 0,
+                    max: 1,
                   }}
                 />
               </Grid>
@@ -213,7 +213,7 @@ export default function CategoryStyleForm() {
                   onChange={handleStrokeColorChange}
                   InputLabelProps={{ shrink: true }}
                   required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
@@ -226,11 +226,11 @@ export default function CategoryStyleForm() {
                   size="small"
                   InputLabelProps={{ shrink: true }}
                   required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  fullWidth
                   inputProps={{
-                    step: 1, // Set the step attribute to control decimal precision
-                    min: 1, // Set the minimum value
-                    max: 5, // Set the maximum value
+                    step: 1,
+                    min: 1,
+                    max: 5,
                   }}
                 />
               </Grid>
@@ -240,7 +240,7 @@ export default function CategoryStyleForm() {
                   variant="contained"
                   color="success"
                   size="small"
-                  fullWidth // Use fullWidth to make the button occupy the form's width
+                  fullWidth
                 >
                   Done
                 </Button>
@@ -251,7 +251,7 @@ export default function CategoryStyleForm() {
                   variant="contained"
                   color="error"
                   size="small"
-                  fullWidth // Use fullWidth to make the button occupy the form's width
+                  fullWidth
                 >
                   Close
                 </Button>

@@ -23,9 +23,7 @@ const AddLayerAndSourceToMap = ({
     axios
       .get(`${import.meta.env.VITE_API_MAP_URL}/${source_layer}`)
       .then(function (response) {
-        // handle success
         const bounds = response.data.bounds;
-        // fit map to bounds
         if (bounds && bounds.length === 4) {
           map.fitBounds(bounds, {
             padding: 20,
@@ -33,19 +31,14 @@ const AddLayerAndSourceToMap = ({
           });
         }
       })
-      .catch(function (error) {
-        // handle error
-        // console.log(error, "Fit bounds didnot work due to error");
-      });
+      .catch(function () {});
   }
 
-  // create the new source object
   const newSource = {
-    /* source options */
     type: "vector",
     tiles: [url],
   };
-  // add the source to the map
+
   map.addSource(sourceId, newSource);
 
   if (fillType && fillType === "line") {
@@ -78,10 +71,6 @@ const AddLayerAndSourceToMap = ({
     map.addLayer(newLayer);
     // map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
   }
-
-  // create the new layer object
-
-  // add the layer to the map
 
   if (showPopup) {
     map.on("click", layerId, (e) => {

@@ -14,7 +14,6 @@ export const DrawnPolygon = createSlice({
   },
 });
 
-// Action creators are generated for each case reducer function
 // eslint-disable-next-line react-refresh/only-export-components
 export const { setWKTGeometry } = DrawnPolygon.actions;
 

@@ -6,13 +6,8 @@ import Checkbox from "@mui/material/Checkbox";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { List } from "@mui/material";
-import { updateCheckedById } from "../../reducers/MapCategories";
-import { useDispatch } from "react-redux";
-
-// List
 
 function LayersControlLayerCategory({ map, layer }) {
-  const dispatch = useDispatch();
   const [opacity, setOpacity] = useState(0.5);
   const [style, setStyle] = useState({});
   const [checked, setChecked] = useState([1]);
@@ -63,7 +58,6 @@ function LayersControlLayerCategory({ map, layer }) {
     const layerId = String(layer.project) + layer.full_name + "layer";
 
     if (newChecked.length === 2) {
-      // dispatch(updateCheckedById({ id: layer.id, checked: true }));
       const url = `${
         import.meta.env.VITE_API_MAP_URL
       }/function_zxy_query_app_polygondata_by_project_category/{z}/{x}/{y}?project=${
@@ -87,12 +81,6 @@ function LayersControlLayerCategory({ map, layer }) {
         paint: {
           "fill-color": style.fill,
           "fill-outline-color": style.stroke,
-          // "fill-opacity": [
-          //   "case",
-          //   ["boolean", ["feature-state", "hover"], false],
-          //   1,
-          //   style.fill_opacity,
-          // ],
           "fill-opacity": parseFloat(style.fill_opacity),
         },
       };
@@ -103,16 +91,12 @@ function LayersControlLayerCategory({ map, layer }) {
       const existingLayer = style.layers.find((layer) => layer.id === layerId);
       const existingSource = style.sources[sourceId];
       if (existingLayer) {
-        // remove the layer from the map
         map.off("click", layerId);
         map.removeLayer(layerId);
       }
       if (existingSource) {
-        // remove the source from the map
         map.removeSource(sourceId);
       }
-
-      // dispatch(updateCheckedById({ id: layer.id, checked: false }));
     }
   };
 

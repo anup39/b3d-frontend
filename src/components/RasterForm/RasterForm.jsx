@@ -20,9 +20,7 @@ export default function RasterForm({
   project_id,
   onProgressForm,
   onProgressValue,
-  // onSetRasters,
 }) {
-  // console.log("Form Reloaded");
   const mapContainerRaster = useRef();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
@@ -80,15 +78,6 @@ export default function RasterForm({
 
     const blob_ = createImagePNG(image);
 
-    // console.log("project", project_id);
-    // console.log("name", nameInput.value);
-    // console.log("status", "Uploaded");
-    // console.log("file_size", uploadedFile.size);
-    // console.log("projection", projection);
-    // console.log("tif_file", uploadedFile);
-    // console.log("file_name", fileName);
-    // console.log(blob_, "image");
-
     const formData = new FormData();
     formData.append("project", project_id);
     formData.append("name", nameInput.value);
@@ -117,7 +106,7 @@ export default function RasterForm({
           },
         }
       )
-      .then((res) => {
+      .then(() => {
         onProgressValue(true);
         onProgressForm(false);
         onProgressValue(0);
@@ -127,10 +116,8 @@ export default function RasterForm({
               import.meta.env.VITE_API_DASHBOARD_URL
             }/raster-data/?project=${project_id}`
           )
-          .then((res) => {
-            // onSetRasters(res.data);
+          .then(() => {
             window.location.reload();
-            // console.log("Raster file uplaoded : ", res.data);
           });
       })
       .catch((error) => {
@@ -210,8 +197,8 @@ export default function RasterForm({
             left: 0,
             width: "100%",
             height: "100%",
-            background: "rgba(0, 0, 0, 0.5)", // Semi-transparent backdrop
-            zIndex: 9999, // Higher z-index to cover other elements
+            background: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
           }}
         >
           <form
@@ -221,10 +208,10 @@ export default function RasterForm({
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "500px", // Adjust the width to your desired size
+              width: "500px",
               background: "#fff",
               padding: "20px",
-              zIndex: 10000, // Higher z-index for the form
+              zIndex: 10000,
             }}
           >
             <Grid container spacing={2}>
@@ -237,7 +224,7 @@ export default function RasterForm({
                   size="small"
                   InputLabelProps={{ shrink: true }}
                   required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
@@ -270,7 +257,7 @@ export default function RasterForm({
                   variant="contained"
                   color="success"
                   size="small"
-                  fullWidth // Use fullWidth to make the button occupy the form's width
+                  fullWidth
                   disabled={!loaded}
                 >
                   Done
@@ -282,7 +269,7 @@ export default function RasterForm({
                   variant="contained"
                   color="error"
                   size="small"
-                  fullWidth // Use fullWidth to make the button occupy the form's width
+                  fullWidth
                 >
                   Close
                 </Button>
