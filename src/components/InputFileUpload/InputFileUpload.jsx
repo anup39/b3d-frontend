@@ -46,7 +46,6 @@ export default function InputFileUpload({
   image,
   loaded,
 }) {
-  // console.log("input file reloaded");
   const fileInputRef = useRef();
   const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
   const [openrasterErrorMessage, setOpenrasterErrorMessage] = useState("");
@@ -54,8 +53,6 @@ export default function InputFileUpload({
   useEffect(() => {
     if (loaded) {
       takeScreenshot(window.mapraster).then(function (data) {
-        // console.log(data);
-        // console.log(canvas.toDataURL(), "canvas");
         onImage(data);
       });
     }
@@ -83,8 +80,8 @@ export default function InputFileUpload({
           const geo_Keys = image_raster.geoKeys;
           // console.log(geo_Keys, "geokeys");
           const source_bbox = {
-            southwest: [bbox[0], bbox[1]], // Replace with actual coordinates
-            northeast: [bbox[2], bbox[3]], // Replace with actual coordinates
+            southwest: [bbox[0], bbox[1]],
+            northeast: [bbox[2], bbox[3]],
           };
           const source_epsg = geo_Keys.ProjectedCSTypeGeoKey;
 
@@ -111,7 +108,6 @@ export default function InputFileUpload({
               bboxInEPSG4326.southwest[1],
             ];
 
-            // Create a GeoJSON polygon feature
             const geoJSONPolygon = {
               type: "Feature",
               geometry: {
