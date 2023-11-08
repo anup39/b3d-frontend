@@ -39,7 +39,7 @@ function Appbar() {
     if (page.toUpperCase() === "CLASSIFICATION") {
       navigate("/class");
     }
-    if (page.toUpperCase() === "PROJECTS") {
+    if (page.toUpperCase() === "CLIENTS") {
       navigate("/dashboard");
     }
     if (page.toUpperCase() === "USERS") {
@@ -54,7 +54,7 @@ function Appbar() {
     if (page.toUpperCase() === "CLASSIFICATION") {
       navigate("/class");
     }
-    if (page.toUpperCase() === "PROJECTS") {
+    if (page.toUpperCase() === "CLIENTS") {
       navigate("/dashboard");
     }
     if (page.toUpperCase() === "USERS") {

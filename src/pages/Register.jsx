@@ -31,12 +31,26 @@ export default function Register() {
     const data = new FormData(event.currentTarget);
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/register/`, data)
-      .then(function () {
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(settoastMessage("Successfully Created User"));
-        dispatch(settoastType("success"));
-        navigate("/users");
+      .then(function (res) {
+        console.log(res.data.id);
+        axios
+          .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/`, {
+            user: res.data.id,
+            role: 1,
+          })
+          .then(function () {
+            setLoading(false);
+            dispatch(setshowToast(true));
+            dispatch(settoastMessage("Successfully Created User"));
+            dispatch(settoastType("success"));
+            navigate("/users");
+          })
+          .catch(() => {
+            setLoading(false);
+            dispatch(setshowToast(true));
+            dispatch(settoastMessage("Failed to Create User"));
+            dispatch(settoastType("error"));
+          });
       })
       .catch(() => {
         setLoading(false);
