@@ -7,6 +7,7 @@ import Classification from "../pages/Classification";
 import ManageClasses from "../pages/ManageClasses";
 import Orthophotos from "../pages/Orthophotos";
 import Mapgl from "../components/mapgl/Mapgl";
+import Users from "../pages/Users";
 
 export default function Routers() {
   return (
@@ -20,6 +21,7 @@ export default function Routers() {
         <Route exact path="/manage-classes/:id" element={<ManageClasses />} />
         <Route exact path="/orthophotos/:id" element={<Orthophotos />} />
         <Route exact path="/mapgl" element={<Mapgl />} />
+        <Route exact path="/users" element={<Users />} />
       </Routes>
     </Router>
   );

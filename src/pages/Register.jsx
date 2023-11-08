@@ -16,12 +16,14 @@ import {
   settoastMessage,
   settoastType,
 } from "../reducers/DisplaySettings";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 export default function Register() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -34,6 +36,7 @@ export default function Register() {
         dispatch(setshowToast(true));
         dispatch(settoastMessage("Successfully Created User"));
         dispatch(settoastType("success"));
+        navigate("/users");
       })
       .catch(() => {
         setLoading(false);
