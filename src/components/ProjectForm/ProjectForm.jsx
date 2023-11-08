@@ -74,7 +74,7 @@ export default function ProjectForm() {
         open={openProjectErrorToast}
         autoHideDuration={6000}
         // onClose={handleClose}
-        message="Failed to Create Project"
+        message="Failed to Create Client"
         // action={action}
       >
         <Alert
@@ -82,7 +82,7 @@ export default function ProjectForm() {
           severity="error"
           sx={{ width: "100%" }}
         >
-          Failed to Create Project
+          Failed to Create Client
         </Alert>
       </Snackbar>
       <Snackbar
@@ -90,7 +90,7 @@ export default function ProjectForm() {
         open={openProjectSuccessToast}
         autoHideDuration={6000}
         // onClose={handleClose}
-        message="Sucessfully Created Project"
+        message="Sucessfully Created Client"
         // action={action}
       >
         <Alert
@@ -98,18 +98,18 @@ export default function ProjectForm() {
           severity="success"
           sx={{ width: "100%" }}
         >
-          Sucessfully Created Project
+          Sucessfully Created Client
         </Alert>
       </Snackbar>
 
-      <Tooltip title="Create Project">
+      <Tooltip title="Create Client">
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Create Project
+          Create Client
         </Button>
       </Tooltip>
       {isFormOpen && (
