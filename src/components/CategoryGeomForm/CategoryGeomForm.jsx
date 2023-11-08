@@ -6,7 +6,7 @@ import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleShowGeomFormPopup } from "../../reducers/DisplaySettings";
+import { setshowGeomFormPopup } from "../../reducers/DisplaySettings";
 import AutoCompleteMap from "../AutoCompleteMap/AutoCompleteMap";
 import PropTypes from "prop-types";
 import { setWKTGeometry } from "../../reducers/DrawnPolygon";
@@ -86,7 +86,7 @@ export default function CategoryGeomForm({ project_id }) {
   };
 
   const closeForm = () => {
-    dispatch(toggleShowGeomFormPopup("none"));
+    dispatch(setshowGeomFormPopup("none"));
   };
 
   return (

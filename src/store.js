@@ -9,6 +9,7 @@ import CategoryStyle from "./reducers/CategoryStyle";
 import MapCategories from "./reducers/MapCategories";
 import DrawnPolygon from "./reducers/DrawnPolygon";
 import Raster from "./reducers/Raster";
+import Users from "./reducers/Users";
 
 export const store = configureStore({
   reducer: {
@@ -22,5 +23,6 @@ export const store = configureStore({
     categoryStyle: CategoryStyle,
     mapCategories: MapCategories,
     drawnPolygon: DrawnPolygon,
+    users: Users,
   },
 });

@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, setUserId, setUserName } from "../../reducers/Auth";
 
-const pages = ["Projects", "Classification", "About", "Contact"];
+const pages = ["Clients", "Classification", "Users", "About", "Contact"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Appbar() {
@@ -39,9 +39,13 @@ function Appbar() {
     if (page.toUpperCase() === "CLASSIFICATION") {
       navigate("/class");
     }
-    if (page.toUpperCase() === "PROJECTS") {
+    if (page.toUpperCase() === "CLIENTS") {
       navigate("/dashboard");
     }
+    if (page.toUpperCase() === "USERS") {
+      navigate("/users");
+    }
+
     setAnchorElNav(null);
   };
 
@@ -50,8 +54,11 @@ function Appbar() {
     if (page.toUpperCase() === "CLASSIFICATION") {
       navigate("/class");
     }
-    if (page.toUpperCase() === "PROJECTS") {
+    if (page.toUpperCase() === "CLIENTS") {
       navigate("/dashboard");
+    }
+    if (page.toUpperCase() === "USERS") {
+      navigate("/users");
     }
     setAnchorElNav(null);
   };

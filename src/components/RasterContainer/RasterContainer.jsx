@@ -2,22 +2,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import RasterCard from "../RasterCard/RasterCard";
-import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 
 export default function RasterContainer({ id }) {
-  const navigate = useNavigate();
   const [rasters, setRasters] = useState([]);
-
-  const handleOpenMap = () => {
-    navigate(`/map/${id}`);
-  };
 
   const fetchData = (id) => {
     axios
-      .get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=${id}`
-      )
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=1`)
       .then((res) => {
         setRasters(res.data);
       });
@@ -37,17 +28,6 @@ export default function RasterContainer({ id }) {
 
   return (
     <div>
-      {rasters.length > 0 ? (
-        <Button
-          style={{ left: "50%" }}
-          onClick={handleOpenMap}
-          variant="contained"
-          color="success"
-        >
-          Open Map
-        </Button>
-      ) : null}
-
       {rasters
         ? rasters.map((raster) => (
             <RasterCard
