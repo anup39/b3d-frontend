@@ -14,12 +14,15 @@ export default function UserCard({
   email,
   last_login,
   date_joined,
+  onUserId,
+  onOpenForm,
 }) {
   const [role, setRole] = useState("");
   const username_current = useSelector((state) => state.auth.username);
+
   const handleAssignRole = () => {
-    // navigate(`/map/${id}`);
-    console.log("Assing Role");
+    onUserId(id);
+    onOpenForm(true);
   };
 
   const handleDeleteUser = () => {
@@ -107,4 +110,6 @@ UserCard.propTypes = {
   email: PropTypes.string,
   last_login: PropTypes.string,
   date_joined: PropTypes.string,
+  onUserId: PropTypes.func,
+  onOpenForm: PropTypes.func,
 };

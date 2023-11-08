@@ -32,7 +32,6 @@ export default function Register() {
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/register/`, data)
       .then(function (res) {
-        console.log(res.data.id);
         axios
           .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/`, {
             user: res.data.id,
