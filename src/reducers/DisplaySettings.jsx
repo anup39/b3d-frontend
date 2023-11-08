@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  showToast: true,
+  showToast: false,
   toastMessage: "Error creating user",
   toastType: "error",
   showGeomFormPopup: "none",
@@ -29,7 +29,7 @@ export const DisplaySettings = createSlice({
 // eslint-disable-next-line react-refresh/only-export-components
 export const {
   setshowToast,
-  setToastMessage,
+  settoastMessage,
   settoastType,
   setshowGeomFormPopup,
 } = DisplaySettings.actions;

@@ -2,51 +2,45 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Grid";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://b3d.com/">
-        B3D
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { CircularProgress } from "@mui/material";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../reducers/DisplaySettings";
 
 const defaultTheme = createTheme();
 
 export default function Register() {
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setLoading(true);
     const data = new FormData(event.currentTarget);
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/register/`, data)
       .then(function () {
-        // setOpenRegisterSuccessToast(true);
-        setTimeout(() => {
-          navigate("/");
-        }, 3000);
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Successfully Created User"));
+        dispatch(settoastType("success"));
+      })
+      .catch(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Failed to Create User"));
+        dispatch(settoastType("error"));
       });
-    // .catch(() => setOpenRegisterErrorToast(true));
   };
 
   return (
@@ -67,12 +61,7 @@ export default function Register() {
           <Typography component="h1" variant="h5">
             Register
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <form onSubmit={handleSubmit}>
             <TextField
               margin="normal"
               required
@@ -105,26 +94,14 @@ export default function Register() {
             <Button
               type="submit"
               fullWidth
-              variant="contained"
+              variant={loading ? "outlined" : "contained"}
               sx={{ mt: 3, mb: 2 }}
             >
-              Register
+              {loading ? null : "Register"}
+              {loading ? <CircularProgress /> : null}
             </Button>
-            <Grid container>
-              {/* <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid> */}
-              <Grid item>
-                <Link href="/" variant="body2">
-                  {"Back To Login"}
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
+          </form>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );
