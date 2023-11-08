@@ -3,18 +3,20 @@ import Box from "@mui/material/Box";
 import { Button, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import UserCard from "../components/UserCard/UserCard";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function Users() {
-  const [users, setUsers] = [];
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_DASHBOARD_URL}/users`).then((res) => {
-      setUsers(res.data);
-    });
-  }, [setUsers]);
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/users/`)
+      .then((res) => {
+        setUsers(res.data);
+      });
+  }, []);
 
   return (
     <>
@@ -53,6 +55,8 @@ export default function Users() {
                 id={user.id}
                 username={user.username}
                 email={user.email}
+                last_login={user.last_login}
+                date_joined={user.date_joined}
               />
             ))
           : null}

@@ -4,8 +4,17 @@ import Typography from "@mui/material/Typography";
 
 import PropTypes from "prop-types";
 import { Button } from "@mui/material";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function UserCard({ id, username, email }) {
+export default function UserCard({
+  id,
+  username,
+  email,
+  last_login,
+  date_joined,
+}) {
+  const [role, setRole] = useState("");
   const handleAssignRole = () => {
     // navigate(`/map/${id}`);
     console.log("Assing Role");
@@ -15,6 +24,14 @@ export default function UserCard({ id, username, email }) {
     // navigate(`/map/${id}`);
     console.log("Delete User");
   };
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?user=${id}`)
+      .then((res) => {
+        setRole(res?.data[0]?.role_name);
+      });
+  }, [id]);
 
   return (
     <Paper
@@ -31,14 +48,23 @@ export default function UserCard({ id, username, email }) {
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" component="div">
+              {/* <Typography gutterBottom variant="subtitle1" component="div">
                 <b>ID </b>: {id}
-              </Typography>
+              </Typography> */}
               <Typography gutterBottom variant="subtitle1" component="div">
                 <b>User Name </b>: {username}
               </Typography>
               <Typography gutterBottom variant="subtitle1" component="div">
                 <b>Email</b> : {email}
+              </Typography>
+              <Typography gutterBottom variant="subtitle1" component="div">
+                <b>Role</b> : {role}
+              </Typography>
+              <Typography gutterBottom variant="subtitle1" component="div">
+                <b>Last Login</b> : {last_login}
+              </Typography>
+              <Typography gutterBottom variant="subtitle1" component="div">
+                <b>Date Joined</b> : {date_joined}
               </Typography>
             </Grid>
             <Grid item xs container direction="row" spacing={2}>
@@ -72,4 +98,6 @@ UserCard.propTypes = {
   id: PropTypes.number,
   username: PropTypes.string,
   email: PropTypes.string,
+  last_login: PropTypes.string,
+  date_joined: PropTypes.string,
 };
