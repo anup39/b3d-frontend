@@ -1,7 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  showButton: false,
+  showSucessToast: false,
+  showErrorToast: false,
+  sucessToastMessage: "Sucessful",
+  errorToastMessage: "Error",
   showGeomFormPopup: "none",
 };
 
@@ -9,17 +12,31 @@ export const DisplaySettings = createSlice({
   name: "DisplaySettings",
   initialState,
   reducers: {
-    toggleShowButton: (state, action) => {
-      state.showButton = action.payload;
+    setshowSucessToast: (state, action) => {
+      state.showSucessToast = action.payload;
     },
-    toggleShowGeomFormPopup: (state, action) => {
+    setshowErrorToast: (state, action) => {
+      state.showErrorToast = action.payload;
+    },
+    setsucessToastMessage: (state, action) => {
+      state.sucessToastMessage = action.payload;
+    },
+    seterrorToastMessage: (state, action) => {
+      state.errorToastMessage = action.payload;
+    },
+    setshowGeomFormPopup: (state, action) => {
       state.showGeomFormPopup = action.payload;
     },
   },
 });
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const { toggleShowButton, toggleShowGeomFormPopup } =
-  DisplaySettings.actions;
+export const {
+  setshowSucessToast,
+  setshowErrorToast,
+  setsucessToastMessage,
+  seterrorToastMessage,
+  setshowGeomFormPopup,
+} = DisplaySettings.actions;
 
 export default DisplaySettings.reducer;

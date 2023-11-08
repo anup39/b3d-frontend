@@ -8,17 +8,9 @@ import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
-import { useState } from "react";
-import MuiAlert from "@mui/material/Alert";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 function Copyright(props) {
   return (
@@ -42,9 +34,6 @@ const defaultTheme = createTheme();
 
 export default function Register() {
   const navigate = useNavigate();
-  const [openRegisterErrorToast, setOpenRegisterErrorToast] = useState(false);
-  const [openRegisterSuccessToast, setOpenRegisterSuccessToast] =
-    useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -52,48 +41,16 @@ export default function Register() {
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/register/`, data)
       .then(function () {
-        setOpenRegisterSuccessToast(true);
+        // setOpenRegisterSuccessToast(true);
         setTimeout(() => {
           navigate("/");
         }, 3000);
-      })
-      .catch(() => setOpenRegisterErrorToast(true));
+      });
+    // .catch(() => setOpenRegisterErrorToast(true));
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openRegisterErrorToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message="Failed to Create User"
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Failed to Create User
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openRegisterSuccessToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message="Sucessfully Created User"
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Sucessfully Created User
-        </Alert>
-      </Snackbar>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
