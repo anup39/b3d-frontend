@@ -13,13 +13,13 @@ export default function UserCard({
   id,
   username,
   email,
+  role,
   last_login,
   date_joined,
   onUserId,
   onOpenForm,
 }) {
   const navigate = useNavigate();
-  const [role, setRole] = useState("");
   const username_current = useSelector((state) => state.auth.username);
 
   const handleAssignRole = () => {
@@ -35,14 +35,6 @@ export default function UserCard({
   const handleManageProjects = () => {
     navigate(`/manage-projects/${id}`);
   };
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?user=${id}`)
-      .then((res) => {
-        setRole(res?.data[0]?.role_name);
-      });
-  }, [id]);
 
   return (
     <>
@@ -141,6 +133,7 @@ UserCard.propTypes = {
   id: PropTypes.number,
   username: PropTypes.string,
   email: PropTypes.string,
+  role: PropTypes.string,
   last_login: PropTypes.string,
   date_joined: PropTypes.string,
   onUserId: PropTypes.func,

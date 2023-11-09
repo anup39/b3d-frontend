@@ -34,20 +34,27 @@ export default function ProjectForm() {
     };
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, data)
-      .then(() => {
-        setOpenProjectSuccessToast(true);
-        setOpenProjectErrorToast(false);
-        setTimeout(() => {
-          setOpenProjectSuccessToast(false);
-        }, 3000);
+      .then((res) => {
         axios
-          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, {
-            headers: {
-              Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
-            },
+          .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-projects/`, {
+            user: user_id,
+            project: res.data.id,
           })
-          .then((res) => {
-            dispatch(setProjects(res.data));
+          .then(() => {
+            setOpenProjectSuccessToast(true);
+            setOpenProjectErrorToast(false);
+            setTimeout(() => {
+              setOpenProjectSuccessToast(false);
+            }, 3000);
+            axios
+              .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, {
+                headers: {
+                  Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
+                },
+              })
+              .then((res) => {
+                dispatch(setProjects(res.data));
+              });
           });
       })
       .catch(() => {

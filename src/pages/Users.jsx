@@ -78,6 +78,7 @@ export default function Users() {
                 id={user.id}
                 username={user.username}
                 email={user.email}
+                role={user.role_name}
                 last_login={user.last_login}
                 date_joined={user.date_joined}
               />
