@@ -190,9 +190,6 @@ export default function ProjectTransferList({ id, component }) {
     );
 
     if (component === "projects") {
-      console.log(itemsMovedToLeft, "itemsMovedToLeft");
-      console.log(itemsMovedToRight, "itemsMovedToRight");
-
       try {
         setLoading(true);
         if (itemsMovedToRight.length > 0) {

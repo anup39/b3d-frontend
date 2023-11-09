@@ -96,14 +96,17 @@ export default function UserTransferList({ id, component }) {
 
             let filteredLeftList = leftList.filter(
               (item) =>
+                item.username !== username_current &&
                 !rightList.some(
                   (rightItem) => rightItem.user_name === item.username
                 )
             );
-            const filteredRightList = leftList.filter((item) =>
-              rightList.some(
-                (rightItem) => rightItem.user_name === item.username
-              )
+            const filteredRightList = leftList.filter(
+              (item) =>
+                item.username !== username_current &&
+                rightList.some(
+                  (rightItem) => rightItem.user_name === item.username
+                )
             );
             setInitialLeft(filteredLeftList);
             setInitialRight(filteredRightList);
@@ -114,7 +117,7 @@ export default function UserTransferList({ id, component }) {
 
         // Fetch data from the second API endpoint
       });
-  }, [id, component]);
+  }, [id, component, username_current]);
 
   const customList = (title, items) => (
     <Card sx={{ backgroundColor: "#828282" }}>
@@ -191,9 +194,6 @@ export default function UserTransferList({ id, component }) {
     );
 
     if (component === "users") {
-      console.log(itemsMovedToLeft, "itemsMovedToLeft");
-      console.log(itemsMovedToRight, "itemsMovedToRight");
-
       try {
         setLoading(true);
         if (itemsMovedToRight.length > 0) {

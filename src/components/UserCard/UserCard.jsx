@@ -82,33 +82,46 @@ export default function UserCard({
                   </Typography>
                 </Grid>
                 <Grid item xs container direction="row" spacing={2}>
-                  <Grid item>
-                    <Button
-                      onClick={handleAssignRole}
-                      variant="contained"
-                      color="success"
-                    >
-                      Assign Roles
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleManageProjects}
-                      variant="contained"
-                      color="success"
-                    >
-                      Manage Clients
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleDeleteUser}
-                      variant="contained"
-                      color="error"
-                    >
-                      Delete
-                    </Button>
-                  </Grid>
+                  {role !== "admin" ? (
+                    <>
+                      <Grid item>
+                        <Button
+                          onClick={handleAssignRole}
+                          variant="contained"
+                          color="success"
+                        >
+                          Assign Roles
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          onClick={handleManageProjects}
+                          variant="contained"
+                          color="success"
+                        >
+                          Manage Clients
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          onClick={handleDeleteUser}
+                          variant="contained"
+                          color="error"
+                        >
+                          Delete
+                        </Button>
+                      </Grid>
+                    </>
+                  ) : (
+                    <Grid item xs>
+                      <Typography variant="body2" color="text.secondary">
+                        <b>
+                          Full Access due to Role Admin. No need to assign role
+                          and project
+                        </b>
+                      </Typography>
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
               <Grid item xs>

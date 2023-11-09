@@ -21,6 +21,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [orthophotos, setOrthophotos] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const handleViewInMap = () => {
     navigate(`/map/${id}`);
@@ -39,6 +40,13 @@ export default function ProjectCard({ id, name, description, created_at }) {
       )
       .then((res) => {
         setOrthophotos(res.data);
+      });
+    axios
+      .get(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/user-projects/?project=${id}`
+      )
+      .then((res) => {
+        setUsers(res.data);
       });
   }, [id]);
 
@@ -110,7 +118,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
               Total Orthophotos: {orthophotos.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Total Users: {orthophotos.length}
+              Total Users: {users.length}
             </Typography>
           </Grid>
 
