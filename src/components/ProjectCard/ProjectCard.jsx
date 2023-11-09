@@ -95,18 +95,11 @@ export default function ProjectCard({ id, name, description, created_at }) {
             </Grid>
           </Grid>
           <Grid item xs>
-            <Tooltip>
-              <Button
-                sx={{ marginBottom: "25px" }}
-                variant="outlined"
-                color="error"
-              >
-                Orthophotos
-              </Button>
-            </Tooltip>
-
-            <Typography gutterBottom variant="subtitle1" component="div">
+            <Typography variant="body2" color="text.secondary">
               Total Orthophotos: {orthophotos.length}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Total Users: {orthophotos.length}
             </Typography>
           </Grid>
 

@@ -8,6 +8,7 @@ import ManageClasses from "../pages/ManageClasses";
 import Orthophotos from "../pages/Orthophotos";
 import Mapgl from "../components/mapgl/Mapgl";
 import Users from "../pages/Users";
+import ManageProjects from "../pages/ManageProjects";
 
 export default function Routers() {
   return (
@@ -22,6 +23,7 @@ export default function Routers() {
         <Route exact path="/orthophotos/:id" element={<Orthophotos />} />
         <Route exact path="/mapgl" element={<Mapgl />} />
         <Route exact path="/users" element={<Users />} />
+        <Route exact path="/manage-projects/:id" element={<ManageProjects />} />
       </Routes>
     </Router>
   );

@@ -7,6 +7,7 @@ import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function UserCard({
   id,
@@ -17,6 +18,7 @@ export default function UserCard({
   onUserId,
   onOpenForm,
 }) {
+  const navigate = useNavigate();
   const [role, setRole] = useState("");
   const username_current = useSelector((state) => state.auth.username);
 
@@ -28,6 +30,10 @@ export default function UserCard({
   const handleDeleteUser = () => {
     // navigate(`/map/${id}`);
     console.log("Delete User");
+  };
+
+  const handleManageProjects = () => {
+    navigate(`/manage-projects/${id}`);
   };
 
   useEffect(() => {
@@ -61,17 +67,17 @@ export default function UserCard({
                   <Typography gutterBottom variant="subtitle1" component="div">
                     <b>User Name </b>: {username}
                   </Typography>
-                  <Typography gutterBottom variant="subtitle1" component="div">
+                  <Typography variant="body2" color="text.secondary">
                     <b>Email</b> : {email}
                   </Typography>
-                  <Typography gutterBottom variant="subtitle1" component="div">
+                  <Typography variant="body2" color="text.secondary">
                     <b>Role</b> : {role}
                   </Typography>
                   {/* <Typography gutterBottom variant="subtitle1" component="div">
                     <b>Last Login</b> :{" "}
                     {last_login ? last_login : "Not logged in Yet"}
                   </Typography> */}
-                  <Typography gutterBottom variant="subtitle1" component="div">
+                  <Typography variant="body2" color="text.secondary">
                     <b>Date Joined</b> : {date_joined}
                   </Typography>
                 </Grid>
@@ -80,21 +86,35 @@ export default function UserCard({
                     <Button
                       onClick={handleAssignRole}
                       variant="contained"
-                      color="error"
+                      color="success"
                     >
                       Assign Roles
                     </Button>
                   </Grid>
                   <Grid item>
                     <Button
-                      onClick={handleDeleteUser}
+                      onClick={handleManageProjects}
                       variant="contained"
                       color="success"
+                    >
+                      Manage Clients
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      onClick={handleDeleteUser}
+                      variant="contained"
+                      color="error"
                     >
                       Delete
                     </Button>
                   </Grid>
                 </Grid>
+              </Grid>
+              <Grid item xs>
+                <Typography variant="body2" color="text.secondary">
+                  <b>Total Assigned Projects</b> : {2}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
