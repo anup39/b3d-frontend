@@ -4,7 +4,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
-import { Button, Tooltip } from "@mui/material";
+import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -18,9 +18,11 @@ const Img = styled("img")({
 
 export default function ProjectCard({ id, name, description, created_at }) {
   const navigate = useNavigate();
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
   const [orthophotos, setOrthophotos] = useState([]);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [admin, setAdmin] = useState(0);
+  const [editor, setEditor] = useState(0);
+  const [basic, setBasic] = useState(0);
 
   const handleViewInMap = () => {
     navigate(`/map/${id}`);
@@ -29,7 +31,9 @@ export default function ProjectCard({ id, name, description, created_at }) {
   const handleManageClasses = () => {
     navigate(`/manage-classes/${id}`);
   };
-
+  const handleManageUsers = () => {
+    navigate(`/manage-users/${id}`);
+  };
   useEffect(() => {
     axios
       .get(
@@ -37,6 +41,24 @@ export default function ProjectCard({ id, name, description, created_at }) {
       )
       .then((res) => {
         setOrthophotos(res.data);
+      });
+  }, [id]);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/user-projects/?project=${id}`
+      )
+      .then((res) => {
+        setTotalUsers(res.data.length);
+        const counts = res.data.reduce((acc, item) => {
+          const { role_name } = item;
+          acc[role_name] = (acc[role_name] || 0) + 1;
+          return acc;
+        }, {});
+        setAdmin(counts.admin ? counts.admin : 0);
+        setEditor(counts.editor ? counts.editor : 0);
+        setBasic(counts.basic ? counts.basic : 0);
       });
   }, [id]);
 
@@ -92,6 +114,15 @@ export default function ProjectCard({ id, name, description, created_at }) {
                   Manage Classes
                 </Button>
               </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleManageUsers}
+                  variant="contained"
+                  color="success"
+                >
+                  Manage Users
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
           <Grid item xs>
@@ -99,7 +130,16 @@ export default function ProjectCard({ id, name, description, created_at }) {
               Total Orthophotos: {orthophotos.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Total Users: {orthophotos.length}
+              Total Users: {totalUsers}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Admin : {admin}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Editor : {editor}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Basic : {basic}
             </Typography>
           </Grid>
 

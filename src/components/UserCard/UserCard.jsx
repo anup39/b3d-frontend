@@ -13,13 +13,13 @@ export default function UserCard({
   id,
   username,
   email,
+  role,
   last_login,
   date_joined,
   onUserId,
   onOpenForm,
 }) {
   const navigate = useNavigate();
-  const [role, setRole] = useState("");
   const username_current = useSelector((state) => state.auth.username);
 
   const handleAssignRole = () => {
@@ -35,14 +35,6 @@ export default function UserCard({
   const handleManageProjects = () => {
     navigate(`/manage-projects/${id}`);
   };
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?user=${id}`)
-      .then((res) => {
-        setRole(res?.data[0]?.role_name);
-      });
-  }, [id]);
 
   return (
     <>
@@ -82,33 +74,46 @@ export default function UserCard({
                   </Typography>
                 </Grid>
                 <Grid item xs container direction="row" spacing={2}>
-                  <Grid item>
-                    <Button
-                      onClick={handleAssignRole}
-                      variant="contained"
-                      color="success"
-                    >
-                      Assign Roles
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleManageProjects}
-                      variant="contained"
-                      color="success"
-                    >
-                      Manage Clients
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleDeleteUser}
-                      variant="contained"
-                      color="error"
-                    >
-                      Delete
-                    </Button>
-                  </Grid>
+                  {role !== "admin" ? (
+                    <>
+                      <Grid item>
+                        <Button
+                          onClick={handleAssignRole}
+                          variant="contained"
+                          color="success"
+                        >
+                          Assign Roles
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          onClick={handleManageProjects}
+                          variant="contained"
+                          color="success"
+                        >
+                          Manage Clients
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          onClick={handleDeleteUser}
+                          variant="contained"
+                          color="error"
+                        >
+                          Delete
+                        </Button>
+                      </Grid>
+                    </>
+                  ) : (
+                    <Grid item xs>
+                      <Typography variant="body2" color="text.secondary">
+                        <b>
+                          Full Access due to Role Admin. No need to assign role
+                          and project
+                        </b>
+                      </Typography>
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
               <Grid item xs>
@@ -128,6 +133,7 @@ UserCard.propTypes = {
   id: PropTypes.number,
   username: PropTypes.string,
   email: PropTypes.string,
+  role: PropTypes.string,
   last_login: PropTypes.string,
   date_joined: PropTypes.string,
   onUserId: PropTypes.func,

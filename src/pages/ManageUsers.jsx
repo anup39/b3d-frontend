@@ -3,18 +3,18 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AppBar from "../components/AppBar/AppBar";
 import Box from "@mui/material/Box";
-import ProjectTransferList from "../components/ProjectTransferList/ProjectTransferList";
+import UserTransferList from "../components/UserTransferList/UserTransferList";
 import { Button, Tooltip } from "@mui/material";
 
-export default function ManageProjects() {
+export default function ManageUsers() {
   const { id } = useParams();
   const [projectName, setProjectName] = useState("");
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/users/${id}/`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/${id}/`)
       .then((res) => {
-        setProjectName(res.data.username);
+        setProjectName(res.data.name);
       });
   }, [id]);
 
@@ -39,7 +39,7 @@ export default function ManageProjects() {
             {projectName}
           </Button>
         </Tooltip>
-        <ProjectTransferList id={parseInt(id)} component={"projects"} />
+        <UserTransferList id={parseInt(id)} component={"users"} />
       </Box>
     </>
   );

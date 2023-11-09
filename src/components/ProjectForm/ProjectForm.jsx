@@ -9,6 +9,7 @@ import Snackbar from "@mui/material/Snackbar";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setProjects } from "../../reducers/Project";
+// import axiosInstance from "../../utils/axiosInstance";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -33,20 +34,27 @@ export default function ProjectForm() {
     };
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, data)
-      .then(() => {
-        setOpenProjectSuccessToast(true);
-        setOpenProjectErrorToast(false);
-        setTimeout(() => {
-          setOpenProjectSuccessToast(false);
-        }, 3000);
+      .then((res) => {
         axios
-          .get(
-            `${
-              import.meta.env.VITE_API_DASHBOARD_URL
-            }/projects/?owner=${user_id}`
-          )
-          .then((res) => {
-            dispatch(setProjects(res.data));
+          .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-projects/`, {
+            user: user_id,
+            project: res.data.id,
+          })
+          .then(() => {
+            setOpenProjectSuccessToast(true);
+            setOpenProjectErrorToast(false);
+            setTimeout(() => {
+              setOpenProjectSuccessToast(false);
+            }, 3000);
+            axios
+              .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, {
+                headers: {
+                  Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
+                },
+              })
+              .then((res) => {
+                dispatch(setProjects(res.data));
+              });
           });
       })
       .catch(() => {

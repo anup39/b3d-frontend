@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   settoastMessage,
   setshowToast,
@@ -31,7 +31,7 @@ function union(a, b) {
   return [...a, ...not(b, a)];
 }
 
-export default function SimpleTransferList({ id, component }) {
+export default function UserTransferList({ id, component }) {
   const dispatch = useDispatch();
   const [checked, setChecked] = useState([]);
   const [finalLeft, setFinalLeft] = useState([]);
@@ -41,6 +41,7 @@ export default function SimpleTransferList({ id, component }) {
   const leftChecked = intersection(checked, finalLeft);
   const rightChecked = intersection(checked, finalRight);
   const [loading, setLoading] = useState(false);
+  const username_current = useSelector((state) => state.auth.username);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -81,14 +82,12 @@ export default function SimpleTransferList({ id, component }) {
     // Fetch data from the first API endpoint
     axios
       .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/user-${component}/?user=${id}`
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/user-projects/?project=${id}`
       )
       .then((res) => {
         const rightList = res.data.map((item) => item);
 
-        if (component === "projects") {
+        if (component === "users") {
           let global_url = `${
             import.meta.env.VITE_API_DASHBOARD_URL
           }/${component}/`;
@@ -97,14 +96,19 @@ export default function SimpleTransferList({ id, component }) {
 
             let filteredLeftList = leftList.filter(
               (item) =>
+                item.username !== username_current &&
+                item.role_name !== "admin" &&
                 !rightList.some(
-                  (rightItem) => rightItem.project_name === item.name
+                  (rightItem) => rightItem.user_name === item.username
                 )
             );
-            const filteredRightList = leftList.filter((item) =>
-              rightList.some(
-                (rightItem) => rightItem.project_name === item.name
-              )
+            const filteredRightList = leftList.filter(
+              (item) =>
+                item.username !== username_current &&
+                item.role_name !== "admin" &&
+                rightList.some(
+                  (rightItem) => rightItem.user_name === item.username
+                )
             );
             setInitialLeft(filteredLeftList);
             setInitialRight(filteredRightList);
@@ -115,7 +119,7 @@ export default function SimpleTransferList({ id, component }) {
 
         // Fetch data from the second API endpoint
       });
-  }, [id, component]);
+  }, [id, component, username_current]);
 
   const customList = (title, items) => (
     <Card sx={{ backgroundColor: "#828282" }}>
@@ -173,7 +177,7 @@ export default function SimpleTransferList({ id, component }) {
                 />
               </ListItemIcon>
 
-              <ListItemText id={labelId} primary={value.name} />
+              <ListItemText id={labelId} primary={value.username} />
             </ListItem>
           );
         })}
@@ -183,27 +187,26 @@ export default function SimpleTransferList({ id, component }) {
 
   const handleSave = () => {
     const itemsMovedToLeft = finalLeft.filter(
-      (item) => !initialLeft.some((leftItem) => leftItem.name === item.name)
+      (item) =>
+        !initialLeft.some((leftItem) => leftItem.username === item.username)
     );
     const itemsMovedToRight = finalRight.filter(
-      (item) => !initialRight.some((rightItem) => rightItem.name === item.name)
+      (item) =>
+        !initialRight.some((rightItem) => rightItem.username === item.username)
     );
 
-    if (component === "projects") {
-      console.log(itemsMovedToLeft, "itemsMovedToLeft");
-      console.log(itemsMovedToRight, "itemsMovedToRight");
-
+    if (component === "users") {
       try {
         setLoading(true);
         if (itemsMovedToRight.length > 0) {
           itemsMovedToRight.map((item) => {
             const data = {
-              project: item.id,
-              user: id,
+              project: id,
+              user: item.id,
             };
             axios
               .post(
-                `${import.meta.env.VITE_API_DASHBOARD_URL}/user-${component}/`,
+                `${import.meta.env.VITE_API_DASHBOARD_URL}/user-projects/`,
                 data
               )
               .then(() => {
@@ -219,7 +222,7 @@ export default function SimpleTransferList({ id, component }) {
               .get(
                 `${
                   import.meta.env.VITE_API_DASHBOARD_URL
-                }/user-${component}/?project=${item.id}&user=${id}`
+                }/user-projects/?project=${id}&user=${item.id}`
               )
               .then((res) => {
                 const id = res.data[0].id;
@@ -227,7 +230,7 @@ export default function SimpleTransferList({ id, component }) {
                   .delete(
                     `${
                       import.meta.env.VITE_API_DASHBOARD_URL
-                    }/user-${component}/${id}/`
+                    }/user-projects/${id}/`
                   )
                   .then(() => {
                     dispatch(setshowToast(true));
@@ -297,7 +300,7 @@ export default function SimpleTransferList({ id, component }) {
   );
 }
 
-SimpleTransferList.propTypes = {
+UserTransferList.propTypes = {
   id: PropTypes.number,
   component: PropTypes.string,
 };
