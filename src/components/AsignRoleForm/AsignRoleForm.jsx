@@ -24,9 +24,6 @@ export default function AsignRoleForm({ openForm, user_id, onOpenForm }) {
     const data = {
       role: selectedUserRole,
     };
-
-    console.log(data, "data");
-
     axios
       .get(
         `${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?user=${user_id}`
@@ -39,15 +36,12 @@ export default function AsignRoleForm({ openForm, user_id, onOpenForm }) {
             data
           )
           .then(() => {
-            axios
-              .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/users/`)
-              .then((res) => {
-                window.location.reload(true);
-                setLoading(false);
-                dispatch(setshowToast(true));
-                dispatch(settoastMessage("Successfully Created User Role"));
-                dispatch(settoastType("success"));
-              });
+            window.location.reload(true);
+            setLoading(false);
+            dispatch(setshowToast(true));
+            dispatch(settoastMessage("Successfully Created User Role"));
+            dispatch(settoastType("success"));
+            closeForm();
           })
           .catch(() => {
             setLoading(false);
@@ -56,8 +50,6 @@ export default function AsignRoleForm({ openForm, user_id, onOpenForm }) {
             dispatch(settoastType("error"));
           });
       });
-
-    closeForm();
   };
 
   const closeForm = () => {
