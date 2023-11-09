@@ -29,7 +29,9 @@ export default function ProjectCard({ id, name, description, created_at }) {
   const handleManageClasses = () => {
     navigate(`/manage-classes/${id}`);
   };
-
+  const handleManageUsers = () => {
+    navigate(`/manage-users/${id}`);
+  };
   useEffect(() => {
     axios
       .get(
@@ -90,6 +92,15 @@ export default function ProjectCard({ id, name, description, created_at }) {
                   color="success"
                 >
                   Manage Classes
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleManageUsers}
+                  variant="contained"
+                  color="success"
+                >
+                  Manage Users
                 </Button>
               </Grid>
             </Grid>
