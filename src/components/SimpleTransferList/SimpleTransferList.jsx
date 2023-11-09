@@ -8,15 +8,16 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import { CircularProgress } from "@mui/material";
+import { useDispatch } from "react-redux";
+import {
+  settoastMessage,
+  setshowToast,
+  settoastType,
+} from "../../reducers/DisplaySettings";
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -31,6 +32,7 @@ function union(a, b) {
 }
 
 export default function SimpleTransferList({ id, component }) {
+  const dispatch = useDispatch();
   const [checked, setChecked] = useState([]);
   const [finalLeft, setFinalLeft] = useState([]);
   const [finalRight, setFinalRight] = useState([]);
@@ -38,9 +40,7 @@ export default function SimpleTransferList({ id, component }) {
   const [initialRight, setInitialRight] = useState([]);
   const leftChecked = intersection(checked, finalLeft);
   const rightChecked = intersection(checked, finalRight);
-  const [openCategoryErrorToast, setOpenCategoryErrorToast] = useState(false);
-  const [openCategorySuccessToast, setOpenCategorySuccessToast] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -88,15 +88,12 @@ export default function SimpleTransferList({ id, component }) {
       .then((res) => {
         const rightList = res.data.map((item) => item);
 
-        console.log(rightList, "right list");
-
         if (component === "projects") {
           let global_url = `${
             import.meta.env.VITE_API_DASHBOARD_URL
           }/${component}/`;
           axios.get(global_url).then((res) => {
             const leftList = res.data.map((item) => item);
-            console.log(leftList, "leftList");
 
             let filteredLeftList = leftList.filter(
               (item) =>
@@ -122,38 +119,6 @@ export default function SimpleTransferList({ id, component }) {
 
   const customList = (title, items) => (
     <Card sx={{ backgroundColor: "#828282" }}>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openCategoryErrorToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message={`Failed to Created ${component}`}
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Failed to Create {component} .
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openCategorySuccessToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message={`Sucessfully Created ${component}`}
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Sucessfully Created {component}
-        </Alert>
-      </Snackbar>
       <CardHeader
         sx={{ px: 2, py: 1 }}
         avatar={
@@ -218,63 +183,71 @@ export default function SimpleTransferList({ id, component }) {
 
   const handleSave = () => {
     const itemsMovedToLeft = finalLeft.filter(
-      (item) =>
-        !initialLeft.some((leftItem) => leftItem.full_name === item.full_name)
+      (item) => !initialLeft.some((leftItem) => leftItem.name === item.name)
     );
     const itemsMovedToRight = finalRight.filter(
-      (item) =>
-        !initialRight.some(
-          (rightItem) => rightItem.full_name === item.full_name
-        )
+      (item) => !initialRight.some((rightItem) => rightItem.name === item.name)
     );
 
     if (component === "projects") {
-      const project_url = `${
-        import.meta.env.VITE_API_DASHBOARD_URL
-      }/${component}`;
-      if (itemsMovedToRight.length > 0) {
-        itemsMovedToRight.map((item) => {
-          const data = {
-            name: item.name,
-            description: item.description,
-            project: id,
-            is_display: true,
-            view_name: item.full_name,
-            global_standard_category: item.id,
-          };
-          axios.post(`${project_url}/`, data).then(() => {
-            setOpenCategorySuccessToast(true);
-            setOpenCategoryErrorToast(false);
-            setTimeout(() => {
-              setOpenCategorySuccessToast(false);
-            }, 3000);
+      console.log(itemsMovedToLeft, "itemsMovedToLeft");
+      console.log(itemsMovedToRight, "itemsMovedToRight");
+
+      try {
+        setLoading(true);
+        if (itemsMovedToRight.length > 0) {
+          itemsMovedToRight.map((item) => {
+            const data = {
+              project: item.id,
+              user: id,
+            };
+            axios
+              .post(
+                `${import.meta.env.VITE_API_DASHBOARD_URL}/user-${component}/`,
+                data
+              )
+              .then(() => {
+                dispatch(setshowToast(true));
+                dispatch(settoastMessage("Saving ..."));
+                dispatch(settoastType("success"));
+              });
           });
-        });
-      }
-      if (itemsMovedToLeft.length > 0) {
-        itemsMovedToLeft.map((item) => {
-          axios
-            .get(`${project_url}/?project=${id}&view_name=${item.full_name}`)
-            .then((res) => {
-              const id = res.data[0].id;
-              axios
-                .delete(`${project_url}/${id}/`)
-                .then(() => {
-                  setOpenCategorySuccessToast(true);
-                  setOpenCategoryErrorToast(false);
-                  setTimeout(() => {
-                    setOpenCategorySuccessToast(false);
-                  }, 3000);
-                })
-                .catch(() => {
-                  setOpenCategoryErrorToast(true);
-                  setOpenCategorySuccessToast(false);
-                  setTimeout(() => {
-                    setOpenCategoryErrorToast(false);
-                  }, 3000);
-                });
-            });
-        });
+        }
+        if (itemsMovedToLeft.length > 0) {
+          itemsMovedToLeft.map((item) => {
+            axios
+              .get(
+                `${
+                  import.meta.env.VITE_API_DASHBOARD_URL
+                }/user-${component}/?project=${item.id}&user=${id}`
+              )
+              .then((res) => {
+                const id = res.data[0].id;
+                axios
+                  .delete(
+                    `${
+                      import.meta.env.VITE_API_DASHBOARD_URL
+                    }/user-${component}/${id}/`
+                  )
+                  .then(() => {
+                    dispatch(setshowToast(true));
+                    dispatch(settoastMessage("Saving ..."));
+                    dispatch(settoastType("success"));
+                  })
+                  .catch(() => {});
+              });
+          });
+        }
+        setTimeout(() => {
+          setLoading(false);
+
+          window.location.reload(true);
+        }, 4000);
+      } catch {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Failed to Create User"));
+        dispatch(settoastType("error"));
       }
     }
   };
@@ -308,8 +281,16 @@ export default function SimpleTransferList({ id, component }) {
       </Grid>
       <Grid item>{customList("Chosen", finalRight)}</Grid>
       <Grid item>
-        <Button onClick={handleSave} variant="contained" color="success">
-          Save
+        <Button
+          color="success"
+          type="submit"
+          onClick={handleSave}
+          fullWidth
+          variant={loading ? "outlined" : "contained"}
+          sx={{ mt: 3, mb: 2 }}
+        >
+          {loading ? null : "Save"}
+          {loading ? <CircularProgress /> : null}
         </Button>
       </Grid>
     </Grid>
