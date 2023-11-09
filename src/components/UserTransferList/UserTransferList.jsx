@@ -97,6 +97,7 @@ export default function UserTransferList({ id, component }) {
             let filteredLeftList = leftList.filter(
               (item) =>
                 item.username !== username_current &&
+                item.role_name !== "admin" &&
                 !rightList.some(
                   (rightItem) => rightItem.user_name === item.username
                 )
@@ -104,6 +105,7 @@ export default function UserTransferList({ id, component }) {
             const filteredRightList = leftList.filter(
               (item) =>
                 item.username !== username_current &&
+                item.role_name !== "admin" &&
                 rightList.some(
                   (rightItem) => rightItem.user_name === item.username
                 )
