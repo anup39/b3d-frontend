@@ -21,7 +21,7 @@ export default function AutoCompleteCustom({ onItemSelected, category }) {
   return (
     <Autocomplete
       disablePortal
-      id="combo-box-demo"
+      id="category-select"
       options={options}
       getOptionLabel={(option) => option.full_name}
       sx={{ width: 300 }}

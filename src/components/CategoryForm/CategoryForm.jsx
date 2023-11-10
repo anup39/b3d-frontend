@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
 import AutoCompleteCustom from "../AutoCompleteCustom/AutoCompleteCustom";
+import Autocomplete from "@mui/material/Autocomplete";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -24,6 +25,7 @@ export default function CategoryForm() {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [selectedStandradCategoryId, setSelectedStandradCategoryId] =
     useState(null);
+  const [inputValue, setInputValue] = useState("");
 
   const handleCreateCategory = (event) => {
     event.preventDefault();
@@ -36,6 +38,7 @@ export default function CategoryForm() {
         description: descriptionInput.value,
         sub_category: selectedCategoryId,
         standard_category: selectedStandradCategoryId,
+        type_of_geometry: inputValue,
       };
       axios
         .post(
@@ -165,6 +168,28 @@ export default function CategoryForm() {
                     setSelectedStandradCategoryId(ids);
                   }}
                   category={"sub-category"}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Autocomplete
+                  disablePortal
+                  id="type-of-geometry"
+                  options={["Polygon", "LineString", "Point"]}
+                  getOptionLabel={(option) => option}
+                  style={{ width: 300 }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Type of Geometry"
+                      variant="outlined"
+                      required
+                    />
+                  )}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setInputValue(newValue);
+                    }
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
