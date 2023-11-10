@@ -4,6 +4,10 @@ const initialState = {
   showToast: false,
   toastMessage: "Error creating user",
   toastType: "error",
+  showDeletePopup: false,
+  deletePopupMessage: "Are you sure you want to delete?",
+  deleteId: null,
+  deleteTarget: "",
   showGeomFormPopup: "none",
 };
 
@@ -23,6 +27,18 @@ export const DisplaySettings = createSlice({
     setshowGeomFormPopup: (state, action) => {
       state.showGeomFormPopup = action.payload;
     },
+    setshowDeletePopup: (state, action) => {
+      state.showDeletePopup = action.payload;
+    },
+    setdeletePopupMessage: (state, action) => {
+      state.deletePopupMessage = action.payload;
+    },
+    setdeleteId: (state, action) => {
+      state.deleteId = action.payload;
+    },
+    setdeleteTarget: (state, action) => {
+      state.deleteTarget = action.payload;
+    },
   },
 });
 
@@ -31,6 +47,10 @@ export const {
   setshowToast,
   settoastMessage,
   settoastType,
+  setshowDeletePopup,
+  setdeletePopupMessage,
+  setdeleteId,
+  setdeleteTarget,
   setshowGeomFormPopup,
 } = DisplaySettings.actions;
 
