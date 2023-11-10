@@ -57,7 +57,7 @@ export default function RasterContainer({ id }) {
               status={raster.status}
               file_size={raster.file_size}
               progress={raster.progress}
-              created_on={raster.created_on}
+              created_at={raster.created_at}
               task_id={raster.task_id}
               file_name={raster.file_name}
               projection={raster.projection}

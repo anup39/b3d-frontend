@@ -171,6 +171,7 @@ export default function Classification() {
                   name={c.name}
                   full_name={c.full_name}
                   description={c.description}
+                  type_of_geometry={c.type_of_geometry}
                   created_at={c.created_at}
                 />
               ))
