@@ -8,6 +8,13 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {
+  setdeleteId,
+  setdeletePopupMessage,
+  setdeleteTarget,
+  setshowDeletePopup,
+} from "../../reducers/DisplaySettings";
 
 const Img = styled("img")({
   margin: "auto",
@@ -18,6 +25,7 @@ const Img = styled("img")({
 
 export default function ProjectCard({ id, name, description, created_at }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [orthophotos, setOrthophotos] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [admin, setAdmin] = useState(0);
@@ -34,6 +42,18 @@ export default function ProjectCard({ id, name, description, created_at }) {
   const handleManageUsers = () => {
     navigate(`/manage-users/${id}`);
   };
+
+  const handleDeleteProject = () => {
+    dispatch(setshowDeletePopup(true));
+    dispatch(setdeleteId(id));
+    dispatch(setdeleteTarget("projects"));
+    dispatch(
+      setdeletePopupMessage(
+        `Are you sure you want to delete Project ${id} and its content?`
+      )
+    );
+  };
+
   useEffect(() => {
     axios
       .get(
@@ -92,10 +112,10 @@ export default function ProjectCard({ id, name, description, created_at }) {
                 {description}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Created On: {created_at}
+                Created at: {created_at}
               </Typography>
             </Grid>
-            <Grid item xs container direction="row" spacing={2}>
+            <Grid item xs container direction="row" spacing={1}>
               <Grid item>
                 <Button
                   onClick={handleViewInMap}
@@ -121,6 +141,15 @@ export default function ProjectCard({ id, name, description, created_at }) {
                   color="success"
                 >
                   Manage Users
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleDeleteProject}
+                  variant="contained"
+                  color="error"
+                >
+                  Delete
                 </Button>
               </Grid>
             </Grid>
