@@ -11,48 +11,29 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
-import { useState } from "react";
-import MuiAlert from "@mui/material/Alert";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setToken, setUserId, setUserName } from "../reducers/Auth";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://b3d.com/">
-        B3D
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../reducers/DisplaySettings";
+import Copyright from "../components/Copyright/Copyright";
+import { CircularProgress } from "@mui/material";
+import { useState } from "react";
 
 const defaultTheme = createTheme();
 
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [openLoginToast, setOpenLoginToast] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setLoading(true);
     const data = new FormData(event.currentTarget);
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/api-token-auth/`, data)
@@ -68,30 +49,22 @@ export default function Login() {
         localStorage.setItem("user_id", user_id);
         localStorage.setItem("username", username);
 
-        setOpenLoginToast(false);
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Successfully Logged In "));
+        dispatch(settoastType("success"));
         navigate("/dashboard");
       })
-      .catch(() => setOpenLoginToast(true));
+      .catch(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Invalid Credentials"));
+        dispatch(settoastType("error"));
+      });
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openLoginToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message="Incorrect Credentials"
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Incorrect Credentials
-        </Alert>
-      </Snackbar>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -108,12 +81,7 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Log in
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <form onSubmit={handleSubmit}>
             <TextField
               margin="normal"
               required
@@ -141,10 +109,11 @@ export default function Login() {
             <Button
               type="submit"
               fullWidth
-              variant="contained"
+              variant={loading ? "outlined" : "contained"}
               sx={{ mt: 3, mb: 2 }}
             >
-              Log In
+              {loading ? null : "Login"}
+              {loading ? <CircularProgress /> : null}
             </Button>
             <Grid container>
               {/* <Grid item xs>
@@ -158,7 +127,7 @@ export default function Login() {
                 </Link>
               </Grid>
             </Grid>
-          </Box>
+          </form>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>

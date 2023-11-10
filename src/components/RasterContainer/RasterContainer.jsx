@@ -2,16 +2,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import RasterCard from "../RasterCard/RasterCard";
-import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 export default function RasterContainer({ id }) {
   const navigate = useNavigate();
   const [rasters, setRasters] = useState([]);
-
-  const handleOpenMap = () => {
-    navigate(`/map/${id}`);
-  };
 
   const fetchData = (id) => {
     axios
@@ -35,6 +31,10 @@ export default function RasterContainer({ id }) {
     };
   }, [id]);
 
+  const handleOpenMap = () => {
+    navigate(`/map/${id}`);
+  };
+
   return (
     <div>
       {rasters.length > 0 ? (
@@ -57,7 +57,7 @@ export default function RasterContainer({ id }) {
               status={raster.status}
               file_size={raster.file_size}
               progress={raster.progress}
-              created_on={raster.created_on}
+              created_at={raster.created_at}
               task_id={raster.task_id}
               file_name={raster.file_name}
               projection={raster.projection}

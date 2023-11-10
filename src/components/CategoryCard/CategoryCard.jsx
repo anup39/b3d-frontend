@@ -12,7 +12,12 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
-export default function CategoryCard({ full_name, description, created_at }) {
+export default function CategoryCard({
+  full_name,
+  description,
+  type_of_geometry,
+  created_at,
+}) {
   return (
     <Paper
       sx={{
@@ -42,8 +47,11 @@ export default function CategoryCard({ full_name, description, created_at }) {
               <Typography variant="body2" gutterBottom>
                 {description}
               </Typography>
+              <Typography variant="body2" gutterBottom>
+                Type of Geometry : {type_of_geometry}
+              </Typography>
               <Typography variant="body2" color="text.secondary">
-                Created On: {created_at}
+                Created At: {created_at}
               </Typography>
             </Grid>
           </Grid>
@@ -58,5 +66,6 @@ CategoryCard.propTypes = {
   name: PropTypes.string,
   full_name: PropTypes.string,
   description: PropTypes.string,
+  type_of_geometry: PropTypes.string,
   created_at: PropTypes.string,
 };

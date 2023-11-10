@@ -311,8 +311,6 @@ export default function TransferList({ project_id, component }) {
   );
 
   const handleSave = () => {
-    // Compare current lists with initial lists to track changes
-
     const itemsMovedToLeft = finalLeft.filter(
       (item) =>
         !initialLeft.some((leftItem) => leftItem.full_name === item.full_name)
@@ -465,6 +463,7 @@ export default function TransferList({ project_id, component }) {
                 global_sub_category: item.sub_category,
                 global_category: item.id,
                 description: item.description,
+                type_of_geometry: item.type_of_geometry,
                 is_display: true,
                 view_name: item.full_name,
               };

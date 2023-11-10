@@ -4,10 +4,17 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
-import { Button, Tooltip } from "@mui/material";
+import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {
+  setdeleteId,
+  setdeletePopupMessage,
+  setdeleteTarget,
+  setshowDeletePopup,
+} from "../../reducers/DisplaySettings";
 
 const Img = styled("img")({
   margin: "auto",
@@ -18,9 +25,12 @@ const Img = styled("img")({
 
 export default function ProjectCard({ id, name, description, created_at }) {
   const navigate = useNavigate();
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const dispatch = useDispatch();
   const [orthophotos, setOrthophotos] = useState([]);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [admin, setAdmin] = useState(0);
+  const [editor, setEditor] = useState(0);
+  const [basic, setBasic] = useState(0);
 
   const handleViewInMap = () => {
     navigate(`/map/${id}`);
@@ -28,6 +38,24 @@ export default function ProjectCard({ id, name, description, created_at }) {
 
   const handleManageClasses = () => {
     navigate(`/manage-classes/${id}`);
+  };
+  const handleManageUsers = () => {
+    navigate(`/manage-users/${id}`);
+  };
+
+  const handleManageStyles = () => {
+    navigate(`/manage-styles/${id}`);
+  };
+
+  const handleDeleteProject = () => {
+    dispatch(setshowDeletePopup(true));
+    dispatch(setdeleteId(id));
+    dispatch(setdeleteTarget("projects"));
+    dispatch(
+      setdeletePopupMessage(
+        `Are you sure you want to delete Project ${id} and its content?`
+      )
+    );
   };
 
   useEffect(() => {
@@ -37,6 +65,24 @@ export default function ProjectCard({ id, name, description, created_at }) {
       )
       .then((res) => {
         setOrthophotos(res.data);
+      });
+  }, [id]);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/user-projects/?project=${id}`
+      )
+      .then((res) => {
+        setTotalUsers(res.data.length);
+        const counts = res.data.reduce((acc, item) => {
+          const { role_name } = item;
+          acc[role_name] = (acc[role_name] || 0) + 1;
+          return acc;
+        }, {});
+        setAdmin(counts.admin ? counts.admin : 0);
+        setEditor(counts.editor ? counts.editor : 0);
+        setBasic(counts.basic ? counts.basic : 0);
       });
   }, [id]);
 
@@ -70,10 +116,10 @@ export default function ProjectCard({ id, name, description, created_at }) {
                 {description}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Created On: {created_at}
+                Created At: {created_at}
               </Typography>
             </Grid>
-            <Grid item xs container direction="row" spacing={2}>
+            <Grid item xs container direction="row" spacing={1}>
               <Grid item>
                 <Button
                   onClick={handleViewInMap}
@@ -92,21 +138,50 @@ export default function ProjectCard({ id, name, description, created_at }) {
                   Manage Classes
                 </Button>
               </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleManageUsers}
+                  variant="contained"
+                  color="success"
+                >
+                  Manage Users
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleManageStyles}
+                  variant="contained"
+                  color="success"
+                >
+                  Manage Styles
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleDeleteProject}
+                  variant="contained"
+                  color="error"
+                >
+                  Delete
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
           <Grid item xs>
-            <Tooltip>
-              <Button
-                sx={{ marginBottom: "25px" }}
-                variant="outlined"
-                color="error"
-              >
-                Orthophotos
-              </Button>
-            </Tooltip>
-
-            <Typography gutterBottom variant="subtitle1" component="div">
+            <Typography variant="body2" color="text.secondary">
               Total Orthophotos: {orthophotos.length}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Total Users: {totalUsers}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Admin : {admin}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Editor : {editor}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Basic : {basic}
             </Typography>
           </Grid>
 

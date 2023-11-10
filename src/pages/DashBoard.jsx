@@ -5,7 +5,8 @@ import ProjectForm from "../components/ProjectForm/ProjectForm";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setProjects } from "../reducers/Project";
-import axios from "axios";
+// import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 export default function DashBoard() {
   const dispatch = useDispatch();
@@ -13,10 +14,12 @@ export default function DashBoard() {
   const user_id = useSelector((state) => state.auth.user_id);
 
   useEffect(() => {
-    axios
-      .get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/projects/?owner=${user_id}`
-      )
+    axiosInstance
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, {
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
+        },
+      })
       .then((res) => {
         dispatch(setProjects(res.data));
       });

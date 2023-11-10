@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
 import AutoCompleteCustom from "../AutoCompleteCustom/AutoCompleteCustom";
+import Autocomplete from "@mui/material/Autocomplete";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -24,6 +25,7 @@ export default function CategoryForm() {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [selectedStandradCategoryId, setSelectedStandradCategoryId] =
     useState(null);
+  const [inputValue, setInputValue] = useState("");
 
   const handleCreateCategory = (event) => {
     event.preventDefault();
@@ -34,8 +36,9 @@ export default function CategoryForm() {
       const data = {
         name: nameInput.value,
         description: descriptionInput.value,
-        sub_category: selectedCategoryId, // Use the selected category ID
+        sub_category: selectedCategoryId,
         standard_category: selectedStandradCategoryId,
+        type_of_geometry: inputValue,
       };
       axios
         .post(
@@ -53,9 +56,9 @@ export default function CategoryForm() {
             .then((res) => {
               dispatch(setCategorys(res.data));
             })
-            .catch((error) => {});
+            .catch(() => {});
         })
-        .catch((error) => {
+        .catch(() => {
           setOpenCategoryErrorToast(true);
           setOpenCategorySuccessToast(false);
           setTimeout(() => {
@@ -81,15 +84,9 @@ export default function CategoryForm() {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={openCategoryErrorToast}
         autoHideDuration={6000}
-        // onClose={handleClose}
         message="Failed to Create Category"
-        // action={action}
       >
-        <Alert
-          //  onClose={handleClose}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
+        <Alert severity="error" sx={{ width: "100%" }}>
           Failed to Create Category
         </Alert>
       </Snackbar>
@@ -97,15 +94,9 @@ export default function CategoryForm() {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={openCategorySuccessToast}
         autoHideDuration={6000}
-        // onClose={handleClose}
         message="Sucessfully Created Category"
-        // action={action}
       >
-        <Alert
-          //  onClose={handleClose}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
+        <Alert severity="success" sx={{ width: "100%" }}>
           Sucessfully Created Category
         </Alert>
       </Snackbar>
@@ -128,8 +119,8 @@ export default function CategoryForm() {
             left: 0,
             width: "100%",
             height: "100%",
-            background: "rgba(0, 0, 0, 0.5)", // Semi-transparent backdrop
-            zIndex: 9999, // Higher z-index to cover other elements
+            background: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
           }}
         >
           <form
@@ -139,10 +130,10 @@ export default function CategoryForm() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px", // Adjust the width to your desired size
+              width: "300px",
               background: "#fff",
               padding: "20px",
-              zIndex: 10000, // Higher z-index for the form
+              zIndex: 10000,
             }}
           >
             <Grid container spacing={2}>
@@ -155,7 +146,7 @@ export default function CategoryForm() {
                   size="small"
                   InputLabelProps={{ shrink: true }}
                   required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
@@ -167,7 +158,7 @@ export default function CategoryForm() {
                   size="small"
                   InputLabelProps={{ shrink: true }}
                   required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
@@ -180,12 +171,34 @@ export default function CategoryForm() {
                 />
               </Grid>
               <Grid item xs={12}>
+                <Autocomplete
+                  disablePortal
+                  id="type-of-geometry"
+                  options={["Polygon", "LineString", "Point"]}
+                  getOptionLabel={(option) => option}
+                  style={{ width: 300 }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Type of Geometry"
+                      variant="outlined"
+                      required
+                    />
+                  )}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setInputValue(newValue);
+                    }
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <Button
                   type="submit"
                   variant="contained"
                   color="success"
                   size="small"
-                  fullWidth // Use fullWidth to make the button occupy the form's width
+                  fullWidth
                 >
                   Done
                 </Button>
@@ -196,7 +209,7 @@ export default function CategoryForm() {
                   variant="contained"
                   color="error"
                   size="small"
-                  fullWidth // Use fullWidth to make the button occupy the form's width
+                  fullWidth
                 >
                   Close
                 </Button>

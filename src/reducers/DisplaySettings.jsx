@@ -1,7 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  showButton: false,
+  showToast: false,
+  toastMessage: "Error creating user",
+  toastType: "error",
+  showDeletePopup: false,
+  deletePopupMessage: "Are you sure you want to delete?",
+  deleteId: null,
+  deleteTarget: "",
   showGeomFormPopup: "none",
 };
 
@@ -9,18 +15,43 @@ export const DisplaySettings = createSlice({
   name: "DisplaySettings",
   initialState,
   reducers: {
-    toggleShowButton: (state, action) => {
-      state.showButton = action.payload;
+    setshowToast: (state, action) => {
+      state.showToast = action.payload;
     },
-    toggleShowGeomFormPopup: (state, action) => {
+    settoastMessage: (state, action) => {
+      state.toastMessage = action.payload;
+    },
+    settoastType: (state, action) => {
+      state.toastType = action.payload;
+    },
+    setshowGeomFormPopup: (state, action) => {
       state.showGeomFormPopup = action.payload;
+    },
+    setshowDeletePopup: (state, action) => {
+      state.showDeletePopup = action.payload;
+    },
+    setdeletePopupMessage: (state, action) => {
+      state.deletePopupMessage = action.payload;
+    },
+    setdeleteId: (state, action) => {
+      state.deleteId = action.payload;
+    },
+    setdeleteTarget: (state, action) => {
+      state.deleteTarget = action.payload;
     },
   },
 });
 
-// Action creators are generated for each case reducer function
 // eslint-disable-next-line react-refresh/only-export-components
-export const { toggleShowButton, toggleShowGeomFormPopup } =
-  DisplaySettings.actions;
+export const {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+  setshowDeletePopup,
+  setdeletePopupMessage,
+  setdeleteId,
+  setdeleteTarget,
+  setshowGeomFormPopup,
+} = DisplaySettings.actions;
 
 export default DisplaySettings.reducer;

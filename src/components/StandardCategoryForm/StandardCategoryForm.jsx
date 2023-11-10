@@ -124,8 +124,8 @@ export default function StandardCategoryForm() {
             left: 0,
             width: "100%",
             height: "100%",
-            background: "rgba(0, 0, 0, 0.5)", // Semi-transparent backdrop
-            zIndex: 9999, // Higher z-index to cover other elements
+            background: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
           }}
         >
           <form
@@ -135,10 +135,10 @@ export default function StandardCategoryForm() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px", // Adjust the width to your desired size
+              width: "300px",
               background: "#fff",
               padding: "20px",
-              zIndex: 10000, // Higher z-index for the form
+              zIndex: 10000,
             }}
           >
             <Grid container spacing={2}>
@@ -151,7 +151,7 @@ export default function StandardCategoryForm() {
                   size="small"
                   InputLabelProps={{ shrink: true }}
                   required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
@@ -163,7 +163,7 @@ export default function StandardCategoryForm() {
                   size="small"
                   InputLabelProps={{ shrink: true }}
                   required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
@@ -172,7 +172,7 @@ export default function StandardCategoryForm() {
                   variant="contained"
                   color="success"
                   size="small"
-                  fullWidth // Use fullWidth to make the button occupy the form's width
+                  fullWidth
                 >
                   Done
                 </Button>
@@ -183,7 +183,7 @@ export default function StandardCategoryForm() {
                   variant="contained"
                   color="error"
                   size="small"
-                  fullWidth // Use fullWidth to make the button occupy the form's width
+                  fullWidth
                 >
                   Close
                 </Button>

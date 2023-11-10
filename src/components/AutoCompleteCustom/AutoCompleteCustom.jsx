@@ -9,7 +9,6 @@ export default function AutoCompleteCustom({ onItemSelected, category }) {
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    // Make an API call to fetch the data from the provided endpoint.
     axios
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-${category}/`)
       .then((response) => {
@@ -22,7 +21,7 @@ export default function AutoCompleteCustom({ onItemSelected, category }) {
   return (
     <Autocomplete
       disablePortal
-      id="combo-box-demo"
+      id="category-select"
       options={options}
       getOptionLabel={(option) => option.full_name}
       sx={{ width: 300 }}
@@ -39,7 +38,7 @@ export default function AutoCompleteCustom({ onItemSelected, category }) {
       onChange={(event, newValue) => {
         if (newValue) {
           setInputValue(newValue.full_name);
-          onItemSelected(newValue.id, newValue.standard_category); // Pass the selected ID to the parent component.
+          onItemSelected(newValue.id, newValue.standard_category);
         }
       }}
     />
@@ -47,6 +46,6 @@ export default function AutoCompleteCustom({ onItemSelected, category }) {
 }
 
 AutoCompleteCustom.propTypes = {
-  onItemSelected: PropTypes.func.isRequired, // Ensure it's a function and required
+  onItemSelected: PropTypes.func.isRequired,
   category: PropTypes.string,
 };

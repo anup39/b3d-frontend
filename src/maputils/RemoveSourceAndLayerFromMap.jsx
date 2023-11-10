@@ -4,13 +4,11 @@ const RemoveSourceAndLayerFromMap = (map, layerId, sourceId) => {
   const existingSource = style.sources[sourceId];
 
   if (existingLayer) {
-    // remove the layer from the map
     map.off("click", layerId);
     map.removeLayer(layerId);
   }
 
   if (existingSource) {
-    // remove the source from the map
     map.removeSource(sourceId);
   }
 };

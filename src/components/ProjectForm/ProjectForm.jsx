@@ -9,6 +9,7 @@ import Snackbar from "@mui/material/Snackbar";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setProjects } from "../../reducers/Project";
+// import axiosInstance from "../../utils/axiosInstance";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -33,20 +34,27 @@ export default function ProjectForm() {
     };
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, data)
-      .then(() => {
-        setOpenProjectSuccessToast(true);
-        setOpenProjectErrorToast(false);
-        setTimeout(() => {
-          setOpenProjectSuccessToast(false);
-        }, 3000);
+      .then((res) => {
         axios
-          .get(
-            `${
-              import.meta.env.VITE_API_DASHBOARD_URL
-            }/projects/?owner=${user_id}`
-          )
-          .then((res) => {
-            dispatch(setProjects(res.data));
+          .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-projects/`, {
+            user: user_id,
+            project: res.data.id,
+          })
+          .then(() => {
+            setOpenProjectSuccessToast(true);
+            setOpenProjectErrorToast(false);
+            setTimeout(() => {
+              setOpenProjectSuccessToast(false);
+            }, 3000);
+            axios
+              .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, {
+                headers: {
+                  Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
+                },
+              })
+              .then((res) => {
+                dispatch(setProjects(res.data));
+              });
           });
       })
       .catch(() => {
@@ -74,7 +82,7 @@ export default function ProjectForm() {
         open={openProjectErrorToast}
         autoHideDuration={6000}
         // onClose={handleClose}
-        message="Failed to Create Project"
+        message="Failed to Create Client"
         // action={action}
       >
         <Alert
@@ -82,7 +90,7 @@ export default function ProjectForm() {
           severity="error"
           sx={{ width: "100%" }}
         >
-          Failed to Create Project
+          Failed to Create Client
         </Alert>
       </Snackbar>
       <Snackbar
@@ -90,7 +98,7 @@ export default function ProjectForm() {
         open={openProjectSuccessToast}
         autoHideDuration={6000}
         // onClose={handleClose}
-        message="Sucessfully Created Project"
+        message="Sucessfully Created Client"
         // action={action}
       >
         <Alert
@@ -98,18 +106,18 @@ export default function ProjectForm() {
           severity="success"
           sx={{ width: "100%" }}
         >
-          Sucessfully Created Project
+          Sucessfully Created Client
         </Alert>
       </Snackbar>
 
-      <Tooltip title="Create Project">
+      <Tooltip title="Create Client">
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Create Project
+          Create Client
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -120,8 +128,8 @@ export default function ProjectForm() {
             left: 0,
             width: "100%",
             height: "100%",
-            background: "rgba(0, 0, 0, 0.5)", // Semi-transparent backdrop
-            zIndex: 9999, // Higher z-index to cover other elements
+            background: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
           }}
         >
           <form
@@ -131,10 +139,10 @@ export default function ProjectForm() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px", // Adjust the width to your desired size
+              width: "300px",
               background: "#fff",
               padding: "20px",
-              zIndex: 10000, // Higher z-index for the form
+              zIndex: 10000,
             }}
           >
             <Grid container spacing={2}>
@@ -147,7 +155,7 @@ export default function ProjectForm() {
                   size="small"
                   InputLabelProps={{ shrink: true }}
                   required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
@@ -159,7 +167,7 @@ export default function ProjectForm() {
                   size="small"
                   InputLabelProps={{ shrink: true }}
                   required
-                  fullWidth // Use fullWidth to make the input occupy the form's width
+                  fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
@@ -168,7 +176,7 @@ export default function ProjectForm() {
                   variant="contained"
                   color="success"
                   size="small"
-                  fullWidth // Use fullWidth to make the button occupy the form's width
+                  fullWidth
                 >
                   Done
                 </Button>
@@ -179,7 +187,7 @@ export default function ProjectForm() {
                   variant="contained"
                   color="error"
                   size="small"
-                  fullWidth // Use fullWidth to make the button occupy the form's width
+                  fullWidth
                 >
                   Close
                 </Button>

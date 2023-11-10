@@ -1,4 +1,3 @@
-/// app.js
 import DeckGL from "@deck.gl/react";
 import { LineLayer } from "@deck.gl/layers";
 import { Map } from "react-map-gl/maplibre";
@@ -7,10 +6,8 @@ import PropTypes from "prop-types";
 import { BitmapLayer } from "@deck.gl/layers";
 import { TileLayer } from "@deck.gl/geo-layers";
 
-// Set your mapbox access token here
 const MAPTILER_TOKEN = import.meta.env.VITE_MAPTILER_TOKEN;
 
-// Viewport settings
 const INITIAL_VIEW_STATE = {
   longitude: -107.88857386093643,
   latitude: 38.98669825130578,
@@ -21,7 +18,6 @@ const INITIAL_VIEW_STATE = {
 const MAP_STYLE = `https://api.maptiler.com/maps/satellite/style.json?key=${
   import.meta.env.VITE_MAPTILER_TOKEN
 }`;
-// Data to be used by the LineLayer
 
 export default function Mapgl() {
   const bounds = [

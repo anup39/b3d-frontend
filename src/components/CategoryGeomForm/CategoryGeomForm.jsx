@@ -6,7 +6,7 @@ import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleShowGeomFormPopup } from "../../reducers/DisplaySettings";
+import { setshowGeomFormPopup } from "../../reducers/DisplaySettings";
 import AutoCompleteMap from "../AutoCompleteMap/AutoCompleteMap";
 import PropTypes from "prop-types";
 import { setWKTGeometry } from "../../reducers/DrawnPolygon";
@@ -43,7 +43,7 @@ export default function CategoryGeomForm({ project_id }) {
               project: parseInt(project_id),
               standard_category: res.data.standard_category,
               sub_category: res.data.sub_category,
-              category: selectedCategoryId, // Use the selected category ID
+              category: selectedCategoryId,
               geom: wkt_geometry,
             };
 
@@ -86,7 +86,7 @@ export default function CategoryGeomForm({ project_id }) {
   };
 
   const closeForm = () => {
-    dispatch(toggleShowGeomFormPopup("none"));
+    dispatch(setshowGeomFormPopup("none"));
   };
 
   return (
@@ -141,10 +141,10 @@ export default function CategoryGeomForm({ project_id }) {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "300px", // Adjust the width to your desired size
+            width: "300px",
             background: "#fff",
             padding: "20px",
-            zIndex: 10000, // Higher z-index for the form
+            zIndex: 10000,
           }}
         >
           <Grid container spacing={2}>
@@ -161,7 +161,7 @@ export default function CategoryGeomForm({ project_id }) {
                 variant="contained"
                 color="success"
                 size="small"
-                fullWidth // Use fullWidth to make the button occupy the form's width
+                fullWidth
               >
                 Done
               </Button>
@@ -172,7 +172,7 @@ export default function CategoryGeomForm({ project_id }) {
                 variant="contained"
                 color="error"
                 size="small"
-                fullWidth // Use fullWidth to make the button occupy the form's width
+                fullWidth
               >
                 Close
               </Button>

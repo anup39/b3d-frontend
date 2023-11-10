@@ -16,7 +16,7 @@ const Img = styled("img")({
 });
 
 function bytesToMB(bytes) {
-  return (bytes / 1048576).toFixed(2); // Keep two decimal places
+  return (bytes / 1048576).toFixed(2);
 }
 
 export default function RasterCard({
@@ -25,7 +25,7 @@ export default function RasterCard({
   status,
   file_size,
   progress,
-  created_on,
+  created_at,
   task_id,
   file_name,
   projection,
@@ -74,7 +74,7 @@ export default function RasterCard({
                 <b>File size </b>: {bytesToMB(file_size)} MB
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                <b>Created On </b>: {created_on}
+                <b>Created At </b>: {created_at}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 <b>Task ID</b>: {task_id}
@@ -117,7 +117,7 @@ RasterCard.propTypes = {
   status: PropTypes.string,
   file_size: PropTypes.number,
   progress: PropTypes.number,
-  created_on: PropTypes.string,
+  created_at: PropTypes.string,
   task_id: PropTypes.string,
   file_name: PropTypes.string,
   projection: PropTypes.string,
