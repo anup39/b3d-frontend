@@ -43,7 +43,7 @@ export default function CategoryCard({ full_name, description, created_at }) {
                 {description}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Created On: {created_at}
+                Created At: {created_at}
               </Typography>
             </Grid>
           </Grid>

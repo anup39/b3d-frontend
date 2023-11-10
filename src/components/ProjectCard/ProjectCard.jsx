@@ -112,7 +112,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
                 {description}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Created at: {created_at}
+                Created At: {created_at}
               </Typography>
             </Grid>
             <Grid item xs container direction="row" spacing={1}>

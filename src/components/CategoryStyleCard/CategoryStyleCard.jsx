@@ -75,7 +75,7 @@ export default function CategoryStyleCard({
                 {stroke_width}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Created On: {created_at}
+                Created At: {created_at}
               </Typography>
             </Grid>
           </Grid>
