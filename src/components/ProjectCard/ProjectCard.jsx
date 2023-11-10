@@ -43,6 +43,10 @@ export default function ProjectCard({ id, name, description, created_at }) {
     navigate(`/manage-users/${id}`);
   };
 
+  const handleManageStyles = () => {
+    navigate(`/manage-styles/${id}`);
+  };
+
   const handleDeleteProject = () => {
     dispatch(setshowDeletePopup(true));
     dispatch(setdeleteId(id));
@@ -141,6 +145,15 @@ export default function ProjectCard({ id, name, description, created_at }) {
                   color="success"
                 >
                   Manage Users
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleManageStyles}
+                  variant="contained"
+                  color="success"
+                >
+                  Manage Styles
                 </Button>
               </Grid>
               <Grid item>

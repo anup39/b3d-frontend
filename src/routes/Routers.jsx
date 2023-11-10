@@ -10,6 +10,7 @@ import Mapgl from "../components/mapgl/Mapgl";
 import Users from "../pages/Users";
 import ManageProjects from "../pages/ManageProjects";
 import ManageUsers from "../pages/ManageUsers";
+import ManageStyles from "../pages/ManageStyles";
 
 export default function Routers() {
   return (
@@ -26,6 +27,7 @@ export default function Routers() {
         <Route exact path="/users" element={<Users />} />
         <Route exact path="/manage-projects/:id" element={<ManageProjects />} />
         <Route exact path="/manage-users/:id" element={<ManageUsers />} />
+        <Route exact path="/manage-styles/:id" element={<ManageStyles />} />
       </Routes>
     </Router>
   );
