@@ -11,7 +11,9 @@ export default function RasterContainer({ id }) {
 
   const fetchData = (id) => {
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=1`)
+      .get(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=${id}`
+      )
       .then((res) => {
         setRasters(res.data);
       });
