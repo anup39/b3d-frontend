@@ -39,6 +39,10 @@ export default function ClientCard({ id, name, description, created_at }) {
     navigate(`/manage-styles/${id}`);
   };
 
+  const handleOpenClient = () => {
+    navigate(`/projects/${id}`);
+  };
+
   const handleDeleteProject = () => {
     dispatch(setshowDeletePopup(true));
     dispatch(setdeleteId(id));
@@ -167,7 +171,11 @@ export default function ClientCard({ id, name, description, created_at }) {
             >
               Orthophotos
             </Button> */}
-            <Button variant="contained" color="success">
+            <Button
+              onClick={handleOpenClient}
+              variant="contained"
+              color="success"
+            >
               Open
             </Button>
           </Grid>

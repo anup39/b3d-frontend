@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "../pages/Login";
 import MapSection from "../pages/MapSection";
-import DashBoard from "../pages/DashBoard";
+import Projects from "../pages/Projects";
 import Register from "../pages/Register";
 import Classification from "../pages/Classification";
 import ManageClasses from "../pages/ManageClasses";
@@ -19,6 +19,7 @@ export default function Routers() {
       <Routes>
         <Route exact path="/" element={<Login />} />
         <Route exact path="/dashboard" element={<Clients />} />
+        <Route exact path="/projects/:id" element={<Projects />} />
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/class" element={<Classification />} />
         <Route exact path="/map/:id" element={<MapSection />} />
