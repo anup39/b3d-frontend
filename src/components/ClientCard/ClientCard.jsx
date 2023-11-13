@@ -124,11 +124,11 @@ export default function ClientCard({ id, name, description, created_at }) {
                   Manage Users
                 </button>
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <button className="btn-main" onClick={handleManageStyles}>
                   Manage Styles
                 </button>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <button className="btn-main" onClick={handleDeleteProject}>
                   Delete
