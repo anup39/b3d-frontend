@@ -110,49 +110,29 @@ export default function ClientCard({ id, name, description, created_at }) {
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>
-                <Button
-                  onClick={handleViewInMap}
-                  variant="contained"
-                  color="success"
-                >
+                <button className="btn-main" onClick={handleViewInMap}>
                   View In Map
-                </Button>
+                </button>
               </Grid>
               <Grid item>
-                <Button
-                  onClick={handleManageClasses}
-                  variant="contained"
-                  color="success"
-                >
+                <button className="btn-main" onClick={handleManageClasses}>
                   Manage Classes
-                </Button>
+                </button>
               </Grid>
               <Grid item>
-                <Button
-                  onClick={handleManageUsers}
-                  variant="contained"
-                  color="success"
-                >
+                <button className="btn-main" onClick={handleManageUsers}>
                   Manage Users
-                </Button>
+                </button>
               </Grid>
               <Grid item>
-                <Button
-                  onClick={handleManageStyles}
-                  variant="contained"
-                  color="success"
-                >
+                <button className="btn-main" onClick={handleManageStyles}>
                   Manage Styles
-                </Button>
+                </button>
               </Grid>
               <Grid item>
-                <Button
-                  onClick={handleDeleteProject}
-                  variant="contained"
-                  color="error"
-                >
+                <button className="btn-main" onClick={handleDeleteProject}>
                   Delete
-                </Button>
+                </button>
               </Grid>
             </Grid>
           </Grid>
@@ -175,16 +155,20 @@ export default function ClientCard({ id, name, description, created_at }) {
           </Grid>
 
           <Grid item>
-            <Button
+            {/* <Button
               sx={{ marginTop: "25px" }}
               variant="contained"
               color="success"
               id="orthoButton"
+              size="small"
               onClick={() => {
                 navigate(`/orthophotos/${id}`);
               }}
             >
               Orthophotos
+            </Button> */}
+            <Button variant="contained" color="success">
+              Open
             </Button>
           </Grid>
         </Grid>

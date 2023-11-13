@@ -114,7 +114,6 @@ export default function ClientForm() {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  margin="normal"
                   required
                   fullWidth
                   id="username"
@@ -122,6 +121,8 @@ export default function ClientForm() {
                   name="username"
                   autoComplete="username"
                   autoFocus
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -151,19 +152,19 @@ export default function ClientForm() {
 
               <Grid item xs={12}>
                 <TextField
-                  margin="normal"
                   required
                   fullWidth
                   id="email"
                   label="email"
                   name="email"
                   autoComplete="email"
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
 
               <Grid item xs={12}>
                 <TextField
-                  margin="normal"
                   required
                   fullWidth
                   name="password"
@@ -171,6 +172,8 @@ export default function ClientForm() {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   autoComplete="current-password"
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
