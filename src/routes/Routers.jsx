@@ -11,13 +11,14 @@ import Users from "../pages/Users";
 import ManageProjects from "../pages/ManageProjects";
 import ManageUsers from "../pages/ManageUsers";
 import ManageStyles from "../pages/ManageStyles";
+import Clients from "../pages/Clients";
 
 export default function Routers() {
   return (
     <Router>
       <Routes>
         <Route exact path="/" element={<Login />} />
-        <Route exact path="/dashboard" element={<DashBoard />} />
+        <Route exact path="/dashboard" element={<Clients />} />
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/class" element={<Classification />} />
         <Route exact path="/map/:id" element={<MapSection />} />
