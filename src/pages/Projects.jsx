@@ -5,9 +5,8 @@ import { useParams } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { setProjects } from "../reducers/Project";
-// import axios from "axios";
-import axiosInstance from "../utils/axiosInstance";
+import { setprojects } from "../reducers/Project";
+import axios from "axios";
 
 export default function Projects() {
   const { client_id } = useParams();
@@ -16,19 +15,19 @@ export default function Projects() {
   const user_id = useSelector((state) => state.auth.user_id);
 
   useEffect(() => {
-    axiosInstance
+    axios
       .get(
         `${
           import.meta.env.VITE_API_DASHBOARD_URL
         }/projects/?client=${client_id}`,
         {
           headers: {
-            Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
+            Authorization: "Token " + localStorage.getItem("token"),
           },
         }
       )
       .then((res) => {
-        dispatch(setProjects(res.data));
+        dispatch(setprojects(res.data));
       });
   }, [client_id, user_id, dispatch]);
 

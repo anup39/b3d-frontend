@@ -22,7 +22,7 @@ export default function Orthophotos() {
     setProgress(value);
   };
 
-  // const onSetRasters = (value) => {
+  // const onSetRasters = (value) => {s
   //   setRasters(value);
   // };
 
