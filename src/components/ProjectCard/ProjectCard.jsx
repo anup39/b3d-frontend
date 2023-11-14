@@ -26,25 +26,15 @@ const Img = styled("img")({
 export default function ProjectCard({ id, name, description, created_at }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [orthophotos, setOrthophotos] = useState([]);
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [admin, setAdmin] = useState(0);
-  const [editor, setEditor] = useState(0);
-  const [basic, setBasic] = useState(0);
+  const [properties, setproperties] = useState([]);
+  const [users, setusers] = useState([]);
 
   const handleViewInMap = () => {
     navigate(`/map/${id}`);
   };
 
-  const handleManageClasses = () => {
-    navigate(`/manage-classes/${id}`);
-  };
   const handleManageUsers = () => {
     navigate(`/manage-users/${id}`);
-  };
-
-  const handleManageStyles = () => {
-    navigate(`/manage-styles/${id}`);
   };
 
   const handleDeleteProject = () => {
@@ -64,25 +54,12 @@ export default function ProjectCard({ id, name, description, created_at }) {
         `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=${id}`
       )
       .then((res) => {
-        setOrthophotos(res.data);
+        setproperties(res.data);
       });
-  }, [id]);
-
-  useEffect(() => {
     axios
-      .get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/user-projects/?project=${id}`
-      )
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?project=${id}`)
       .then((res) => {
-        setTotalUsers(res.data.length);
-        const counts = res.data.reduce((acc, item) => {
-          const { role_name } = item;
-          acc[role_name] = (acc[role_name] || 0) + 1;
-          return acc;
-        }, {});
-        setAdmin(counts.admin ? counts.admin : 0);
-        setEditor(counts.editor ? counts.editor : 0);
-        setBasic(counts.basic ? counts.basic : 0);
+        setusers(res.data);
       });
   }, [id]);
 
@@ -121,70 +98,30 @@ export default function ProjectCard({ id, name, description, created_at }) {
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>
-                <Button
-                  onClick={handleViewInMap}
-                  variant="contained"
-                  color="success"
-                >
+                <button className="btn-main" onClick={handleViewInMap}>
                   View In Map
-                </Button>
+                </button>
               </Grid>
               <Grid item>
-                <Button
-                  onClick={handleManageClasses}
-                  variant="contained"
-                  color="success"
-                >
-                  Manage Classes
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={handleManageUsers}
-                  variant="contained"
-                  color="success"
-                >
+                <button className="btn-main" onClick={handleManageUsers}>
                   Manage Users
-                </Button>
+                </button>
               </Grid>
               <Grid item>
-                <Button
-                  onClick={handleManageStyles}
-                  variant="contained"
-                  color="success"
-                >
-                  Manage Styles
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={handleDeleteProject}
-                  variant="contained"
-                  color="error"
-                >
+                <button className="btn-main" onClick={handleDeleteProject}>
                   Delete
-                </Button>
+                </button>
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs>
             <Typography variant="body2" color="text.secondary">
-              Total Orthophotos: {orthophotos.length}
+              Total properties: {properties.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Total Users: {totalUsers}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Admin : {admin}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Editor : {editor}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Basic : {basic}
+              Total Users: {users.length}
             </Typography>
           </Grid>
-
           <Grid item>
             <Button
               sx={{ marginTop: "25px" }}
@@ -192,10 +129,10 @@ export default function ProjectCard({ id, name, description, created_at }) {
               color="success"
               id="orthoButton"
               onClick={() => {
-                navigate(`/orthophotos/${id}`);
+                navigate(`/properties/${id}`);
               }}
             >
-              Orthophotos
+              Open
             </Button>
           </Grid>
         </Grid>

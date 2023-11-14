@@ -14,11 +14,7 @@ export default function Clients() {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, {
-        // headers: {
-        //   Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
-        // },
-      })
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, {})
       .then((res) => {
         dispatch(setclients(res.data));
       });

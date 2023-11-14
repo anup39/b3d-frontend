@@ -20,11 +20,11 @@ export default function Routers() {
         <Route exact path="/" element={<Login />} />
         <Route exact path="/dashboard" element={<Clients />} />
         <Route exact path="/projects/:id" element={<Projects />} />
+        <Route exact path="/properties/:id" element={<Orthophotos />} />
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/class" element={<Classification />} />
         <Route exact path="/map/:id" element={<MapSection />} />
         <Route exact path="/manage-classes/:id" element={<ManageClasses />} />
-        <Route exact path="/orthophotos/:id" element={<Orthophotos />} />
         <Route exact path="/mapgl" element={<Mapgl />} />
         <Route exact path="/users" element={<Users />} />
         <Route exact path="/manage-projects/:id" element={<ManageProjects />} />

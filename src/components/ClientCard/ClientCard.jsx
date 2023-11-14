@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import {
@@ -14,15 +14,12 @@ import {
   setshowDeletePopup,
 } from "../../reducers/DisplaySettings";
 import FolderIcon from "@mui/icons-material/Folder";
-
 export default function ClientCard({ id, name, description, created_at }) {
+  const [properties, setproperties] = useState([]);
+  const [projects, setprojects] = useState([]);
+  const [users, setusers] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [orthophotos, setOrthophotos] = useState([]);
-  //   const [totalUsers, setTotalUsers] = useState(0);
-  //   const [admin, setAdmin] = useState(0);
-  //   const [editor, setEditor] = useState(0);
-  //   const [basic, setBasic] = useState(0);
 
   const handleViewInMap = () => {
     navigate(`/map/${id}`);
@@ -35,15 +32,11 @@ export default function ClientCard({ id, name, description, created_at }) {
     navigate(`/manage-users/${id}`);
   };
 
-  const handleManageStyles = () => {
-    navigate(`/manage-styles/${id}`);
-  };
-
   const handleOpenClient = () => {
     navigate(`/projects/${id}`);
   };
 
-  const handleDeleteProject = () => {
+  const handleDeleteClient = () => {
     dispatch(setshowDeletePopup(true));
     dispatch(setdeleteId(id));
     dispatch(setdeleteTarget("clients"));
@@ -56,33 +49,23 @@ export default function ClientCard({ id, name, description, created_at }) {
 
   useEffect(() => {
     axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/?client=${id}`)
+      .then((res) => {
+        setprojects(res.data);
+      });
+    axios
       .get(
         `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?client=${id}`
       )
       .then((res) => {
-        setOrthophotos(res.data);
+        setproperties(res.data);
       });
-  }, [id]);
-
-  // TODO: Do this later since we removed t he User Projects and we now have User Roles in database
-
-  //   useEffect(() => {
-  //     axios
-  //       .get(
-  //         `${import.meta.env.VITE_API_DASHBOARD_URL}/user-projects/?project=${id}`
-  //       )
-  //       .then((res) => {
-  //         setTotalUsers(res.data.length);
-  //         const counts = res.data.reduce((acc, item) => {
-  //           const { role_name } = item;
-  //           acc[role_name] = (acc[role_name] || 0) + 1;
-  //           return acc;
-  //         }, {});
-  //         setAdmin(counts.admin ? counts.admin : 0);
-  //         setEditor(counts.editor ? counts.editor : 0);
-  //         setBasic(counts.basic ? counts.basic : 0);
-  //       });
-  //   }, [id]);
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?client=${id}`)
+      .then((res) => {
+        setusers(res.data);
+      });
+  }, [id, dispatch]);
 
   return (
     <Paper
@@ -128,13 +111,8 @@ export default function ClientCard({ id, name, description, created_at }) {
                   Manage Users
                 </button>
               </Grid>
-              {/* <Grid item>
-                <button className="btn-main" onClick={handleManageStyles}>
-                  Manage Styles
-                </button>
-              </Grid> */}
               <Grid item>
-                <button className="btn-main" onClick={handleDeleteProject}>
+                <button className="btn-main" onClick={handleDeleteClient}>
                   Delete
                 </button>
               </Grid>
@@ -142,35 +120,17 @@ export default function ClientCard({ id, name, description, created_at }) {
           </Grid>
           <Grid item xs>
             <Typography variant="body2" color="text.secondary">
-              Total Orthophotos: {orthophotos.length}
-            </Typography>
-            {/* <Typography variant="body2" color="text.secondary">
-              Total Users: {totalUsers}
+              Total Projects: {projects.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Admin : {admin}
+              Total Properties: {properties.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Editor : {editor}
+              Total Users : {users.length}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Basic : {basic}
-            </Typography> */}
           </Grid>
 
           <Grid item>
-            {/* <Button
-              sx={{ marginTop: "25px" }}
-              variant="contained"
-              color="success"
-              id="orthoButton"
-              size="small"
-              onClick={() => {
-                navigate(`/orthophotos/${id}`);
-              }}
-            >
-              Orthophotos
-            </Button> */}
             <Button
               onClick={handleOpenClient}
               variant="contained"

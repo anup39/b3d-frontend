@@ -8,7 +8,7 @@ import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { setProjects } from "../../reducers/Project";
+import { setprojects } from "../../reducers/Project";
 // import axiosInstance from "../../utils/axiosInstance";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -53,7 +53,7 @@ export default function ProjectForm() {
                 },
               })
               .then((res) => {
-                dispatch(setProjects(res.data));
+                dispatch(setprojects(res.data));
               });
           });
       })
