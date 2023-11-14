@@ -4,7 +4,6 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
-import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import LinearProgressLabel from "../ProgressBar/LinearProgressLabel";
 
@@ -19,7 +18,7 @@ function bytesToMB(bytes) {
   return (bytes / 1048576).toFixed(2);
 }
 
-export default function RasterCard({
+export default function PropertyCard({
   id,
   name,
   status,
@@ -29,16 +28,22 @@ export default function RasterCard({
   task_id,
   file_name,
   projection,
-  thubnail,
+  thumbnail,
+  client_name,
+  project_name,
 }) {
   const navigate = useNavigate();
-
-  const handleDelete = () => {
+  const handleViewInMapProperty = () => {
+    console.log("map");
+  };
+  const handleDeleteProperty = () => {
+    console.log("Delete ", id);
     navigate(`/map/${id}`);
   };
 
-  const handleReprocess = () => {
-    navigate(`/map/${id}`);
+  const handleReprocessProperty = () => {
+    // navigate(`/map/${id}`);
+    console.log("Reprocess", id);
   };
 
   return (
@@ -55,7 +60,7 @@ export default function RasterCard({
       <Grid container spacing={2}>
         <Grid item>
           <ButtonBase sx={{ width: 300, height: 200 }}>
-            <Img alt="complex" src={thubnail} />
+            <Img alt="complex" src={thumbnail} />
           </ButtonBase>
         </Grid>
         <Grid item xs={12} sm container>
@@ -82,26 +87,29 @@ export default function RasterCard({
               <Typography variant="body2" gutterBottom>
                 <b>Status </b>: {status}
               </Typography>
+              <Typography variant="body2" gutterBottom>
+                <b>Client Name </b>: {client_name}
+              </Typography>{" "}
+              <Typography variant="body2" gutterBottom>
+                <b>Project Name </b>: {project_name}
+              </Typography>
               <LinearProgressLabel value={progress}></LinearProgressLabel>
             </Grid>
             <Grid item xs container direction="row" spacing={2}>
               <Grid item>
-                <Button
-                  // onClick={handleDelete}
-                  variant="contained"
-                  color="error"
-                >
-                  Delete
-                </Button>
+                <button className="btn-main" onClick={handleViewInMapProperty}>
+                  View In Map
+                </button>
               </Grid>
               <Grid item>
-                <Button
-                  // onClick={handleReprocess}
-                  variant="contained"
-                  color="success"
-                >
+                <button className="btn-main" onClick={handleDeleteProperty}>
+                  Delete
+                </button>
+              </Grid>
+              <Grid item>
+                <button className="btn-main" onClick={handleReprocessProperty}>
                   Reprocess
-                </Button>
+                </button>
               </Grid>
             </Grid>
           </Grid>
@@ -111,7 +119,7 @@ export default function RasterCard({
   );
 }
 
-RasterCard.propTypes = {
+PropertyCard.propTypes = {
   id: PropTypes.number,
   name: PropTypes.string,
   status: PropTypes.string,
@@ -121,5 +129,7 @@ RasterCard.propTypes = {
   task_id: PropTypes.string,
   file_name: PropTypes.string,
   projection: PropTypes.string,
-  thubnail: PropTypes.string,
+  thumbnail: PropTypes.string,
+  client_name: PropTypes.string,
+  project_name: PropTypes.string,
 };

@@ -16,7 +16,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function RasterForm({
+export default function PropertyForm({
   project_id,
   onProgressForm,
   onProgressValue,
@@ -282,7 +282,7 @@ export default function RasterForm({
   );
 }
 
-RasterForm.propTypes = {
+PropertyForm.propTypes = {
   project_id: PropTypes.string,
   onProgressForm: PropTypes.func,
   onProgressValue: PropTypes.func,
