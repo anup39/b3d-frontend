@@ -17,6 +17,7 @@ import {
 
 export default function ProjectCard({
   id,
+  client_id,
   name,
   client_name,
   description,
@@ -125,7 +126,7 @@ export default function ProjectCard({
               color="success"
               id="orthoButton"
               onClick={() => {
-                navigate(`/properties/${id}`);
+                navigate(`/properties/${client_id}/${id}`);
               }}
             >
               Open
@@ -138,6 +139,7 @@ export default function ProjectCard({
 }
 
 ProjectCard.propTypes = {
+  client_id: PropTypes.string,
   id: PropTypes.number,
   name: PropTypes.string,
   client_name: PropTypes.string,

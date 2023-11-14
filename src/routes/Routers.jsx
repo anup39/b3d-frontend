@@ -22,7 +22,11 @@ export default function Routers() {
         <Route exact path="/class" element={<Classification />} />
         <Route exact path="/dashboard" element={<Clients />} />
         <Route exact path="/projects/:client_id" element={<Projects />} />
-        <Route exact path="/properties/:project_id" element={<Properties />} />
+        <Route
+          exact
+          path="/properties/:client_id/:project_id"
+          element={<Properties />}
+        />
         <Route exact path="/map/:id" element={<MapSection />} />
         <Route exact path="/mapgl" element={<Mapgl />} />
         <Route exact path="/users" element={<Users />} />

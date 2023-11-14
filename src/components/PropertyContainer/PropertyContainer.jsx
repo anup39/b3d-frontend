@@ -13,7 +13,7 @@ export default function PropertyContainer({ project_id }) {
   const properties = useSelector((state) => state.property.properties);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const fetchData = () => {
       axios
         .get(
           `${
@@ -23,8 +23,9 @@ export default function PropertyContainer({ project_id }) {
         .then((res) => {
           dispatch(setproperties(res.data));
         });
-    }, 10000);
-
+    };
+    fetchData();
+    const interval = setInterval(fetchData, 10000);
     return () => {
       clearInterval(interval);
     };
@@ -36,17 +37,6 @@ export default function PropertyContainer({ project_id }) {
 
   return (
     <div>
-      {properties.length > 0 ? (
-        <Button
-          style={{ left: "50%" }}
-          onClick={handleOpenMap}
-          variant="contained"
-          color="success"
-        >
-          Open Map
-        </Button>
-      ) : null}
-
       {properties
         ? properties.map((property) => (
             <PropertyCard

@@ -40,6 +40,7 @@ export default function Projects() {
           ? projects.map((project) => (
               <ProjectCard
                 key={project.id}
+                client_id={client_id}
                 id={project.id}
                 name={project.name}
                 client_name={project.client_name}

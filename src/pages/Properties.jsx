@@ -6,6 +6,7 @@ import UploadProgress from "../components/UploadProgress/UploadProgress";
 import PropertyContainer from "../components/PropertyContainer/PropertyContainer";
 
 export default function Properties() {
+  const { client_id } = useParams();
   const { project_id } = useParams();
   const [isProgressFormOpen, setIsProgressFormOpen] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -23,6 +24,7 @@ export default function Properties() {
       <AppBar></AppBar>
 
       <PropertyForm
+        client_id={client_id}
         project_id={project_id}
         onProgressForm={onProgressForm}
         onProgressValue={onProgressValue}
