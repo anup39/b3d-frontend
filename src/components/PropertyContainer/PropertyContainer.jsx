@@ -3,7 +3,6 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import PropertyCard from "../PropertyCard/PropertyCard";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
 import { setproperties } from "../../reducers/Property";
 import { useDispatch, useSelector } from "react-redux";
 

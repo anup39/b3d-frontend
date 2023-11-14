@@ -102,13 +102,13 @@ export default function PropertyCard({
                 </button>
               </Grid>
               <Grid item>
-                <button className="btn-main" onClick={handleDeleteProperty}>
-                  Delete
+                <button className="btn-main" onClick={handleReprocessProperty}>
+                  Reprocess
                 </button>
               </Grid>
               <Grid item>
-                <button className="btn-main" onClick={handleReprocessProperty}>
-                  Reprocess
+                <button className="btn-main" onClick={handleDeleteProperty}>
+                  Delete
                 </button>
               </Grid>
             </Grid>
