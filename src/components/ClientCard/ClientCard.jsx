@@ -4,63 +4,70 @@ import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import FolderCopyIcon from "@mui/icons-material/FolderCopy";
 import {
   setdeleteId,
   setdeletePopupMessage,
   setdeleteTarget,
   setshowDeletePopup,
 } from "../../reducers/DisplaySettings";
-
-export default function ProjectCard({
-  id,
-  client_id,
-  name,
-  client_name,
-  description,
-  created_at,
-}) {
+import FolderIcon from "@mui/icons-material/Folder";
+export default function ClientCard({ id, name, description, created_at }) {
+  const [properties, setproperties] = useState([]);
+  const [projects, setprojects] = useState([]);
+  const [users, setusers] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [properties, setproperties] = useState([]);
-  const [users, setusers] = useState([]);
 
   const handleViewInMap = () => {
-    navigate(`/map/${id}`);
+    // #use client id
+    navigate(`/map/2`);
   };
 
+  const handleManageClasses = () => {
+    navigate(`/manage-classes/${id}`);
+  };
   const handleManageUsers = () => {
     navigate(`/manage-users/${id}`);
   };
 
-  const handleDeleteProject = () => {
+  const handleOpenClient = () => {
+    console.log(id, "id");
+    navigate(`/projects/${id}`);
+  };
+
+  const handleDeleteClient = () => {
     dispatch(setshowDeletePopup(true));
     dispatch(setdeleteId(id));
-    dispatch(setdeleteTarget("projects"));
+    dispatch(setdeleteTarget("clients"));
     dispatch(
       setdeletePopupMessage(
-        `Are you sure you want to delete Project ${id} and its content?`
+        `Are you sure you want to delete Client ${id} and its content?`
       )
     );
   };
 
   useEffect(() => {
     axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/?client=${id}`)
+      .then((res) => {
+        setprojects(res.data);
+      });
+    axios
       .get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=${id}`
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?client=${id}`
       )
       .then((res) => {
         setproperties(res.data);
       });
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?project=${id}`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?client=${id}`)
       .then((res) => {
         setusers(res.data);
       });
-  }, [id]);
+  }, [id, dispatch]);
 
   return (
     <Paper
@@ -75,7 +82,7 @@ export default function ProjectCard({
     >
       <Grid container spacing={2}>
         <Grid item>
-          <FolderCopyIcon sx={{ width: 128, height: 128, color: "green" }} />
+          <FolderIcon sx={{ width: 128, height: 128, color: "#23C9C9" }} />
         </Grid>
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
@@ -85,9 +92,6 @@ export default function ProjectCard({
               </Typography>
               <Typography variant="body2" gutterBottom>
                 {description}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                Client Name : {client_name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Created At: {created_at}
@@ -100,12 +104,17 @@ export default function ProjectCard({
                 </button>
               </Grid>
               <Grid item>
+                <button className="btn-main" onClick={handleManageClasses}>
+                  Manage Classes
+                </button>
+              </Grid>
+              <Grid item>
                 <button className="btn-main" onClick={handleManageUsers}>
                   Manage Users
                 </button>
               </Grid>
               <Grid item>
-                <button className="btn-main" onClick={handleDeleteProject}>
+                <button className="btn-main" onClick={handleDeleteClient}>
                   Delete
                 </button>
               </Grid>
@@ -113,21 +122,21 @@ export default function ProjectCard({
           </Grid>
           <Grid item xs>
             <Typography variant="body2" color="text.secondary">
-              Total properties: {properties.length}
+              Total Projects: {projects.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Total Users: {users.length}
+              Total Properties: {properties.length}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Total Users : {users.length}
             </Typography>
           </Grid>
+
           <Grid item>
             <Button
-              sx={{ marginTop: "25px" }}
+              onClick={handleOpenClient}
               variant="contained"
               color="success"
-              id="orthoButton"
-              onClick={() => {
-                navigate(`/properties/${client_id}/${id}`);
-              }}
             >
               Open
             </Button>
@@ -138,11 +147,9 @@ export default function ProjectCard({
   );
 }
 
-ProjectCard.propTypes = {
-  client_id: PropTypes.string,
+ClientCard.propTypes = {
   id: PropTypes.number,
   name: PropTypes.string,
-  client_name: PropTypes.string,
   description: PropTypes.string,
   created_at: PropTypes.string,
 };

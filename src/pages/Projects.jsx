@@ -1,41 +1,49 @@
 import AppBar from "../components/AppBar/AppBar";
 import ProjectCard from "../components/ProjectCard/ProjectCard";
 import ProjectForm from "../components/ProjectForm/ProjectForm";
+import { useParams } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { setProjects } from "../reducers/Project";
-// import axios from "axios";
-import axiosInstance from "../utils/axiosInstance";
+import { setprojects } from "../reducers/Project";
+import axios from "axios";
 
-export default function DashBoard() {
+export default function Projects() {
+  const { client_id } = useParams();
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.project.projects);
   const user_id = useSelector((state) => state.auth.user_id);
 
   useEffect(() => {
-    axiosInstance
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, {
-        headers: {
-          Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
-        },
-      })
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/projects/?client=${client_id}`,
+        {
+          headers: {
+            Authorization: "Token " + localStorage.getItem("token"),
+          },
+        }
+      )
       .then((res) => {
-        dispatch(setProjects(res.data));
+        dispatch(setprojects(res.data));
       });
-  }, [user_id, dispatch]);
+  }, [client_id, user_id, dispatch]);
 
   return (
     <div>
       <AppBar />
-      <ProjectForm />
+      <ProjectForm client_id={client_id} />
       <div>
         {projects
           ? projects.map((project) => (
               <ProjectCard
                 key={project.id}
+                client_id={client_id}
                 id={project.id}
                 name={project.name}
+                client_name={project.client_name}
                 description={project.description}
                 created_at={project.created_at}
               />

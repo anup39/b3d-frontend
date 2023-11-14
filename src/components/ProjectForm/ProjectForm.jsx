@@ -1,70 +1,62 @@
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
-import MuiAlert from "@mui/material/Alert";
-import React from "react";
-import Snackbar from "@mui/material/Snackbar";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { setProjects } from "../../reducers/Project";
-// import axiosInstance from "../../utils/axiosInstance";
+import { setprojects } from "../../reducers/Project";
+import PropTypes from "prop-types";
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../../reducers/DisplaySettings";
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-export default function ProjectForm() {
+export default function ProjectForm({ client_id }) {
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [openProjectErrorToast, setOpenProjectErrorToast] = useState(false);
-  const [openProjectSuccessToast, setOpenProjectSuccessToast] = useState(false);
+  const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
-  const username_ = useSelector((state) => state.auth.username);
 
   const handleCreateProject = (event) => {
     event.preventDefault();
-    const nameInput = document.getElementById("name");
-    const descriptionInput = document.getElementById("description");
-    const data = {
-      name: nameInput.value,
-      description: descriptionInput.value,
-      owner: user_id,
-    };
+    setLoading(true);
+    const data = new FormData(event.currentTarget);
+    data.append("client", client_id);
+    data.append("created_by", user_id);
+    data.append("is_display", true);
+
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, data)
-      .then((res) => {
+      .then(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Successfully Created Project"));
+        dispatch(settoastType("success"));
+        closeForm();
         axios
-          .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-projects/`, {
-            user: user_id,
-            project: res.data.id,
-          })
-          .then(() => {
-            setOpenProjectSuccessToast(true);
-            setOpenProjectErrorToast(false);
-            setTimeout(() => {
-              setOpenProjectSuccessToast(false);
-            }, 3000);
-            axios
-              .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/`, {
-                headers: {
-                  Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
-                },
-              })
-              .then((res) => {
-                dispatch(setProjects(res.data));
-              });
+          .get(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/projects/?client=${client_id}`,
+            {
+              headers: {
+                Authorization: "Token " + localStorage.getItem("token"),
+              },
+            }
+          )
+          .then((res) => {
+            dispatch(setprojects(res.data));
           });
       })
       .catch(() => {
-        setOpenProjectErrorToast(true);
-        setOpenProjectSuccessToast(false);
-        setTimeout(() => {
-          setOpenProjectErrorToast(false);
-        }, 3000);
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Failed to Create Project"));
+        dispatch(settoastType("error"));
+        closeForm();
       });
-    closeForm();
   };
 
   const openForm = () => {
@@ -77,47 +69,14 @@ export default function ProjectForm() {
 
   return (
     <>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openProjectErrorToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message="Failed to Create Client"
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Failed to Create Client
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openProjectSuccessToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message="Sucessfully Created Client"
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Sucessfully Created Client
-        </Alert>
-      </Snackbar>
-
-      <Tooltip title="Create Client">
+      <Tooltip title="Create Project">
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Create Client
+          Create Project
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -173,12 +132,12 @@ export default function ProjectForm() {
               <Grid item xs={12}>
                 <Button
                   type="submit"
-                  variant="contained"
-                  color="success"
-                  size="small"
                   fullWidth
+                  variant={loading ? "outlined" : "contained"}
+                  sx={{ mt: 3, mb: 2 }}
                 >
-                  Done
+                  {loading ? null : "Create Project"}
+                  {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
               <Grid item xs={12}>
@@ -199,3 +158,7 @@ export default function ProjectForm() {
     </>
   );
 }
+
+ProjectForm.propTypes = {
+  client_id: PropTypes.string,
+};

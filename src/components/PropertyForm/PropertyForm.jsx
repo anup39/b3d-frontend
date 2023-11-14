@@ -1,36 +1,37 @@
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
-import MuiAlert from "@mui/material/Alert";
-import React from "react";
-import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
 import InputFileUpload from "../InputFileUpload/InputFileUpload";
 import maplibregl from "maplibre-gl";
 import { createImagePNG } from "../../maputils/createMapImage";
 import PropTypes from "prop-types";
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../../reducers/DisplaySettings";
+import { useDispatch } from "react-redux";
+import { setproperties } from "../../reducers/Property";
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-export default function RasterForm({
+export default function PropertyForm({
+  client_id,
   project_id,
   onProgressForm,
   onProgressValue,
 }) {
-  const mapContainerRaster = useRef();
+  const dispatch = useDispatch();
+  const mapContainerProperty = useRef();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
-  const [openrasterSuccessToast, setOpenrasterSuccessToast] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [projection, setProjection] = useState("");
   const [fileName, setFileName] = useState("");
   const [filesize, setFilesize] = useState("");
   const [image, setImage] = useState();
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const openForm = () => {
     setIsFormOpen(true);
@@ -38,8 +39,6 @@ export default function RasterForm({
 
   const closeForm = () => {
     setIsFormOpen(false);
-    setOpenrasterErrorToast(false);
-    setOpenrasterSuccessToast(false);
     setUploadedFile(null);
     setProjection("");
     setFileName("");
@@ -72,13 +71,14 @@ export default function RasterForm({
     setImage(value);
   };
 
-  const handleCreateraster = (event) => {
+  const handleCreateProperty = (event) => {
     event.preventDefault();
+    setLoading(true);
+
     const nameInput = document.getElementById("name");
-
     const blob_ = createImagePNG(image);
-
     const formData = new FormData();
+    formData.append("client", client_id);
     formData.append("project", project_id);
     formData.append("name", nameInput.value);
     formData.append("status", "Uploaded");
@@ -110,25 +110,34 @@ export default function RasterForm({
         onProgressValue(true);
         onProgressForm(false);
         onProgressValue(0);
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Successfully Created Property"));
+        dispatch(settoastType("success"));
+        closeForm();
         axios
           .get(
             `${
               import.meta.env.VITE_API_DASHBOARD_URL
             }/raster-data/?project=${project_id}`
           )
-          .then(() => {
-            window.location.reload();
+          .then((res) => {
+            dispatch(setproperties(res.data));
           });
       })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
+      .catch(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Failed Created Property"));
+        dispatch(settoastType("error"));
+        closeForm();
       });
   };
 
   useEffect(() => {
     if (isFormOpen) {
       const map = new maplibregl.Map({
-        container: mapContainerRaster.current,
+        container: mapContainerProperty.current,
         style: `https://api.maptiler.com/maps/satellite/style.json?key=${
           import.meta.env.VITE_MAPTILER_TOKEN
         }`,
@@ -136,7 +145,7 @@ export default function RasterForm({
         zoom: 10,
       });
 
-      window.mapraster = map;
+      window.mapproperty = map;
 
       return () => {
         map.remove();
@@ -146,47 +155,14 @@ export default function RasterForm({
 
   return (
     <>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openrasterErrorToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message="Failed to Create raster"
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Failed to Create raster
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openrasterSuccessToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message="Sucessfully Created raster"
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Sucessfully Created raster
-        </Alert>
-      </Snackbar>
-
-      <Tooltip title="Create raster">
+      <Tooltip title="Create Property">
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Upload Raster
+          Create Property
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -202,7 +178,7 @@ export default function RasterForm({
           }}
         >
           <form
-            onSubmit={handleCreateraster}
+            onSubmit={handleCreateProperty}
             style={{
               position: "absolute",
               top: "50%",
@@ -229,7 +205,7 @@ export default function RasterForm({
               </Grid>
               <Grid item xs={12}>
                 <InputFileUpload
-                  mapref={mapContainerRaster}
+                  mapref={mapContainerProperty}
                   fileName={fileName}
                   filesize={filesize}
                   projection={projection}
@@ -245,22 +221,22 @@ export default function RasterForm({
                 <Grid item>
                   <div
                     style={{ width: "100%", height: "300px" }}
-                    ref={mapContainerRaster}
-                    id="mapraster"
-                    className="mapraster"
+                    ref={mapContainerProperty}
+                    id="mapproperty"
+                    className="mapproperty"
                   />
                 </Grid>
               </Grid>
               <Grid item xs={12}>
                 <Button
                   type="submit"
-                  variant="contained"
-                  color="success"
-                  size="small"
                   fullWidth
+                  variant={loading ? "outlined" : "contained"}
+                  sx={{ mt: 3, mb: 2 }}
                   disabled={!loaded}
                 >
-                  Done
+                  {loading ? null : "Create Property"}
+                  {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
               <Grid item xs={12}>
@@ -282,7 +258,8 @@ export default function RasterForm({
   );
 }
 
-RasterForm.propTypes = {
+PropertyForm.propTypes = {
+  client_id: PropTypes.string,
   project_id: PropTypes.string,
   onProgressForm: PropTypes.func,
   onProgressValue: PropTypes.func,

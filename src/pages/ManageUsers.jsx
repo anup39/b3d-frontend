@@ -5,24 +5,66 @@ import AppBar from "../components/AppBar/AppBar";
 import Box from "@mui/material/Box";
 import UserTransferList from "../components/UserTransferList/UserTransferList";
 import { Button, Tooltip } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import UserCard from "../components/UserCard/UserCard";
 
 export default function ManageUsers() {
-  const { id } = useParams();
-  const [projectName, setProjectName] = useState("");
+  const navigate = useNavigate();
+  const { client_id } = useParams();
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/${id}/`)
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/user-role/?client=${client_id}`
+      )
       .then((res) => {
-        setProjectName(res.data.name);
+        // dispatch(setUsers(res.data));
+        setUsers(res.data);
       });
-  }, [id]);
+  }, [client_id]);
 
   return (
     <>
       <AppBar></AppBar>
 
-      <Box
+      <Tooltip>
+        <Button
+          onClick={() => navigate("/register")}
+          sx={{
+            //   marginBottom: "15px",
+            marginTop: "5px",
+            marginLeft: "5px",
+            marginRight: "5px",
+          }}
+          variant="contained"
+          color="error"
+        >
+          Create User
+        </Button>
+      </Tooltip>
+
+      <div>
+        {users
+          ? users.map((user) => (
+              <UserCard
+                // onUserId={onUserId}
+                // onOpenForm={onOpenForm}
+                key={user.id}
+                id={user.id}
+                username={user.username}
+                email={user.email}
+                role={user.role_name}
+                last_login={user.last_login}
+                date_joined={user.date_joined}
+              />
+            ))
+          : null}
+      </div>
+
+      {/* <Box
         sx={{
           bgcolor: "background.paper",
           display: "block",
@@ -36,11 +78,11 @@ export default function ManageUsers() {
             variant="outlined"
             color="error"
           >
-            {projectName}
+            {clientName}
           </Button>
-        </Tooltip>
-        <UserTransferList id={parseInt(id)} component={"users"} />
-      </Box>
+        </Tooltip> */}
+      {/* <UserTransferList id={parseInt(id)} component={"users"} /> */}
+      {/* </Box> */}
     </>
   );
 }
