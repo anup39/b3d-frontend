@@ -77,31 +77,14 @@ export default function UserCard({
                   {role !== "admin" ? (
                     <>
                       <Grid item>
-                        <Button
-                          onClick={handleAssignRole}
-                          variant="contained"
-                          color="success"
-                        >
+                        <button className="btn-main" onClick={handleAssignRole}>
                           Assign Roles
-                        </Button>
+                        </button>
                       </Grid>
-                      {/* <Grid item>
-                        <Button
-                          onClick={handleManageProjects}
-                          variant="contained"
-                          color="success"
-                        >
-                          Manage Clients
-                        </Button>
-                      </Grid> */}
                       <Grid item>
-                        <Button
-                          onClick={handleDeleteUser}
-                          variant="contained"
-                          color="error"
-                        >
+                        <button className="btn-main" onClick={handleDeleteUser}>
                           Delete
-                        </Button>
+                        </button>
                       </Grid>
                     </>
                   ) : (
