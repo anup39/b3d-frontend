@@ -34,7 +34,7 @@ export default function Projects() {
   return (
     <div>
       <AppBar />
-      <ProjectForm />
+      <ProjectForm client_id={client_id} />
       <div>
         {projects
           ? projects.map((project) => (

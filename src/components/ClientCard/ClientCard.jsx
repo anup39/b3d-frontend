@@ -33,6 +33,7 @@ export default function ClientCard({ id, name, description, created_at }) {
   };
 
   const handleOpenClient = () => {
+    console.log(id, "id");
     navigate(`/projects/${id}`);
   };
 

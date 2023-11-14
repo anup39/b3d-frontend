@@ -1,27 +1,19 @@
-import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import FolderCopyIcon from "@mui/icons-material/FolderCopy";
 import {
   setdeleteId,
   setdeletePopupMessage,
   setdeleteTarget,
   setshowDeletePopup,
 } from "../../reducers/DisplaySettings";
-
-const Img = styled("img")({
-  margin: "auto",
-  display: "block",
-  maxWidth: "100%",
-  maxHeight: "100%",
-});
 
 export default function ProjectCard({ id, name, description, created_at }) {
   const navigate = useNavigate();
@@ -76,12 +68,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
     >
       <Grid container spacing={2}>
         <Grid item>
-          <ButtonBase sx={{ width: 128, height: 128 }}>
-            <Img
-              alt="complex"
-              src="https://cdn-icons-png.flaticon.com/512/4212/4212570.png"
-            />
-          </ButtonBase>
+          <FolderCopyIcon sx={{ width: 128, height: 128, color: "green" }} />
         </Grid>
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
