@@ -42,6 +42,7 @@ export default function Projects() {
                 key={project.id}
                 id={project.id}
                 name={project.name}
+                client_name={project.client_name}
                 description={project.description}
                 created_at={project.created_at}
               />

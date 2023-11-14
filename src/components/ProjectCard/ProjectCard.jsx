@@ -15,7 +15,13 @@ import {
   setshowDeletePopup,
 } from "../../reducers/DisplaySettings";
 
-export default function ProjectCard({ id, name, description, created_at }) {
+export default function ProjectCard({
+  id,
+  name,
+  client_name,
+  description,
+  created_at,
+}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [properties, setproperties] = useState([]);
@@ -79,6 +85,9 @@ export default function ProjectCard({ id, name, description, created_at }) {
               <Typography variant="body2" gutterBottom>
                 {description}
               </Typography>
+              <Typography variant="body2" gutterBottom>
+                Client Name : {client_name}
+              </Typography>
               <Typography variant="body2" color="text.secondary">
                 Created At: {created_at}
               </Typography>
@@ -131,6 +140,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
 ProjectCard.propTypes = {
   id: PropTypes.number,
   name: PropTypes.string,
+  client_name: PropTypes.string,
   description: PropTypes.string,
   created_at: PropTypes.string,
 };
