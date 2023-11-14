@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Grid, Typography } from "@mui/material";
 // import GeoTIFF, { fromUrl, fromUrls, fromBlob } from "geotiff";
 import { fromArrayBuffer } from "geotiff";
@@ -10,13 +10,13 @@ import PropTypes from "prop-types";
 import proj4 from "proj4";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import epsgDefinitions from "../../maputils/epsgcodes";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
 import { takeScreenshot } from "../../maputils/createMapImage";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../../reducers/DisplaySettings";
+import { useDispatch } from "react-redux";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -47,9 +47,8 @@ export default function InputFileUpload({
   image,
   loaded,
 }) {
+  const dispatch = useDispatch();
   const fileInputRef = useRef();
-  const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
-  const [openrasterErrorMessage, setOpenrasterErrorMessage] = useState("");
 
   useEffect(() => {
     if (loaded) {
@@ -60,7 +59,7 @@ export default function InputFileUpload({
   }, [loaded, onImage]);
 
   const handleFileChange = async (e) => {
-    setOpenrasterErrorToast(false);
+    dispatch(setshowToast(false));
     onDoneLoaded(false);
     onImage();
     RemoveSourceAndLayerFromMap(
@@ -146,8 +145,9 @@ export default function InputFileUpload({
               onDoneLoaded(true);
             });
           } else {
-            setOpenrasterErrorToast(true);
-            setOpenrasterErrorMessage(`${source_epsg} cannot be uploaded.`);
+            dispatch(setshowToast(true));
+            dispatch(settoastMessage(`${source_epsg} cannot be uploaded.`));
+            dispatch(settoastType("error"));
           }
 
           onFileName(file.name);
@@ -159,35 +159,21 @@ export default function InputFileUpload({
             onFileUpload(file);
           }
         } catch (error) {
-          setOpenrasterErrorToast(true);
-          setOpenrasterErrorMessage("Please select a valid GeoTIFF file.");
+          dispatch(setshowToast(true));
+          dispatch(settoastMessage("Please select a valid GeoTIFF file."));
+          dispatch(settoastType("error"));
         }
       };
       reader.readAsArrayBuffer(file);
     } else {
-      setOpenrasterErrorToast(true);
-      setOpenrasterErrorMessage("Please select a tiff file.");
+      dispatch(setshowToast(true));
+      dispatch(settoastMessage("Please select a tiff file."));
+      dispatch(settoastType("error"));
     }
   };
 
   return (
     <div>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openrasterErrorToast}
-        autoHideDuration={3000}
-        // onClose={handleClose}
-        message="Failed to Create raster"
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          {openrasterErrorMessage}
-        </Alert>
-      </Snackbar>
       <Grid item xs={12}>
         <Typography variant="body2" gutterBottom>
           <b>Supported EPSG</b> : 4326, 32613 , 25832
