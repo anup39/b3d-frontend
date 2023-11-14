@@ -44,9 +44,9 @@ function a11yProps(index) {
 }
 
 export default function Classification() {
-  const { id } = useParams();
+  const { client_id } = useParams();
   const [value, setValue] = useState(0);
-  const [projectName, setProjectName] = useState("");
+  const [clientName, setClientName] = useState("");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -54,11 +54,11 @@ export default function Classification() {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/${id}/`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${client_id}/`)
       .then((res) => {
-        setProjectName(res.data.name);
+        setClientName(res.data.name);
       });
-  }, [id]);
+  }, [client_id]);
 
   return (
     <>
@@ -95,11 +95,11 @@ export default function Classification() {
               variant="outlined"
               color="error"
             >
-              {projectName}
+              {clientName}
             </Button>
           </Tooltip>
           <TransferList
-            project_id={parseInt(id)}
+            client_id={parseInt(client_id)}
             component={"standard-category"}
           />
         </TabPanel>
@@ -110,10 +110,13 @@ export default function Classification() {
               variant="outlined"
               color="error"
             >
-              {projectName}
+              {clientName}
             </Button>
           </Tooltip>
-          <TransferList project_id={parseInt(id)} component={"sub-category"} />
+          <TransferList
+            client_id={parseInt(client_id)}
+            component={"sub-category"}
+          />
         </TabPanel>
         <TabPanel value={value} index={2}>
           <Tooltip>
@@ -122,10 +125,13 @@ export default function Classification() {
               variant="outlined"
               color="error"
             >
-              {projectName}
+              {clientName}
             </Button>
           </Tooltip>
-          <TransferList project_id={parseInt(id)} component={"category"} />
+          <TransferList
+            client_id={parseInt(client_id)}
+            component={"category"}
+          />
         </TabPanel>
       </Box>
     </>

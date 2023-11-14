@@ -30,9 +30,17 @@ export default function Routers() {
         <Route exact path="/map/:id" element={<MapSection />} />
         <Route exact path="/mapgl" element={<Mapgl />} />
         <Route exact path="/users" element={<Users />} />
-        <Route exact path="/manage-classes/:id" element={<ManageClasses />} />
+        <Route
+          exact
+          path="/manage-classes/:client_id"
+          element={<ManageClasses />}
+        />
         <Route exact path="/manage-projects/:id" element={<ManageProjects />} />
-        <Route exact path="/manage-users/:id" element={<ManageUsers />} />
+        <Route
+          exact
+          path="/manage-users/:client_id"
+          element={<ManageUsers />}
+        />
         <Route exact path="/manage-styles/:id" element={<ManageStyles />} />
       </Routes>
     </Router>

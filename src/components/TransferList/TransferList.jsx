@@ -30,7 +30,7 @@ function union(a, b) {
   return [...a, ...not(b, a)];
 }
 
-export default function TransferList({ project_id, component }) {
+export default function TransferList({ client_id, component }) {
   const [checked, setChecked] = useState([]);
   const [finalLeft, setFinalLeft] = useState([]);
   const [finalRight, setFinalRight] = useState([]);
@@ -83,7 +83,7 @@ export default function TransferList({ project_id, component }) {
       .get(
         `${
           import.meta.env.VITE_API_DASHBOARD_URL
-        }/${component}/?project=${project_id}`
+        }/${component}/?client=${client_id}`
       )
       .then((res) => {
         const rightList = res.data.map((item) => item);
@@ -117,7 +117,7 @@ export default function TransferList({ project_id, component }) {
             .get(
               `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/${"standard-category"}/?project=${project_id}`
+              }/${"standard-category"}/?client=${client_id}`
             )
             .then((res) => {
               const prevList = res.data.map((item) => item);
@@ -162,7 +162,7 @@ export default function TransferList({ project_id, component }) {
             .get(
               `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/${"sub-category"}/?project=${project_id}`
+              }/${"sub-category"}/?client=${client_id}`
             )
             .then((res) => {
               const prevList = res.data.map((item) => item);
@@ -212,7 +212,7 @@ export default function TransferList({ project_id, component }) {
 
         // Fetch data from the second API endpoint
       });
-  }, [project_id, component]);
+  }, [client_id, component]);
 
   const customList = (title, items) => (
     <Card sx={{ backgroundColor: "#828282" }}>
@@ -323,7 +323,7 @@ export default function TransferList({ project_id, component }) {
     );
 
     if (component === "standard-category") {
-      const project_url = `${
+      const client_url = `${
         import.meta.env.VITE_API_DASHBOARD_URL
       }/${component}`;
       if (itemsMovedToRight.length > 0) {
@@ -331,12 +331,12 @@ export default function TransferList({ project_id, component }) {
           const data = {
             name: item.name,
             description: item.description,
-            project: project_id,
+            client: client_id,
             is_display: true,
             view_name: item.full_name,
             global_standard_category: item.id,
           };
-          axios.post(`${project_url}/`, data).then(() => {
+          axios.post(`${client_url}/`, data).then(() => {
             setOpenCategorySuccessToast(true);
             setOpenCategoryErrorToast(false);
             setTimeout(() => {
@@ -349,12 +349,12 @@ export default function TransferList({ project_id, component }) {
         itemsMovedToLeft.map((item) => {
           axios
             .get(
-              `${project_url}/?project=${project_id}&view_name=${item.full_name}`
+              `${client_url}/?client=${client_id}&view_name=${item.full_name}`
             )
             .then((res) => {
               const id = res.data[0].id;
               axios
-                .delete(`${project_url}/${id}/`)
+                .delete(`${client_url}/${id}/`)
                 .then(() => {
                   setOpenCategorySuccessToast(true);
                   setOpenCategoryErrorToast(false);
@@ -374,7 +374,7 @@ export default function TransferList({ project_id, component }) {
       }
     }
     if (component === "sub-category") {
-      const project_url = `${
+      const client_url = `${
         import.meta.env.VITE_API_DASHBOARD_URL
       }/${component}`;
       if (itemsMovedToRight.length > 0) {
@@ -383,23 +383,23 @@ export default function TransferList({ project_id, component }) {
             .get(
               `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/${"standard-category"}/?project=${project_id}&view_name=${
+              }/${"standard-category"}/?client=${client_id}&view_name=${
                 item.standard_category_name
               }`
             )
             .then((res) => {
-              const project_s_c_id = res.data[0].id;
+              const client_s_c_id = res.data[0].id;
               const data = {
                 name: item.name,
-                project: project_id,
-                standard_category: project_s_c_id,
+                client: client_id,
+                standard_category: client_s_c_id,
                 global_standard_category: item.standard_category,
                 global_sub_category: item.id,
                 description: item.description,
                 is_display: true,
                 view_name: item.full_name,
               };
-              axios.post(`${project_url}/`, data).then(() => {
+              axios.post(`${client_url}/`, data).then(() => {
                 setOpenCategorySuccessToast(true);
                 setOpenCategoryErrorToast(false);
                 setTimeout(() => {
@@ -413,12 +413,12 @@ export default function TransferList({ project_id, component }) {
         itemsMovedToLeft.map((item) => {
           axios
             .get(
-              `${project_url}/?project=${project_id}&view_name=${item.full_name}`
+              `${client_url}/?client=${client_id}&view_name=${item.full_name}`
             )
             .then((res) => {
               const id = res.data[0].id;
               axios
-                .delete(`${project_url}/${id}/`)
+                .delete(`${client_url}/${id}/`)
                 .then(() => {
                   setOpenCategorySuccessToast(true);
                   setOpenCategoryErrorToast(false);
@@ -438,7 +438,7 @@ export default function TransferList({ project_id, component }) {
       }
     }
     if (component === "category") {
-      const project_url = `${
+      const client_url = `${
         import.meta.env.VITE_API_DASHBOARD_URL
       }/${component}`;
       if (itemsMovedToRight.length > 0) {
@@ -447,19 +447,19 @@ export default function TransferList({ project_id, component }) {
             .get(
               `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/${"sub-category"}/?project=${project_id}&view_name=${
+              }/${"sub-category"}/?client=${client_id}&view_name=${
                 item.sub_category_name
               }`
             )
             .then((res) => {
-              const project_s_c_id = res.data[0].standard_category;
-              const project_sub_c_id = res.data[0].id;
+              const client_s_c_id = res.data[0].standard_category;
+              const client_sub_c_id = res.data[0].id;
               const data = {
                 name: item.name,
-                project: project_id,
-                standard_category: project_s_c_id,
+                client: client_id,
+                standard_category: client_s_c_id,
                 global_standard_category: item.standard_category,
-                sub_category: project_sub_c_id,
+                sub_category: client_sub_c_id,
                 global_sub_category: item.sub_category,
                 global_category: item.id,
                 description: item.description,
@@ -467,7 +467,7 @@ export default function TransferList({ project_id, component }) {
                 is_display: true,
                 view_name: item.full_name,
               };
-              axios.post(`${project_url}/`, data).then(() => {
+              axios.post(`${client_url}/`, data).then(() => {
                 setOpenCategorySuccessToast(true);
                 setOpenCategoryErrorToast(false);
                 setTimeout(() => {
@@ -481,12 +481,12 @@ export default function TransferList({ project_id, component }) {
         itemsMovedToLeft.map((item) => {
           axios
             .get(
-              `${project_url}/?project=${project_id}&view_name=${item.full_name}`
+              `${client_url}/?client=${client_id}&view_name=${item.full_name}`
             )
             .then((res) => {
               const id = res.data[0].id;
               axios
-                .delete(`${project_url}/${id}/`)
+                .delete(`${client_url}/${id}/`)
                 .then(() => {
                   setOpenCategorySuccessToast(true);
                   setOpenCategoryErrorToast(false);
@@ -545,6 +545,6 @@ export default function TransferList({ project_id, component }) {
 }
 
 TransferList.propTypes = {
-  project_id: PropTypes.number,
+  client_id: PropTypes.number,
   component: PropTypes.string,
 };
