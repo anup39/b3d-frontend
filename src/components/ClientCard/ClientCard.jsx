@@ -22,7 +22,8 @@ export default function ClientCard({ id, name, description, created_at }) {
   const dispatch = useDispatch();
 
   const handleViewInMap = () => {
-    navigate(`/map/${id}`);
+    // #use client id
+    navigate(`/map/2`);
   };
 
   const handleManageClasses = () => {

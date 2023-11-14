@@ -85,7 +85,7 @@ export default function UserCard({
                           Assign Roles
                         </Button>
                       </Grid>
-                      <Grid item>
+                      {/* <Grid item>
                         <Button
                           onClick={handleManageProjects}
                           variant="contained"
@@ -93,7 +93,7 @@ export default function UserCard({
                         >
                           Manage Clients
                         </Button>
-                      </Grid>
+                      </Grid> */}
                       <Grid item>
                         <Button
                           onClick={handleDeleteUser}
