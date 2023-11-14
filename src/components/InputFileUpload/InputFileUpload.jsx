@@ -4,7 +4,8 @@ import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useRef, useState } from "react";
 import { Grid, Typography } from "@mui/material";
-import GeoTIFF, { fromUrl, fromUrls, fromArrayBuffer, fromBlob } from "geotiff";
+// import GeoTIFF, { fromUrl, fromUrls, fromBlob } from "geotiff";
+import { fromArrayBuffer } from "geotiff";
 import PropTypes from "prop-types";
 import proj4 from "proj4";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
@@ -52,7 +53,7 @@ export default function InputFileUpload({
 
   useEffect(() => {
     if (loaded) {
-      takeScreenshot(window.mapraster).then(function (data) {
+      takeScreenshot(window.mapproperty).then(function (data) {
         onImage(data);
       });
     }
@@ -63,7 +64,7 @@ export default function InputFileUpload({
     onDoneLoaded(false);
     onImage();
     RemoveSourceAndLayerFromMap(
-      window.mapraster,
+      window.mapproperty,
       "geojson-layer",
       "geojson-source"
     );
@@ -124,12 +125,12 @@ export default function InputFileUpload({
               },
               properties: {},
             };
-            window.mapraster.addSource("geojson-source", {
+            window.mapproperty.addSource("geojson-source", {
               type: "geojson",
               data: geoJSONPolygon,
             });
 
-            window.mapraster.addLayer({
+            window.mapproperty.addLayer({
               id: "geojson-layer",
               type: "line",
               source: "geojson-source",
@@ -140,8 +141,8 @@ export default function InputFileUpload({
               },
             });
 
-            window.mapraster.fitBounds(bbox_reprojected);
-            window.mapraster.on("moveend", function () {
+            window.mapproperty.fitBounds(bbox_reprojected);
+            window.mapproperty.on("moveend", function () {
               onDoneLoaded(true);
             });
           } else {
@@ -175,15 +176,9 @@ export default function InputFileUpload({
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={openrasterErrorToast}
         autoHideDuration={3000}
-        // onClose={handleClose}
-        message="Failed to Create raster"
-        // action={action}
+        message="Failed to Upload Geotif"
       >
-        <Alert
-          //  onClose={handleClose}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
+        <Alert severity="error" sx={{ width: "100%" }}>
           {openrasterErrorMessage}
         </Alert>
       </Snackbar>

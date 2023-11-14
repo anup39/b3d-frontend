@@ -1,14 +1,13 @@
-import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import FolderCopyIcon from "@mui/icons-material/FolderCopy";
 import {
   setdeleteId,
   setdeletePopupMessage,
@@ -16,14 +15,14 @@ import {
   setshowDeletePopup,
 } from "../../reducers/DisplaySettings";
 
-const Img = styled("img")({
-  margin: "auto",
-  display: "block",
-  maxWidth: "100%",
-  maxHeight: "100%",
-});
-
-export default function ProjectCard({ id, name, description, created_at }) {
+export default function ProjectCard({
+  id,
+  client_id,
+  name,
+  client_name,
+  description,
+  created_at,
+}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [properties, setproperties] = useState([]);
@@ -76,12 +75,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
     >
       <Grid container spacing={2}>
         <Grid item>
-          <ButtonBase sx={{ width: 128, height: 128 }}>
-            <Img
-              alt="complex"
-              src="https://cdn-icons-png.flaticon.com/512/4212/4212570.png"
-            />
-          </ButtonBase>
+          <FolderCopyIcon sx={{ width: 128, height: 128, color: "green" }} />
         </Grid>
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
@@ -91,6 +85,9 @@ export default function ProjectCard({ id, name, description, created_at }) {
               </Typography>
               <Typography variant="body2" gutterBottom>
                 {description}
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                Client Name : {client_name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Created At: {created_at}
@@ -129,7 +126,7 @@ export default function ProjectCard({ id, name, description, created_at }) {
               color="success"
               id="orthoButton"
               onClick={() => {
-                navigate(`/properties/${id}`);
+                navigate(`/properties/${client_id}/${id}`);
               }}
             >
               Open
@@ -142,8 +139,10 @@ export default function ProjectCard({ id, name, description, created_at }) {
 }
 
 ProjectCard.propTypes = {
+  client_id: PropTypes.string,
   id: PropTypes.number,
   name: PropTypes.string,
+  client_name: PropTypes.string,
   description: PropTypes.string,
   created_at: PropTypes.string,
 };

@@ -5,7 +5,7 @@ import Projects from "../pages/Projects";
 import Register from "../pages/Register";
 import Classification from "../pages/Classification";
 import ManageClasses from "../pages/ManageClasses";
-import Orthophotos from "../pages/Orthophotos";
+import Properties from "../pages/Properties";
 import Mapgl from "../components/mapgl/Mapgl";
 import Users from "../pages/Users";
 import ManageProjects from "../pages/ManageProjects";
@@ -18,15 +18,19 @@ export default function Routers() {
     <Router>
       <Routes>
         <Route exact path="/" element={<Login />} />
-        <Route exact path="/dashboard" element={<Clients />} />
-        <Route exact path="/projects/:id" element={<Projects />} />
-        <Route exact path="/properties/:id" element={<Orthophotos />} />
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/class" element={<Classification />} />
+        <Route exact path="/dashboard" element={<Clients />} />
+        <Route exact path="/projects/:client_id" element={<Projects />} />
+        <Route
+          exact
+          path="/properties/:client_id/:project_id"
+          element={<Properties />}
+        />
         <Route exact path="/map/:id" element={<MapSection />} />
-        <Route exact path="/manage-classes/:id" element={<ManageClasses />} />
         <Route exact path="/mapgl" element={<Mapgl />} />
         <Route exact path="/users" element={<Users />} />
+        <Route exact path="/manage-classes/:id" element={<ManageClasses />} />
         <Route exact path="/manage-projects/:id" element={<ManageProjects />} />
         <Route exact path="/manage-users/:id" element={<ManageUsers />} />
         <Route exact path="/manage-styles/:id" element={<ManageStyles />} />

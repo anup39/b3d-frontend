@@ -34,14 +34,16 @@ export default function Projects() {
   return (
     <div>
       <AppBar />
-      <ProjectForm />
+      <ProjectForm client_id={client_id} />
       <div>
         {projects
           ? projects.map((project) => (
               <ProjectCard
                 key={project.id}
+                client_id={client_id}
                 id={project.id}
                 name={project.name}
+                client_name={project.client_name}
                 description={project.description}
                 created_at={project.created_at}
               />
