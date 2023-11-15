@@ -29,7 +29,7 @@ export default function ProjectCard({
   const [users, setusers] = useState([]);
 
   const handleViewInMap = () => {
-    navigate(`/map/${id}`);
+    navigate(`/map/project/${id}`);
   };
 
   const handleManageUsers = () => {

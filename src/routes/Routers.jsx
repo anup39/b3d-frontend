@@ -27,8 +27,8 @@ export default function Routers() {
           path="/properties/:client_id/:project_id"
           element={<Properties />}
         />
-        <Route exact path="/map/:id" element={<MapSection />} />
-        <Route exact path="/mapgl" element={<Mapgl />} />
+        <Route exact path="/map/:level/:id" element={<MapSection />} />
+        {/* <Route exact path="/mapgl" element={<Mapgl />} /> */}
         <Route exact path="/users" element={<Users />} />
         <Route
           exact

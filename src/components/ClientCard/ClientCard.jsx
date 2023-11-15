@@ -23,7 +23,7 @@ export default function ClientCard({ id, name, description, created_at }) {
 
   const handleViewInMap = () => {
     // #use client id
-    navigate(`/map/2`);
+    navigate(`/map/client/${id}`);
   };
 
   const handleManageClasses = () => {
