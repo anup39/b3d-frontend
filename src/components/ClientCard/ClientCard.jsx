@@ -23,7 +23,7 @@ export default function ClientCard({ id, name, description, created_at }) {
 
   const handleViewInMap = () => {
     // #use client id
-    navigate(`/map/2`);
+    navigate(`/map/client/${id}`);
   };
 
   const handleManageClasses = () => {
@@ -122,10 +122,10 @@ export default function ClientCard({ id, name, description, created_at }) {
           </Grid>
           <Grid item xs>
             <Typography variant="body2" color="text.secondary">
-              Total Projects: {projects.length}
+              Total Properties: {projects.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Total Properties: {properties.length}
+              Total Maps: {properties.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Total Users : {users.length}

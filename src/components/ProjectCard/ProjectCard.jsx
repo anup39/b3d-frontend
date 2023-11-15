@@ -29,7 +29,7 @@ export default function ProjectCard({
   const [users, setusers] = useState([]);
 
   const handleViewInMap = () => {
-    navigate(`/map/${id}`);
+    navigate(`/map/project/${id}`);
   };
 
   const handleManageUsers = () => {
@@ -113,7 +113,7 @@ export default function ProjectCard({
           </Grid>
           <Grid item xs>
             <Typography variant="body2" color="text.secondary">
-              Total properties: {properties.length}
+              Total Maps/Ortho: {properties.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Total Users: {users.length}
@@ -129,7 +129,7 @@ export default function ProjectCard({
                 navigate(`/properties/${client_id}/${id}`);
               }}
             >
-              Open
+              Manage Maps/Ortho
             </Button>
           </Grid>
         </Grid>

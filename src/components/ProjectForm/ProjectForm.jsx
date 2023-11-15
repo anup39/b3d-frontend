@@ -76,7 +76,7 @@ export default function ProjectForm({ client_id }) {
           variant="contained"
           color="error"
         >
-          Create Project
+          Create Property
         </Button>
       </Tooltip>
       {isFormOpen && (
