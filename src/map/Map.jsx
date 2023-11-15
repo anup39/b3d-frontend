@@ -21,7 +21,7 @@ import {
 } from "@watergis/maplibre-gl-export";
 import "@watergis/maplibre-gl-export/dist/maplibre-gl-export.css";
 
-export default function Map({ refObj, project_id }) {
+export default function Map({ refObj, id }) {
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
@@ -106,7 +106,7 @@ export default function Map({ refObj, project_id }) {
     if (map) {
       const layer_control = new LayersControl();
       map.addControl(layer_control, "top-left");
-      layer_control.updateProject(project_id);
+      layer_control.updateProject(id);
       map.addControl(
         new MaplibreExportControl({
           PageSize: Size.A3,
@@ -121,15 +121,15 @@ export default function Map({ refObj, project_id }) {
       map.addControl(new maplibregl.NavigationControl(), "top-right");
       const raster_control = new RasterControl();
       map.addControl(raster_control, "top-left");
-      raster_control.updateProject(project_id);
+      raster_control.updateProject(id);
       map.addControl(new DrawControl(), "top-left");
     }
-  }, [map, project_id]);
+  }, [map, id]);
 
   return <div ref={mapContainer} id="map" className="map" />;
 }
 
 Map.propTypes = {
   refObj: PropTypes.object,
-  project_id: PropTypes.string,
+  id: PropTypes.string,
 };

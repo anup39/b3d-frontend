@@ -162,7 +162,7 @@ export default function PropertyForm({
           variant="contained"
           color="error"
         >
-          Create Property
+          Add Property Map
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -235,7 +235,7 @@ export default function PropertyForm({
                   sx={{ mt: 3, mb: 2 }}
                   disabled={!loaded}
                 >
-                  {loading ? null : "Create Property"}
+                  {loading ? null : "Add Property Map"}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>

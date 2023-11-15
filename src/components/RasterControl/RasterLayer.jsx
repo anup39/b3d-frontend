@@ -56,7 +56,7 @@ export default function RasterLayer({ map, project_id }) {
       .get(
         `${
           import.meta.env.VITE_API_DASHBOARD_URL
-        }/raster-data/?project=${project_id}&is_display=true`
+        }/raster-data/?client=${project_id}&is_display=true`
       )
       .then((res) => {
         setOrthophotos(res.data);

@@ -34,7 +34,8 @@ export default function PropertyCard({
 }) {
   const navigate = useNavigate();
   const handleViewInMapProperty = () => {
-    console.log("map");
+    // console.log("map");
+    // navigate(`/map/${properti}/${1}`);
   };
   const handleDeleteProperty = () => {
     console.log("Delete ", id);
