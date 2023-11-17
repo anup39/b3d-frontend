@@ -24,7 +24,6 @@ export default function CategoryCard({
       .then((res) => {
         const style = res.data[0];
         setStyle(style);
-        console.log(style);
       });
   }, [id]);
 
