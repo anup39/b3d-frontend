@@ -13,6 +13,8 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -41,6 +43,8 @@ export default function TransferList({ client_id, component }) {
   const [openCategoryErrorToast, setOpenCategoryErrorToast] = useState(false);
   const [openCategorySuccessToast, setOpenCategorySuccessToast] =
     useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -79,6 +83,7 @@ export default function TransferList({ client_id, component }) {
 
   useEffect(() => {
     // Fetch data from the first API endpoint
+    setLoading(true);
     axios
       .get(
         `${
@@ -210,6 +215,8 @@ export default function TransferList({ client_id, component }) {
             });
         }
 
+        setLoading(false);
+
         // Fetch data from the second API endpoint
       });
   }, [client_id, component]);
@@ -281,31 +288,39 @@ export default function TransferList({ client_id, component }) {
         component="div"
         role="list"
       >
-        {items.map((value) => {
-          const labelId = `transfer-list-all-item-${value}-label`;
+        {!loading ? (
+          <>
+            {items.map((value) => {
+              const labelId = `transfer-list-all-item-${value}-label`;
 
-          return (
-            <ListItem
-              key={value.id}
-              role="listitem"
-              button
-              onClick={handleToggle(value)}
-            >
-              <ListItemIcon>
-                <Checkbox
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{
-                    "aria-labelledby": labelId,
-                  }}
-                />
-              </ListItemIcon>
+              return (
+                <ListItem
+                  key={value.id}
+                  role="listitem"
+                  button
+                  onClick={handleToggle(value)}
+                >
+                  <ListItemIcon>
+                    <Checkbox
+                      checked={checked.indexOf(value) !== -1}
+                      tabIndex={-1}
+                      disableRipple
+                      inputProps={{
+                        "aria-labelledby": labelId,
+                      }}
+                    />
+                  </ListItemIcon>
 
-              <ListItemText id={labelId} primary={value.full_name} />
-            </ListItem>
-          );
-        })}
+                  <ListItemText id={labelId} primary={value.full_name} />
+                </ListItem>
+              );
+            })}
+          </>
+        ) : (
+          <Box sx={{ marginLeft: "40%", marginTop: "50%" }}>
+            <CircularProgress />
+          </Box>
+        )}
       </List>
     </Card>
   );
