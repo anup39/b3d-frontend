@@ -1,16 +1,8 @@
-import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
-
-const Img = styled("img")({
-  margin: "auto",
-  display: "block",
-  maxWidth: "100%",
-  maxHeight: "100%",
-});
+import TabIcon from "@mui/icons-material/Tab";
 
 export default function StandardCategoryCard({
   name,
@@ -30,12 +22,7 @@ export default function StandardCategoryCard({
     >
       <Grid container spacing={2}>
         <Grid item>
-          <ButtonBase sx={{ width: 100, height: 100 }}>
-            <Img
-              alt="complex"
-              src="https://cdn-icons-png.flaticon.com/512/9244/9244680.png"
-            />
-          </ButtonBase>
+          <TabIcon sx={{ width: 30, height: 30, color: "red" }} />
         </Grid>
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
