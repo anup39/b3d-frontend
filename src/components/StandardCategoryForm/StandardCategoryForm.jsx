@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setStandardCategorys } from "../../reducers/StandardCategory";
 import {
@@ -17,6 +17,7 @@ export default function StandardCategoryForm() {
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const user_id = useSelector((state) => state.auth.user_id);
 
   const handleCreateStandardCategory = (event) => {
     event.preventDefault();
@@ -26,6 +27,7 @@ export default function StandardCategoryForm() {
     const data = {
       name: nameInput.value,
       description: descriptionInput.value,
+      created_by: user_id,
     };
     axios
       .post(

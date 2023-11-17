@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setSubCategorys } from "../../reducers/SubCategory";
 import AutoCompleteCustom from "../AutoCompleteCustom/AutoCompleteCustom";
@@ -19,6 +19,7 @@ export default function SubCategoryForm() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const user_id = useSelector((state) => state.auth.user_id);
 
   const handleCreateSubCategory = (event) => {
     event.preventDefault();
@@ -30,6 +31,7 @@ export default function SubCategoryForm() {
         name: nameInput.value,
         description: descriptionInput.value,
         standard_category: selectedCategoryId,
+        created_by: user_id,
       };
       axios
         .post(

@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
 import AutoCompleteCustom from "../AutoCompleteCustom/AutoCompleteCustom";
@@ -24,6 +24,7 @@ export default function CategoryForm() {
   const [selectedFillColor, setSelectedFillColor] = useState("#32788f");
   const [selectedStrokeColor, setSelectedStrokeColor] = useState("#d71414");
   const [loading, setLoading] = useState(false);
+  const user_id = useSelector((state) => state.auth.user_id);
 
   const handleCreateCategory = (event) => {
     event.preventDefault();
@@ -40,6 +41,7 @@ export default function CategoryForm() {
         sub_category: selectedCategoryId,
         standard_category: selectedStandradCategoryId,
         type_of_geometry: inputValue,
+        created_by: user_id,
       };
 
       axios
@@ -54,6 +56,7 @@ export default function CategoryForm() {
             stroke: selectedStrokeColor,
             stroke_width: strokeWidthInput.value,
             category: res.data.id,
+            created_by: user_id,
           };
           axios
             .post(
