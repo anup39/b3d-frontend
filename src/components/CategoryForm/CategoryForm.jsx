@@ -1,36 +1,37 @@
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
-import MuiAlert from "@mui/material/Alert";
-import React from "react";
-import Snackbar from "@mui/material/Snackbar";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
 import AutoCompleteCustom from "../AutoCompleteCustom/AutoCompleteCustom";
 import Autocomplete from "@mui/material/Autocomplete";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../../reducers/DisplaySettings";
 
 export default function CategoryForm() {
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [openCategoryErrorToast, setOpenCategoryErrorToast] = useState(false);
-  const [openCategorySuccessToast, setOpenCategorySuccessToast] =
-    useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [selectedStandradCategoryId, setSelectedStandradCategoryId] =
     useState(null);
   const [inputValue, setInputValue] = useState("");
+  const [selectedFillColor, setSelectedFillColor] = useState("#32788f");
+  const [selectedStrokeColor, setSelectedStrokeColor] = useState("#d71414");
+  const [loading, setLoading] = useState(false);
 
   const handleCreateCategory = (event) => {
     event.preventDefault();
+    setLoading(true);
     const nameInput = document.getElementById("name");
     const descriptionInput = document.getElementById("description");
+    const fillOpacityInput = document.getElementById("fill_opacity");
+    const strokeWidthInput = document.getElementById("stroke_width");
 
     if (selectedCategoryId !== null) {
       const data = {
@@ -40,34 +41,51 @@ export default function CategoryForm() {
         standard_category: selectedStandradCategoryId,
         type_of_geometry: inputValue,
       };
+
       axios
         .post(
           `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`,
           data
         )
-        .then(() => {
-          setOpenCategorySuccessToast(true);
-          setOpenCategoryErrorToast(false);
-          setTimeout(() => {
-            setOpenCategorySuccessToast(false);
-          }, 3000);
+        .then((res) => {
+          const style_data = {
+            fill: selectedFillColor,
+            fill_opacity: fillOpacityInput.value,
+            stroke: selectedStrokeColor,
+            stroke_width: strokeWidthInput.value,
+            category: res.data.id,
+          };
           axios
-            .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
-            .then((res) => {
-              dispatch(setCategorys(res.data));
-            })
-            .catch(() => {});
+            .post(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/global-category-style/`,
+              style_data
+            )
+            .then(() => {
+              setLoading(false);
+              dispatch(setshowToast(true));
+              dispatch(settoastMessage("Successfully Created category"));
+              dispatch(settoastType("success"));
+              closeForm();
+              axios
+                .get(
+                  `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
+                )
+                .then((res) => {
+                  dispatch(setCategorys(res.data));
+                })
+                .catch(() => {});
+            });
         })
         .catch(() => {
-          setOpenCategoryErrorToast(true);
-          setOpenCategorySuccessToast(false);
-          setTimeout(() => {
-            setOpenCategoryErrorToast(false);
-          }, 3000);
+          setLoading(false);
+          dispatch(setshowToast(true));
+          dispatch(settoastMessage("Failed to create category"));
+          dispatch(settoastType("error"));
+          closeForm();
         });
     }
-
-    closeForm();
   };
 
   const openForm = () => {
@@ -78,29 +96,18 @@ export default function CategoryForm() {
     setIsFormOpen(false);
   };
 
+  const handleFillColorChange = (event) => {
+    const newColor = event.target.value;
+    setSelectedFillColor(newColor);
+  };
+
+  const handleStrokeColorChange = (event) => {
+    const newColor = event.target.value;
+    setSelectedStrokeColor(newColor);
+  };
+
   return (
     <>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openCategoryErrorToast}
-        autoHideDuration={6000}
-        message="Failed to Create Category"
-      >
-        <Alert severity="error" sx={{ width: "100%" }}>
-          Failed to Create Category
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openCategorySuccessToast}
-        autoHideDuration={6000}
-        message="Sucessfully Created Category"
-      >
-        <Alert severity="success" sx={{ width: "100%" }}>
-          Sucessfully Created Category
-        </Alert>
-      </Snackbar>
-
       <Tooltip title="Create Category">
         <Button
           onClick={openForm}
@@ -193,14 +200,80 @@ export default function CategoryForm() {
                 />
               </Grid>
               <Grid item xs={12}>
+                <TextField
+                  id="fill_color"
+                  type="color"
+                  name="fill_color"
+                  label="Fill Color"
+                  variant="outlined"
+                  size="small"
+                  value={selectedFillColor}
+                  onChange={handleFillColorChange}
+                  InputLabelProps={{ shrink: true }}
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="fill_opacity"
+                  type="number"
+                  name="fill_opacity"
+                  label="Fill Opacity"
+                  variant="outlined"
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                  required
+                  fullWidth
+                  inputProps={{
+                    step: 0.1,
+                    min: 0,
+                    max: 1,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="stroke_color"
+                  type="color"
+                  name="stroke_color"
+                  label="Stroke Color"
+                  variant="outlined"
+                  size="small"
+                  value={selectedStrokeColor}
+                  onChange={handleStrokeColorChange}
+                  InputLabelProps={{ shrink: true }}
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="stroke_width"
+                  type="number"
+                  name="stroke_width"
+                  label="Stroke Width"
+                  variant="outlined"
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                  required
+                  fullWidth
+                  inputProps={{
+                    step: 1,
+                    min: 1,
+                    max: 5,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <Button
                   type="submit"
-                  variant="contained"
-                  color="success"
-                  size="small"
                   fullWidth
+                  variant={loading ? "outlined" : "contained"}
+                  sx={{ mt: 3, mb: 2 }}
                 >
-                  Done
+                  {loading ? null : "Create Category"}
+                  {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
               <Grid item xs={12}>

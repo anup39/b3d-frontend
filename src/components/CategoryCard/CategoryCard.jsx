@@ -26,7 +26,7 @@ export default function CategoryCard({
         setStyle(style);
         console.log(style);
       });
-  });
+  }, [id]);
 
   return (
     <Paper
