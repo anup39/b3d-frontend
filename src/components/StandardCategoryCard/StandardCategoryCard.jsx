@@ -28,13 +28,10 @@ export default function StandardCategoryCard({
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {name}
+                <b>{name}</b>
               </Typography>
               <Typography variant="body2" gutterBottom>
                 {description}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Created At: {created_at}
               </Typography>
             </Grid>
           </Grid>

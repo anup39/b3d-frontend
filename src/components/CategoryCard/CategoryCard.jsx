@@ -1,23 +1,33 @@
-import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
-
-const Img = styled("img")({
-  margin: "auto",
-  display: "block",
-  maxWidth: "100%",
-  maxHeight: "100%",
-});
+import TabIcon from "@mui/icons-material/Tab";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function CategoryCard({
+  id,
   full_name,
   description,
   type_of_geometry,
   created_at,
 }) {
+  const [style, setStyle] = useState();
+  useEffect(() => {
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/global-category-style/?category=${id}`
+      )
+      .then((res) => {
+        const style = res.data[0];
+        setStyle(style);
+        console.log(style);
+      });
+  });
+
   return (
     <Paper
       sx={{
@@ -31,28 +41,55 @@ export default function CategoryCard({
     >
       <Grid container spacing={2}>
         <Grid item>
-          <ButtonBase sx={{ width: 100, height: 100 }}>
-            <Img
-              alt="complex"
-              src="https://cdn-icons-png.flaticon.com/512/6736/6736258.png "
-            />
-          </ButtonBase>
+          <TabIcon sx={{ width: 30, height: 30, color: "green" }} />
         </Grid>
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                {full_name}
+                <b>{full_name}</b>
               </Typography>
               <Typography variant="body2" gutterBottom>
                 {description}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                Type of Geometry : {type_of_geometry}
+                Type of Geometry: {type_of_geometry}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Created At: {created_at}
-              </Typography>
+              {style ? (
+                <>
+                  <Typography variant="body2" gutterBottom>
+                    <span>Fill Color: </span>
+                    <span
+                      style={{
+                        color: style.fill,
+                        backgroundColor: style.fill,
+                      }}
+                    >
+                      {style.fill}
+                    </span>
+                  </Typography>
+                  <Typography variant="body2" gutterBottom>
+                    <span>Fill Opacity: </span>
+
+                    {style.fill_opacity}
+                  </Typography>
+                  <Typography variant="body2" gutterBottom>
+                    <span>Stroke Color: </span>
+                    <span
+                      style={{
+                        color: style.stroke,
+                        backgroundColor: style.stroke,
+                      }}
+                    >
+                      {style.stroke}
+                    </span>
+                  </Typography>
+                  <Typography variant="body2" gutterBottom>
+                    <span>Stroke Width: </span>
+                    {style.stroke_width}
+                  </Typography>
+                </>
+              ) : null}
             </Grid>
           </Grid>
         </Grid>
