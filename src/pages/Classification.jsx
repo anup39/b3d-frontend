@@ -12,13 +12,10 @@ import SubCategoryForm from "../components/SubCategoryForm/SubCategoryForm";
 import SubCategoryCard from "../components/SubCategoryCard/SubCategoryCard";
 import CategoryForm from "../components/CategoryForm/CategoryForm";
 import CategoryCard from "../components/CategoryCard/CategoryCard";
-import CategoryStyleForm from "../components/CategoryStyleForm/CategoryStyleFrom";
-import CategoryStyleCard from "../components/CategoryStyleCard/CategoryStyleCard";
 
 import { setStandardCategorys } from "../reducers/StandardCategory";
 import { setSubCategorys } from "../reducers/SubCategory";
 import { setCategorys } from "../reducers/Category";
-import { setCategoryStyles } from "../reducers/CategoryStyle";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -62,9 +59,6 @@ export default function Classification() {
   );
   const subCategorys = useSelector((state) => state.subCategory.subCategorys);
   const categorys = useSelector((state) => state.category.categorys);
-  const categoryStyles = useSelector(
-    (state) => state.categoryStyle.categoryStyles
-  );
 
   useEffect(() => {
     axios
@@ -89,14 +83,6 @@ export default function Classification() {
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
       .then((res) => {
         dispatch(setCategorys(res.data));
-      });
-  }, [dispatch]);
-
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category-style/`)
-      .then((res) => {
-        dispatch(setCategoryStyles(res.data));
       });
   }, [dispatch]);
 
@@ -130,7 +116,6 @@ export default function Classification() {
           <Tab label="Standard Category" {...a11yProps(0)} />
           <Tab label="Sub Category" {...a11yProps(1)} />
           <Tab label="Category" {...a11yProps(2)} />
-          <Tab label="Category Style" {...a11yProps(3)} />
         </Tabs>
         <TabPanel value={value} index={0}>
           <StandardCategoryForm />
@@ -173,23 +158,6 @@ export default function Classification() {
                   description={c.description}
                   type_of_geometry={c.type_of_geometry}
                   created_at={c.created_at}
-                />
-              ))
-            : null}
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-          <CategoryStyleForm />
-          {categoryStyles
-            ? categoryStyles.map((cs) => (
-                <CategoryStyleCard
-                  key={cs.id}
-                  id={cs.id}
-                  full_name={cs.full_name}
-                  fill_color={cs.fill}
-                  fill_opacity={cs.fill_opacity}
-                  stroke_color={cs.stroke}
-                  stroke_width={cs.stroke_width}
-                  created_at={cs.created_at}
                 />
               ))
             : null}
