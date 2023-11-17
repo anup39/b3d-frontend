@@ -15,7 +15,11 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  seterrorMessage,
+  setshowErrorPopup,
+} from "../../reducers/DisplaySettings";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -34,6 +38,7 @@ function union(a, b) {
 }
 
 export default function TransferList({ client_id, component }) {
+  const dispatch = useDispatch();
   const [checked, setChecked] = useState([]);
   const [finalLeft, setFinalLeft] = useState([]);
   const [finalRight, setFinalRight] = useState([]);
@@ -46,6 +51,7 @@ export default function TransferList({ client_id, component }) {
     useState(false);
   const [loadingcontent, setLoadingContent] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const user_id = useSelector((state) => state.auth.user_id);
 
   const handleToggle = (value) => () => {
@@ -372,21 +378,43 @@ export default function TransferList({ client_id, component }) {
             )
             .then((res) => {
               const id = res.data[0].id;
+              // here check if the subcategory exists with this standard category
+
+              console.log(id, "id");
+
               axios
-                .delete(`${client_url}/${id}/`)
-                .then(() => {
-                  setOpenCategorySuccessToast(true);
-                  setOpenCategoryErrorToast(false);
-                  setTimeout(() => {
-                    setOpenCategorySuccessToast(false);
-                  }, 3000);
-                })
-                .catch(() => {
-                  setOpenCategoryErrorToast(true);
-                  setOpenCategorySuccessToast(false);
-                  setTimeout(() => {
-                    setOpenCategoryErrorToast(false);
-                  }, 3000);
+                .get(
+                  `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/sub-category/?standard_category=${id}`
+                )
+                .then((res) => {
+                  console.log(res.data);
+                  if (res.data.length > 0) {
+                    dispatch(setshowErrorPopup(true));
+                    dispatch(
+                      seterrorMessage(
+                        `Cannot remove standard category ${item.name} since it is used in sub category . Remove it from sub category first  `
+                      )
+                    );
+                  } else {
+                    axios
+                      .delete(`${client_url}/${id}/`)
+                      .then(() => {
+                        setOpenCategorySuccessToast(true);
+                        setOpenCategoryErrorToast(false);
+                        setTimeout(() => {
+                          setOpenCategorySuccessToast(false);
+                        }, 3000);
+                      })
+                      .catch(() => {
+                        setOpenCategoryErrorToast(true);
+                        setOpenCategorySuccessToast(false);
+                        setTimeout(() => {
+                          setOpenCategoryErrorToast(false);
+                        }, 3000);
+                      });
+                  }
                 });
             });
         });
@@ -437,21 +465,41 @@ export default function TransferList({ client_id, component }) {
             )
             .then((res) => {
               const id = res.data[0].id;
+              // here check if the category exists with this sub category
+              console.log(id, "id");
+
               axios
-                .delete(`${client_url}/${id}/`)
-                .then(() => {
-                  setOpenCategorySuccessToast(true);
-                  setOpenCategoryErrorToast(false);
-                  setTimeout(() => {
-                    setOpenCategorySuccessToast(false);
-                  }, 3000);
-                })
-                .catch(() => {
-                  setOpenCategoryErrorToast(true);
-                  setOpenCategorySuccessToast(false);
-                  setTimeout(() => {
-                    setOpenCategoryErrorToast(false);
-                  }, 3000);
+                .get(
+                  `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/category/?sub_category=${id}`
+                )
+                .then((res) => {
+                  if (res.data.length > 0) {
+                    dispatch(setshowErrorPopup(true));
+                    dispatch(
+                      seterrorMessage(
+                        `Cannot remove sub category ${item.name} since it is used in  category . Remove it from  category first  `
+                      )
+                    );
+                  } else {
+                    axios
+                      .delete(`${client_url}/${id}/`)
+                      .then(() => {
+                        setOpenCategorySuccessToast(true);
+                        setOpenCategoryErrorToast(false);
+                        setTimeout(() => {
+                          setOpenCategorySuccessToast(false);
+                        }, 3000);
+                      })
+                      .catch(() => {
+                        setOpenCategoryErrorToast(true);
+                        setOpenCategorySuccessToast(false);
+                        setTimeout(() => {
+                          setOpenCategoryErrorToast(false);
+                        }, 3000);
+                      });
+                  }
                 });
             });
         });

@@ -9,6 +9,8 @@ const initialState = {
   deleteId: null,
   deleteTarget: "",
   showGeomFormPopup: "none",
+  showErrorPopup: false,
+  errorMessage: "There is an error",
 };
 
 export const DisplaySettings = createSlice({
@@ -39,6 +41,12 @@ export const DisplaySettings = createSlice({
     setdeleteTarget: (state, action) => {
       state.deleteTarget = action.payload;
     },
+    setshowErrorPopup: (state, action) => {
+      state.showErrorPopup = action.payload;
+    },
+    seterrorMessage: (state, action) => {
+      state.errorMessage = action.payload;
+    },
   },
 });
 
@@ -52,6 +60,8 @@ export const {
   setdeleteId,
   setdeleteTarget,
   setshowGeomFormPopup,
+  setshowErrorPopup,
+  seterrorMessage,
 } = DisplaySettings.actions;
 
 export default DisplaySettings.reducer;

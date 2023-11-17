@@ -41,3 +41,8 @@ Things i will do this week from Octobor 10 :
 
 
 Let me know if you have any changes meanwhile from recent update in server
+
+November 17 TODO:
+
+1)  When removing classes from client check if the uppper or lower class exists or not.
+
