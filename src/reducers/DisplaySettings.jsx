@@ -52,7 +52,7 @@ export const DisplaySettings = createSlice({
       state.errorMessage = action.payload;
     },
     setshowDeleteUserPopup: (state, action) => {
-      state.showDeletePopup = action.payload;
+      state.showDeleteUserPopup = action.payload;
     },
     setdeleteUserPopupMessage: (state, action) => {
       state.deleteUserPopupMessage = action.payload;

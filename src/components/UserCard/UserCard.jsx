@@ -3,17 +3,15 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
 import PropTypes from "prop-types";
-import { Button, CircularProgress } from "@mui/material";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { CircularProgress } from "@mui/material";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {
-  setshowToast,
-  settoastMessage,
-  settoastType,
+  setdeleteUserRoleId,
+  setdeleteUserPopupMessage,
+  setshowDeleteUserPopup,
+  setClientId,
 } from "../../reducers/DisplaySettings";
-import { setUsers } from "../../reducers/Users";
 
 export default function UserCard({
   id,
@@ -27,9 +25,7 @@ export default function UserCard({
   client_id,
 }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const username_current = useSelector((state) => state.auth.username);
-  const [loading, setLoading] = useState(false);
 
   const handleAssignRole = () => {
     onUserId(id);
@@ -37,54 +33,14 @@ export default function UserCard({
   };
 
   const handleDeleteUser = () => {
-    setLoading(true);
-    // navigate(`/map/${id}`);
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/${id}/`)
-      .then((res) => {
-        const user_role_data = res.data;
-        const data = {
-          is_deleted: true,
-        };
-        axios
-          .patch(
-            `${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/${id}/`,
-            data
-          )
-          .then(() => {
-            const user_data = {
-              is_active: false,
-            };
-            axios
-              .patch(
-                `${import.meta.env.VITE_API_DASHBOARD_URL}/users/${
-                  user_role_data.user
-                }/`,
-                user_data
-              )
-              .then(() => {
-                setLoading(false);
-                dispatch(setshowToast(true));
-                dispatch(settoastMessage("Sucessfully deleted the User"));
-                dispatch(settoastType("success"));
-                axios
-                  .get(
-                    `${
-                      import.meta.env.VITE_API_DASHBOARD_URL
-                    }/user-role/?client=${client_id}`
-                  )
-                  .then((res) => {
-                    dispatch(setUsers(res.data));
-                  });
-              });
-          });
-      })
-      .catch(() => {
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(settoastMessage("Failed to delete User"));
-        dispatch(settoastType("error"));
-      });
+    dispatch(setdeleteUserRoleId(id));
+    dispatch(
+      setdeleteUserPopupMessage(
+        `Are you sure you want to delete user ${username} ?`
+      )
+    );
+    dispatch(setshowDeleteUserPopup(true));
+    dispatch(setClientId(client_id));
   };
 
   return (
@@ -130,16 +86,9 @@ export default function UserCard({
                         </button>
                       </Grid>
                       <Grid item>
-                        {loading ? (
-                          <CircularProgress />
-                        ) : (
-                          <button
-                            className="btn-main"
-                            onClick={handleDeleteUser}
-                          >
-                            Delete
-                          </button>
-                        )}
+                        <button className="btn-main" onClick={handleDeleteUser}>
+                          Delete
+                        </button>
                       </Grid>
                     </>
                   ) : (

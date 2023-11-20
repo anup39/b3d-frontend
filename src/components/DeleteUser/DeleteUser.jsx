@@ -14,7 +14,7 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import { setUsers } from "../../reducers/Users";
 
-export default function DeletePopup() {
+export default function DeleteUser() {
   const dispatch = useDispatch();
   const showDeleteUserPopup = useSelector(
     (state) => state.displaySettings.showDeleteUserPopup
@@ -22,6 +22,7 @@ export default function DeletePopup() {
   const deleteUserPopupMessage = useSelector(
     (state) => state.displaySettings.deleteUserPopupMessage
   );
+  console.log(deleteUserPopupMessage, "delete user popup message");
   const deleteUserRoleId = useSelector(
     (state) => state.displaySettings.deleteUserRoleId
   );
@@ -30,6 +31,7 @@ export default function DeletePopup() {
   const [loading, setLoading] = useState(false);
 
   const handleDeleteUser = (event) => {
+    console.log("here");
     event.preventDefault();
     setLoading(true);
 
