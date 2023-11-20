@@ -45,5 +45,7 @@ Let me know if you have any changes meanwhile from recent update in server
 November 17 TODO:
 
 1)  When removing classes from client check if the uppper or lower class exists or not.---- done
-2) when client is delete update redux state
+2) when client is delete update redux state ---
+3) When deleting property(project) and map(raster) donot use the logic or middle ware of client need to reconsider this 
+4) Reprocess from map is not implemeted
 
