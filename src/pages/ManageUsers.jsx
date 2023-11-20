@@ -7,6 +7,7 @@ import UserTransferList from "../components/UserTransferList/UserTransferList";
 import { Button, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import UserCard from "../components/UserCard/UserCard";
+import ClientForm from "../components/ClientForm/ClientForm";
 
 export default function ManageUsers() {
   const navigate = useNavigate();
@@ -30,7 +31,9 @@ export default function ManageUsers() {
     <>
       <AppBar></AppBar>
 
-      <Tooltip>
+      <ClientForm />
+
+      {/* <Tooltip>
         <Button
           onClick={() => navigate("/register")}
           sx={{
@@ -44,7 +47,7 @@ export default function ManageUsers() {
         >
           Create User
         </Button>
-      </Tooltip>
+      </Tooltip> */}
 
       <div>
         {users
