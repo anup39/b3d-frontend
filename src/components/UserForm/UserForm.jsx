@@ -6,22 +6,25 @@ import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Button } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { setclients } from "../../reducers/Client";
+import { setUsers } from "../../reducers/Users";
 import {
   setshowToast,
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Autocomplete } from "@mui/material";
+import PropTypes from "prop-types";
 
-export default function ClientForm() {
+export default function UserForm({ client_id }) {
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [inputValue, setInputValue] = useState("");
   const user_id = useSelector((state) => state.auth.user_id);
   const [roles, setRoles] = useState([]);
 
@@ -39,19 +42,16 @@ export default function ClientForm() {
     event.preventDefault();
     setLoading(true);
     const data_ = new FormData(event.currentTarget);
-    data_.append("created_by", user_id);
-    data_.append("is_display", true);
     axios
-      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, data_)
+      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/users/`, data_)
       .then((res) => {
-        const client_data = res.data;
-        const client_admin = roles.find((item) => item.name === "client admin");
+        const user_data = res.data;
         const user_role_data = {
-          user: client_data.user,
-          role: client_admin.id,
+          user: user_data.id,
+          role: inputValue.id,
           created_by: user_id,
           is_display: true,
-          client: client_data.id,
+          client: client_id,
         };
         axios
           .post(
@@ -61,17 +61,17 @@ export default function ClientForm() {
           .then(() => {
             setLoading(false);
             dispatch(setshowToast(true));
-            dispatch(settoastMessage("Successfully Created Client"));
+            dispatch(settoastMessage("Successfully Created User"));
             dispatch(settoastType("success"));
             closeForm();
             axios
-              .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, {
-                // headers: {
-                //   Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
-                // },
-              })
+              .get(
+                `${
+                  import.meta.env.VITE_API_DASHBOARD_URL
+                }/user-role/?client=${client_id}`
+              )
               .then((res) => {
-                dispatch(setclients(res.data));
+                dispatch(setUsers(res.data));
               });
           });
       })
@@ -81,7 +81,7 @@ export default function ClientForm() {
         dispatch(setshowToast(true));
         dispatch(
           settoastMessage(
-            error_message ? error_message : "Failed to Create Client"
+            error_message ? error_message : "Failed to Create User"
           )
         );
         dispatch(settoastType("error"));
@@ -102,14 +102,14 @@ export default function ClientForm() {
 
   return (
     <>
-      <Tooltip title="Create Client">
+      <Tooltip title="Create User">
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Create Client
+          Create User
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -153,8 +153,8 @@ export default function ClientForm() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  id="firstname"
-                  name="firstname"
+                  id="first_name"
+                  name="first_name"
                   label="First Name"
                   variant="outlined"
                   size="small"
@@ -165,8 +165,8 @@ export default function ClientForm() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  id="lastname"
-                  name="lastname"
+                  id="last_name"
+                  name="last_name"
                   label="Last Name"
                   variant="outlined"
                   size="small"
@@ -214,16 +214,29 @@ export default function ClientForm() {
                   }}
                 />
               </Grid>
+
               <Grid item xs={12}>
-                <TextField
-                  id="description"
-                  name="description"
-                  label="Description"
-                  variant="outlined"
-                  size="small"
-                  InputLabelProps={{ shrink: true }}
-                  required
-                  fullWidth
+                <Autocomplete
+                  disablePortal
+                  id="user-roles"
+                  options={roles}
+                  getOptionLabel={(option) => option.name}
+                  style={{ width: 300 }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select User Role"
+                      InputLabelProps={{ shrink: true }}
+                      variant="outlined"
+                      size="small"
+                      required
+                    />
+                  )}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setInputValue(newValue);
+                    }
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -233,7 +246,7 @@ export default function ClientForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Client"}
+                  {loading ? null : "Create User"}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -255,3 +268,7 @@ export default function ClientForm() {
     </>
   );
 }
+
+UserForm.propTypes = {
+  client_id: PropTypes.string,
+};

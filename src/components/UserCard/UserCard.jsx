@@ -3,11 +3,15 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
 import PropTypes from "prop-types";
-import { Button } from "@mui/material";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setdeleteUserRoleId,
+  setdeleteUserPopupMessage,
+  setshowDeleteUserPopup,
+  setClientId,
+} from "../../reducers/DisplaySettings";
 
 export default function UserCard({
   id,
@@ -16,10 +20,11 @@ export default function UserCard({
   role,
   last_login,
   date_joined,
-  onUserId,
-  onOpenForm,
+  // onUserId,
+  // onOpenForm,
+  client_id,
 }) {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const username_current = useSelector((state) => state.auth.username);
 
   const handleAssignRole = () => {
@@ -28,12 +33,14 @@ export default function UserCard({
   };
 
   const handleDeleteUser = () => {
-    // navigate(`/map/${id}`);
-    console.log("Delete User");
-  };
-
-  const handleManageProjects = () => {
-    navigate(`/manage-projects/${id}`);
+    dispatch(setdeleteUserRoleId(id));
+    dispatch(
+      setdeleteUserPopupMessage(
+        `Are you sure you want to delete user ${username} ?`
+      )
+    );
+    dispatch(setshowDeleteUserPopup(true));
+    dispatch(setClientId(client_id));
   };
 
   return (
@@ -53,9 +60,6 @@ export default function UserCard({
             <Grid item xs={12} sm container>
               <Grid item xs container direction="column" spacing={2}>
                 <Grid item xs>
-                  {/* <Typography gutterBottom variant="subtitle1" component="div">
-                <b>ID </b>: {id}
-              </Typography> */}
                   <Typography gutterBottom variant="subtitle1" component="div">
                     <b>User Name </b>: {username}
                   </Typography>
@@ -78,7 +82,7 @@ export default function UserCard({
                     <>
                       <Grid item>
                         <button className="btn-main" onClick={handleAssignRole}>
-                          Assign Roles
+                          Change Roles
                         </button>
                       </Grid>
                       <Grid item>
@@ -99,11 +103,6 @@ export default function UserCard({
                   )}
                 </Grid>
               </Grid>
-              <Grid item xs>
-                <Typography variant="body2" color="text.secondary">
-                  <b>Total Assigned Projects</b> : {2}
-                </Typography>
-              </Grid>
             </Grid>
           </Grid>
         </Paper>
@@ -121,4 +120,5 @@ UserCard.propTypes = {
   date_joined: PropTypes.string,
   onUserId: PropTypes.func,
   onOpenForm: PropTypes.func,
+  client_id: PropTypes.string,
 };

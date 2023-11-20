@@ -36,16 +36,16 @@ export default function ProjectCard({
     navigate(`/manage-users/${id}`);
   };
 
-  const handleDeleteProject = () => {
-    dispatch(setshowDeletePopup(true));
-    dispatch(setdeleteId(id));
-    dispatch(setdeleteTarget("projects"));
-    dispatch(
-      setdeletePopupMessage(
-        `Are you sure you want to delete Project ${id} and its content?`
-      )
-    );
-  };
+  // const handleDeleteProject = () => {
+  //   dispatch(setshowDeletePopup(true));
+  //   dispatch(setdeleteId(id));
+  //   dispatch(setdeleteTarget("projects"));
+  //   dispatch(
+  //     setdeletePopupMessage(
+  //       `Are you sure you want to delete Project ${id} and its content?`
+  //     )
+  //   );
+  // };
 
   useEffect(() => {
     axios
@@ -105,9 +105,9 @@ export default function ProjectCard({
                 </button>
               </Grid>
               <Grid item>
-                <button className="btn-main" onClick={handleDeleteProject}>
+                {/* <button className="btn-main" onClick={handleDeleteProject}>
                   Delete
-                </button>
+                </button> */}
               </Grid>
             </Grid>
           </Grid>
