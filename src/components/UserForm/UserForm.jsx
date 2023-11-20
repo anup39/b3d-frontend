@@ -17,8 +17,9 @@ import {
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Autocomplete } from "@mui/material";
+import PropTypes from "prop-types";
 
-export default function UserForm() {
+export default function UserForm({ client_id }) {
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -47,35 +48,52 @@ export default function UserForm() {
     setLoading(true);
     const data_ = new FormData(event.currentTarget);
     console.log(data_, "data");
-    // axios
-    //   .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, data_)
-    //   .then(() => {
-    //     setLoading(false);
-    //     dispatch(setshowToast(true));
-    //     dispatch(settoastMessage("Successfully Created User"));
-    //     dispatch(settoastType("success"));
-    //     closeForm();
-    //     axios
-    //       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, {
-    //         // headers: {
-    //         //   Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
-    //         // },
-    //       })
-    //       .then((res) => {
-    //         dispatch(setUsers(res.data));
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     const error_message = error.response.data.message;
-    //     setLoading(false);
-    //     dispatch(setshowToast(true));
-    //     dispatch(
-    //       settoastMessage(
-    //         error_message ? error_message : "Failed to Create User"
-    //       )
-    //     );
-    //     dispatch(settoastType("error"));
-    //   });
+    axios
+      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/users/`, data_)
+      .then((res) => {
+        console.log(res.data, "user data");
+        const user_data = res.data;
+        const user_role_data = {
+          user: user_data.id,
+          role: inputValue.id,
+          created_by: user_id,
+          is_display: true,
+          client: client_id,
+        };
+        axios
+          .post(
+            `${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/`,
+            user_role_data
+          )
+          .then((res) => {
+            console.log(res.data, "created the role");
+            setLoading(false);
+            dispatch(setshowToast(true));
+            dispatch(settoastMessage("Successfully Created User"));
+            dispatch(settoastType("success"));
+            closeForm();
+            axios
+              .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/users/`, {
+                // headers: {
+                //   Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
+                // },
+              })
+              .then((res) => {
+                dispatch(setUsers(res.data));
+              });
+          });
+      })
+      .catch((error) => {
+        const error_message = error.response.data.message;
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(
+          settoastMessage(
+            error_message ? error_message : "Failed to Create User"
+          )
+        );
+        dispatch(settoastType("error"));
+      });
   };
 
   const openForm = () => {
@@ -143,8 +161,8 @@ export default function UserForm() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  id="firstname"
-                  name="firstname"
+                  id="first_name"
+                  name="first_name"
                   label="First Name"
                   variant="outlined"
                   size="small"
@@ -155,8 +173,8 @@ export default function UserForm() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  id="lastname"
-                  name="lastname"
+                  id="last_name"
+                  name="last_name"
                   label="Last Name"
                   variant="outlined"
                   size="small"
@@ -258,3 +276,7 @@ export default function UserForm() {
     </>
   );
 }
+
+UserForm.propTypes = {
+  client_id: PropTypes.string,
+};

@@ -26,7 +26,7 @@ export default function ManageUsers() {
     <>
       <AppBar></AppBar>
 
-      <UserForm />
+      <UserForm client_id={client_id} />
       <div>
         {users
           ? users.map((user) => (
