@@ -29,6 +29,7 @@ export default function DeletePopup() {
   const [loading, setLoading] = useState(false);
 
   const handleDeleteProject = (event) => {
+    console.log("here");
     event.preventDefault();
     setLoading(true);
     axios
@@ -49,9 +50,10 @@ export default function DeletePopup() {
         dispatch(setshowToast(true));
         dispatch(settoastMessage(`Successfully Deleted  ${deleteId}`));
         dispatch(settoastType("success"));
-        // window.location.reload(true);
+        window.location.reload(true);
       })
       .catch(() => {
+        setLoading(false);
         dispatch(setshowDeletePopup(false));
         dispatch(setdeletePopupMessage("Are you sure you want to delete?"));
         dispatch(setdeleteId(null));

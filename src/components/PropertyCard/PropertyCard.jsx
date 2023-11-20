@@ -32,20 +32,20 @@ export default function PropertyCard({
   client_name,
   project_name,
 }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const handleViewInMapProperty = () => {
     // console.log("map");
     // navigate(`/map/${properti}/${1}`);
   };
-  const handleDeleteProperty = () => {
-    console.log("Delete ", id);
-    navigate(`/map/${id}`);
-  };
+  // const handleDeleteProperty = () => {
+  //   console.log("Delete ", id);
+  //   navigate(`/map/${id}`);
+  // };
 
-  const handleReprocessProperty = () => {
-    // navigate(`/map/${id}`);
-    console.log("Reprocess", id);
-  };
+  // const handleReprocessProperty = () => {
+  //   // navigate(`/map/${id}`);
+  //   console.log("Reprocess", id);
+  // };
 
   return (
     <Paper
@@ -92,7 +92,7 @@ export default function PropertyCard({
                 <b>Client Name </b>: {client_name}
               </Typography>{" "}
               <Typography variant="body2" gutterBottom>
-                <b>Project Name </b>: {project_name}
+                <b>Property Name </b>: {project_name}
               </Typography>
               <LinearProgressLabel value={progress}></LinearProgressLabel>
             </Grid>
@@ -103,14 +103,14 @@ export default function PropertyCard({
                 </button>
               </Grid>
               <Grid item>
-                <button className="btn-main" onClick={handleReprocessProperty}>
+                {/* <button className="btn-main" onClick={handleReprocessProperty}>
                   Reprocess
-                </button>
+                </button> */}
               </Grid>
               <Grid item>
-                <button className="btn-main" onClick={handleDeleteProperty}>
+                {/* <button className="btn-main" onClick={handleDeleteProperty}>
                   Delete
-                </button>
+                </button> */}
               </Grid>
             </Grid>
           </Grid>

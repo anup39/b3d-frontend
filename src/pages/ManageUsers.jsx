@@ -1,17 +1,17 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import AppBar from "../components/AppBar/AppBar";
-import Box from "@mui/material/Box";
-import UserTransferList from "../components/UserTransferList/UserTransferList";
-import { Button, Tooltip } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import UserCard from "../components/UserCard/UserCard";
+import UserForm from "../components/UserForm/UserForm";
+import { useDispatch, useSelector } from "react-redux";
+import { setUsers } from "../reducers/Users";
 
 export default function ManageUsers() {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { client_id } = useParams();
-  const [users, setUsers] = useState([]);
+
+  const users = useSelector((state) => state.users.users);
 
   useEffect(() => {
     axios
@@ -21,31 +21,16 @@ export default function ManageUsers() {
         }/user-role/?client=${client_id}`
       )
       .then((res) => {
-        // dispatch(setUsers(res.data));
-        setUsers(res.data);
+        dispatch(setUsers(res.data));
+        // setUsers(res.data);
       });
-  }, [client_id]);
+  }, [client_id, dispatch]);
 
   return (
     <>
       <AppBar></AppBar>
 
-      <Tooltip>
-        <Button
-          onClick={() => navigate("/register")}
-          sx={{
-            //   marginBottom: "15px",
-            marginTop: "5px",
-            marginLeft: "5px",
-            marginRight: "5px",
-          }}
-          variant="contained"
-          color="error"
-        >
-          Create User
-        </Button>
-      </Tooltip>
-
+      <UserForm client_id={client_id} />
       <div>
         {users
           ? users.map((user) => (
@@ -59,30 +44,11 @@ export default function ManageUsers() {
                 role={user.role_name}
                 last_login={user.last_login}
                 date_joined={user.date_joined}
+                client_id={client_id}
               />
             ))
           : null}
       </div>
-
-      {/* <Box
-        sx={{
-          bgcolor: "background.paper",
-          display: "block",
-          height: 224,
-          margin: 10,
-        }}
-      >
-        <Tooltip>
-          <Button
-            sx={{ marginBottom: "25px" }}
-            variant="outlined"
-            color="error"
-          >
-            {clientName}
-          </Button>
-        </Tooltip> */}
-      {/* <UserTransferList id={parseInt(id)} component={"users"} /> */}
-      {/* </Box> */}
     </>
   );
 }

@@ -13,6 +13,13 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  seterrorMessage,
+  setshowErrorPopup,
+} from "../../reducers/DisplaySettings";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -31,6 +38,7 @@ function union(a, b) {
 }
 
 export default function TransferList({ client_id, component }) {
+  const dispatch = useDispatch();
   const [checked, setChecked] = useState([]);
   const [finalLeft, setFinalLeft] = useState([]);
   const [finalRight, setFinalRight] = useState([]);
@@ -41,6 +49,10 @@ export default function TransferList({ client_id, component }) {
   const [openCategoryErrorToast, setOpenCategoryErrorToast] = useState(false);
   const [openCategorySuccessToast, setOpenCategorySuccessToast] =
     useState(false);
+  const [loadingcontent, setLoadingContent] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const user_id = useSelector((state) => state.auth.user_id);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -79,6 +91,7 @@ export default function TransferList({ client_id, component }) {
 
   useEffect(() => {
     // Fetch data from the first API endpoint
+    setLoadingContent(true);
     axios
       .get(
         `${
@@ -210,6 +223,8 @@ export default function TransferList({ client_id, component }) {
             });
         }
 
+        setLoadingContent(false);
+
         // Fetch data from the second API endpoint
       });
   }, [client_id, component]);
@@ -281,36 +296,45 @@ export default function TransferList({ client_id, component }) {
         component="div"
         role="list"
       >
-        {items.map((value) => {
-          const labelId = `transfer-list-all-item-${value}-label`;
+        {!loadingcontent ? (
+          <>
+            {items.map((value) => {
+              const labelId = `transfer-list-all-item-${value}-label`;
 
-          return (
-            <ListItem
-              key={value.id}
-              role="listitem"
-              button
-              onClick={handleToggle(value)}
-            >
-              <ListItemIcon>
-                <Checkbox
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{
-                    "aria-labelledby": labelId,
-                  }}
-                />
-              </ListItemIcon>
+              return (
+                <ListItem
+                  key={value.id}
+                  role="listitem"
+                  button
+                  onClick={handleToggle(value)}
+                >
+                  <ListItemIcon>
+                    <Checkbox
+                      checked={checked.indexOf(value) !== -1}
+                      tabIndex={-1}
+                      disableRipple
+                      inputProps={{
+                        "aria-labelledby": labelId,
+                      }}
+                    />
+                  </ListItemIcon>
 
-              <ListItemText id={labelId} primary={value.full_name} />
-            </ListItem>
-          );
-        })}
+                  <ListItemText id={labelId} primary={value.full_name} />
+                </ListItem>
+              );
+            })}
+          </>
+        ) : (
+          <Box sx={{ marginLeft: "40%", marginTop: "50%" }}>
+            <CircularProgress />
+          </Box>
+        )}
       </List>
     </Card>
   );
 
   const handleSave = () => {
+    setLoading(true);
     const itemsMovedToLeft = finalLeft.filter(
       (item) =>
         !initialLeft.some((leftItem) => leftItem.full_name === item.full_name)
@@ -335,6 +359,7 @@ export default function TransferList({ client_id, component }) {
             is_display: true,
             view_name: item.full_name,
             global_standard_category: item.id,
+            created_by: user_id,
           };
           axios.post(`${client_url}/`, data).then(() => {
             setOpenCategorySuccessToast(true);
@@ -353,21 +378,43 @@ export default function TransferList({ client_id, component }) {
             )
             .then((res) => {
               const id = res.data[0].id;
+              // here check if the subcategory exists with this standard category
+
+              console.log(id, "id");
+
               axios
-                .delete(`${client_url}/${id}/`)
-                .then(() => {
-                  setOpenCategorySuccessToast(true);
-                  setOpenCategoryErrorToast(false);
-                  setTimeout(() => {
-                    setOpenCategorySuccessToast(false);
-                  }, 3000);
-                })
-                .catch(() => {
-                  setOpenCategoryErrorToast(true);
-                  setOpenCategorySuccessToast(false);
-                  setTimeout(() => {
-                    setOpenCategoryErrorToast(false);
-                  }, 3000);
+                .get(
+                  `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/sub-category/?standard_category=${id}`
+                )
+                .then((res) => {
+                  console.log(res.data);
+                  if (res.data.length > 0) {
+                    dispatch(setshowErrorPopup(true));
+                    dispatch(
+                      seterrorMessage(
+                        `Cannot remove standard category ${item.name} since it is used in sub category . Remove it from sub category first  `
+                      )
+                    );
+                  } else {
+                    axios
+                      .delete(`${client_url}/${id}/`)
+                      .then(() => {
+                        setOpenCategorySuccessToast(true);
+                        setOpenCategoryErrorToast(false);
+                        setTimeout(() => {
+                          setOpenCategorySuccessToast(false);
+                        }, 3000);
+                      })
+                      .catch(() => {
+                        setOpenCategoryErrorToast(true);
+                        setOpenCategorySuccessToast(false);
+                        setTimeout(() => {
+                          setOpenCategoryErrorToast(false);
+                        }, 3000);
+                      });
+                  }
                 });
             });
         });
@@ -398,6 +445,7 @@ export default function TransferList({ client_id, component }) {
                 description: item.description,
                 is_display: true,
                 view_name: item.full_name,
+                created_by: user_id,
               };
               axios.post(`${client_url}/`, data).then(() => {
                 setOpenCategorySuccessToast(true);
@@ -417,21 +465,41 @@ export default function TransferList({ client_id, component }) {
             )
             .then((res) => {
               const id = res.data[0].id;
+              // here check if the category exists with this sub category
+              console.log(id, "id");
+
               axios
-                .delete(`${client_url}/${id}/`)
-                .then(() => {
-                  setOpenCategorySuccessToast(true);
-                  setOpenCategoryErrorToast(false);
-                  setTimeout(() => {
-                    setOpenCategorySuccessToast(false);
-                  }, 3000);
-                })
-                .catch(() => {
-                  setOpenCategoryErrorToast(true);
-                  setOpenCategorySuccessToast(false);
-                  setTimeout(() => {
-                    setOpenCategoryErrorToast(false);
-                  }, 3000);
+                .get(
+                  `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/category/?sub_category=${id}`
+                )
+                .then((res) => {
+                  if (res.data.length > 0) {
+                    dispatch(setshowErrorPopup(true));
+                    dispatch(
+                      seterrorMessage(
+                        `Cannot remove sub category ${item.name} since it is used in  category . Remove it from  category first  `
+                      )
+                    );
+                  } else {
+                    axios
+                      .delete(`${client_url}/${id}/`)
+                      .then(() => {
+                        setOpenCategorySuccessToast(true);
+                        setOpenCategoryErrorToast(false);
+                        setTimeout(() => {
+                          setOpenCategorySuccessToast(false);
+                        }, 3000);
+                      })
+                      .catch(() => {
+                        setOpenCategoryErrorToast(true);
+                        setOpenCategorySuccessToast(false);
+                        setTimeout(() => {
+                          setOpenCategoryErrorToast(false);
+                        }, 3000);
+                      });
+                  }
                 });
             });
         });
@@ -466,6 +534,7 @@ export default function TransferList({ client_id, component }) {
                 type_of_geometry: item.type_of_geometry,
                 is_display: true,
                 view_name: item.full_name,
+                created_by: user_id,
               };
               axios.post(`${client_url}/`, data).then(() => {
                 setOpenCategorySuccessToast(true);
@@ -505,6 +574,9 @@ export default function TransferList({ client_id, component }) {
         });
       }
     }
+    setTimeout(() => {
+      setLoading(false);
+    }, 6000);
   };
 
   return (
@@ -536,8 +608,15 @@ export default function TransferList({ client_id, component }) {
       </Grid>
       <Grid item>{customList("Chosen", finalRight)}</Grid>
       <Grid item>
-        <Button onClick={handleSave} variant="contained" color="success">
-          Save
+        <Button
+          onClick={handleSave}
+          type="submit"
+          fullWidth
+          variant={loading ? "outlined" : "contained"}
+          sx={{ mt: 3, mb: 2 }}
+        >
+          {loading ? null : "Save"}
+          {loading ? <CircularProgress /> : null}
         </Button>
       </Grid>
     </Grid>

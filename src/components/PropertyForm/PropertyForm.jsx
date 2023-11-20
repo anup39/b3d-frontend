@@ -13,7 +13,7 @@ import {
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setproperties } from "../../reducers/Property";
 
 export default function PropertyForm({
@@ -32,6 +32,7 @@ export default function PropertyForm({
   const [image, setImage] = useState();
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const user_id = useSelector((state) => state.auth.user_id);
 
   const openForm = () => {
     setIsFormOpen(true);
@@ -87,6 +88,7 @@ export default function PropertyForm({
     formData.append("projection", projection);
     formData.append("tif_file", uploadedFile);
     formData.append("file_name", fileName);
+    formData.append("created_by", user_id);
 
     closeForm();
     if (onProgressForm) {

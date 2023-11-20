@@ -8,6 +8,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import TransferList from "../components/TransferList/TransferList";
 import { Button, Tooltip } from "@mui/material";
+import ErrorPopup from "../components/ErrorPopup/ErrorPopup";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -63,6 +64,8 @@ export default function Classification() {
   return (
     <>
       <AppBar></AppBar>
+
+      <ErrorPopup />
 
       <Box
         sx={{

@@ -3,29 +3,27 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
 import { useState } from "react";
-import MuiAlert from "@mui/material/Alert";
-import React from "react";
-import Snackbar from "@mui/material/Snackbar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setSubCategorys } from "../../reducers/SubCategory";
 import AutoCompleteCustom from "../AutoCompleteCustom/AutoCompleteCustom";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../../reducers/DisplaySettings";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function SubCategoryForm() {
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [openSubCategoryErrorToast, setOpenSubCategoryErrorToast] =
-    useState(false);
-  const [openSubCategorySuccessToast, setOpenSubCategorySuccessToast] =
-    useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const user_id = useSelector((state) => state.auth.user_id);
 
   const handleCreateSubCategory = (event) => {
     event.preventDefault();
+    setLoading(true);
     const nameInput = document.getElementById("name");
     const descriptionInput = document.getElementById("description");
     if (selectedCategoryId !== null) {
@@ -33,6 +31,7 @@ export default function SubCategoryForm() {
         name: nameInput.value,
         description: descriptionInput.value,
         standard_category: selectedCategoryId,
+        created_by: user_id,
       };
       axios
         .post(
@@ -40,11 +39,11 @@ export default function SubCategoryForm() {
           data
         )
         .then(() => {
-          setOpenSubCategorySuccessToast(true);
-          setOpenSubCategoryErrorToast(false);
-          setTimeout(() => {
-            setOpenSubCategorySuccessToast(false);
-          }, 3000);
+          setLoading(false);
+          dispatch(setshowToast(true));
+          dispatch(settoastMessage("Successfully Created Sub category"));
+          dispatch(settoastType("success"));
+          closeForm();
           axios
             .get(
               `${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`
@@ -54,14 +53,13 @@ export default function SubCategoryForm() {
             });
         })
         .catch(() => {
-          setOpenSubCategoryErrorToast(true);
-          setOpenSubCategorySuccessToast(false);
-          setTimeout(() => {
-            setOpenSubCategoryErrorToast(false);
-          }, 3000);
+          setLoading(false);
+          dispatch(setshowToast(true));
+          dispatch(settoastMessage("Failed to  Create Standard category"));
+          dispatch(settoastType("error"));
+          closeForm();
         });
     }
-    closeForm();
   };
 
   const openForm = () => {
@@ -74,39 +72,6 @@ export default function SubCategoryForm() {
 
   return (
     <>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openSubCategoryErrorToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message="Failed to Create SubCategory"
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Failed to Create SubCategory
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openSubCategorySuccessToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message="Sucessfully Created SubCategory"
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Sucessfully Created SubCategory
-        </Alert>
-      </Snackbar>
-      {/* <Box sx={{ flexGrow: 0 }}> */}
       <Tooltip title="Create SubCategory">
         <Button
           onClick={openForm}
@@ -177,12 +142,12 @@ export default function SubCategoryForm() {
               <Grid item xs={12}>
                 <Button
                   type="submit"
-                  variant="contained"
-                  color="success"
-                  size="small"
                   fullWidth
+                  variant={loading ? "outlined" : "contained"}
+                  sx={{ mt: 3, mb: 2 }}
                 >
-                  Done
+                  {loading ? null : "Create Sub Category"}
+                  {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
               <Grid item xs={12}>

@@ -3,34 +3,31 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
 import { useState } from "react";
-import MuiAlert from "@mui/material/Alert";
-import React from "react";
-import Snackbar from "@mui/material/Snackbar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setStandardCategorys } from "../../reducers/StandardCategory";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../../reducers/DisplaySettings";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function StandardCategoryForm() {
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [openStandardCategoryErrorToast, setOpenStandardCategoryErrorToast] =
-    useState(false);
-  const [
-    openStandardCategorySuccessToast,
-    setOpenStandardCategorySuccessToast,
-  ] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const user_id = useSelector((state) => state.auth.user_id);
 
   const handleCreateStandardCategory = (event) => {
     event.preventDefault();
+    setLoading(true);
     const nameInput = document.getElementById("name");
     const descriptionInput = document.getElementById("description");
     const data = {
       name: nameInput.value,
       description: descriptionInput.value,
+      created_by: user_id,
     };
     axios
       .post(
@@ -38,11 +35,12 @@ export default function StandardCategoryForm() {
         data
       )
       .then(() => {
-        setOpenStandardCategorySuccessToast(true);
-        setOpenStandardCategoryErrorToast(false);
-        setTimeout(() => {
-          setOpenStandardCategorySuccessToast(false);
-        }, 3000);
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Successfully Created Standard category"));
+        dispatch(settoastType("success"));
+        closeForm();
+
         axios
           .get(
             `${
@@ -54,13 +52,12 @@ export default function StandardCategoryForm() {
           });
       })
       .catch(() => {
-        setOpenStandardCategoryErrorToast(true);
-        setOpenStandardCategorySuccessToast(false);
-        setTimeout(() => {
-          setOpenStandardCategoryErrorToast(false);
-        }, 3000);
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Failed to load Standard Category"));
+        dispatch(settoastType("error"));
+        closeForm();
       });
-    closeForm();
   };
 
   const openForm = () => {
@@ -73,39 +70,6 @@ export default function StandardCategoryForm() {
 
   return (
     <>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openStandardCategoryErrorToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message="Failed to Create StandardCategory"
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Failed to Create StandardCategory
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={openStandardCategorySuccessToast}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message="Sucessfully Created StandardCategory"
-        // action={action}
-      >
-        <Alert
-          //  onClose={handleClose}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Sucessfully Created StandardCategory
-        </Alert>
-      </Snackbar>
-
       <Tooltip title="Create StandardCategory">
         <Button
           onClick={openForm}
@@ -169,12 +133,12 @@ export default function StandardCategoryForm() {
               <Grid item xs={12}>
                 <Button
                   type="submit"
-                  variant="contained"
-                  color="success"
-                  size="small"
                   fullWidth
+                  variant={loading ? "outlined" : "contained"}
+                  sx={{ mt: 3, mb: 2 }}
                 >
-                  Done
+                  {loading ? null : "Create Standard Category"}
+                  {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
               <Grid item xs={12}>
