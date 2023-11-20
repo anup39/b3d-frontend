@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setclients } from "../../reducers/Client";
@@ -23,6 +23,16 @@ export default function ClientForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-roles/`)
+      .then((res) => {
+        setRoles(res.data);
+      })
+      .then(() => {});
+  }, []);
 
   const handleCreateClient = (event) => {
     // TODO : Here handle the error since username and email  are checked in backend
@@ -33,20 +43,36 @@ export default function ClientForm() {
     data_.append("is_display", true);
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, data_)
-      .then(() => {
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(settoastMessage("Successfully Created Client"));
-        dispatch(settoastType("success"));
-        closeForm();
+      .then((res) => {
+        const client_data = res.data;
+        const client_admin = roles.find((item) => item.name === "client admin");
+        const user_role_data = {
+          user: client_data.user,
+          role: client_admin.id,
+          created_by: user_id,
+          is_display: true,
+          client: client_data.id,
+        };
         axios
-          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, {
-            // headers: {
-            //   Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
-            // },
-          })
-          .then((res) => {
-            dispatch(setclients(res.data));
+          .post(
+            `${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/`,
+            user_role_data
+          )
+          .then(() => {
+            setLoading(false);
+            dispatch(setshowToast(true));
+            dispatch(settoastMessage("Successfully Created Client"));
+            dispatch(settoastType("success"));
+            closeForm();
+            axios
+              .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, {
+                // headers: {
+                //   Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
+                // },
+              })
+              .then((res) => {
+                dispatch(setclients(res.data));
+              });
           });
       })
       .catch((error) => {

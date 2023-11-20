@@ -28,18 +28,13 @@ export default function UserForm({ client_id }) {
   const user_id = useSelector((state) => state.auth.user_id);
   const [roles, setRoles] = useState([]);
 
-  console.log(inputValue, "inputValue");
-
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-roles/`)
       .then((res) => {
-        console.log(res.data);
         setRoles(res.data);
       })
-      .then((error) => {
-        console.log(error);
-      });
+      .then(() => {});
   }, []);
 
   const handleCreateClient = (event) => {
@@ -47,11 +42,9 @@ export default function UserForm({ client_id }) {
     event.preventDefault();
     setLoading(true);
     const data_ = new FormData(event.currentTarget);
-    console.log(data_, "data");
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/users/`, data_)
       .then((res) => {
-        console.log(res.data, "user data");
         const user_data = res.data;
         const user_role_data = {
           user: user_data.id,
@@ -65,8 +58,7 @@ export default function UserForm({ client_id }) {
             `${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/`,
             user_role_data
           )
-          .then((res) => {
-            console.log(res.data, "created the role");
+          .then(() => {
             setLoading(false);
             dispatch(setshowToast(true));
             dispatch(settoastMessage("Successfully Created User"));
