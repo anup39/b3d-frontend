@@ -32,10 +32,6 @@ export default function UserCard({
     console.log("Delete User");
   };
 
-  const handleManageProjects = () => {
-    navigate(`/manage-projects/${id}`);
-  };
-
   return (
     <>
       {username_current !== username ? (
@@ -53,9 +49,6 @@ export default function UserCard({
             <Grid item xs={12} sm container>
               <Grid item xs container direction="column" spacing={2}>
                 <Grid item xs>
-                  {/* <Typography gutterBottom variant="subtitle1" component="div">
-                <b>ID </b>: {id}
-              </Typography> */}
                   <Typography gutterBottom variant="subtitle1" component="div">
                     <b>User Name </b>: {username}
                   </Typography>
@@ -98,11 +91,6 @@ export default function UserCard({
                     </Grid>
                   )}
                 </Grid>
-              </Grid>
-              <Grid item xs>
-                <Typography variant="body2" color="text.secondary">
-                  <b>Total Assigned Projects</b> : {2}
-                </Typography>
               </Grid>
             </Grid>
           </Grid>
