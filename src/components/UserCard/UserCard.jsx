@@ -82,7 +82,7 @@ export default function UserCard({
       .catch(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Failed to Create User"));
+        dispatch(settoastMessage("Failed to delete User"));
         dispatch(settoastType("error"));
       });
   };
@@ -126,7 +126,7 @@ export default function UserCard({
                     <>
                       <Grid item>
                         <button className="btn-main" onClick={handleAssignRole}>
-                          Assign Roles
+                          Change Roles
                         </button>
                       </Grid>
                       <Grid item>
