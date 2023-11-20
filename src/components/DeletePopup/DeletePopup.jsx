@@ -49,7 +49,7 @@ export default function DeletePopup() {
         dispatch(setshowToast(true));
         dispatch(settoastMessage(`Successfully Deleted  ${deleteId}`));
         dispatch(settoastType("success"));
-        // window.location.reload(true);
+        window.location.reload(true);
       })
       .catch(() => {
         dispatch(setshowDeletePopup(false));
