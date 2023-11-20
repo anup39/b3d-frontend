@@ -65,11 +65,11 @@ export default function UserForm({ client_id }) {
             dispatch(settoastType("success"));
             closeForm();
             axios
-              .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/users/`, {
-                // headers: {
-                //   Authorization: "Token " + localStorage.getItem("token"), // Include the API token from localStorage in the 'Authorization' header
-                // },
-              })
+              .get(
+                `${
+                  import.meta.env.VITE_API_DASHBOARD_URL
+                }/user-role/?client=${client_id}`
+              )
               .then((res) => {
                 dispatch(setUsers(res.data));
               });

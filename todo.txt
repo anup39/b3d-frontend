@@ -52,4 +52,6 @@ November 17 TODO:
 6) always count the number of super admin in the client also , this is due to client being empyt in user role for super_admin role -- not done 
 7) delete the user ---> is deleted for user role and is_active false in user table 
 8) always show the login admin as me and disable the assgin role for that user also disable delete of self in the user card
+9) While creating user only super admin can create role of super_admin --- not done
+10) Delete user user role is delete , user is_active false but disable for login user both things
 

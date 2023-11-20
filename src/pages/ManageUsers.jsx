@@ -1,13 +1,17 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import AppBar from "../components/AppBar/AppBar";
 import UserCard from "../components/UserCard/UserCard";
 import UserForm from "../components/UserForm/UserForm";
+import { useDispatch, useSelector } from "react-redux";
+import { setUsers } from "../reducers/Users";
 
 export default function ManageUsers() {
+  const dispatch = useDispatch();
   const { client_id } = useParams();
-  const [users, setUsers] = useState([]);
+
+  const users = useSelector((state) => state.users.users);
 
   useEffect(() => {
     axios
@@ -17,10 +21,10 @@ export default function ManageUsers() {
         }/user-role/?client=${client_id}`
       )
       .then((res) => {
-        // dispatch(setUsers(res.data));
-        setUsers(res.data);
+        dispatch(setUsers(res.data));
+        // setUsers(res.data);
       });
-  }, [client_id]);
+  }, [client_id, dispatch]);
 
   return (
     <>
@@ -40,6 +44,7 @@ export default function ManageUsers() {
                 role={user.role_name}
                 last_login={user.last_login}
                 date_joined={user.date_joined}
+                client_id={client_id}
               />
             ))
           : null}
