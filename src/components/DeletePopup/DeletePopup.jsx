@@ -52,6 +52,7 @@ export default function DeletePopup() {
         window.location.reload(true);
       })
       .catch(() => {
+        setLoading(false);
         dispatch(setshowDeletePopup(false));
         dispatch(setdeletePopupMessage("Are you sure you want to delete?"));
         dispatch(setdeleteId(null));

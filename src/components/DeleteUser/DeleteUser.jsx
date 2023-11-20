@@ -12,6 +12,7 @@ import {
   settoastType,
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
+import { setUsers } from "../../reducers/Users";
 
 export default function DeletePopup() {
   const dispatch = useDispatch();
@@ -24,35 +25,71 @@ export default function DeletePopup() {
   const deleteUserRoleId = useSelector(
     (state) => state.displaySettings.deleteUserRoleId
   );
+  const clientId = useSelector((state) => state.displaySettings.clientId);
+
   const [loading, setLoading] = useState(false);
 
   const handleDeleteUser = (event) => {
     event.preventDefault();
     setLoading(true);
+
     axios
-      .patch(
+      .get(
         `${
           import.meta.env.VITE_API_DASHBOARD_URL
-        }/${deleteTarget}/${deleteId}/`,
-        {
-          is_deleted: true,
-        }
+        }/user-role/${deleteUserRoleId}/`
       )
-      .then(() => {
-        setLoading(false);
-        dispatch(setshowDeleteUserPopup(false));
-        dispatch(
-          setdeleteUserPopupMessage(
-            "Are you sure you want to delete this user?"
+      .then((res) => {
+        const user_role_data = res.data;
+        const data = {
+          is_deleted: true,
+        };
+        axios
+          .patch(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/user-role/${deleteUserRoleId}/`,
+            data
           )
-        );
-        dispatch(setdeleteUserRoleId(null));
-        dispatch(setshowToast(true));
-        dispatch(settoastMessage(`Successfully Deleted  ${deleteUserRoleId}`));
-        dispatch(settoastType("success"));
-        window.location.reload(true);
+          .then(() => {
+            const user_data = {
+              is_active: false,
+            };
+            axios
+              .patch(
+                `${import.meta.env.VITE_API_DASHBOARD_URL}/users/${
+                  user_role_data.user
+                }/`,
+                user_data
+              )
+              .then(() => {
+                setLoading(false);
+                dispatch(setshowDeleteUserPopup(false));
+                dispatch(
+                  setdeleteUserPopupMessage(
+                    "Are you sure you want to delete this user?"
+                  )
+                );
+                dispatch(setdeleteUserRoleId(null));
+                dispatch(setshowToast(true));
+                dispatch(
+                  settoastMessage(`Successfully Deleted  ${deleteUserRoleId}`)
+                );
+                dispatch(settoastType("success"));
+                axios
+                  .get(
+                    `${
+                      import.meta.env.VITE_API_DASHBOARD_URL
+                    }/user-role/?client=${clientId}`
+                  )
+                  .then((res) => {
+                    dispatch(setUsers(res.data));
+                  });
+              });
+          });
       })
       .catch(() => {
+        setLoading(false);
         dispatch(setshowDeleteUserPopup(false));
         dispatch(
           setdeleteUserPopupMessage(
