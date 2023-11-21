@@ -305,7 +305,6 @@ export default function TransferList({ client_id, component }) {
                 <ListItem
                   key={value.id}
                   role="listitem"
-                  button
                   onClick={handleToggle(value)}
                 >
                   <ListItemIcon>
