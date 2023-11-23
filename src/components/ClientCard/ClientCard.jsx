@@ -42,13 +42,13 @@ export default function ClientCard({ id, name, description, created_at }) {
     dispatch(setshowDeletePopup(true));
     dispatch(setdeleteId(id));
     dispatch(setdeleteTarget("clients"));
+    ``;
     dispatch(
       setdeletePopupMessage(
         `Are you sure you want to delete Client ${id} and its content?`
       )
     );
   };
-
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/?client=${id}`)
