@@ -7,8 +7,6 @@ import Classification from "../pages/Classification";
 import ManageClasses from "../pages/ManageClasses";
 import Properties from "../pages/Properties";
 import Mapgl from "../components/mapgl/Mapgl";
-import Users from "../pages/Users";
-import ManageProjects from "../pages/ManageProjects";
 import ManageUsers from "../pages/ManageUsers";
 import ManageStyles from "../pages/ManageStyles";
 import Clients from "../pages/Clients";
@@ -29,13 +27,11 @@ export default function Routers() {
         />
         <Route exact path="/map/:level/:id" element={<MapSection />} />
         {/* <Route exact path="/mapgl" element={<Mapgl />} /> */}
-        <Route exact path="/users" element={<Users />} />
         <Route
           exact
           path="/manage-classes/:client_id"
           element={<ManageClasses />}
         />
-        <Route exact path="/manage-projects/:id" element={<ManageProjects />} />
         <Route
           exact
           path="/manage-users/:client_id"

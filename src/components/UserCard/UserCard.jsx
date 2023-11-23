@@ -20,8 +20,8 @@ export default function UserCard({
   role,
   last_login,
   date_joined,
-  // onUserId,
-  // onOpenForm,
+  onUserId,
+  onOpenForm,
   client_id,
 }) {
   const dispatch = useDispatch();
