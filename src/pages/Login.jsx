@@ -14,7 +14,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setToken, setUserId, setUserName } from "../reducers/Auth";
+import { setToken, setUserId, setUserName, setRole } from "../reducers/Auth";
 import {
   setshowToast,
   settoastMessage,
@@ -49,10 +49,20 @@ export default function Login() {
         localStorage.setItem("user_id", user_id);
         localStorage.setItem("username", username);
 
-        setLoading(false);
         dispatch(setshowToast(true));
         dispatch(settoastMessage("Successfully Logged In "));
         dispatch(settoastType("success"));
+        axios
+          .get(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/user-role/?user=${user_id}`
+          )
+          .then((res) => {
+            dispatch(setRole(res.data.role_name));
+            localStorage.setItem("role_name", username);
+          });
+        setLoading(false);
         navigate("/dashboard");
       })
       .catch(() => {

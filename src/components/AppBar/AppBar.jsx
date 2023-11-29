@@ -72,7 +72,10 @@ function Appbar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      sx={{ backgroundColor: "#F1F7FF", color: "black", boxShadow: "none" }}
+      position="static"
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -87,7 +90,7 @@ function Appbar() {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "#027FFE",
               textDecoration: "none",
             }}
           >
@@ -125,7 +128,9 @@ function Appbar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography sx={{ color: "#027FFE" }} textAlign="center">
+                    {page}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -143,24 +148,36 @@ function Appbar() {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "#027FFE",
               textDecoration: "none",
             }}
           >
             B3D
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+              color: "black",
+            }}
+          >
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenuButton}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{ my: 2, color: "#027FFE", display: "block" }}
               >
                 {page}
               </Button>
             ))}
           </Box>
-          <Typography>{username}</Typography>
+
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Typography>{username}</Typography>
+            <Typography>
+              <b>Role:</b> {username}
+            </Typography>
+          </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

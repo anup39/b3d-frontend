@@ -100,7 +100,11 @@ export default function ProjectCard({
                 </button>
               </Grid>
               <Grid item>
-                <button className="btn-main" onClick={handleManageUsers}>
+                <button
+                  disabled
+                  className="btn-main"
+                  // onClick={handleManageUsers}
+                >
                   Manage Users
                 </button>
               </Grid>

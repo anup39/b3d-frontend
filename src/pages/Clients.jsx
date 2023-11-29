@@ -24,7 +24,7 @@ export default function Clients() {
     <div>
       <AppBar />
       <ClientForm />
-      <div>
+      <div style={{ backgroundColor: "#F2F6F8" }}>
         {clients
           ? clients.map((client) => (
               <ClientCard
