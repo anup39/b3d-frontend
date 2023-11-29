@@ -65,7 +65,7 @@ export default function RasterLayer({ map, project_id }) {
 
   return (
     <div>
-      <h2>Orthophotos</h2>
+      <h2>Property Maps</h2>
       <ul>
         {orthophotos.map((ortho) => {
           return (

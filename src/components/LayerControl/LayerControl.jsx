@@ -2,7 +2,6 @@ import ReactDOM from "react-dom/client";
 import LayersControlButton from "./LayersControlButton";
 import { store } from "../../store";
 import { Provider } from "react-redux";
-import LayersControlNew from "./LayerControlNew";
 import LayersAndLabelControl from "./LayersAndLabelControl";
 
 export default class LayersControl {
