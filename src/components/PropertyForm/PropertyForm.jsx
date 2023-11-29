@@ -222,7 +222,7 @@ export default function PropertyForm({
                 />
                 <Grid item>
                   <div
-                    style={{ width: "100%", height: "180px" }}
+                    style={{ width: "100%", height: "160px" }}
                     ref={mapContainerProperty}
                     id="mapproperty"
                     className="mapproperty"
