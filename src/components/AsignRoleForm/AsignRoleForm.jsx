@@ -25,9 +25,7 @@ export default function AsignRoleForm({ openForm, user_id, onOpenForm }) {
       role: selectedUserRole,
     };
     axios
-      .get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?user=${user_id}`
-      )
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?id=${user_id}`)
       .then((res) => {
         const role_id = res.data[0].id;
         axios
