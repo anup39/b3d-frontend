@@ -1,7 +1,8 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useState } from "react";
 
 const all_categories = [
   {
@@ -70,7 +71,8 @@ const all_categories = [
 ];
 
 export default function LayersControlNew() {
-  const [categories, setCategories] = React.useState(all_categories);
+  const [categories, setCategories] = useState(all_categories);
+  const [transform, setTransform] = useState("rotate(-90deg)");
 
   const handleChangesd = (event, sdIndex) => {
     const updatedCategories = [...categories];
@@ -192,37 +194,69 @@ export default function LayersControlNew() {
     <div style={{ maxHeight: "50vh", minWidth: "15vw" }}>
       {categories.map((sd, sdIndex) => (
         <div key={sd.id}>
-          <FormControlLabel
-            label={sd.label}
-            control={
-              <Checkbox
-                checked={sd.checked}
-                indeterminate={sd.indeterminate}
-                onChange={(event) => handleChangesd(event, sdIndex)}
-              />
-            }
-          />
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <ExpandMoreIcon
+              sx={{
+                transform: transform,
+                fontSize: "14px",
+                backgroundColor: "#FFFFFF",
+                color: "black",
+                marginRight: "4px",
+                padding: "2px",
+                "&:hover": {
+                  backgroundColor: "#9C27B0",
+                },
+              }}
+            />
+            <FormControlLabel
+              label={sd.label}
+              control={
+                <Checkbox
+                  size="medium"
+                  checked={sd.checked}
+                  indeterminate={sd.indeterminate}
+                  onChange={(event) => handleChangesd(event, sdIndex)}
+                />
+              }
+            />
+          </Box>
 
           {sd.sub_category.map((sub, subIndex) => (
             <Box
               sx={{ display: "flex", flexDirection: "column", ml: 3 }}
               key={sub.id}
             >
-              <FormControlLabel
-                label={sub.label}
-                control={
-                  <Checkbox
-                    checked={sub.checked}
-                    indeterminate={sub.indeterminate}
-                    onChange={(event) =>
-                      handleChangesub(event, sdIndex, subIndex)
-                    }
-                  />
-                }
-              />
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <ExpandMoreIcon
+                  sx={{
+                    transform: transform,
+                    fontSize: "14px",
+                    backgroundColor: "#FFFFFF",
+                    color: "black",
+                    marginRight: "4px",
+                    padding: "2px",
+                    "&:hover": {
+                      backgroundColor: "#9C27B0",
+                    },
+                  }}
+                />
+                <FormControlLabel
+                  label={sub.label}
+                  control={
+                    <Checkbox
+                      checked={sub.checked}
+                      indeterminate={sub.indeterminate}
+                      onChange={(event) =>
+                        handleChangesub(event, sdIndex, subIndex)
+                      }
+                    />
+                  }
+                />
+              </Box>
+
               {sub.category.map((cat, catIndex) => (
                 <Box
-                  sx={{ display: "flex", flexDirection: "column", ml: 3 }}
+                  sx={{ display: "flex", flexDirection: "column", ml: 5 }}
                   key={cat.id}
                 >
                   <FormControlLabel
