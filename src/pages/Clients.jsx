@@ -1,11 +1,10 @@
-import AppBar from "../components/AppBar/AppBar";
-import ClientCard from "../components/ClientCard/ClientCard";
-import ClientForm from "../components/ClientForm/ClientForm";
-
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setclients } from "../reducers/Client";
 import axios from "axios";
+import AppBar from "../components/Common/AppBar";
+import ClientCard from "../components/Client/ClientCard";
+import ClientForm from "../components/Client/ClientForm";
 
 export default function Clients() {
   const dispatch = useDispatch();

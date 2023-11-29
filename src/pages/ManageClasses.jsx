@@ -1,14 +1,14 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import AppBar from "../components/AppBar/AppBar";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import TransferList from "../components/TransferList/TransferList";
 import { Button, Tooltip } from "@mui/material";
-import ErrorPopup from "../components/ErrorPopup/ErrorPopup";
+import AppBar from "../components/Common/AppBar";
+import TransferList from "../components/StandardCategory/TransferList";
+import ErrorPopup from "../components/Common/ErrorPopup";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

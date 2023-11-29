@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import AppBar from "../components/AppBar/AppBar";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useSelector, useDispatch } from "react-redux";
-import StandardCategoryForm from "../components/StandardCategoryForm/StandardCategoryForm";
-import StandardCategoryCard from "../components/StandardCategoryCard/StandardCategoryCard";
-import SubCategoryForm from "../components/SubCategoryForm/SubCategoryForm";
-import SubCategoryCard from "../components/SubCategoryCard/SubCategoryCard";
-import CategoryForm from "../components/CategoryForm/CategoryForm";
-import CategoryCard from "../components/CategoryCard/CategoryCard";
-
 import { setStandardCategorys } from "../reducers/StandardCategory";
 import { setSubCategorys } from "../reducers/SubCategory";
 import { setCategorys } from "../reducers/Category";
+import AppBar from "../components/Common/AppBar";
+import StandardCategoryForm from "../components/StandardCategory/StandardCategoryForm";
+import StandardCategoryCard from "../components/StandardCategory/StandardCategoryCard";
+import SubCategoryForm from "../components/SubCategory/SubCategoryForm";
+import SubCategoryCard from "../components/SubCategory/SubCategoryCard";
+import CategoryForm from "../components/Category/CategoryForm";
+import CategoryCard from "../components/Category/CategoryCard";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

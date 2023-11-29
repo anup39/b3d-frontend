@@ -1,8 +1,6 @@
 import { useEffect, useRef } from "react";
 import Map from "../map/Map";
-import Search from "../components/Search/Search";
 import { useParams } from "react-router-dom";
-import AppBar from "../components/AppBar/AppBar";
 import axios from "axios";
 import {
   setStandardCategories,
@@ -11,7 +9,8 @@ import {
   setProjectName,
 } from "../reducers/MapCategories";
 import { useDispatch } from "react-redux";
-import CategoryGeomForm from "../components/CategoryGeomForm/CategoryGeomForm";
+import AppBar from "../components/Common/AppBar";
+import CategoryGeomForm from "../components/Category/CategoryGeomForm";
 
 export default function MapSection() {
   const dispatch = useDispatch();

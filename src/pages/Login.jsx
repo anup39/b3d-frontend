@@ -20,7 +20,6 @@ import {
   settoastMessage,
   settoastType,
 } from "../reducers/DisplaySettings";
-import Copyright from "../components/Copyright/Copyright";
 import { CircularProgress } from "@mui/material";
 import { useState } from "react";
 
@@ -139,7 +138,7 @@ export default function Login() {
             </Grid>
           </form>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
     </ThemeProvider>
   );

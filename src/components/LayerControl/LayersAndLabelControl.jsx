@@ -1,4 +1,4 @@
-import LayersControlNew from "./LayerControlNew";
+import LayersControlPanel from "./LayerControlPanel";
 import { Typography } from "@mui/material";
 export default function LayersAndLabelControl() {
   return (
@@ -12,7 +12,7 @@ export default function LayersAndLabelControl() {
       >
         Measurings
       </Typography>
-      <LayersControlNew />
+      <LayersControlPanel />
     </div>
   );
 }

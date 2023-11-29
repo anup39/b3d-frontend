@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import AppBar from "../components/AppBar/AppBar";
-import PropertyForm from "../components/PropertyForm/PropertyForm";
-import UploadProgress from "../components/UploadProgress/UploadProgress";
-import PropertyContainer from "../components/PropertyContainer/PropertyContainer";
+import AppBar from "../components/Common/AppBar";
+import PropertyForm from "../components/Property/PropertyForm";
+import UploadProgress from "../components/Property/UploadProgress";
+import PropertyContainer from "../components/Property/PropertyContainer";
 
 export default function Properties() {
   const { client_id } = useParams();
