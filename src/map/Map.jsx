@@ -1,9 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "./Map.scss";
-import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
-import GeocoderApi from "../maputils/GeocoderApi";
 import PropTypes from "prop-types";
 import LayersControl from "../components/LayerControl/LayerControl";
 import DrawControl from "../components/DrawControl/DrawControl";
@@ -21,7 +19,7 @@ import {
 } from "@watergis/maplibre-gl-export";
 import "@watergis/maplibre-gl-export/dist/maplibre-gl-export.css";
 
-export default function Map({ refObj, id }) {
+export default function Map({ id }) {
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();

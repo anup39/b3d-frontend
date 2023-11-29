@@ -12,6 +12,7 @@ const all_categories = [
     checked: true,
     expand: false,
     indeterminate: false,
+    extent: [],
     sub_category: [
       {
         id: 1,
@@ -19,9 +20,10 @@ const all_categories = [
         checked: true,
         expand: false,
         indeterminate: false,
+        extent: [],
         category: [
-          { id: 1, label: "Tall Green", checked: true },
-          { id: 2, label: "Short Green", checked: true },
+          { id: 1, label: "Tall Green", checked: true, extent: [] },
+          { id: 2, label: "Short Green", checked: true, extent: [] },
         ],
       },
       {
@@ -30,9 +32,10 @@ const all_categories = [
         checked: true,
         expand: false,
         indeterminate: false,
+        extent: [],
         category: [
-          { id: 1, label: "Tall Light", checked: true },
-          { id: 2, label: "Short Light", checked: true },
+          { id: 1, label: "Tall Light", checked: true, extent: [] },
+          { id: 2, label: "Short Light", checked: true, extent: [] },
         ],
       },
     ],
@@ -43,6 +46,7 @@ const all_categories = [
     checked: false,
     expand: false,
     indeterminate: false,
+    extent: [],
     sub_category: [
       {
         id: 1,
@@ -50,10 +54,10 @@ const all_categories = [
         checked: false,
         expand: false,
         indeterminate: false,
-
+        extent: [],
         category: [
-          { id: 1, label: "Tall Tropical", checked: false },
-          { id: 2, label: "Short Tropical", checked: false },
+          { id: 1, label: "Tall Tropical", checked: false, extent: [] },
+          { id: 2, label: "Short Tropical", checked: false, extent: [] },
         ],
       },
       {
@@ -62,9 +66,10 @@ const all_categories = [
         checked: false,
         expand: false,
         indeterminate: false,
+        extent: [],
         category: [
-          { id: 1, label: "Tall Terrestrial", checked: false },
-          { id: 2, label: "Short Terrestrial", checked: false },
+          { id: 1, label: "Tall Terrestrial", checked: false, extent: [] },
+          { id: 2, label: "Short Terrestrial", checked: false, extent: [] },
         ],
       },
     ],
@@ -73,7 +78,6 @@ const all_categories = [
 
 export default function LayersControlNew() {
   const [categories, setCategories] = useState(all_categories);
-  const [transform, setTransform] = useState("rotate(-90deg)");
 
   const handleChangesd = (event, sdIndex) => {
     const updatedCategories = [...categories];
@@ -149,7 +153,6 @@ export default function LayersControlNew() {
     updatedCategories[sdIndex].sub_category[subIndex].indeterminate =
       someCategoriesChecked && !allCategoriesChecked;
 
-    let allSubCategoriesChecked = true;
     let someSubCategoriesChecked = false;
 
     updatedCategories[sdIndex].sub_category.forEach((sub) => {
@@ -242,7 +245,13 @@ export default function LayersControlNew() {
                 }
               />
             </Box>
-            <ZoomInIcon />
+            <ZoomInIcon
+              sx={{
+                backgroundColor: "#F1F7FF",
+                color: "black",
+                "&:hover": { cursor: "pointer" },
+              }}
+            />
           </Box>
 
           {sd.sub_category.map((sub, subIndex) => (
@@ -283,7 +292,13 @@ export default function LayersControlNew() {
                     />
                   }
                 />
-                <ZoomInIcon />
+                <ZoomInIcon
+                  sx={{
+                    backgroundColor: "#F1F7FF",
+                    color: "black",
+                    "&:hover": { cursor: "pointer" },
+                  }}
+                />
               </Box>
 
               {sub.category.map((cat, catIndex) => (
