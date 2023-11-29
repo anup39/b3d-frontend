@@ -1,14 +1,14 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import AppBar from "../components/AppBar/AppBar";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import TransferList from "../components/TransferList/TransferList";
 import { Button, Tooltip } from "@mui/material";
-import ErrorPopup from "../components/ErrorPopup/ErrorPopup";
+import AppBar from "../components/Common/AppBar";
+import TransferList from "../components/StandardCategory/TransferList";
+import ErrorPopup from "../components/Common/ErrorPopup";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -71,34 +71,55 @@ export default function Classification() {
         sx={{
           flexGrow: 1,
           bgcolor: "background.paper",
-          display: "flex",
-          height: 224,
+          // // display: "flex",
+          // height: 224,
         }}
       >
         <Tabs
-          orientation="vertical"
-          variant="scrollable"
+          orientation="horizontal"
+          variant="fullWidth"
           value={value}
           onChange={handleChange}
           aria-label="Vertical tabs example"
           sx={{
             borderRight: "1px solid",
-            height: "100vh",
+            // height: "100vh",
             borderColor: "divider",
+            backgroundColor: "white",
+
+            // display: "flex",
           }}
         >
-          <Tab label="Standard Category" {...a11yProps(0)} />
-          <Tab label="Sub Category" {...a11yProps(1)} />
-          <Tab label="Category" {...a11yProps(2)} />
+          <Tab
+            label="Standard Category"
+            sx={{ ":hover": { backgroundColor: "white" } }}
+            {...a11yProps(0)}
+          />
+          <Tab
+            sx={{ ":hover": { backgroundColor: "white" } }}
+            label="Sub Category"
+            {...a11yProps(1)}
+          />
+          <Tab
+            sx={{ ":hover": { backgroundColor: "white" } }}
+            label="Category"
+            {...a11yProps(2)}
+          />
         </Tabs>
-        <TabPanel value={value} index={0}>
+        <TabPanel
+          sx={{
+            flexDirection: "column",
+          }}
+          value={value}
+          index={0}
+        >
           <Tooltip>
             <Button
               sx={{ marginBottom: "25px" }}
               variant="outlined"
               color="error"
             >
-              {clientName}
+              Client : {clientName}
             </Button>
           </Tooltip>
           <TransferList
@@ -113,7 +134,7 @@ export default function Classification() {
               variant="outlined"
               color="error"
             >
-              {clientName}
+              Client : {clientName}
             </Button>
           </Tooltip>
           <TransferList
@@ -128,7 +149,7 @@ export default function Classification() {
               variant="outlined"
               color="error"
             >
-              {clientName}
+              Client : {clientName}
             </Button>
           </Tooltip>
           <TransferList

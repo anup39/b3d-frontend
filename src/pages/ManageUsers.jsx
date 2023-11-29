@@ -1,12 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import AppBar from "../components/AppBar/AppBar";
-import UserCard from "../components/UserCard/UserCard";
-import UserForm from "../components/UserForm/UserForm";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../reducers/Users";
-import AsignRoleForm from "../components/AsignRoleForm/AsignRoleForm";
+import AppBar from "../components/Common/AppBar";
+import UserCard from "../components/ManageUser/UserCard";
+import UserForm from "../components/ManageUser/UserForm";
+import AsignRoleForm from "../components/ManageUser/AsignRoleForm";
 
 export default function ManageUsers() {
   const dispatch = useDispatch();

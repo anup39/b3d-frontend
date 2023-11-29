@@ -2,11 +2,9 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "../pages/Login";
 import MapSection from "../pages/MapSection";
 import Projects from "../pages/Projects";
-import Register from "../pages/Register";
 import Classification from "../pages/Classification";
 import ManageClasses from "../pages/ManageClasses";
 import Properties from "../pages/Properties";
-import Mapgl from "../components/mapgl/Mapgl";
 import ManageUsers from "../pages/ManageUsers";
 import ManageStyles from "../pages/ManageStyles";
 import Clients from "../pages/Clients";
@@ -16,7 +14,6 @@ export default function Routers() {
     <Router>
       <Routes>
         <Route exact path="/" element={<Login />} />
-        <Route exact path="/register" element={<Register />} />
         <Route exact path="/class" element={<Classification />} />
         <Route exact path="/dashboard" element={<Clients />} />
         <Route exact path="/projects/:client_id" element={<Projects />} />
@@ -26,7 +23,6 @@ export default function Routers() {
           element={<Properties />}
         />
         <Route exact path="/map/:level/:id" element={<MapSection />} />
-        {/* <Route exact path="/mapgl" element={<Mapgl />} /> */}
         <Route
           exact
           path="/manage-classes/:client_id"

@@ -1,13 +1,14 @@
 import ReactDOM from "react-dom/client";
-import LayersControlButton from "./LayersControlButton";
 import { store } from "../../store";
 import { Provider } from "react-redux";
+import LayersAndLabelControl from "./LayersAndLabelControl";
 
 export default class LayersControl {
   onAdd(map) {
     this._map = map;
     this._container = document.createElement("div");
-    this._container.className = "maplibregl-ctrl";
+    this._container.className =
+      "maplibregl-ctrl maplibregl-ctrl-layer-and-draw";
     this._project_id = 1;
 
     return this._container;
@@ -17,7 +18,8 @@ export default class LayersControl {
     this._project_id = project_id;
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        <LayersControlButton map={this._map} />
+        {/* <LayersControlButton map={this._map} /> */}
+        <LayersAndLabelControl />
       </Provider>
     );
   }

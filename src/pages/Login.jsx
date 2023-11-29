@@ -14,13 +14,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setToken, setUserId, setUserName } from "../reducers/Auth";
+import { setToken, setUserId, setUserName, setRole } from "../reducers/Auth";
 import {
   setshowToast,
   settoastMessage,
   settoastType,
 } from "../reducers/DisplaySettings";
-import Copyright from "../components/Copyright/Copyright";
 import { CircularProgress } from "@mui/material";
 import { useState } from "react";
 
@@ -49,10 +48,20 @@ export default function Login() {
         localStorage.setItem("user_id", user_id);
         localStorage.setItem("username", username);
 
-        setLoading(false);
         dispatch(setshowToast(true));
         dispatch(settoastMessage("Successfully Logged In "));
         dispatch(settoastType("success"));
+        axios
+          .get(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/user-role/?user=${user_id}`
+          )
+          .then((res) => {
+            dispatch(setRole(res.data.role_name));
+            localStorage.setItem("role_name", username);
+          });
+        setLoading(false);
         navigate("/dashboard");
       })
       .catch(() => {
@@ -129,7 +138,7 @@ export default function Login() {
             </Grid>
           </form>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
     </ThemeProvider>
   );
