@@ -122,7 +122,7 @@ export default function Map({ refObj, id }) {
       const raster_control = new RasterControl();
       map.addControl(raster_control, "top-left");
       raster_control.updateProject(id);
-      map.addControl(new DrawControl(), "top-left");
+      map.addControl(new DrawControl(), "top-right");
     }
   }, [map, id]);
 

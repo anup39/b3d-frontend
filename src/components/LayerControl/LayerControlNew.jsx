@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import { useState } from "react";
 
 const all_categories = [
@@ -205,35 +206,43 @@ export default function LayersControlNew() {
   };
 
   return (
-    <div style={{ maxHeight: "50vh", minWidth: "15vw" }}>
+    <div style={{ maxHeight: "50vh", minWidth: "12vw" }}>
       {categories.map((sd, sdIndex) => (
         <div key={sd.id}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <ExpandMoreIcon
-              sx={{
-                transform: sd.expand ? "rotate(360deg)" : "rotate(-90deg)",
-                fontSize: "14px",
-                backgroundColor: "#FFFFFF",
-                color: "black",
-                marginRight: "4px",
-                padding: "2px",
-                "&:hover": {
-                  backgroundColor: "#9C27B0",
-                },
-              }}
-              onClick={(event) => handleChangeExpandSd(event, sdIndex)}
-            />
-            <FormControlLabel
-              label={sd.label}
-              control={
-                <Checkbox
-                  size="medium"
-                  checked={sd.checked}
-                  indeterminate={sd.indeterminate}
-                  onChange={(event) => handleChangesd(event, sdIndex)}
-                />
-              }
-            />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <ExpandMoreIcon
+                sx={{
+                  transform: sd.expand ? "rotate(360deg)" : "rotate(-90deg)",
+                  fontSize: "14px",
+                  backgroundColor: "#FFFFFF",
+                  color: "black",
+                  marginRight: "4px",
+                  padding: "2px",
+                  "&:hover": {
+                    backgroundColor: "#9C27B0",
+                  },
+                }}
+                onClick={(event) => handleChangeExpandSd(event, sdIndex)}
+              />
+              <FormControlLabel
+                label={sd.label}
+                control={
+                  <Checkbox
+                    size="medium"
+                    checked={sd.checked}
+                    indeterminate={sd.indeterminate}
+                    onChange={(event) => handleChangesd(event, sdIndex)}
+                  />
+                }
+              />
+            </Box>
+            <ZoomInIcon />
           </Box>
 
           {sd.sub_category.map((sub, subIndex) => (
@@ -274,6 +283,7 @@ export default function LayersControlNew() {
                     />
                   }
                 />
+                <ZoomInIcon />
               </Box>
 
               {sub.category.map((cat, catIndex) => (
@@ -285,17 +295,32 @@ export default function LayersControlNew() {
                   }}
                   key={cat.id}
                 >
-                  <FormControlLabel
-                    label={cat.label}
-                    control={
-                      <Checkbox
-                        checked={cat.checked}
-                        onChange={(event) =>
-                          handleChangecat(event, sdIndex, subIndex, catIndex)
-                        }
-                      />
-                    }
-                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <FormControlLabel
+                      label={cat.label}
+                      control={
+                        <Checkbox
+                          checked={cat.checked}
+                          onChange={(event) =>
+                            handleChangecat(event, sdIndex, subIndex, catIndex)
+                          }
+                        />
+                      }
+                    />
+                    <ZoomInIcon
+                      sx={{
+                        marginLeft: "10px",
+                        backgroundColor: "#F1F7FF",
+                        color: "black",
+                        "&:hover": { cursor: "pointer" },
+                      }}
+                    />
+                  </Box>
                 </Box>
               ))}
             </Box>
