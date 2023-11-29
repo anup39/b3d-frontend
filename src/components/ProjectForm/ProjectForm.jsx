@@ -69,7 +69,7 @@ export default function ProjectForm({ client_id }) {
 
   return (
     <>
-      <Tooltip title="Create Project">
+      <Tooltip title="Create Property">
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
@@ -136,7 +136,7 @@ export default function ProjectForm({ client_id }) {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Project"}
+                  {loading ? null : "Create Property"}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>

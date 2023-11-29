@@ -186,7 +186,7 @@ export default function PropertyForm({
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "500px",
+              width: "300px",
               background: "#fff",
               padding: "20px",
               zIndex: 10000,
@@ -222,7 +222,7 @@ export default function PropertyForm({
                 />
                 <Grid item>
                   <div
-                    style={{ width: "100%", height: "300px" }}
+                    style={{ width: "100%", height: "180px" }}
                     ref={mapContainerProperty}
                     id="mapproperty"
                     className="mapproperty"
@@ -234,7 +234,7 @@ export default function PropertyForm({
                   type="submit"
                   fullWidth
                   variant={loading ? "outlined" : "contained"}
-                  sx={{ mt: 3, mb: 2 }}
+                  sx={{ mt: 0, mb: 0 }}
                   disabled={!loaded}
                 >
                   {loading ? null : "Add Property Map"}

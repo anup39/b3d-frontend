@@ -8,6 +8,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import FolderCopyIcon from "@mui/icons-material/FolderCopy";
+import FolderIcon from "@mui/icons-material/Folder";
+
 import {
   setdeleteId,
   setdeletePopupMessage,
@@ -75,7 +77,7 @@ export default function ProjectCard({
     >
       <Grid container spacing={2}>
         <Grid item>
-          <FolderCopyIcon sx={{ width: 128, height: 128, color: "green" }} />
+          <FolderIcon sx={{ width: 128, height: 128, color: "#65C9FF" }} />
         </Grid>
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
@@ -89,9 +91,9 @@ export default function ProjectCard({
               <Typography variant="body2" gutterBottom>
                 Client Name : {client_name}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              {/* <Typography variant="body2" color="text.secondary">
                 Created At: {created_at}
-              </Typography>
+              </Typography> */}
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>

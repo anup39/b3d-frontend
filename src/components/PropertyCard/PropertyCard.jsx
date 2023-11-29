@@ -58,9 +58,9 @@ export default function PropertyCard({
           theme.palette.mode === "dark" ? "#1A2027" : "#fff",
       }}
     >
-      <Grid container spacing={2}>
+      <Grid container spacing={1} sx={{ flexDirection: "row" }}>
         <Grid item>
-          <ButtonBase sx={{ width: 300, height: 200 }}>
+          <ButtonBase sx={{ width: 350, height: 200 }}>
             <Img alt="complex" src={thumbnail} />
           </ButtonBase>
         </Grid>
@@ -70,7 +70,7 @@ export default function PropertyCard({
               <Typography gutterBottom variant="subtitle1" component="div">
                 <b>Name </b>: {name}
               </Typography>
-              <Typography gutterBottom variant="subtitle1" component="div">
+              <Typography sx={{ fontSize: "13px" }} variant="subtitle1">
                 <b>File Name</b> : {file_name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -79,9 +79,9 @@ export default function PropertyCard({
               <Typography variant="body2" color="text.secondary">
                 <b>File size </b>: {bytesToMB(file_size)} MB
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              {/* <Typography variant="body2" color="text.secondary">
                 <b>Created At </b>: {created_at}
-              </Typography>
+              </Typography> */}
               <Typography variant="body2" color="text.secondary">
                 <b>Task ID</b>: {task_id}
               </Typography>

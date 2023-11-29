@@ -209,7 +209,7 @@ export default function InputFileUpload({
       <Grid item xs={12}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
-            <Typography variant="body2" gutterBottom>
+            <Typography sx={{ fontSize: "12px" }} variant="body2" gutterBottom>
               <b>FileName</b> : {fileName}
             </Typography>
             <Typography variant="body2" gutterBottom>
@@ -218,21 +218,21 @@ export default function InputFileUpload({
             <Typography variant="body2" gutterBottom>
               <b>Projection</b>: {projection}
             </Typography>
-          </div>
-          <div>
-            {image ? (
-              <>
-                <Typography variant="body2" gutterBottom>
-                  <b>Generated Thumbnail</b> :
-                </Typography>
-                <img
-                  style={{ height: "75px", width: "125px" }}
-                  id="screenshot-img"
-                  src={image ? image : ""}
-                  alt="Map Screenshot"
-                ></img>
-              </>
-            ) : null}
+            <div>
+              {image ? (
+                <>
+                  <Typography variant="body2" gutterBottom>
+                    <b>Generated Thumbnail</b> :
+                  </Typography>
+                  <img
+                    style={{ height: "75px", width: "125px" }}
+                    id="screenshot-img"
+                    src={image ? image : ""}
+                    alt="Map Screenshot"
+                  ></img>
+                </>
+              ) : null}
+            </div>
           </div>
         </div>
       </Grid>

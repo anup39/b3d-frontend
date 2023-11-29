@@ -93,9 +93,9 @@ export default function ClientCard({ id, name, description, created_at }) {
               <Typography variant="body2" gutterBottom>
                 {description}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              {/* <Typography variant="body2" color="text.secondary">
                 Created At: {created_at}
-              </Typography>
+              </Typography> */}
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>
