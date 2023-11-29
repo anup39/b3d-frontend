@@ -9,14 +9,14 @@ const all_categories = [
     id: 1,
     label: "Grass",
     checked: true,
+    expand: false,
     indeterminate: false,
-    expand: true,
     sub_category: [
       {
         id: 1,
         label: "Green",
         checked: true,
-        expand: true,
+        expand: false,
         indeterminate: false,
         category: [
           { id: 1, label: "Tall Green", checked: true },
@@ -27,7 +27,7 @@ const all_categories = [
         id: 2,
         label: "Light Green",
         checked: true,
-        expand: true,
+        expand: false,
         indeterminate: false,
         category: [
           { id: 1, label: "Tall Light", checked: true },
@@ -40,7 +40,7 @@ const all_categories = [
     id: 2,
     label: "Trees",
     checked: false,
-    expand: true,
+    expand: false,
     indeterminate: false,
     sub_category: [
       {
@@ -190,6 +190,20 @@ export default function LayersControlNew() {
     setCategories(updatedCategories);
   };
 
+  const handleChangeExpandSd = (event, sdIndex) => {
+    const updatedCategories = [...categories];
+    updatedCategories[sdIndex].expand = !updatedCategories[sdIndex].expand;
+
+    setCategories(updatedCategories);
+  };
+
+  const handleChangeExpandSub = (event, sdIndex, subIndex) => {
+    const updatedCategories = [...categories];
+    updatedCategories[sdIndex].sub_category[subIndex].expand =
+      !updatedCategories[sdIndex].sub_category[subIndex].expand;
+    setCategories(updatedCategories);
+  };
+
   return (
     <div style={{ maxHeight: "50vh", minWidth: "15vw" }}>
       {categories.map((sd, sdIndex) => (
@@ -197,7 +211,7 @@ export default function LayersControlNew() {
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <ExpandMoreIcon
               sx={{
-                transform: transform,
+                transform: sd.expand ? "rotate(360deg)" : "rotate(-90deg)",
                 fontSize: "14px",
                 backgroundColor: "#FFFFFF",
                 color: "black",
@@ -207,6 +221,7 @@ export default function LayersControlNew() {
                   backgroundColor: "#9C27B0",
                 },
               }}
+              onClick={(event) => handleChangeExpandSd(event, sdIndex)}
             />
             <FormControlLabel
               label={sd.label}
@@ -223,13 +238,17 @@ export default function LayersControlNew() {
 
           {sd.sub_category.map((sub, subIndex) => (
             <Box
-              sx={{ display: "flex", flexDirection: "column", ml: 3 }}
+              sx={{
+                display: sd.expand ? "flex" : "none",
+                flexDirection: "column",
+                ml: 3,
+              }}
               key={sub.id}
             >
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <ExpandMoreIcon
                   sx={{
-                    transform: transform,
+                    transform: sub.expand ? "rotate(360deg)" : "rotate(-90deg)",
                     fontSize: "14px",
                     backgroundColor: "#FFFFFF",
                     color: "black",
@@ -239,6 +258,9 @@ export default function LayersControlNew() {
                       backgroundColor: "#9C27B0",
                     },
                   }}
+                  onClick={(event) =>
+                    handleChangeExpandSub(event, sdIndex, subIndex)
+                  }
                 />
                 <FormControlLabel
                   label={sub.label}
@@ -256,7 +278,11 @@ export default function LayersControlNew() {
 
               {sub.category.map((cat, catIndex) => (
                 <Box
-                  sx={{ display: "flex", flexDirection: "column", ml: 5 }}
+                  sx={{
+                    display: sub.expand ? "flex" : "none",
+                    flexDirection: "column",
+                    ml: 5,
+                  }}
                   key={cat.id}
                 >
                   <FormControlLabel
