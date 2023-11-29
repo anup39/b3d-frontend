@@ -2,6 +2,7 @@ import ReactDOM from "react-dom/client";
 import LayersControlButton from "./LayersControlButton";
 import { store } from "../../store";
 import { Provider } from "react-redux";
+import LayersControlNew from "./LayerControlNew";
 
 export default class LayersControl {
   onAdd(map) {
@@ -17,7 +18,8 @@ export default class LayersControl {
     this._project_id = project_id;
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        <LayersControlButton map={this._map} />
+        {/* <LayersControlButton map={this._map} /> */}
+        <LayersControlNew />
       </Provider>
     );
   }

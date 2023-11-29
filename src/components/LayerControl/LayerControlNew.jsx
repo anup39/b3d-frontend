@@ -1,0 +1,247 @@
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+
+const all_categories = [
+  {
+    id: 1,
+    label: "Grass",
+    checked: true,
+    indeterminate: false,
+    expand: true,
+    sub_category: [
+      {
+        id: 1,
+        label: "Green",
+        checked: true,
+        expand: true,
+        indeterminate: false,
+        category: [
+          { id: 1, label: "Tall Green", checked: true },
+          { id: 2, label: "Short Green", checked: true },
+        ],
+      },
+      {
+        id: 2,
+        label: "Light Green",
+        checked: true,
+        expand: true,
+        indeterminate: false,
+        category: [
+          { id: 1, label: "Tall Light", checked: true },
+          { id: 2, label: "Short Light", checked: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 2,
+    label: "Trees",
+    checked: false,
+    expand: true,
+    indeterminate: false,
+    sub_category: [
+      {
+        id: 1,
+        label: "Tropical",
+        checked: false,
+        expand: false,
+        indeterminate: false,
+
+        category: [
+          { id: 1, label: "Tall Tropical", checked: false },
+          { id: 2, label: "Short Tropical", checked: false },
+        ],
+      },
+      {
+        id: 2,
+        label: "Terrestrial",
+        checked: false,
+        expand: false,
+        indeterminate: false,
+        category: [
+          { id: 1, label: "Tall Terrestrial", checked: false },
+          { id: 2, label: "Short Terrestrial", checked: false },
+        ],
+      },
+    ],
+  },
+];
+
+export default function LayersControlNew() {
+  const [categories, setCategories] = React.useState(all_categories);
+
+  const handleChangesd = (event, sdIndex) => {
+    const updatedCategories = [...categories];
+    updatedCategories[sdIndex].checked = event.target.checked;
+    updatedCategories[sdIndex].indeterminate = false;
+    updatedCategories[sdIndex].sub_category.forEach((sub) => {
+      sub.checked = event.target.checked;
+      sub.indeterminate = false;
+      sub.category.forEach((cat) => {
+        cat.checked = event.target.checked;
+      });
+    });
+    setCategories(updatedCategories);
+  };
+
+  const handleChangesub = (event, sdIndex, subIndex) => {
+    const updatedCategories = [...categories];
+    updatedCategories[sdIndex].sub_category[subIndex].checked =
+      event.target.checked;
+    updatedCategories[sdIndex].sub_category[subIndex].indeterminate = false;
+
+    updatedCategories[sdIndex].sub_category[subIndex].category.forEach(
+      (cat) => {
+        cat.checked = event.target.checked;
+      }
+    );
+
+    let allSubCategoriesChecked = true;
+    let someSubCategoriesChecked = false;
+
+    updatedCategories[sdIndex].sub_category.forEach((sub) => {
+      if (!sub.checked) {
+        allSubCategoriesChecked = false;
+      } else {
+        someSubCategoriesChecked = true;
+      }
+    });
+
+    updatedCategories[sdIndex].checked = allSubCategoriesChecked;
+    updatedCategories[sdIndex].indeterminate =
+      someSubCategoriesChecked && !allSubCategoriesChecked;
+
+    // Check if all sub-categories are checked, then check the main category
+    if (allSubCategoriesChecked) {
+      updatedCategories[sdIndex].checked = true;
+      updatedCategories[sdIndex].indeterminate = false;
+    }
+
+    setCategories(updatedCategories);
+  };
+
+  const handleChangecat = (event, sdIndex, subIndex, catIndex) => {
+    const updatedCategories = [...categories];
+    updatedCategories[sdIndex].sub_category[subIndex].category[
+      catIndex
+    ].checked = event.target.checked;
+
+    let allCategoriesChecked = true;
+    let someCategoriesChecked = false;
+
+    updatedCategories[sdIndex].sub_category[subIndex].category.forEach(
+      (cat) => {
+        if (!cat.checked) {
+          allCategoriesChecked = false;
+        } else {
+          someCategoriesChecked = true;
+        }
+      }
+    );
+
+    updatedCategories[sdIndex].sub_category[subIndex].checked =
+      allCategoriesChecked;
+    updatedCategories[sdIndex].sub_category[subIndex].indeterminate =
+      someCategoriesChecked && !allCategoriesChecked;
+
+    let allSubCategoriesChecked = true;
+    let someSubCategoriesChecked = false;
+
+    updatedCategories[sdIndex].sub_category.forEach((sub) => {
+      let allSubCategoriesCheckedForSub = true;
+
+      sub.category.forEach((cat) => {
+        if (!cat.checked) {
+          allSubCategoriesCheckedForSub = false;
+        }
+      });
+
+      if (allSubCategoriesCheckedForSub) {
+        sub.checked = true;
+        sub.indeterminate = false;
+      } else {
+        sub.checked = false;
+        someSubCategoriesChecked = true;
+      }
+    });
+
+    updatedCategories[sdIndex].checked = !someSubCategoriesChecked;
+    updatedCategories[sdIndex].indeterminate = someSubCategoriesChecked;
+
+    // Check if none of the categories within a sub-category are checked
+    let noCategoriesChecked = true;
+    updatedCategories[sdIndex].sub_category.forEach((sub) => {
+      sub.category.forEach((cat) => {
+        if (cat.checked) {
+          noCategoriesChecked = false;
+        }
+      });
+    });
+
+    if (noCategoriesChecked) {
+      updatedCategories[sdIndex].checked = false;
+      updatedCategories[sdIndex].indeterminate = false;
+    }
+
+    setCategories(updatedCategories);
+  };
+
+  return (
+    <div style={{ maxHeight: "50vh", minWidth: "15vw" }}>
+      {categories.map((sd, sdIndex) => (
+        <div key={sd.id}>
+          <FormControlLabel
+            label={sd.label}
+            control={
+              <Checkbox
+                checked={sd.checked}
+                indeterminate={sd.indeterminate}
+                onChange={(event) => handleChangesd(event, sdIndex)}
+              />
+            }
+          />
+
+          {sd.sub_category.map((sub, subIndex) => (
+            <Box
+              sx={{ display: "flex", flexDirection: "column", ml: 3 }}
+              key={sub.id}
+            >
+              <FormControlLabel
+                label={sub.label}
+                control={
+                  <Checkbox
+                    checked={sub.checked}
+                    indeterminate={sub.indeterminate}
+                    onChange={(event) =>
+                      handleChangesub(event, sdIndex, subIndex)
+                    }
+                  />
+                }
+              />
+              {sub.category.map((cat, catIndex) => (
+                <Box
+                  sx={{ display: "flex", flexDirection: "column", ml: 3 }}
+                  key={cat.id}
+                >
+                  <FormControlLabel
+                    label={cat.label}
+                    control={
+                      <Checkbox
+                        checked={cat.checked}
+                        onChange={(event) =>
+                          handleChangecat(event, sdIndex, subIndex, catIndex)
+                        }
+                      />
+                    }
+                  />
+                </Box>
+              ))}
+            </Box>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
