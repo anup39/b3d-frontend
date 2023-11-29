@@ -60,13 +60,16 @@ export default function MapSection() {
   }, [id, level, dispatch]);
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+      }}
+    >
       <AppBar />
       <CategoryGeomForm project_id={id} />
       <Map refObj={searchRef} id={id} />
-      <div style={{ position: "absolute", top: "10vh", right: "5vw" }}>
-        <Search refObj={searchRef} />
-      </div>
     </div>
   );
 }

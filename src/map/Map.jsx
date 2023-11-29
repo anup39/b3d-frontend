@@ -86,21 +86,21 @@ export default function Map({ refObj, id }) {
     }
   }, [map, dispatch]);
 
-  useEffect(() => {
-    if (map) {
-      const geocoder = new MaplibreGeocoder(GeocoderApi, {
-        maplibregl: maplibregl,
-        showResultsWhileTyping: true,
-        flyTo: true,
-      });
+  // useEffect(() => {
+  //   if (map) {
+  //     const geocoder = new MaplibreGeocoder(GeocoderApi, {
+  //       maplibregl: maplibregl,
+  //       showResultsWhileTyping: true,
+  //       flyTo: true,
+  //     });
 
-      geocoder.addTo(refObj.current);
-      geocoder.on("result", function (ev) {
-        const coords = ev.result.geometry.coordinates;
-        map.flyTo({ center: coords });
-      });
-    }
-  }, [map, refObj]);
+  //     geocoder.addTo(refObj.current);
+  //     geocoder.on("result", function (ev) {
+  //       const coords = ev.result.geometry.coordinates;
+  //       map.flyTo({ center: coords });
+  //     });
+  //   }
+  // }, [map, refObj]);
 
   useEffect(() => {
     if (map) {

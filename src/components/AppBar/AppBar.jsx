@@ -74,7 +74,7 @@ function Appbar() {
   return (
     <AppBar
       sx={{ backgroundColor: "#F1F7FF", color: "black", boxShadow: "none" }}
-      position="static"
+      position="sticky"
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>

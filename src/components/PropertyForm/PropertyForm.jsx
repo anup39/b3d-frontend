@@ -160,7 +160,7 @@ export default function PropertyForm({
       <Tooltip title="Create Property">
         <Button
           onClick={openForm}
-          sx={{ margin: "5px" }}
+          sx={{ margin: "5px", position: "static" }}
           variant="contained"
           color="error"
         >
