@@ -9,12 +9,14 @@ export default class DrawControl {
   onAdd(map) {
     this._map = map;
     this._container = document.createElement("div");
-    this._container.className = "maplibregl-ctrl maplibregl-ctrl-draw";
+    this._container.className = "maplibregl-ctrl maplibregl-ctrl-group";
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        <DrawPolygon />
-        <Cancel />
-        <Save />
+        <div className="maplibregl-ctrl-draw-control">
+          <DrawPolygon />
+          <Cancel />
+          <Save />
+        </div>
       </Provider>
     );
     return this._container;

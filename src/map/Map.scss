@@ -1,3 +1,13 @@
 .map {
   flex-grow: 1;
 }
+
+.maplibregl-ctrl-layer-control {
+  max-height: 50vh;
+  max-width: 400px;
+  overflow: scroll;
+}
+
+.maplibregl-ctrl-top-left .maplibregl-ctrl {
+  margin-left: 0;
+}

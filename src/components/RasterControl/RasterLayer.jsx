@@ -64,7 +64,7 @@ export default function RasterLayer({ map, project_id }) {
   }, [project_id]);
 
   return (
-    <div>
+    <div className="maplibregl-ctrl-raster-layer">
       <h2>Property Maps</h2>
       <ul>
         {orthophotos.map((ortho) => {

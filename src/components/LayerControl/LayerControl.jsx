@@ -7,8 +7,7 @@ export default class LayersControl {
   onAdd(map) {
     this._map = map;
     this._container = document.createElement("div");
-    this._container.className =
-      "maplibregl-ctrl maplibregl-ctrl-layer-and-draw";
+    this._container.className = "maplibregl-ctrl maplibregl-ctrl-group";
     this._project_id = 1;
 
     return this._container;
