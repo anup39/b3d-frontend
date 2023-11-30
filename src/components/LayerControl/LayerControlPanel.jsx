@@ -3,13 +3,15 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const all_categories = [
   {
     id: 1,
     label: "Grass",
-    checked: true,
+    checked: false,
     expand: false,
     indeterminate: false,
     extent: [],
@@ -17,25 +19,25 @@ const all_categories = [
       {
         id: 1,
         label: "Green",
-        checked: true,
+        checked: false,
         expand: false,
         indeterminate: false,
         extent: [],
         category: [
-          { id: 1, label: "Tall Green", checked: true, extent: [] },
-          { id: 2, label: "Short Green", checked: true, extent: [] },
+          { id: 1, label: "Tall Green", checked: false, extent: [] },
+          { id: 2, label: "Short Green", checked: false, extent: [] },
         ],
       },
       {
         id: 2,
         label: "Light Green",
-        checked: true,
+        checked: false,
         expand: false,
         indeterminate: false,
         extent: [],
         category: [
-          { id: 1, label: "Tall Light", checked: true, extent: [] },
-          { id: 2, label: "Short Light", checked: true, extent: [] },
+          { id: 1, label: "Tall Light", checked: false, extent: [] },
+          { id: 2, label: "Short Light", checked: false, extent: [] },
         ],
       },
     ],
@@ -74,10 +76,33 @@ const all_categories = [
       },
     ],
   },
+  {
+    id: 3,
+    label: "Land",
+    checked: false,
+    expand: false,
+    indeterminate: false,
+    extent: [],
+    sub_category: [],
+  },
 ];
 
 export default function LayersControlPanel() {
   const [categories, setCategories] = useState(all_categories);
+  const client_id = useSelector((state) => state.mapCategories.client_id);
+
+  useEffect(() => {
+    console.log(client_id);
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/map-measurings/?client=${client_id}`
+      )
+      .then((res) => {
+        setCategories(res.data);
+      });
+  }, [client_id]);
 
   const handleChangesd = (event, sdIndex) => {
     const updatedCategories = [...categories];
@@ -93,6 +118,7 @@ export default function LayersControlPanel() {
     setCategories(updatedCategories);
   };
 
+  // TODO: Here small issue , when the categories are empty for sub category , in this case when i selected any catgroy it will be automatically checked
   const handleChangesub = (event, sdIndex, subIndex) => {
     const updatedCategories = [...categories];
     updatedCategories[sdIndex].sub_category[subIndex].checked =
