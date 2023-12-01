@@ -18,7 +18,7 @@ export default class LayersControl {
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
         {/* <LayersControlButton map={this._map} /> */}
-        <LayersAndLabelControl />
+        <LayersAndLabelControl map={this._map} />
       </Provider>
     );
   }

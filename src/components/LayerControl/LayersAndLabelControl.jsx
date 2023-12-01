@@ -1,6 +1,8 @@
 import LayersControlPanel from "./LayerControlPanel";
 import { Typography } from "@mui/material";
-export default function LayersAndLabelControl() {
+import { PropTypes } from "prop-types";
+
+export default function LayersAndLabelControl({ map }) {
   return (
     <div
       className="maplibregl-ctrl-layer-control"
@@ -15,7 +17,11 @@ export default function LayersAndLabelControl() {
       >
         Measurings
       </Typography>
-      <LayersControlPanel />
+      <LayersControlPanel map={map} />
     </div>
   );
 }
+
+LayersAndLabelControl.propTypes = {
+  map: PropTypes.obj,
+};

@@ -6,6 +6,7 @@ import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { PropTypes } from "prop-types";
 
 const all_categories = [
   {
@@ -87,7 +88,7 @@ const all_categories = [
   },
 ];
 
-export default function LayersControlPanel() {
+export default function LayersControlPanel({ map }) {
   const [categories, setCategories] = useState(all_categories);
   const client_id = useSelector((state) => state.mapCategories.client_id);
 
@@ -114,6 +115,47 @@ export default function LayersControlPanel() {
       sub.category.forEach((cat) => {
         cat.checked = event.target.checked;
         console.log(cat, "category clicked in standard");
+        if (cat.type_of_geometry) {
+          const sourceId = String(client_id) + cat.view_name + "source";
+          const layerId = String(client_id) + cat.view_name + "layer";
+          const url = `${
+            import.meta.env.VITE_API_MAP_URL
+          }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
+            cat.id
+          }`;
+          const source_layer = "function_zxy_query_app_polygondata_by_category";
+          const newSource = {
+            type: "vector",
+            tiles: [url],
+            // promoteId: "id",
+          };
+
+          axios
+            .get(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-style/?category=${cat.id}`
+            )
+            .then((response) => {
+              const categoryStyle = response.data[0];
+              map.addSource(sourceId, newSource);
+
+              const newLayer = {
+                id: layerId,
+                type: "fill",
+                source: sourceId,
+                "source-layer": source_layer,
+                layout: {},
+                paint: {
+                  "fill-color": categoryStyle.fill,
+                  "fill-outline-color": categoryStyle.stroke,
+                  "fill-opacity": parseFloat(categoryStyle.fill_opacity),
+                },
+              };
+              map.addLayer(newLayer);
+              map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
+            });
+        }
       });
     });
     setCategories(updatedCategories);
@@ -416,3 +458,7 @@ export default function LayersControlPanel() {
     </div>
   );
 }
+
+LayersControlPanel.propTypes = {
+  map: PropTypes.obj,
+};
