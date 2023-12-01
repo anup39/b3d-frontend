@@ -1,7 +1,7 @@
 import axios from "axios";
 import {
   Map,
-  LngLatLike,
+  LngLatBounds,
   SourceSpecification,
   CircleLayerSpecification,
   LayerSpecification,
@@ -17,7 +17,7 @@ interface AddLayerProps {
   showPopup: boolean;
   style: { fill_color: string; fill_opacity: string; stroke_color: string };
   zoomToLayer: boolean;
-  center: LngLatLike;
+  extent: LngLatBounds;
   fillType: string;
   trace: boolean;
   component: string;
@@ -32,27 +32,14 @@ function AddLayerAndSourceToMap({
   showPopup,
   style,
   zoomToLayer,
-  center,
+  extent,
   fillType,
   trace,
 }: AddLayerProps) {
   // Rest of your component code remains unchanged
 
   if (zoomToLayer) {
-    axios
-      .get(`${import.meta.env.VITE_API_MAP_URL}/${source_layer}`)
-      .then(function (response) {
-        const bounds = response.data.bounds;
-
-        if (bounds && bounds.length === 4) {
-          if (fillType === "point") {
-            map.flyTo({ center: center });
-          } else {
-            map.fitBounds(bounds);
-          }
-        }
-      })
-      .catch(function () {});
+    map.fitBounds(extent);
   }
 
   const newSource: SourceSpecification = {
@@ -102,8 +89,8 @@ function AddLayerAndSourceToMap({
         "fill-opacity": [
           "case",
           ["boolean", ["feature-state", "hover"], false],
-          1,
-          0.5,
+          0.8,
+          parseFloat(style.fill_opacity),
         ],
       },
     };
@@ -130,6 +117,7 @@ function AddLayerAndSourceToMap({
             map._controls[map._controls.length - 2];
           // @ts-ignore
           console.log(popup_control, "popup contorl");
+          // @ts-ignore
           popup_control.updatePopup(feature.properties, trace);
         }
       }

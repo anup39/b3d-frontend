@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { PropTypes } from "prop-types";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
+import convertExtentStringToArray from "../../maputils/convertExtentStringToArray";
 
 const all_categories = [
   {
@@ -94,7 +95,6 @@ export default function LayersControlPanel({ map }) {
   const client_id = useSelector((state) => state.mapCategories.client_id);
 
   useEffect(() => {
-    console.log(client_id);
     axios
       .get(
         `${
@@ -127,6 +127,13 @@ export default function LayersControlPanel({ map }) {
             )
             .then((response) => {
               const categoryStyle = response.data[0];
+              let extent_ = [];
+              try {
+                extent_ = convertExtentStringToArray(cat.extent[0][0]);
+              } catch {
+                extent_ = [];
+              }
+              console.log(extent_, "extent_");
               AddLayerAndSourceToMap({
                 map: map,
                 layerId: layerId,
@@ -139,12 +146,12 @@ export default function LayersControlPanel({ map }) {
                 source_layer: "function_zxy_query_app_polygondata_by_category",
                 showPopup: true,
                 style: {
-                  fill_color: "red",
-                  fill_opacity: "0",
-                  stroke_color: "red",
+                  fill_color: categoryStyle.fill,
+                  fill_opacity: categoryStyle.fill_opacity,
+                  stroke_color: categoryStyle.stroke,
                 },
-                zoomToLayer: false,
-                center: [103.8574, 2.2739],
+                zoomToLayer: true,
+                extent: extent_,
                 fillType: "fill",
                 trace: false,
                 component: "map",
