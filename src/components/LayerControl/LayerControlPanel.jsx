@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { PropTypes } from "prop-types";
+import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 
 const all_categories = [
   {
@@ -118,18 +119,6 @@ export default function LayersControlPanel({ map }) {
         if (cat.type_of_geometry) {
           const sourceId = String(client_id) + cat.view_name + "source";
           const layerId = String(client_id) + cat.view_name + "layer";
-          const url = `${
-            import.meta.env.VITE_API_MAP_URL
-          }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
-            cat.id
-          }`;
-          const source_layer = "function_zxy_query_app_polygondata_by_category";
-          const newSource = {
-            type: "vector",
-            tiles: [url],
-            // promoteId: "id",
-          };
-
           axios
             .get(
               `${
@@ -138,22 +127,28 @@ export default function LayersControlPanel({ map }) {
             )
             .then((response) => {
               const categoryStyle = response.data[0];
-              map.addSource(sourceId, newSource);
-
-              const newLayer = {
-                id: layerId,
-                type: "fill",
-                source: sourceId,
-                "source-layer": source_layer,
-                layout: {},
-                paint: {
-                  "fill-color": categoryStyle.fill,
-                  "fill-outline-color": categoryStyle.stroke,
-                  "fill-opacity": parseFloat(categoryStyle.fill_opacity),
+              AddLayerAndSourceToMap({
+                map: map,
+                layerId: layerId,
+                sourceId: sourceId,
+                url: `${
+                  import.meta.env.VITE_API_MAP_URL
+                }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
+                  cat.id
+                }`,
+                source_layer: "function_zxy_query_app_polygondata_by_category",
+                showPopup: true,
+                style: {
+                  fill_color: "red",
+                  fill_opacity: "0",
+                  stroke_color: "red",
                 },
-              };
-              map.addLayer(newLayer);
-              map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
+                zoomToLayer: false,
+                center: [103.8574, 2.2739],
+                fillType: "fill",
+                trace: false,
+                component: "map",
+              });
             });
         }
       });
