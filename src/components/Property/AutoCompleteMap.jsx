@@ -18,18 +18,20 @@ export default function AutoCompleteMap({
   console.log(client_id, "cid");
 
   useEffect(() => {
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/${category}/?client=${parseInt(client_id)}`
-      )
-      .then((response) => {
-        setOptions(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    if (client_id) {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/${category}/?client=${parseInt(client_id)}`
+        )
+        .then((response) => {
+          setOptions(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
   }, [client_id, category]);
   return (
     <Autocomplete
