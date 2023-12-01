@@ -455,5 +455,5 @@ export default function LayersControlPanel({ map }) {
 }
 
 LayersControlPanel.propTypes = {
-  map: PropTypes.obj,
+  map: PropTypes.object,
 };

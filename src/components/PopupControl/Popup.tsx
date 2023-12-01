@@ -15,8 +15,8 @@ interface PopupProps {
 const Popup = ({ properties, trace }: PopupProps) => {
   const propertyElements = properties
     ? Object.entries(properties).map(([key, value]) => (
-        <div key={key} className="mb-2 truncate">
-          <strong className="mr-1">{key}:</strong> {value}
+        <div key={key}>
+          <strong>{key}:</strong> {value}
         </div>
       ))
     : null;
@@ -24,10 +24,8 @@ const Popup = ({ properties, trace }: PopupProps) => {
   return (
     <>
       {properties ? (
-        <div className="bg-white rounded shadow-md p-2 max-w-sm  md:max-w-md max-h-48 overflow-auto">
-          <div className="divide-y divide-gray-200 mt-3">
-            {propertyElements}
-          </div>
+        <div className="maplibregl-ctrl-layer-control">
+          <div>{propertyElements}</div>
         </div>
       ) : null}
     </>

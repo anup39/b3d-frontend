@@ -23,5 +23,5 @@ export default function LayersAndLabelControl({ map }) {
 }
 
 LayersAndLabelControl.propTypes = {
-  map: PropTypes.obj,
+  map: PropTypes.object,
 };
