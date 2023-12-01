@@ -113,6 +113,7 @@ export default function LayersControlPanel() {
       sub.indeterminate = false;
       sub.category.forEach((cat) => {
         cat.checked = event.target.checked;
+        console.log(cat, "category clicked in standard");
       });
     });
     setCategories(updatedCategories);
@@ -128,6 +129,48 @@ export default function LayersControlPanel() {
     updatedCategories[sdIndex].sub_category[subIndex].category.forEach(
       (cat) => {
         cat.checked = event.target.checked;
+        console.log(cat, "category clicked in sub");
+        if (cat.type_of_geometry) {
+          const sourceId = String(client_id) + cat.view_name + "source";
+          const layerId = String(client_id) + cat.view_name + "layer";
+          const url = `${
+            import.meta.env.VITE_API_MAP_URL
+          }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
+            cat.id
+          }`;
+          const source_layer = "function_zxy_query_app_polygondata_by_category";
+          const newSource = {
+            type: "vector",
+            tiles: [url],
+            // promoteId: "id",
+          };
+
+          axios
+            .get(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-style/?category=${cat.id}`
+            )
+            .then((response) => {
+              const categoryStyle = response.data[0];
+              map.addSource(sourceId, newSource);
+
+              const newLayer = {
+                id: layerId,
+                type: "fill",
+                source: sourceId,
+                "source-layer": source_layer,
+                layout: {},
+                paint: {
+                  "fill-color": categoryStyle.fill,
+                  "fill-outline-color": categoryStyle.stroke,
+                  "fill-opacity": parseFloat(categoryStyle.fill_opacity),
+                },
+              };
+              map.addLayer(newLayer);
+              map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
+            });
+        }
       }
     );
 
@@ -160,6 +203,8 @@ export default function LayersControlPanel() {
     updatedCategories[sdIndex].sub_category[subIndex].category[
       catIndex
     ].checked = event.target.checked;
+
+    console.log("category clicked in cat");
 
     let allCategoriesChecked = true;
     let someCategoriesChecked = false;
