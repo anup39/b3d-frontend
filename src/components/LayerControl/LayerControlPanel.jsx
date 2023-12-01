@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { PropTypes } from "prop-types";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
-import convertExtentStringToArray from "../../maputils/convertExtentStringToArray";
 
 const all_categories = [
   {
@@ -115,7 +114,6 @@ export default function LayersControlPanel({ map }) {
       sub.indeterminate = false;
       sub.category.forEach((cat) => {
         cat.checked = event.target.checked;
-        console.log(cat, "category clicked in standard");
         if (cat.type_of_geometry) {
           const sourceId = String(client_id) + cat.view_name + "source";
           const layerId = String(client_id) + cat.view_name + "layer";
@@ -127,13 +125,6 @@ export default function LayersControlPanel({ map }) {
             )
             .then((response) => {
               const categoryStyle = response.data[0];
-              let extent_ = [];
-              try {
-                extent_ = convertExtentStringToArray(cat.extent[0][0]);
-              } catch {
-                extent_ = [];
-              }
-              console.log(extent_, "extent_");
               AddLayerAndSourceToMap({
                 map: map,
                 layerId: layerId,
@@ -150,8 +141,8 @@ export default function LayersControlPanel({ map }) {
                   fill_opacity: categoryStyle.fill_opacity,
                   stroke_color: categoryStyle.stroke,
                 },
-                zoomToLayer: true,
-                extent: extent_,
+                zoomToLayer: false,
+                extent: [],
                 fillType: "fill",
                 trace: false,
                 component: "map",
@@ -247,9 +238,6 @@ export default function LayersControlPanel({ map }) {
     updatedCategories[sdIndex].sub_category[subIndex].category[
       catIndex
     ].checked = event.target.checked;
-
-    console.log("category clicked in cat");
-
     let allCategoriesChecked = true;
     let someCategoriesChecked = false;
 

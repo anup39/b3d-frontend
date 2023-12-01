@@ -15,8 +15,6 @@ export default function AutoCompleteMap({
 
   const client_id = useSelector((state) => state.mapCategories.client_id);
 
-  console.log(client_id, "cid");
-
   useEffect(() => {
     if (client_id) {
       axios
