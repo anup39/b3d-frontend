@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  client_id: null,
   project_name: "",
   standard_categories: [],
   sub_categories: [],
@@ -11,6 +12,9 @@ export const MapCategories = createSlice({
   name: "MapCategories",
   initialState,
   reducers: {
+    setClient: (state, action) => {
+      state.client_id = action.payload;
+    },
     setStandardCategories: (state, action) => {
       state.standard_categories = action.payload;
     },
@@ -37,6 +41,7 @@ export const MapCategories = createSlice({
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const {
+  setClient,
   setStandardCategories,
   setSubCategories,
   setCategories,

@@ -1,8 +1,13 @@
 import LayersControlPanel from "./LayerControlPanel";
 import { Typography } from "@mui/material";
-export default function LayersAndLabelControl() {
+import { PropTypes } from "prop-types";
+
+export default function LayersAndLabelControl({ map }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div
+      className="maplibregl-ctrl-layer-control"
+      style={{ display: "flex", flexDirection: "column" }}
+    >
       <Typography
         sx={{
           backgroundColor: "#F1F7FF",
@@ -12,7 +17,11 @@ export default function LayersAndLabelControl() {
       >
         Measurings
       </Typography>
-      <LayersControlPanel />
+      <LayersControlPanel map={map} />
     </div>
   );
 }
+
+LayersAndLabelControl.propTypes = {
+  map: PropTypes.object,
+};

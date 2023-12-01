@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import LayersControl from "../components/LayerControl/LayerControl";
 import DrawControl from "../components/DrawControl/DrawControl";
 import RasterControl from "../components/RasterControl/RasterControl";
+import PopupControl from "../components/PopupControl/PopupControl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { useDispatch } from "react-redux";
@@ -121,6 +122,9 @@ export default function Map({ id }) {
       map.addControl(raster_control, "top-left");
       raster_control.updateProject(id);
       map.addControl(new DrawControl(), "top-right");
+
+      const popup_control = new PopupControl();
+      map.addControl(popup_control, "bottom-left");
     }
   }, [map, id]);
 

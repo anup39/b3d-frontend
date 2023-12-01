@@ -27,6 +27,8 @@ export default function CategoryGeomForm({ project_id }) {
     useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
+  const client_id = useSelector((state) => state.mapCategories.client_id);
+
   const handleCreateCategoryStyle = (event) => {
     event.preventDefault();
 
@@ -40,7 +42,8 @@ export default function CategoryGeomForm({ project_id }) {
           )
           .then((res) => {
             const data = {
-              project: parseInt(project_id),
+              client: parseInt(client_id),
+              // project: parseInt(project_id),
               standard_category: res.data.standard_category,
               sub_category: res.data.sub_category,
               category: selectedCategoryId,

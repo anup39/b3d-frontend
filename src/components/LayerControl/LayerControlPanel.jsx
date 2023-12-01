@@ -3,13 +3,18 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { PropTypes } from "prop-types";
+import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
+import convertExtentStringToArray from "../../maputils/convertExtentStringToArray";
 
 const all_categories = [
   {
     id: 1,
     label: "Grass",
-    checked: true,
+    checked: false,
     expand: false,
     indeterminate: false,
     extent: [],
@@ -17,25 +22,25 @@ const all_categories = [
       {
         id: 1,
         label: "Green",
-        checked: true,
+        checked: false,
         expand: false,
         indeterminate: false,
         extent: [],
         category: [
-          { id: 1, label: "Tall Green", checked: true, extent: [] },
-          { id: 2, label: "Short Green", checked: true, extent: [] },
+          { id: 1, label: "Tall Green", checked: false, extent: [] },
+          { id: 2, label: "Short Green", checked: false, extent: [] },
         ],
       },
       {
         id: 2,
         label: "Light Green",
-        checked: true,
+        checked: false,
         expand: false,
         indeterminate: false,
         extent: [],
         category: [
-          { id: 1, label: "Tall Light", checked: true, extent: [] },
-          { id: 2, label: "Short Light", checked: true, extent: [] },
+          { id: 1, label: "Tall Light", checked: false, extent: [] },
+          { id: 2, label: "Short Light", checked: false, extent: [] },
         ],
       },
     ],
@@ -74,10 +79,32 @@ const all_categories = [
       },
     ],
   },
+  {
+    id: 3,
+    label: "Land",
+    checked: false,
+    expand: false,
+    indeterminate: false,
+    extent: [],
+    sub_category: [],
+  },
 ];
 
-export default function LayersControlPanel() {
+export default function LayersControlPanel({ map }) {
   const [categories, setCategories] = useState(all_categories);
+  const client_id = useSelector((state) => state.mapCategories.client_id);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/map-measurings/?client=${client_id}`
+      )
+      .then((res) => {
+        setCategories(res.data);
+      });
+  }, [client_id]);
 
   const handleChangesd = (event, sdIndex) => {
     const updatedCategories = [...categories];
@@ -88,11 +115,55 @@ export default function LayersControlPanel() {
       sub.indeterminate = false;
       sub.category.forEach((cat) => {
         cat.checked = event.target.checked;
+        console.log(cat, "category clicked in standard");
+        if (cat.type_of_geometry) {
+          const sourceId = String(client_id) + cat.view_name + "source";
+          const layerId = String(client_id) + cat.view_name + "layer";
+          axios
+            .get(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-style/?category=${cat.id}`
+            )
+            .then((response) => {
+              const categoryStyle = response.data[0];
+              let extent_ = [];
+              try {
+                extent_ = convertExtentStringToArray(cat.extent[0][0]);
+              } catch {
+                extent_ = [];
+              }
+              console.log(extent_, "extent_");
+              AddLayerAndSourceToMap({
+                map: map,
+                layerId: layerId,
+                sourceId: sourceId,
+                url: `${
+                  import.meta.env.VITE_API_MAP_URL
+                }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
+                  cat.id
+                }`,
+                source_layer: "function_zxy_query_app_polygondata_by_category",
+                showPopup: true,
+                style: {
+                  fill_color: categoryStyle.fill,
+                  fill_opacity: categoryStyle.fill_opacity,
+                  stroke_color: categoryStyle.stroke,
+                },
+                zoomToLayer: true,
+                extent: extent_,
+                fillType: "fill",
+                trace: false,
+                component: "map",
+              });
+            });
+        }
       });
     });
     setCategories(updatedCategories);
   };
 
+  // TODO: Here small issue , when the categories are empty for sub category , in this case when i selected any catgroy it will be automatically checked
   const handleChangesub = (event, sdIndex, subIndex) => {
     const updatedCategories = [...categories];
     updatedCategories[sdIndex].sub_category[subIndex].checked =
@@ -102,6 +173,48 @@ export default function LayersControlPanel() {
     updatedCategories[sdIndex].sub_category[subIndex].category.forEach(
       (cat) => {
         cat.checked = event.target.checked;
+        console.log(cat, "category clicked in sub");
+        if (cat.type_of_geometry) {
+          const sourceId = String(client_id) + cat.view_name + "source";
+          const layerId = String(client_id) + cat.view_name + "layer";
+          const url = `${
+            import.meta.env.VITE_API_MAP_URL
+          }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
+            cat.id
+          }`;
+          const source_layer = "function_zxy_query_app_polygondata_by_category";
+          const newSource = {
+            type: "vector",
+            tiles: [url],
+            // promoteId: "id",
+          };
+
+          axios
+            .get(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-style/?category=${cat.id}`
+            )
+            .then((response) => {
+              const categoryStyle = response.data[0];
+              map.addSource(sourceId, newSource);
+
+              const newLayer = {
+                id: layerId,
+                type: "fill",
+                source: sourceId,
+                "source-layer": source_layer,
+                layout: {},
+                paint: {
+                  "fill-color": categoryStyle.fill,
+                  "fill-outline-color": categoryStyle.stroke,
+                  "fill-opacity": parseFloat(categoryStyle.fill_opacity),
+                },
+              };
+              map.addLayer(newLayer);
+              map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
+            });
+        }
       }
     );
 
@@ -134,6 +247,8 @@ export default function LayersControlPanel() {
     updatedCategories[sdIndex].sub_category[subIndex].category[
       catIndex
     ].checked = event.target.checked;
+
+    console.log("category clicked in cat");
 
     let allCategoriesChecked = true;
     let someCategoriesChecked = false;
@@ -345,3 +460,7 @@ export default function LayersControlPanel() {
     </div>
   );
 }
+
+LayersControlPanel.propTypes = {
+  map: PropTypes.object,
+};

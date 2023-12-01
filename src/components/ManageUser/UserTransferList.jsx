@@ -78,7 +78,7 @@ export default function UserTransferList({ id, component }) {
     setChecked(not(checked, rightChecked));
   };
 
-  useEffect(() => {
+  () => {
     // Fetch data from the first API endpoint
     axios
       .get(
@@ -119,7 +119,8 @@ export default function UserTransferList({ id, component }) {
 
         // Fetch data from the second API endpoint
       });
-  }, [id, component, username_current]);
+  },
+    [id, component, username_current];
 
   const customList = (title, items) => (
     <Card sx={{ backgroundColor: "#828282" }}>
