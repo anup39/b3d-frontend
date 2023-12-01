@@ -34,7 +34,6 @@ export default function ClientCard({ id, name, description }) {
   };
 
   const handleOpenClient = () => {
-    console.log(id, "id");
     navigate(`/projects/${id}`);
   };
 
