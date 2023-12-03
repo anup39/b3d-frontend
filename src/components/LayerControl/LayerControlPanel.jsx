@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { PropTypes } from "prop-types";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
+import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 
 const all_categories = [
   {
@@ -114,62 +115,16 @@ export default function LayersControlPanel({ map }) {
       sub.indeterminate = false;
       sub.category.forEach((cat) => {
         cat.checked = event.target.checked;
-        if (cat.type_of_geometry) {
-          const sourceId = String(client_id) + cat.view_name + "source";
-          const layerId = String(client_id) + cat.view_name + "layer";
-          axios
-            .get(
-              `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/category-style/?category=${cat.id}`
-            )
-            .then((response) => {
-              const categoryStyle = response.data[0];
-              AddLayerAndSourceToMap({
-                map: map,
-                layerId: layerId,
-                sourceId: sourceId,
-                url: `${
-                  import.meta.env.VITE_API_MAP_URL
-                }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
-                  cat.id
-                }`,
-                source_layer: "function_zxy_query_app_polygondata_by_category",
-                showPopup: true,
-                style: {
-                  fill_color: categoryStyle.fill,
-                  fill_opacity: categoryStyle.fill_opacity,
-                  stroke_color: categoryStyle.stroke,
-                },
-                zoomToLayer: false,
-                extent: [],
-                fillType: "fill",
-                trace: false,
-                component: "map",
-              });
-            });
-        }
-      });
-    });
-    setCategories(updatedCategories);
-  };
-
-  // TODO: Here small issue , when the categories are empty for sub category , in this case when i selected any catgroy it will be automatically checked
-  const handleChangesub = (event, sdIndex, subIndex) => {
-    const updatedCategories = [...categories];
-    updatedCategories[sdIndex].sub_category[subIndex].checked =
-      event.target.checked;
-    updatedCategories[sdIndex].sub_category[subIndex].indeterminate = false;
-
-    updatedCategories[sdIndex].sub_category[subIndex].category.forEach(
-      (cat) => {
-        cat.checked = event.target.checked;
-        console.log(cat, "category clicked in sub");
-        if (cat.type_of_geometry) {
-          cat.checked = event.target.checked;
+        if (event.target.checked) {
           if (cat.type_of_geometry) {
             const sourceId = String(client_id) + cat.view_name + "source";
             const layerId = String(client_id) + cat.view_name + "layer";
+            RemoveSourceAndLayerFromMap({
+              map: map,
+              layerId: layerId,
+              sourceId: sourceId,
+            });
+
             axios
               .get(
                 `${
@@ -202,6 +157,85 @@ export default function LayersControlPanel({ map }) {
                   component: "map",
                 });
               });
+          }
+        } else {
+          const sourceId = String(client_id) + cat.view_name + "source";
+          const layerId = String(client_id) + cat.view_name + "layer";
+          RemoveSourceAndLayerFromMap({
+            map: map,
+            layerId: layerId,
+            sourceId: sourceId,
+          });
+        }
+      });
+    });
+    setCategories(updatedCategories);
+  };
+
+  // TODO: Here small issue , when the categories are empty for sub category , in this case when i selected any catgroy it will be automatically checked
+  const handleChangesub = (event, sdIndex, subIndex) => {
+    const updatedCategories = [...categories];
+    updatedCategories[sdIndex].sub_category[subIndex].checked =
+      event.target.checked;
+    updatedCategories[sdIndex].sub_category[subIndex].indeterminate = false;
+
+    updatedCategories[sdIndex].sub_category[subIndex].category.forEach(
+      (cat) => {
+        cat.checked = event.target.checked;
+        console.log(cat, "category clicked in sub");
+        if (cat.type_of_geometry) {
+          cat.checked = event.target.checked;
+          if (event.target.checked) {
+            if (cat.type_of_geometry) {
+              const sourceId = String(client_id) + cat.view_name + "source";
+              const layerId = String(client_id) + cat.view_name + "layer";
+              RemoveSourceAndLayerFromMap({
+                map: map,
+                layerId: layerId,
+                sourceId: sourceId,
+              });
+
+              axios
+                .get(
+                  `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/category-style/?category=${cat.id}`
+                )
+                .then((response) => {
+                  const categoryStyle = response.data[0];
+                  AddLayerAndSourceToMap({
+                    map: map,
+                    layerId: layerId,
+                    sourceId: sourceId,
+                    url: `${
+                      import.meta.env.VITE_API_MAP_URL
+                    }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
+                      cat.id
+                    }`,
+                    source_layer:
+                      "function_zxy_query_app_polygondata_by_category",
+                    showPopup: true,
+                    style: {
+                      fill_color: categoryStyle.fill,
+                      fill_opacity: categoryStyle.fill_opacity,
+                      stroke_color: categoryStyle.stroke,
+                    },
+                    zoomToLayer: false,
+                    extent: [],
+                    fillType: "fill",
+                    trace: false,
+                    component: "map",
+                  });
+                });
+            }
+          } else {
+            const sourceId = String(client_id) + cat.view_name + "source";
+            const layerId = String(client_id) + cat.view_name + "layer";
+            RemoveSourceAndLayerFromMap({
+              map: map,
+              layerId: layerId,
+              sourceId: sourceId,
+            });
           }
         }
       }
@@ -239,40 +273,56 @@ export default function LayersControlPanel({ map }) {
     const cat =
       updatedCategories[sdIndex].sub_category[subIndex].category[catIndex];
     cat.checked = event.target.checked;
-    if (cat.type_of_geometry) {
+    if (event.target.checked) {
+      if (cat.type_of_geometry) {
+        const sourceId = String(client_id) + cat.view_name + "source";
+        const layerId = String(client_id) + cat.view_name + "layer";
+        RemoveSourceAndLayerFromMap({
+          map: map,
+          layerId: layerId,
+          sourceId: sourceId,
+        });
+
+        axios
+          .get(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/category-style/?category=${cat.id}`
+          )
+          .then((response) => {
+            const categoryStyle = response.data[0];
+            AddLayerAndSourceToMap({
+              map: map,
+              layerId: layerId,
+              sourceId: sourceId,
+              url: `${
+                import.meta.env.VITE_API_MAP_URL
+              }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
+                cat.id
+              }`,
+              source_layer: "function_zxy_query_app_polygondata_by_category",
+              showPopup: true,
+              style: {
+                fill_color: categoryStyle.fill,
+                fill_opacity: categoryStyle.fill_opacity,
+                stroke_color: categoryStyle.stroke,
+              },
+              zoomToLayer: false,
+              extent: [],
+              fillType: "fill",
+              trace: false,
+              component: "map",
+            });
+          });
+      }
+    } else {
       const sourceId = String(client_id) + cat.view_name + "source";
       const layerId = String(client_id) + cat.view_name + "layer";
-      axios
-        .get(
-          `${import.meta.env.VITE_API_DASHBOARD_URL}/category-style/?category=${
-            cat.id
-          }`
-        )
-        .then((response) => {
-          const categoryStyle = response.data[0];
-          AddLayerAndSourceToMap({
-            map: map,
-            layerId: layerId,
-            sourceId: sourceId,
-            url: `${
-              import.meta.env.VITE_API_MAP_URL
-            }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
-              cat.id
-            }`,
-            source_layer: "function_zxy_query_app_polygondata_by_category",
-            showPopup: true,
-            style: {
-              fill_color: categoryStyle.fill,
-              fill_opacity: categoryStyle.fill_opacity,
-              stroke_color: categoryStyle.stroke,
-            },
-            zoomToLayer: false,
-            extent: [],
-            fillType: "fill",
-            trace: false,
-            component: "map",
-          });
-        });
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        layerId: layerId,
+        sourceId: sourceId,
+      });
     }
 
     let allCategoriesChecked = true;
