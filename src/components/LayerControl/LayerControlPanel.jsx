@@ -435,13 +435,6 @@ export default function LayersControlPanel({ map }) {
                 }
               />
             </Box>
-            <ZoomInIcon
-              sx={{
-                backgroundColor: "#F1F7FF",
-                color: "black",
-                "&:hover": { cursor: "pointer" },
-              }}
-            />
           </Box>
 
           {sd.sub_category.map((sub, subIndex) => (
@@ -481,13 +474,6 @@ export default function LayersControlPanel({ map }) {
                       }
                     />
                   }
-                />
-                <ZoomInIcon
-                  sx={{
-                    backgroundColor: "#F1F7FF",
-                    color: "black",
-                    "&:hover": { cursor: "pointer" },
-                  }}
                 />
               </Box>
 
