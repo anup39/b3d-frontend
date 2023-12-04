@@ -403,6 +403,15 @@ export default function LayersControlPanel({ map }) {
     console.log(event);
     console.log(value);
     console.log(cat, "cat index");
+
+    const layerId = String(client_id) + cat.view_name + "layer";
+
+    const style = map.getStyle();
+    const existingLayer = style.layers.find((layer) => layer.id === layerId);
+
+    if (existingLayer) {
+      map.setPaintProperty(layerId, "fill-opacity", parseFloat(value));
+    }
   };
 
   return (
