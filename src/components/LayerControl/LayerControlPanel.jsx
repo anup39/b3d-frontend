@@ -9,6 +9,7 @@ import axios from "axios";
 import { PropTypes } from "prop-types";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
+import { Slider } from "@mui/material";
 
 const all_categories = [
   {
@@ -398,6 +399,12 @@ export default function LayersControlPanel({ map }) {
     setCategories(updatedCategories);
   };
 
+  const handleChangeSlider = (event, value, cat) => {
+    console.log(event);
+    console.log(value);
+    console.log(cat, "cat index");
+  };
+
   return (
     <div style={{ maxHeight: "50vh", minWidth: "12vw" }}>
       {categories.map((sd, sdIndex) => (
@@ -512,6 +519,19 @@ export default function LayersControlPanel({ map }) {
                       }}
                     />
                   </Box>
+                  <Slider
+                    onChange={(event, value) =>
+                      handleChangeSlider(event, value, cat)
+                    }
+                    step={0.1}
+                    min={0}
+                    max={1}
+                    size="small"
+                    defaultValue={cat.fill_opacity}
+                    aria-label="Small"
+                    sx={{ maxWidth: 150, margin: 2 }}
+                    valueLabelDisplay="auto"
+                  />
                 </Box>
               ))}
             </Box>
