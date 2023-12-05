@@ -45,6 +45,12 @@ export default function PropertyCard({
   //   console.log("Reprocess", id);
   // };
 
+  // const handleGetWMS = () => {};
+
+  const wms_url = `${
+    import.meta.env.VITE_API_RASTER_URL
+  }/tile-async/${id}/{z}/{x}/{y}.png`;
+
   return (
     <Paper
       sx={{
@@ -92,6 +98,9 @@ export default function PropertyCard({
               <Typography variant="body2" gutterBottom>
                 <b>Property Name </b>: {project_name}
               </Typography>
+              <Typography variant="body2" gutterBottom>
+                <b>WMS/XYZ:</b> {wms_url}
+              </Typography>
               <LinearProgressLabel value={progress}></LinearProgressLabel>
             </Grid>
             <Grid item xs container direction="row" spacing={2}>
@@ -99,6 +108,9 @@ export default function PropertyCard({
                 <button className="btn-main" onClick={handleViewInMapProperty}>
                   View In Map
                 </button>
+                {/* <button className="btn-main" onClick={handleGetWMS}>
+                  GET WMS/XYZ */}
+                {/* </button> */}
               </Grid>
               <Grid item>
                 {/* <button className="btn-main" onClick={handleReprocessProperty}>
