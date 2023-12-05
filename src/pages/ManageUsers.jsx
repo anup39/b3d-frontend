@@ -1,17 +1,28 @@
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import AppBar from "../components/AppBar/AppBar";
-import UserCard from "../components/UserCard/UserCard";
-import UserForm from "../components/UserForm/UserForm";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../reducers/Users";
+import AppBar from "../components/Common/AppBar";
+import UserCard from "../components/ManageUser/UserCard";
+import UserForm from "../components/ManageUser/UserForm";
+import AsignRoleForm from "../components/ManageUser/AsignRoleForm";
 
 export default function ManageUsers() {
   const dispatch = useDispatch();
   const { client_id } = useParams();
+  const [userid, setUserId] = useState();
+  const [openForm, setOpenFrom] = useState(false);
 
   const users = useSelector((state) => state.users.users);
+
+  const onUserId = (value) => {
+    setUserId(value);
+  };
+
+  const onOpenForm = (value) => {
+    setOpenFrom(value);
+  };
 
   useEffect(() => {
     axios
@@ -29,14 +40,19 @@ export default function ManageUsers() {
   return (
     <>
       <AppBar></AppBar>
+      <AsignRoleForm
+        user_id={userid}
+        openForm={openForm}
+        onOpenForm={onOpenForm}
+      />
 
       <UserForm client_id={client_id} />
       <div>
         {users
           ? users.map((user) => (
               <UserCard
-                // onUserId={onUserId}
-                // onOpenForm={onOpenForm}
+                onUserId={onUserId}
+                onOpenForm={onOpenForm}
                 key={user.id}
                 id={user.id}
                 username={user.username}

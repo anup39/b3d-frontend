@@ -18,9 +18,7 @@ export default function RasterLayer({ map, project_id }) {
               tiles: [
                 `${
                   import.meta.env.VITE_API_RASTER_URL
-                }/tile-async/${id}/{z}/{x}/{y}.png?r=red&g=green&b=blue&tile_size=[512,512]&r_range=[0,255]&g_range=[0,255]&b_range=[0,255]&bounds=[${
-                  bounds[0]
-                },${bounds[1]},${bounds[2]},${bounds[3]}]`,
+                }/tile-async-wms/${id}/{z}/{x}/{y}.png`,
               ],
               tileSize: 512,
             });
@@ -64,8 +62,8 @@ export default function RasterLayer({ map, project_id }) {
   }, [project_id]);
 
   return (
-    <div>
-      <h2>Orthophotos</h2>
+    <div className="maplibregl-ctrl-raster-layer">
+      <h2>Property Maps</h2>
       <ul>
         {orthophotos.map((ortho) => {
           return (

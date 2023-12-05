@@ -1,12 +1,12 @@
-import AppBar from "../components/AppBar/AppBar";
-import ProjectCard from "../components/ProjectCard/ProjectCard";
-import ProjectForm from "../components/ProjectForm/ProjectForm";
 import { useParams } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setprojects } from "../reducers/Project";
 import axios from "axios";
+import AppBar from "../components/Common/AppBar";
+import ProjectCard from "../components/Project/ProjectCard";
+import ProjectForm from "../components/Project/ProjectForm";
 
 export default function Projects() {
   const { client_id } = useParams();
