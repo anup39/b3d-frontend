@@ -18,7 +18,7 @@ export default function RasterLayer({ map, project_id }) {
               tiles: [
                 `${
                   import.meta.env.VITE_API_RASTER_URL
-                }/tile-async-wms/${id}/{z}/{x}/{y}.png`,
+                }/tile-async/${id}/{z}/{x}/{y}.png`,
               ],
               tileSize: 512,
             });
