@@ -414,6 +414,12 @@ export default function LayersControlPanel({ map }) {
     }
   };
 
+  const handleZoomToLayer = (event, cat) => {
+    console.log(event);
+    console.log(cat);
+    map.fitBounds(cat.extent.extent);
+  };
+
   return (
     <div style={{ maxHeight: "50vh", minWidth: "12vw" }}>
       {categories.map((sd, sdIndex) => (
@@ -520,6 +526,7 @@ export default function LayersControlPanel({ map }) {
                       }
                     />
                     <ZoomInIcon
+                      onClick={(event) => handleZoomToLayer(event, cat)}
                       sx={{
                         marginLeft: "10px",
                         backgroundColor: "#F1F7FF",
