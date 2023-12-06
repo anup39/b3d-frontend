@@ -1,9 +1,11 @@
 import ReactDOM from "react-dom/client";
 import DrawPolygon from "./DrawPolygon";
+import LineString from "./LineString";
 import Save from "./Save";
 import Cancel from "./Cancel";
 import { store } from "../../store";
 import { Provider } from "react-redux";
+import Point from "./Point";
 
 export default class DrawControl {
   onAdd(map) {
@@ -14,6 +16,8 @@ export default class DrawControl {
       <Provider store={store}>
         <div className="maplibregl-ctrl-draw-control">
           <DrawPolygon />
+          <LineString />
+          <Point />
           <Cancel />
           <Save />
         </div>
