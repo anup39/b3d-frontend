@@ -61,8 +61,24 @@ export default function Map({ id }) {
             draw.changeMode("draw_polygon");
           });
 
+        document
+          .getElementById("linestring-box")
+          .addEventListener("click", function () {
+            draw.deleteAll();
+            draw.changeMode("draw_line_string");
+          });
+
+        document
+          .getElementById("point-box")
+          .addEventListener("click", function () {
+            draw.deleteAll();
+            draw.changeMode("draw_point");
+          });
+
         map.on("draw.create", function (event) {
+          console.log(event, "event of draw create");
           const feature = event.features;
+
           const geometry = feature[0].geometry;
           const coordinates = geometry.coordinates[0];
           const wktCoordinates = coordinates
@@ -72,7 +88,10 @@ export default function Map({ id }) {
           dispatch(setWKTGeometry(wktCoordinates_final));
         });
         map.on("draw.update", function (event) {
+          console.log(event, "event of draw create");
+
           const feature = event.features;
+
           const geometry = feature[0].geometry;
           const coordinates = geometry.coordinates[0];
           const wktCoordinates = coordinates

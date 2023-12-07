@@ -47,9 +47,13 @@ export default function PropertyCard({
 
   // const handleGetWMS = () => {};
 
-  const wms_url = `${
+  const tms_url = `${
     import.meta.env.VITE_API_RASTER_URL
   }/tile-async/${id}/{z}/{x}/{y}.png`;
+
+  const wmts_url = `${
+    import.meta.env.VITE_API_RASTER_URL
+  }/${id}/ows/?SERVICE=WMTS&REQUEST=GetCapabilites`;
 
   return (
     <Paper
@@ -99,7 +103,10 @@ export default function PropertyCard({
                 <b>Property Name </b>: {project_name}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                <b>WMS/XYZ:</b> {wms_url}
+                <b>TMS/XYZ:</b> {tms_url}
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                <b>WMTS OGC :</b> {wmts_url}
               </Typography>
               <LinearProgressLabel value={progress}></LinearProgressLabel>
             </Grid>
