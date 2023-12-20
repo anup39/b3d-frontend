@@ -22,6 +22,15 @@ import MapSection from "../../pages/MapSection";
 import AdbIcon from "@mui/icons-material/Adb";
 import MapIcon from "@mui/icons-material/Map";
 import LayersAndLabelControl from "../LayerControl/LayersAndLabelControl";
+import { Tooltip } from "@mui/material";
+import ListIcon from "@mui/icons-material/List";
+import LocationCityIcon from "@mui/icons-material/LocationCity";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import StarBorder from "@mui/icons-material/StarBorder";
+import Collapse from "@mui/material/Collapse";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
 
 const drawerWidth = 240;
 
@@ -93,6 +102,7 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
+  const [openProperties, setOpenProperties] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -139,16 +149,12 @@ export default function MiniDrawer() {
             }}
           >
             {/* <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
-            <MapIcon
-              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            ></MapIcon>
             <Typography
               variant="h6"
               noWrap
               component="a"
-              href="/"
               sx={{
-                // mr: 2,
+                ml: 2,
                 // display: { xs: "none", md: "flex" },
                 // fontFamily: "monospace",
                 fontWeight: 700,
@@ -157,8 +163,20 @@ export default function MiniDrawer() {
                 textDecoration: "none",
               }}
             >
-              Anup's Map
+              Anup Assest
             </Typography>
+            <Tooltip title="List View">
+              <ListIcon
+                sx={{
+                  display: {
+                    xs: "none",
+                    md: "flex",
+                    "&:hover": { cursor: "pointer" },
+                  },
+                  ml: 3,
+                }}
+              ></ListIcon>
+            </Tooltip>
           </Box>
 
           <DrawerHeader>
@@ -177,56 +195,44 @@ export default function MiniDrawer() {
         <Divider sx={{ marginBo: "2px" }} />
 
         <List>
-          {["Measurings", "Maps"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              onClick={() => setOpenProperties(!openProperties)}
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+                <LocationCityIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Properties"}
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+              {open ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={openProperties} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <MapsHomeWorkIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Starred" />
+                </ListItemButton>
+              </List>
+            </Collapse>
+          </ListItem>
         </List>
 
         {/* <LayersAndLabelControl /> */}
-
-        {/* <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
         {/* <DrawerHeader /> */}
