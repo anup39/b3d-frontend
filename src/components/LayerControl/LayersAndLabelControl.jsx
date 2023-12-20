@@ -13,6 +13,9 @@ export default function LayersAndLabelControl({ map }) {
           backgroundColor: "#F1F7FF",
           fontWeight: "bold",
           position: "sticky",
+          marginTop: 0,
+          paddingTop: 0,
+          fontSize: "14px",
         }}
       >
         Measurings

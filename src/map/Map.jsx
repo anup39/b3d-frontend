@@ -122,9 +122,9 @@ export default function Map({ id }) {
 
   useEffect(() => {
     if (map) {
-      const layer_control = new LayersControl();
-      map.addControl(layer_control, "top-left");
-      layer_control.updateProject(id);
+      // const layer_control = new LayersControl();
+      // map.addControl(layer_control, "top-left");
+      // layer_control.updateProject(id);
       map.addControl(
         new MaplibreExportControl({
           PageSize: Size.A3,
