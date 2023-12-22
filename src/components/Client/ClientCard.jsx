@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setdeleteId,
   setdeletePopupMessage,
@@ -15,16 +15,23 @@ import {
 } from "../../reducers/DisplaySettings";
 import FolderIcon from "@mui/icons-material/Folder";
 import ShapefileUpload from "./ShapefileUpload";
+import { setprojects } from "../../reducers/Project";
+import MapIcon from "@mui/icons-material/Map";
+import Tooltip from "@mui/material/Tooltip";
+
 export default function ClientCard({ id, name, description }) {
   const [properties, setproperties] = useState([]);
-  const [projects, setprojects] = useState([]);
+  // const [projects, setprojects] = useState([]);
   const [users, setusers] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const projects = useSelector((state) => state.project.projects);
+  console.log(projects, "projects");
+
   const handleViewInMap = () => {
     // #use client id
-    navigate(`/map/client/${id}`);
+    navigate(`/projects/${id}/Map`);
   };
 
   const handleManageClasses = () => {
@@ -35,7 +42,7 @@ export default function ClientCard({ id, name, description }) {
   };
 
   const handleOpenClient = () => {
-    navigate(`/projects/${id}`);
+    navigate(`/projects/${id}/List`);
   };
 
   const handleDeleteClient = () => {
@@ -96,9 +103,12 @@ export default function ClientCard({ id, name, description }) {
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>
-                <button className="btn-main" onClick={handleViewInMap}>
-                  View In Map
-                </button>
+                <Tooltip title="MapView">
+                  <MapIcon
+                    onClick={handleViewInMap}
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                  />
+                </Tooltip>
               </Grid>
               <Grid item>
                 <button className="btn-main" onClick={handleManageClasses}>
@@ -141,10 +151,10 @@ export default function ClientCard({ id, name, description }) {
 
           {/* Test
            */}
-          <Grid item>
-            <ShapefileUpload />
-          </Grid>
-        </Grid>
+          {/* <Grid item> */}
+          {/* <ShapefileUpload /> */}
+          {/* </Grid> */}
+        </Grid>{" "}
       </Grid>
     </Paper>
   );

@@ -434,22 +434,30 @@ export default function LayersControlPanel({ map }) {
               <ExpandMoreIcon
                 sx={{
                   transform: sd.expand ? "rotate(360deg)" : "rotate(-90deg)",
-                  fontSize: "14px",
+                  fontSize: "20px",
                   backgroundColor: "#FFFFFF",
                   color: "black",
                   marginRight: "4px",
                   padding: "2px",
                   "&:hover": {
-                    backgroundColor: "#9C27B0",
+                    // backgroundColor: "#9C27B0",
+                    cursor: "pointer",
                   },
                 }}
                 onClick={(event) => handleChangeExpandSd(event, sdIndex)}
               />
               <FormControlLabel
+                slotProps={{
+                  typography: {
+                    fontSize: 14,
+                    color: "#6A6D70",
+                    fontWeight: 900,
+                  },
+                }}
                 label={sd.label}
                 control={
                   <Checkbox
-                    size="medium"
+                    size="small"
                     checked={sd.checked}
                     indeterminate={sd.indeterminate}
                     onChange={(event) => handleChangesd(event, sdIndex)}
@@ -472,13 +480,14 @@ export default function LayersControlPanel({ map }) {
                 <ExpandMoreIcon
                   sx={{
                     transform: sub.expand ? "rotate(360deg)" : "rotate(-90deg)",
-                    fontSize: "14px",
+                    fontSize: "20px",
                     backgroundColor: "#FFFFFF",
                     color: "black",
                     marginRight: "4px",
                     padding: "2px",
                     "&:hover": {
-                      backgroundColor: "#9C27B0",
+                      // backgroundColor: "#9C27B0",
+                      cursor: "pointer",
                     },
                   }}
                   onClick={(event) =>
@@ -486,9 +495,17 @@ export default function LayersControlPanel({ map }) {
                   }
                 />
                 <FormControlLabel
+                  slotProps={{
+                    typography: {
+                      fontSize: 14,
+                      color: "#6A6D70",
+                      fontWeight: 900,
+                    },
+                  }}
                   label={sub.label}
                   control={
                     <Checkbox
+                      size="small"
                       checked={sub.checked}
                       indeterminate={sub.indeterminate}
                       onChange={(event) =>
@@ -515,9 +532,17 @@ export default function LayersControlPanel({ map }) {
                     }}
                   >
                     <FormControlLabel
+                      slotProps={{
+                        typography: {
+                          fontSize: 14,
+                          color: "#6A6D70",
+                          fontWeight: 900,
+                        },
+                      }}
                       label={cat.label}
                       control={
                         <Checkbox
+                          size="small"
                           checked={cat.checked}
                           onChange={(event) =>
                             handleChangecat(event, sdIndex, subIndex, catIndex)

@@ -8,6 +8,9 @@
   overflow: scroll;
 }
 
-// .maplibregl-ctrl-top-left .maplibregl-ctrl {
-//   margin-left: 0;
-// }
+.maplibregl-ctrl-top-left .maplibregl-ctrl {
+  margin-left: 1;
+  margin-top: 1;
+  font-size: small;
+  font-family: 'Courier New', Courier, monospace;
+}

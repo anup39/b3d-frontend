@@ -9,18 +9,15 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import MapSection from "../../pages/MapSection";
 import { Tooltip } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import Collapse from "@mui/material/Collapse";
-import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
+import { useNavigate } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
+import { deepOrange } from "@mui/material/colors";
+import Badge from "@mui/material/Badge";
+import ProjectView from "./ProjectView";
 
 const drawerWidth = 240;
 
@@ -70,13 +67,18 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer() {
+export default function MapView({ client_id, projects }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
-  const [openProperties, setOpenProperties] = React.useState(true);
+
+  const navigate = useNavigate();
 
   const handleDrawerClose = () => {
     setOpen(!open);
+  };
+
+  const handleListView = () => {
+    navigate(`/projects/${client_id}/List`);
   };
 
   return (
@@ -113,6 +115,7 @@ export default function MiniDrawer() {
             </Typography>
             <Tooltip title="List View">
               <ListIcon
+                onClick={handleListView}
                 sx={{
                   display: {
                     xs: "none",
@@ -141,61 +144,49 @@ export default function MiniDrawer() {
         <Divider />
 
         {/* Main content */}
+        <Box
+          sx={{
+            paddingTop: 2,
+            paddingLeft: 1,
+            paddingRight: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex" }}>
+            <Avatar
+              sx={{ bgcolor: deepOrange[500], width: 25, height: 25, ml: 1 }}
+            >
+              A
+            </Avatar>
+            {open ? <Typography sx={{ ml: 2 }}>Anup Dahal </Typography> : null}
+          </Box>
+          {open ? (
+            <Box>
+              <Tooltip title="Open">
+                <Badge
+                  sx={{ "&:hover": { cursor: "pointer" } }}
+                  badgeContent={4}
+                  color="primary"
+                >
+                  <LocationCityIcon color="action" />
+                </Badge>
+              </Tooltip>
+            </Box>
+          ) : null}
+        </Box>
         <List>
           {/* Properties */}
-          <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
-            <ListItemButton
-              onClick={() => setOpenProperties(!openProperties)}
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-                "&:hover": {
-                  backgroundColor: "#F1F7FF",
-                },
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <LocationCityIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary={"Properties"}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-              {openProperties ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openProperties} timeout="auto" unmountOnExit>
-              <List sx={{ fontSize: 2 }} component="div" disablePadding>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 10].map((item) => (
-                  <ListItemButton
-                    key={item}
-                    sx={{
-                      pl: 4,
-                      "&:hover": {
-                        backgroundColor: "#F1F7FF",
-                      },
-                      fontSize: 6,
-                    }}
-                  >
-                    <ListItemIcon sx={{ fontSize: 2 }}>
-                      <MapsHomeWorkIcon />
-                      <Typography sx={{ ml: 2, fontSize: 15 }}>
-                        Property A
-                      </Typography>
-                    </ListItemIcon>
-                  </ListItemButton>
-                ))}
-              </List>
-            </Collapse>
-          </ListItem>
+
+          {projects
+            ? projects.map((project) => (
+                <ProjectView key={project.id} project={project} />
+              ))
+            : null}
+
           {/* Maps */}
-          <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
+          {/* <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
             <ListItemButton
               onClick={() => setOpenProperties(!openProperties)}
               sx={{
@@ -245,9 +236,9 @@ export default function MiniDrawer() {
                 ))}
               </List>
             </Collapse>
-          </ListItem>
+          </ListItem> */}
           {/* Measurings */}
-          <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
+          {/* <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
             <ListItemButton
               onClick={() => setOpenProperties(!openProperties)}
               sx={{
@@ -297,7 +288,7 @@ export default function MiniDrawer() {
                 ))}
               </List>
             </Collapse>
-          </ListItem>
+          </ListItem> */}
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
