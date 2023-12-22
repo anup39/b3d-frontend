@@ -10,15 +10,17 @@ export default function LayersAndLabelControl({ map }) {
     >
       <Typography
         sx={{
-          backgroundColor: "#F1F7FF",
+          backgroundColor: "white",
           fontWeight: "bold",
           position: "sticky",
           marginTop: 0,
           paddingTop: 0,
+          marginLeft: 2,
           fontSize: "14px",
+          color: "#027FFE",
         }}
       >
-        Measurings
+        Measurings : <span style={{ color: "#D71A60" }}>Map nov</span>
       </Typography>
       <LayersControlPanel map={map} />
     </div>

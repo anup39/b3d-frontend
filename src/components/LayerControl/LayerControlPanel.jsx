@@ -10,6 +10,7 @@ import { PropTypes } from "prop-types";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import { Slider } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 
 const all_categories = [
   {
@@ -421,7 +422,7 @@ export default function LayersControlPanel({ map }) {
   };
 
   return (
-    <div style={{ maxHeight: "50vh", minWidth: "12vw" }}>
+    <div style={{ maxHeight: "50vh", minWidth: "15vw" }}>
       {categories.map((sd, sdIndex) => (
         <div key={sd.id}>
           <Box
@@ -529,8 +530,21 @@ export default function LayersControlPanel({ map }) {
                     sx={{
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "space-between",
                     }}
                   >
+                    <Tooltip title="Zoom to Layer">
+                      <ZoomInIcon
+                        onClick={(event) => handleZoomToLayer(event, cat)}
+                        sx={{
+                          marginLeft: "10px",
+                          backgroundColor: "#FFFFF",
+                          color: "#D61B60",
+                          "&:hover": { cursor: "pointer" },
+                        }}
+                      />
+                    </Tooltip>
+
                     <FormControlLabel
                       slotProps={{
                         typography: {
@@ -550,29 +564,20 @@ export default function LayersControlPanel({ map }) {
                         />
                       }
                     />
-                    <ZoomInIcon
-                      onClick={(event) => handleZoomToLayer(event, cat)}
-                      sx={{
-                        marginLeft: "10px",
-                        backgroundColor: "#F1F7FF",
-                        color: "black",
-                        "&:hover": { cursor: "pointer" },
-                      }}
+                    <Slider
+                      onChange={(event, value) =>
+                        handleChangeSlider(event, value, cat)
+                      }
+                      step={0.1}
+                      min={0}
+                      max={1}
+                      size="small"
+                      defaultValue={cat.fill_opacity}
+                      aria-label="Small"
+                      sx={{ maxWidth: 100, margin: 2 }}
+                      valueLabelDisplay="auto"
                     />
                   </Box>
-                  <Slider
-                    onChange={(event, value) =>
-                      handleChangeSlider(event, value, cat)
-                    }
-                    step={0.1}
-                    min={0}
-                    max={1}
-                    size="small"
-                    defaultValue={cat.fill_opacity}
-                    aria-label="Small"
-                    sx={{ maxWidth: 150, margin: 2 }}
-                    valueLabelDisplay="auto"
-                  />
                 </Box>
               ))}
             </Box>

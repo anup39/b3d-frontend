@@ -144,7 +144,7 @@ export default function MapView({ client_id, projects }) {
         <Divider />
 
         {/* Main content */}
-        <Box
+        {/* <Box
           sx={{
             paddingTop: 2,
             paddingLeft: 1,
@@ -175,7 +175,7 @@ export default function MapView({ client_id, projects }) {
               </Tooltip>
             </Box>
           ) : null}
-        </Box>
+        </Box> */}
         <List>
           {/* Properties */}
 
