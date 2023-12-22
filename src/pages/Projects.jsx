@@ -14,22 +14,22 @@ export default function Projects() {
   const projects = useSelector((state) => state.project.projects);
   const user_id = useSelector((state) => state.auth.user_id);
 
-  useEffect(() => {
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/projects/?client=${client_id}`,
-        {
-          headers: {
-            Authorization: "Token " + localStorage.getItem("token"),
-          },
-        }
-      )
-      .then((res) => {
-        dispatch(setprojects(res.data));
-      });
-  }, [client_id, user_id, dispatch]);
+  // useEffect(() => {
+  //   axios
+  //     .get(
+  //       `${
+  //         import.meta.env.VITE_API_DASHBOARD_URL
+  //       }/projects/?client=${client_id}`,
+  //       {
+  //         headers: {
+  //           Authorization: "Token " + localStorage.getItem("token"),
+  //         },
+  //       }
+  //     )
+  //     .then((res) => {
+  //       dispatch(setprojects(res.data));
+  //     });
+  // }, [client_id, user_id, dispatch]);
 
   return (
     <div>

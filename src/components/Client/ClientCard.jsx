@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setdeleteId,
   setdeletePopupMessage,
@@ -15,12 +15,16 @@ import {
 } from "../../reducers/DisplaySettings";
 import FolderIcon from "@mui/icons-material/Folder";
 import ShapefileUpload from "./ShapefileUpload";
+import { setprojects } from "../../reducers/Project";
 export default function ClientCard({ id, name, description }) {
   const [properties, setproperties] = useState([]);
-  const [projects, setprojects] = useState([]);
+  // const [projects, setprojects] = useState([]);
   const [users, setusers] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const projects = useSelector((state) => state.project.projects);
+  console.log(projects, "projects");
 
   const handleViewInMap = () => {
     // #use client id
@@ -35,6 +39,22 @@ export default function ClientCard({ id, name, description }) {
   };
 
   const handleOpenClient = () => {
+    const client_id = id;
+    console.log(client_id, "client id ");
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/projects/?client=${client_id}`,
+        {
+          headers: {
+            Authorization: "Token " + localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        dispatch(setprojects(res.data));
+      });
     navigate(`/projects/${id}`);
   };
 
@@ -141,10 +161,10 @@ export default function ClientCard({ id, name, description }) {
 
           {/* Test
            */}
-          <Grid item>
-            <ShapefileUpload />
-          </Grid>
-        </Grid>
+          {/* <Grid item> */}
+          {/* <ShapefileUpload /> */}
+          {/* </Grid> */}
+        </Grid>{" "}
       </Grid>
     </Paper>
   );
