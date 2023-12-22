@@ -8,7 +8,6 @@ import Properties from "../pages/Properties";
 import ManageUsers from "../pages/ManageUsers";
 import ManageStyles from "../pages/ManageStyles";
 import Clients from "../pages/Clients";
-import MiniDrawer from "../components/SiderBar/SideBar";
 
 export default function Routers() {
   return (
@@ -35,7 +34,6 @@ export default function Routers() {
           element={<ManageUsers />}
         />
         <Route exact path="/manage-styles/:id" element={<ManageStyles />} />
-        <Route exact path="/map-test" element={<MiniDrawer />} />
       </Routes>
     </Router>
   );

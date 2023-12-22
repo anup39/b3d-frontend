@@ -70,7 +70,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer() {
+export default function MapView() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [openProperties, setOpenProperties] = React.useState(true);

@@ -16,6 +16,9 @@ import {
 import FolderIcon from "@mui/icons-material/Folder";
 import ShapefileUpload from "./ShapefileUpload";
 import { setprojects } from "../../reducers/Project";
+import MapIcon from "@mui/icons-material/Map";
+import Tooltip from "@mui/material/Tooltip";
+
 export default function ClientCard({ id, name, description }) {
   const [properties, setproperties] = useState([]);
   // const [projects, setprojects] = useState([]);
@@ -28,7 +31,7 @@ export default function ClientCard({ id, name, description }) {
 
   const handleViewInMap = () => {
     // #use client id
-    navigate(`/map/client/${id}`);
+    navigate(`/projects/${id}/Map`);
   };
 
   const handleManageClasses = () => {
@@ -100,9 +103,12 @@ export default function ClientCard({ id, name, description }) {
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>
-                <button className="btn-main" onClick={handleViewInMap}>
-                  View In Map
-                </button>
+                <Tooltip title="MapView">
+                  <MapIcon
+                    onClick={handleViewInMap}
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                  />
+                </Tooltip>
               </Grid>
               <Grid item>
                 <button className="btn-main" onClick={handleManageClasses}>
