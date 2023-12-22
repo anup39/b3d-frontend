@@ -11,6 +11,7 @@ import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import { Slider } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
+import ModeIcon from "@mui/icons-material/Mode";
 
 const all_categories = [
   {
@@ -422,7 +423,13 @@ export default function LayersControlPanel({ map }) {
   };
 
   return (
-    <div style={{ maxHeight: "50vh", minWidth: "15vw" }}>
+    <div
+      style={{
+        maxHeight: "50vh",
+        minWidth: "15vw",
+        margin: "15px",
+      }}
+    >
       {categories.map((sd, sdIndex) => (
         <div key={sd.id}>
           <Box
@@ -577,6 +584,29 @@ export default function LayersControlPanel({ map }) {
                       sx={{ maxWidth: 100, margin: 2 }}
                       valueLabelDisplay="auto"
                     />
+                    {/* <Slider
+                      onChange={(event, value) =>
+                        handleChangeSlider(event, value, cat)
+                      }
+                      step={0.1}
+                      min={0}
+                      max={1}
+                      size="small"
+                      defaultValue={cat.fill_opacity}
+                      aria-label="Small"
+                      sx={{ maxWidth: 100, margin: 2 }}
+                      valueLabelDisplay="auto"
+                    /> */}
+                    <Tooltip title="Draw Measuring">
+                      <ModeIcon
+                        sx={{
+                          marginRight: "10px",
+                          backgroundColor: "#FFFFF",
+                          color: "#D61B60",
+                          "&:hover": { cursor: "pointer" },
+                        }}
+                      />
+                    </Tooltip>
                   </Box>
                 </Box>
               ))}
