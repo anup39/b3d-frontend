@@ -1,8 +1,11 @@
 import { Box } from "@mui/material";
 import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
-import Typography from "@mui/material/Typography";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemButton from "@mui/material/ListItemButton";
+import Checkbox from "@mui/material/Checkbox";
+import ListItemText from "@mui/material/ListItemText";
+import { pink } from "@mui/material/colors";
+const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function TiffMapView({ tif }) {
   return (
@@ -19,8 +22,18 @@ export default function TiffMapView({ tif }) {
       >
         <ListItemIcon sx={{ fontSize: 2 }}>
           <MapsHomeWorkIcon />
-          <Typography sx={{ ml: 2, fontSize: 15 }}>{tif.name}</Typography>
         </ListItemIcon>
+        <ListItemText secondary={tif.name} sx={{ opacity: open ? 1 : 0 }} />
+        <Checkbox
+          {...label}
+          defaultChecked
+          sx={{
+            color: pink[800],
+            "&.Mui-checked": {
+              color: pink[600],
+            },
+          }}
+        />
       </ListItemButton>
     </Box>
   );
