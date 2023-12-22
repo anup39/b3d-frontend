@@ -9,47 +9,53 @@ import ProjectCard from "../components/Project/ProjectCard";
 import ProjectForm from "../components/Project/ProjectForm";
 
 export default function Projects() {
-  const { client_id } = useParams();
+  const { client_id, view } = useParams();
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.project.projects);
   const user_id = useSelector((state) => state.auth.user_id);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(
-  //       `${
-  //         import.meta.env.VITE_API_DASHBOARD_URL
-  //       }/projects/?client=${client_id}`,
-  //       {
-  //         headers: {
-  //           Authorization: "Token " + localStorage.getItem("token"),
-  //         },
-  //       }
-  //     )
-  //     .then((res) => {
-  //       dispatch(setprojects(res.data));
-  //     });
-  // }, [client_id, user_id, dispatch]);
+  useEffect(() => {
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/projects/?client=${client_id}`,
+        {
+          headers: {
+            Authorization: "Token " + localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        dispatch(setprojects(res.data));
+      });
+  }, [client_id, user_id, dispatch]);
 
   return (
-    <div>
-      <AppBar />
-      <ProjectForm client_id={client_id} />
-      <div>
-        {projects
-          ? projects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                client_id={client_id}
-                id={project.id}
-                name={project.name}
-                client_name={project.client_name}
-                description={project.description}
-                created_at={project.created_at}
-              />
-            ))
-          : null}
-      </div>
-    </div>
+    <>
+      {view === "List" ? (
+        <div>
+          <AppBar />
+          <ProjectForm client_id={client_id} />
+          <div>
+            {projects
+              ? projects.map((project) => (
+                  <ProjectCard
+                    key={project.id}
+                    client_id={client_id}
+                    id={project.id}
+                    name={project.name}
+                    client_name={project.client_name}
+                    description={project.description}
+                    created_at={project.created_at}
+                  />
+                ))
+              : null}
+          </div>
+        </div>
+      ) : (
+        <div>Test</div>
+      )}
+    </>
   );
 }

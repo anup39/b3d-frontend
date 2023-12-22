@@ -39,23 +39,7 @@ export default function ClientCard({ id, name, description }) {
   };
 
   const handleOpenClient = () => {
-    const client_id = id;
-    console.log(client_id, "client id ");
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/projects/?client=${client_id}`,
-        {
-          headers: {
-            Authorization: "Token " + localStorage.getItem("token"),
-          },
-        }
-      )
-      .then((res) => {
-        dispatch(setprojects(res.data));
-      });
-    navigate(`/projects/${id}`);
+    navigate(`/projects/${id}/List`);
   };
 
   const handleDeleteClient = () => {
