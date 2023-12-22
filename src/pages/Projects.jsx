@@ -80,7 +80,7 @@ export default function Projects() {
           </div>
         </div>
       ) : (
-        <MapView />
+        <MapView client_id={client_id} projects={projects} />
       )}
     </>
   );

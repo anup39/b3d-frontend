@@ -21,6 +21,11 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Collapse from "@mui/material/Collapse";
 import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
+import { useNavigate } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
+import { deepOrange, deepPurple } from "@mui/material/colors";
+import Badge from "@mui/material/Badge";
+import MailIcon from "@mui/icons-material/Mail";
 
 const drawerWidth = 240;
 
@@ -70,13 +75,19 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MapView() {
+export default function MapView({ client_id, projects }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [openProperties, setOpenProperties] = React.useState(true);
 
+  const navigate = useNavigate();
+
   const handleDrawerClose = () => {
     setOpen(!open);
+  };
+
+  const handleListView = () => {
+    navigate(`/projects/${client_id}/List`);
   };
 
   return (
@@ -113,6 +124,7 @@ export default function MapView() {
             </Typography>
             <Tooltip title="List View">
               <ListIcon
+                onClick={handleListView}
                 sx={{
                   display: {
                     xs: "none",
@@ -141,61 +153,114 @@ export default function MapView() {
         <Divider />
 
         {/* Main content */}
+        <Box
+          sx={{
+            paddingTop: 2,
+            paddingLeft: 1,
+            paddingRight: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex" }}>
+            <Avatar
+              sx={{ bgcolor: deepOrange[500], width: 25, height: 25, ml: 1 }}
+            >
+              A
+            </Avatar>
+            <Typography sx={{ ml: 2 }}>Anup Dahal </Typography>
+          </Box>
+          <Box>
+            <Tooltip title="Open">
+              <Badge
+                sx={{ "&:hover": { cursor: "pointer" } }}
+                badgeContent={4}
+                color="primary"
+              >
+                <LocationCityIcon color="action" />
+              </Badge>
+            </Tooltip>
+          </Box>
+        </Box>
         <List>
           {/* Properties */}
-          <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
-            <ListItemButton
-              onClick={() => setOpenProperties(!openProperties)}
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-                "&:hover": {
-                  backgroundColor: "#F1F7FF",
-                },
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <LocationCityIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary={"Properties"}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-              {openProperties ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openProperties} timeout="auto" unmountOnExit>
-              <List sx={{ fontSize: 2 }} component="div" disablePadding>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 10].map((item) => (
-                  <ListItemButton
-                    key={item}
-                    sx={{
-                      pl: 4,
-                      "&:hover": {
-                        backgroundColor: "#F1F7FF",
-                      },
-                      fontSize: 6,
-                    }}
+
+          {projects
+            ? projects.map((project) => (
+                <>
+                  <ListItem
+                    key={project.id}
+                    disablePadding
+                    sx={{ display: "block", fontSize: 28 }}
                   >
-                    <ListItemIcon sx={{ fontSize: 2 }}>
-                      <MapsHomeWorkIcon />
-                      <Typography sx={{ ml: 2, fontSize: 15 }}>
-                        Property A
-                      </Typography>
-                    </ListItemIcon>
-                  </ListItemButton>
-                ))}
-              </List>
-            </Collapse>
-          </ListItem>
+                    <ListItemButton
+                      onClick={() => setOpenProperties(!openProperties)}
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
+                        "&:hover": {
+                          backgroundColor: "#F1F7FF",
+                        },
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <LocationCityIcon />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={project.name}
+                        sx={{ opacity: open ? 1 : 0 }}
+                      />
+                      {openProperties ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemButton>
+                    <Collapse in={openProperties} timeout="auto" unmountOnExit>
+                      <List sx={{ fontSize: 2 }} component="div" disablePadding>
+                        {projects
+                          ? projects.map((project) => (
+                              // <ProjectCard
+                              //   key={project.id}
+                              //   client_id={client_id}
+                              //   id={project.id}
+                              //   name={project.name}
+                              //   client_name={project.client_name}
+                              //   description={project.description}
+                              //   created_at={project.created_at}
+                              // />
+                              <ListItemButton
+                                key={project.id}
+                                sx={{
+                                  pl: 4,
+                                  "&:hover": {
+                                    backgroundColor: "#F1F7FF",
+                                  },
+                                  fontSize: 6,
+                                }}
+                              >
+                                <ListItemIcon sx={{ fontSize: 2 }}>
+                                  <MapsHomeWorkIcon />
+                                  <Typography sx={{ ml: 2, fontSize: 15 }}>
+                                    {project.name}
+                                  </Typography>
+                                </ListItemIcon>
+                              </ListItemButton>
+                            ))
+                          : null}
+                      </List>
+                    </Collapse>
+                  </ListItem>
+                </>
+              ))
+            : null}
+
           {/* Maps */}
-          <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
+          {/* <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
             <ListItemButton
               onClick={() => setOpenProperties(!openProperties)}
               sx={{
@@ -245,9 +310,9 @@ export default function MapView() {
                 ))}
               </List>
             </Collapse>
-          </ListItem>
+          </ListItem> */}
           {/* Measurings */}
-          <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
+          {/* <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
             <ListItemButton
               onClick={() => setOpenProperties(!openProperties)}
               sx={{
@@ -297,7 +362,7 @@ export default function MapView() {
                 ))}
               </List>
             </Collapse>
-          </ListItem>
+          </ListItem> */}
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
