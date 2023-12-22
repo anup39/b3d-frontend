@@ -122,9 +122,9 @@ export default function Map({ id }) {
 
   useEffect(() => {
     if (map) {
-      // const layer_control = new LayersControl();
-      // map.addControl(layer_control, "top-left");
-      // layer_control.updateProject(id);
+      const layer_control = new LayersControl();
+      map.addControl(layer_control, "top-left");
+      layer_control.updateProject(id);
       map.addControl(
         new MaplibreExportControl({
           PageSize: Size.A3,
@@ -137,9 +137,9 @@ export default function Map({ id }) {
         "top-right"
       );
       map.addControl(new maplibregl.NavigationControl(), "top-right");
-      const raster_control = new RasterControl();
-      map.addControl(raster_control, "top-left");
-      raster_control.updateProject(id);
+      // const raster_control = new RasterControl();
+      // map.addControl(raster_control, "top-left");
+      // raster_control.updateProject(id);
       map.addControl(new DrawControl(), "top-right");
 
       const popup_control = new PopupControl();

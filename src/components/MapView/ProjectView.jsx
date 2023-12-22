@@ -38,7 +38,7 @@ export default function ProjectView({ project }) {
         >
           <ListItemIcon
             sx={{
-              minWidth: 0,
+              minWidth: "24px",
               mr: open ? 3 : "auto",
               justifyContent: "center",
             }}
