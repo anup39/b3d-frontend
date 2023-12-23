@@ -12,6 +12,7 @@ import List from "@mui/material/List";
 import TiffMapView from "./TiffMapView";
 import Badge from "@mui/material/Badge";
 import { pink } from "@mui/material/colors";
+import MoreonProperty from "./MoreonProperty";
 
 const tifs = [
   { id: 1, name: "map nov" },
@@ -47,6 +48,8 @@ export default function ProjectView({ project }) {
           >
             <LocationCityIcon />
           </ListItemIcon>
+          <MoreonProperty />
+
           <ListItemText
             secondary={project.name}
             sx={{ opacity: open ? 1 : 0 }}
