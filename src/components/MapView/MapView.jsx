@@ -18,6 +18,7 @@ import { pink } from "@mui/material/colors";
 import ShapefileUpload from "./ShapefileUpload";
 
 import ProjectView from "./ProjectView";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -71,6 +72,10 @@ export default function MapView({ client_id, projects }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
 
+  const showShapefileUpload = useSelector(
+    (state) => state.displaySettings.showShapefileUpload
+  );
+
   const navigate = useNavigate();
 
   const handleDrawerClose = () => {
@@ -83,7 +88,7 @@ export default function MapView({ client_id, projects }) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <ShapefileUpload />
+      {showShapefileUpload ? <ShapefileUpload /> : null}
       <CssBaseline />
       <Drawer variant="permanent" open={open}>
         {/* Top part */}

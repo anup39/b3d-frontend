@@ -8,6 +8,7 @@ import maplibregl, { FullscreenControl } from "maplibre-gl";
 import { createImagePNG } from "../../maputils/createMapImage";
 import PropTypes from "prop-types";
 import {
+  setshowShapefileUpload,
   setshowToast,
   settoastMessage,
   settoastType,
@@ -24,7 +25,7 @@ export default function ShapefileForm({
 }) {
   const dispatch = useDispatch();
   const mapContainerShapefile = useRef();
-  const [isFormOpen, setIsFormOpen] = useState(true);
+  //   const [isFormOpen, setIsFormOpen] = useState(true);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [projection, setProjection] = useState("");
   const [fileName, setFileName] = useState("");
@@ -34,12 +35,13 @@ export default function ShapefileForm({
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
 
-  const openForm = () => {
-    setIsFormOpen(true);
-  };
+  //   const openForm = () => {
+  //     setIsFormOpen(true);
+  //   };
 
   const closeForm = () => {
-    setIsFormOpen(false);
+    // setIsFormOpen(false);
+    dispatch(setshowShapefileUpload(false));
     setUploadedFile(null);
     setProjection("");
     setFileName("");
@@ -137,107 +139,107 @@ export default function ShapefileForm({
   };
 
   useEffect(() => {
-    if (isFormOpen) {
-      const map = new maplibregl.Map({
-        container: mapContainerShapefile.current,
-        style: `https://api.maptiler.com/maps/satellite/style.json?key=${
-          import.meta.env.VITE_MAPTILER_TOKEN
-        }`,
-        center: [103.8574, 2.2739],
-        zoom: 10,
-        attributionControl: false,
-      });
-      map.addControl(new FullscreenControl());
-      window.mapshapefile = map;
+    // if (isFormOpen) {
+    const map = new maplibregl.Map({
+      container: mapContainerShapefile.current,
+      style: `https://api.maptiler.com/maps/satellite/style.json?key=${
+        import.meta.env.VITE_MAPTILER_TOKEN
+      }`,
+      center: [103.8574, 2.2739],
+      zoom: 10,
+      attributionControl: false,
+    });
+    map.addControl(new FullscreenControl());
+    window.mapshapefile = map;
 
-      return () => {
-        map.remove();
-      };
-    }
-  }, [isFormOpen]);
+    return () => {
+      map.remove();
+    };
+    // }
+  }, []);
 
   return (
     <>
-      {isFormOpen && (
-        <div
+      {/* {isFormOpen && ( */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(0, 0, 0, 0.5)",
+          zIndex: 9999,
+        }}
+      >
+        <form
+          onSubmit={handleCreateProperty}
           style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: "rgba(0, 0, 0, 0.5)",
-            zIndex: 9999,
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "300px",
+            background: "#fff",
+            padding: "20px",
+            zIndex: 10000,
           }}
         >
-          <form
-            onSubmit={handleCreateProperty}
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "300px",
-              background: "#fff",
-              padding: "20px",
-              zIndex: 10000,
-            }}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography>Measuring for: Map Nov</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <InputShapefileUpload
-                  mapref={mapContainerShapefile}
-                  fileName={fileName}
-                  filesize={filesize}
-                  projection={projection}
-                  onFileUpload={handleFileUpload}
-                  onProjection={onProjection}
-                  onDoneLoaded={onDoneLoaded}
-                  onImage={onImage}
-                  onFileName={onFileName}
-                  onSetFilesize={onSetFilesize}
-                  image={image}
-                  loaded={loaded}
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography>Measuring for: Map Nov</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <InputShapefileUpload
+                mapref={mapContainerShapefile}
+                fileName={fileName}
+                filesize={filesize}
+                projection={projection}
+                onFileUpload={handleFileUpload}
+                onProjection={onProjection}
+                onDoneLoaded={onDoneLoaded}
+                onImage={onImage}
+                onFileName={onFileName}
+                onSetFilesize={onSetFilesize}
+                image={image}
+                loaded={loaded}
+              />
+              <Grid item>
+                <div
+                  style={{ width: "100%", height: "160px" }}
+                  ref={mapContainerShapefile}
+                  id="mapproperty"
+                  className="mapproperty"
                 />
-                <Grid item>
-                  <div
-                    style={{ width: "100%", height: "160px" }}
-                    ref={mapContainerShapefile}
-                    id="mapproperty"
-                    className="mapproperty"
-                  />
-                </Grid>
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant={loading ? "outlined" : "contained"}
-                  sx={{ mt: 0, mb: 0 }}
-                  disabled={!loaded}
-                >
-                  {loading ? null : "Add Property Map"}
-                  {loading ? <CircularProgress /> : null}
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  onClick={closeForm}
-                  variant="contained"
-                  color="error"
-                  size="small"
-                  fullWidth
-                >
-                  Close
-                </Button>
               </Grid>
             </Grid>
-          </form>
-        </div>
-      )}
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                fullWidth
+                variant={loading ? "outlined" : "contained"}
+                sx={{ mt: 0, mb: 0 }}
+                disabled={!loaded}
+              >
+                {loading ? null : "Add Property Map"}
+                {loading ? <CircularProgress /> : null}
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                onClick={closeForm}
+                variant="contained"
+                color="error"
+                size="small"
+                fullWidth
+              >
+                Close
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+      {/* )} */}
     </>
   );
 }
