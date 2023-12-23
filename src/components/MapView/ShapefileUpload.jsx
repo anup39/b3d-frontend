@@ -23,7 +23,7 @@ export default function ShapefileForm({
   onProgressValue,
 }) {
   const dispatch = useDispatch();
-  const mapContainerProperty = useRef();
+  const mapContainerShapefile = useRef();
   const [isFormOpen, setIsFormOpen] = useState(true);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [projection, setProjection] = useState("");
@@ -139,7 +139,7 @@ export default function ShapefileForm({
   useEffect(() => {
     if (isFormOpen) {
       const map = new maplibregl.Map({
-        container: mapContainerProperty.current,
+        container: mapContainerShapefile.current,
         style: `https://api.maptiler.com/maps/satellite/style.json?key=${
           import.meta.env.VITE_MAPTILER_TOKEN
         }`,
@@ -148,7 +148,7 @@ export default function ShapefileForm({
         attributionControl: false,
       });
 
-      window.mapproperty = map;
+      window.mapshapefile = map;
 
       return () => {
         map.remove();
@@ -189,7 +189,7 @@ export default function ShapefileForm({
               </Grid>
               <Grid item xs={12}>
                 <InputShapefileUpload
-                  mapref={mapContainerProperty}
+                  mapref={mapContainerShapefile}
                   fileName={fileName}
                   filesize={filesize}
                   projection={projection}
@@ -205,7 +205,7 @@ export default function ShapefileForm({
                 <Grid item>
                   <div
                     style={{ width: "100%", height: "160px" }}
-                    ref={mapContainerProperty}
+                    ref={mapContainerShapefile}
                     id="mapproperty"
                     className="mapproperty"
                   />

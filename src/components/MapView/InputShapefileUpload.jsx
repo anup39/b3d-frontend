@@ -9,9 +9,10 @@ import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFrom
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { takeScreenshot } from "../../maputils/createMapImage";
-// import { SHPLoader } from "@loaders.gl/shapefile";
+import { SHPLoader } from "@loaders.gl/shapefile";
 import { load } from "@loaders.gl/core";
 import { JSONLoader } from "@loaders.gl/json";
+import * as turf from "@turf/turf";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -63,12 +64,13 @@ export default function InputShapefileUpload({
     onDoneLoaded(false);
     onImage();
     RemoveSourceAndLayerFromMap({
-      map: window.mapproperty,
+      map: window.mapshapefile,
       layerId: "geojson-layer",
       sourceId: "geojson-source",
     });
     const file = e.target.files[0];
-    const data = await load(file, JSONLoader); // Assuming 'load' and 'SHPLoader' are defined elsewhere
+    // const data = await load(file, JSONLoader); // Assuming 'load' and 'SHPLoader' are defined elsewhere
+    const data = await load(file, SHPLoader); // Assuming 'load' and 'SHPLoader' are defined elsewhere
 
     console.log(data, "data");
     console.log(file, "file");
@@ -79,9 +81,26 @@ export default function InputShapefileUpload({
     onSetFilesize(file_size + " " + "MB");
     onProjection(`EPSG:${4326}`);
 
-    if (file && file.type === "image/tiff") {
-      const reader = new FileReader();
-      console.log(reader, "reader");
+    if (data) {
+      window.mapshapefile.addSource("geojson-source", {
+        type: "geojson",
+        data: data,
+      });
+
+      window.mapshapefile.addLayer({
+        id: "geojson-layer",
+        type: "fill",
+        source: "geojson-source",
+        layout: {},
+        paint: {
+          "fill-color": "red",
+          "fill-opacity": 1,
+          "fill-outline-color": "black",
+        },
+      });
+      const extent = turf.bbox(data);
+      window.mapshapefile.fitBounds(extent);
+      // Calculate the extent
     } else {
       setOpenrasterErrorToast(true);
       setOpenrasterErrorMessage("Please select a tiff file.");
