@@ -5,10 +5,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import { pink } from "@mui/material/colors";
-import LayersIcon from "@mui/icons-material/Layers";
-import Badge from "@mui/material/Badge";
 import Switch from "@mui/material/Switch";
 import { alpha, styled } from "@mui/material/styles";
+import MoreonMap from "./MoreonMap";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -55,36 +54,8 @@ export default function TiffMapView({ tif }) {
 
         <Tooltip title="Show Measurings">
           <PinkSwitch size="small" {...label} defaultChecked={false} />
-          {/* <Badge
-            sx={{ "&:hover": { cursor: "pointer", margin: 0, padding: 0 } }}
-            badgeContent={
-              <Checkbox
-                size="small"
-                {...label}
-                defaultChecked={false}
-                sx={{
-                  color: pink[800],
-                  "&.Mui-checked": {
-                    color: pink[600],
-                  },
-                  margin: 0,
-                  padding: 0,
-                }}
-              />
-            }
-            // color="primary"
-          > */}
-          {/* <LayersIcon
-            size="small"
-            sx={{
-              color: pink[800],
-              padding: 0,
-              margin: 0,
-            }}
-          /> */}
-
-          {/* </Badge> */}
         </Tooltip>
+        <MoreonMap />
       </ListItemButton>
     </Box>
   );

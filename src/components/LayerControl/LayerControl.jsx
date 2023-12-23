@@ -2,7 +2,6 @@ import ReactDOM from "react-dom/client";
 import { store } from "../../store";
 import { Provider } from "react-redux";
 import LayersAndLabelControl from "./LayersAndLabelControl";
-import SwipeableEdgeDrawer from "./LayerDrawer";
 
 export default class LayersControl {
   onAdd(map) {
@@ -18,9 +17,7 @@ export default class LayersControl {
     this._project_id = project_id;
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        {/* <LayersControlButton map={this._map} /> */}
         <LayersAndLabelControl map={this._map} />
-        {/* <SwipeableEdgeDrawer /> */}
       </Provider>
     );
   }

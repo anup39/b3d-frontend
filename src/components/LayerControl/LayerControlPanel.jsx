@@ -10,6 +10,8 @@ import { PropTypes } from "prop-types";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import { Slider } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
+import ModeIcon from "@mui/icons-material/Mode";
 
 const all_categories = [
   {
@@ -421,7 +423,13 @@ export default function LayersControlPanel({ map }) {
   };
 
   return (
-    <div style={{ maxHeight: "50vh", minWidth: "12vw" }}>
+    <div
+      style={{
+        maxHeight: "50vh",
+        minWidth: "19vw",
+        margin: "15px",
+      }}
+    >
       {categories.map((sd, sdIndex) => (
         <div key={sd.id}>
           <Box
@@ -449,7 +457,7 @@ export default function LayersControlPanel({ map }) {
               <FormControlLabel
                 slotProps={{
                   typography: {
-                    fontSize: 14,
+                    fontSize: 12,
                     color: "#6A6D70",
                     fontWeight: 900,
                   },
@@ -497,7 +505,7 @@ export default function LayersControlPanel({ map }) {
                 <FormControlLabel
                   slotProps={{
                     typography: {
-                      fontSize: 14,
+                      fontSize: 12,
                       color: "#6A6D70",
                       fontWeight: 900,
                     },
@@ -529,12 +537,13 @@ export default function LayersControlPanel({ map }) {
                     sx={{
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "space-between",
                     }}
                   >
                     <FormControlLabel
                       slotProps={{
                         typography: {
-                          fontSize: 14,
+                          fontSize: 12,
                           color: "#6A6D70",
                           fontWeight: 900,
                         },
@@ -550,29 +559,42 @@ export default function LayersControlPanel({ map }) {
                         />
                       }
                     />
-                    <ZoomInIcon
-                      onClick={(event) => handleZoomToLayer(event, cat)}
-                      sx={{
-                        marginLeft: "10px",
-                        backgroundColor: "#F1F7FF",
-                        color: "black",
-                        "&:hover": { cursor: "pointer" },
-                      }}
+                    <Slider
+                      onChange={(event, value) =>
+                        handleChangeSlider(event, value, cat)
+                      }
+                      step={0.1}
+                      min={0}
+                      max={1}
+                      size="small"
+                      defaultValue={cat.fill_opacity}
+                      aria-label="Small"
+                      sx={{ maxWidth: 100, margin: 2 }}
+                      valueLabelDisplay="auto"
                     />
+                    <Tooltip title="Draw Measuring">
+                      <ModeIcon
+                        sx={{
+                          marginRight: "10px",
+                          backgroundColor: "#FFFFF",
+                          color: "#D61B60",
+                          "&:hover": { cursor: "pointer" },
+                        }}
+                      />
+                    </Tooltip>
+
+                    <Tooltip title="Zoom to Layer">
+                      <ZoomInIcon
+                        onClick={(event) => handleZoomToLayer(event, cat)}
+                        sx={{
+                          marginLeft: "10px",
+                          backgroundColor: "#FFFFF",
+                          color: "#D61B60",
+                          "&:hover": { cursor: "pointer" },
+                        }}
+                      />
+                    </Tooltip>
                   </Box>
-                  <Slider
-                    onChange={(event, value) =>
-                      handleChangeSlider(event, value, cat)
-                    }
-                    step={0.1}
-                    min={0}
-                    max={1}
-                    size="small"
-                    defaultValue={cat.fill_opacity}
-                    aria-label="Small"
-                    sx={{ maxWidth: 150, margin: 2 }}
-                    valueLabelDisplay="auto"
-                  />
                 </Box>
               ))}
             </Box>

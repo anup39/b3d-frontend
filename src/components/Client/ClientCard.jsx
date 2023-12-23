@@ -14,7 +14,6 @@ import {
   setshowDeletePopup,
 } from "../../reducers/DisplaySettings";
 import FolderIcon from "@mui/icons-material/Folder";
-import ShapefileUpload from "./ShapefileUpload";
 import { setprojects } from "../../reducers/Project";
 import MapIcon from "@mui/icons-material/Map";
 import Tooltip from "@mui/material/Tooltip";
@@ -148,12 +147,6 @@ export default function ClientCard({ id, name, description }) {
               Open
             </Button>
           </Grid>
-
-          {/* Test
-           */}
-          {/* <Grid item> */}
-          {/* <ShapefileUpload /> */}
-          {/* </Grid> */}
         </Grid>{" "}
       </Grid>
     </Paper>
