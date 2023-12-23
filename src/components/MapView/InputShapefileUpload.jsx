@@ -9,6 +9,9 @@ import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFrom
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { takeScreenshot } from "../../maputils/createMapImage";
+// import { SHPLoader } from "@loaders.gl/shapefile";
+import { load } from "@loaders.gl/core";
+import { JSONLoader } from "@loaders.gl/json";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -65,6 +68,9 @@ export default function InputShapefileUpload({
       sourceId: "geojson-source",
     });
     const file = e.target.files[0];
+    const data = await load(file, JSONLoader); // Assuming 'load' and 'SHPLoader' are defined elsewhere
+
+    console.log(data, "data");
     console.log(file, "file");
     onFileUpload(file);
     onDoneLoaded(true);
@@ -111,7 +117,7 @@ export default function InputShapefileUpload({
         Upload Shapefile or Geojson File
         <VisuallyHiddenInput
           type="file"
-          accept=".tif, .tiff"
+          accept=".zip , .json"
           ref={fileInputRef}
           onChange={handleFileChange}
           required
