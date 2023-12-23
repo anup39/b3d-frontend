@@ -540,18 +540,6 @@ export default function LayersControlPanel({ map }) {
                       justifyContent: "space-between",
                     }}
                   >
-                    <Tooltip title="Zoom to Layer">
-                      <ZoomInIcon
-                        onClick={(event) => handleZoomToLayer(event, cat)}
-                        sx={{
-                          marginLeft: "10px",
-                          backgroundColor: "#FFFFF",
-                          color: "#D61B60",
-                          "&:hover": { cursor: "pointer" },
-                        }}
-                      />
-                    </Tooltip>
-
                     <FormControlLabel
                       slotProps={{
                         typography: {
@@ -584,23 +572,22 @@ export default function LayersControlPanel({ map }) {
                       sx={{ maxWidth: 100, margin: 2 }}
                       valueLabelDisplay="auto"
                     />
-                    {/* <Slider
-                      onChange={(event, value) =>
-                        handleChangeSlider(event, value, cat)
-                      }
-                      step={0.1}
-                      min={0}
-                      max={1}
-                      size="small"
-                      defaultValue={cat.fill_opacity}
-                      aria-label="Small"
-                      sx={{ maxWidth: 100, margin: 2 }}
-                      valueLabelDisplay="auto"
-                    /> */}
                     <Tooltip title="Draw Measuring">
                       <ModeIcon
                         sx={{
                           marginRight: "10px",
+                          backgroundColor: "#FFFFF",
+                          color: "#D61B60",
+                          "&:hover": { cursor: "pointer" },
+                        }}
+                      />
+                    </Tooltip>
+
+                    <Tooltip title="Zoom to Layer">
+                      <ZoomInIcon
+                        onClick={(event) => handleZoomToLayer(event, cat)}
+                        sx={{
+                          marginLeft: "10px",
                           backgroundColor: "#FFFFF",
                           color: "#D61B60",
                           "&:hover": { cursor: "pointer" },

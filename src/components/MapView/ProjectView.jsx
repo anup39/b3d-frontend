@@ -56,18 +56,7 @@ export default function ProjectView({ project }) {
         <Collapse in={openProperties} timeout="auto" unmountOnExit>
           <List sx={{ fontSize: 2 }} component="div" disablePadding>
             {tifs
-              ? tifs.map((tif) => (
-                  // <ProjectCard
-                  //   key={project.id}
-                  //   client_id={client_id}
-                  //   id={project.id}
-                  //   name={project.name}
-                  //   client_name={project.client_name}
-                  //   description={project.description}
-                  //   created_at={project.created_at}
-                  // />
-                  <TiffMapView key={tif.id} tif={tif} />
-                ))
+              ? tifs.map((tif) => <TiffMapView key={tif.id} tif={tif} />)
               : null}
           </List>
         </Collapse>

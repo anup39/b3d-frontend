@@ -55,35 +55,6 @@ export default function TiffMapView({ tif }) {
 
         <Tooltip title="Show Measurings">
           <PinkSwitch size="small" {...label} defaultChecked={false} />
-          {/* <Badge
-            sx={{ "&:hover": { cursor: "pointer", margin: 0, padding: 0 } }}
-            badgeContent={
-              <Checkbox
-                size="small"
-                {...label}
-                defaultChecked={false}
-                sx={{
-                  color: pink[800],
-                  "&.Mui-checked": {
-                    color: pink[600],
-                  },
-                  margin: 0,
-                  padding: 0,
-                }}
-              />
-            }
-            // color="primary"
-          > */}
-          {/* <LayersIcon
-            size="small"
-            sx={{
-              color: pink[800],
-              padding: 0,
-              margin: 0,
-            }}
-          /> */}
-
-          {/* </Badge> */}
         </Tooltip>
       </ListItemButton>
     </Box>
