@@ -17,6 +17,8 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 import Badge from "@mui/material/Badge";
+import { pink } from "@mui/material/colors";
+
 import ProjectView from "./ProjectView";
 
 const drawerWidth = 240;
@@ -99,6 +101,9 @@ export default function MapView({ client_id, projects }) {
               alignItems: "center",
             }}
           >
+            <Avatar sx={{ bgcolor: pink[500], width: 25, height: 25, ml: 1 }}>
+              A
+            </Avatar>
             <Typography
               variant="h6"
               noWrap
@@ -108,7 +113,7 @@ export default function MapView({ client_id, projects }) {
                 fontWeight: 700,
                 color: "#027FFE",
                 textDecoration: "none",
-                fontSize: 15,
+                fontSize: 12,
               }}
             >
               Anup Properties
@@ -142,40 +147,6 @@ export default function MapView({ client_id, projects }) {
           </DrawerHeader>
         </Box>
         <Divider />
-
-        {/* Main content */}
-        {/* <Box
-          sx={{
-            paddingTop: 2,
-            paddingLeft: 1,
-            paddingRight: 2,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Box sx={{ display: "flex" }}>
-            <Avatar
-              sx={{ bgcolor: deepOrange[500], width: 25, height: 25, ml: 1 }}
-            >
-              A
-            </Avatar>
-            {open ? <Typography sx={{ ml: 2 }}>Anup Dahal </Typography> : null}
-          </Box>
-          {open ? (
-            <Box>
-              <Tooltip title="Open">
-                <Badge
-                  sx={{ "&:hover": { cursor: "pointer" } }}
-                  badgeContent={4}
-                  color="primary"
-                >
-                  <LocationCityIcon color="action" />
-                </Badge>
-              </Tooltip>
-            </Box>
-          ) : null}
-        </Box> */}
         <List>
           {/* Properties */}
 
@@ -184,111 +155,6 @@ export default function MapView({ client_id, projects }) {
                 <ProjectView key={project.id} project={project} />
               ))
             : null}
-
-          {/* Maps */}
-          {/* <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
-            <ListItemButton
-              onClick={() => setOpenProperties(!openProperties)}
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-                "&:hover": {
-                  backgroundColor: "#F1F7FF",
-                },
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <LocationCityIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary={"Properties"}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-              {openProperties ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openProperties} timeout="auto" unmountOnExit>
-              <List sx={{ fontSize: 2 }} component="div" disablePadding>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 10].map((item) => (
-                  <ListItemButton
-                    key={item}
-                    sx={{
-                      pl: 4,
-                      "&:hover": {
-                        backgroundColor: "#F1F7FF",
-                      },
-                      fontSize: 6,
-                    }}
-                  >
-                    <ListItemIcon sx={{ fontSize: 2 }}>
-                      <MapsHomeWorkIcon />
-                      <Typography sx={{ ml: 2, fontSize: 15 }}>
-                        Property A
-                      </Typography>
-                    </ListItemIcon>
-                  </ListItemButton>
-                ))}
-              </List>
-            </Collapse>
-          </ListItem> */}
-          {/* Measurings */}
-          {/* <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
-            <ListItemButton
-              onClick={() => setOpenProperties(!openProperties)}
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-                "&:hover": {
-                  backgroundColor: "#F1F7FF",
-                },
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <LocationCityIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary={"Properties"}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-              {openProperties ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openProperties} timeout="auto" unmountOnExit>
-              <List sx={{ fontSize: 2 }} component="div" disablePadding>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 10].map((item) => (
-                  <ListItemButton
-                    key={item}
-                    sx={{
-                      pl: 4,
-                      "&:hover": {
-                        backgroundColor: "#F1F7FF",
-                      },
-                      fontSize: 6,
-                    }}
-                  >
-                    <ListItemIcon sx={{ fontSize: 2 }}>
-                      <MapsHomeWorkIcon />
-                      <Typography sx={{ ml: 2, fontSize: 15 }}>
-                        Property A
-                      </Typography>
-                    </ListItemIcon>
-                  </ListItemButton>
-                ))}
-              </List>
-            </Collapse>
-          </ListItem> */}
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
