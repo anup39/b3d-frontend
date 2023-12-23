@@ -69,8 +69,8 @@ export default function InputShapefileUpload({
       sourceId: "geojson-source",
     });
     const file = e.target.files[0];
-    // const data = await load(file, JSONLoader); // Assuming 'load' and 'SHPLoader' are defined elsewhere
-    const data = await load(file, SHPLoader); // Assuming 'load' and 'SHPLoader' are defined elsewhere
+    const data = await load(file, JSONLoader); // Assuming 'load' and 'SHPLoader' are defined elsewhere
+    // const data = await load(file, SHPLoader); // Assuming 'load' and 'SHPLoader' are defined elsewhere
 
     console.log(data, "data");
     console.log(file, "file");

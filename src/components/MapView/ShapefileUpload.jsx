@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import maplibregl from "maplibre-gl";
+import maplibregl, { FullscreenControl } from "maplibre-gl";
 import { createImagePNG } from "../../maputils/createMapImage";
 import PropTypes from "prop-types";
 import {
@@ -147,7 +147,7 @@ export default function ShapefileForm({
         zoom: 10,
         attributionControl: false,
       });
-
+      map.addControl(new FullscreenControl());
       window.mapshapefile = map;
 
       return () => {
