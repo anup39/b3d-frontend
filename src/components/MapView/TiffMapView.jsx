@@ -9,6 +9,7 @@ import LayersIcon from "@mui/icons-material/Layers";
 import Badge from "@mui/material/Badge";
 import Switch from "@mui/material/Switch";
 import { alpha, styled } from "@mui/material/styles";
+import MoreIcon from "@mui/icons-material/More";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -55,6 +56,9 @@ export default function TiffMapView({ tif }) {
 
         <Tooltip title="Show Measurings">
           <PinkSwitch size="small" {...label} defaultChecked={false} />
+        </Tooltip>
+        <Tooltip title="Show More">
+          <MoreIcon sx={{ fontSize: 15, color: "#027FFE" }} />
         </Tooltip>
       </ListItemButton>
     </Box>

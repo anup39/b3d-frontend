@@ -51,6 +51,7 @@ export default function ProjectView({ project }) {
             secondary={project.name}
             sx={{ opacity: open ? 1 : 0 }}
           />
+
           {openProperties ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
         <Collapse in={openProperties} timeout="auto" unmountOnExit>

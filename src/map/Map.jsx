@@ -137,9 +137,9 @@ export default function Map({ id }) {
         "top-right"
       );
       map.addControl(new maplibregl.NavigationControl(), "top-right");
-      // const raster_control = new RasterControl();
-      // map.addControl(raster_control, "top-left");
-      // raster_control.updateProject(id);
+      const raster_control = new RasterControl();
+      map.addControl(raster_control, "top-left");
+      raster_control.updateProject(id);
       map.addControl(new DrawControl(), "top-right");
 
       const popup_control = new PopupControl();
