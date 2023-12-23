@@ -41,15 +41,18 @@ export default function RasterBandList() {
           }}
           label="Red Channel"
           control={
-            <Checkbox
-              size="small"
-              checked={checked[0]}
-              onChange={handleChange2}
-            />
+            <Checkbox size="small" checked={true} onChange={handleChange2} />
           }
         />
 
-        <Box sx={{ display: "flex", alignItems: "center", paddingRight: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            paddingRight: 1,
+            "&:hover": { cursor: "pointer" },
+          }}
+        >
           <input
             onChange={handleColorChange}
             style={{ width: "25px", height: "20px", margin: "2px" }}
@@ -83,14 +86,17 @@ export default function RasterBandList() {
           }}
           label="Green Channel"
           control={
-            <Checkbox
-              size="small"
-              checked={checked[1]}
-              onChange={handleChange2}
-            />
+            <Checkbox size="small" checked={true} onChange={handleChange2} />
           }
         />
-        <Box sx={{ display: "flex", alignItems: "center", paddingRight: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            paddingRight: 1,
+            "&:hover": { cursor: "pointer" },
+          }}
+        >
           <input
             onChange={handleColorChange}
             style={{ width: "25px", height: "20px", margin: "2px" }}
@@ -129,15 +135,18 @@ export default function RasterBandList() {
           }}
           label="Red Channel"
           control={
-            <Checkbox
-              size="small"
-              checked={checked[0]}
-              onChange={handleChange2}
-            />
+            <Checkbox size="small" checked={true} onChange={handleChange2} />
           }
         />
 
-        <Box sx={{ display: "flex", alignItems: "center", paddingRight: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            paddingRight: 1,
+            "&:hover": { cursor: "pointer" },
+          }}
+        >
           <input
             onChange={handleColorChange}
             style={{ width: "25px", height: "20px", margin: "2px" }}
@@ -172,11 +181,7 @@ export default function RasterBandList() {
           }}
           label="NDVI"
           control={
-            <Checkbox
-              size="small"
-              checked={checked[1]}
-              onChange={handleChange2}
-            />
+            <Checkbox size="small" checked={true} onChange={handleChange2} />
           }
         />
       </Box>
