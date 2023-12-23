@@ -15,6 +15,7 @@ import ListIcon from "@mui/icons-material/List";
 import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { pink } from "@mui/material/colors";
+import ShapefileUpload from "./ShapefileUpload";
 
 import ProjectView from "./ProjectView";
 
@@ -82,6 +83,7 @@ export default function MapView({ client_id, projects }) {
 
   return (
     <Box sx={{ display: "flex" }}>
+      <ShapefileUpload />
       <CssBaseline />
       <Drawer variant="permanent" open={open}>
         {/* Top part */}
