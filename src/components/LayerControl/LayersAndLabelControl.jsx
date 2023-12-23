@@ -1,5 +1,5 @@
 import LayersControlPanel from "./LayerControlPanel";
-import { Box, Button, Tooltip, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import BackupIcon from "@mui/icons-material/Backup";

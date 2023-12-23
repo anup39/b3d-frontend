@@ -1,6 +1,5 @@
 import * as React from "react";
 import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Box, Tooltip } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -27,9 +26,6 @@ export default function MoreonMap() {
 
   return (
     <div>
-      {/* <Button aria-describedby={id} variant="contained" onClick={handleClick}>
-        Open Popover
-      </Button> */}
       <Tooltip title="Show More">
         <MoreVertIcon
           onClick={handleClick}
@@ -46,9 +42,6 @@ export default function MoreonMap() {
           horizontal: "left",
         }}
       >
-        {/* <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
-        
-        */}
         <Box sx={{ backgroundColor: "black", color: "white", opacity: 0.8 }}>
           <FormControlLabel
             sx={{ margin: 0, marginRight: 1 }}

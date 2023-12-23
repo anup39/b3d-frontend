@@ -12,13 +12,9 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MapSection from "../../pages/MapSection";
 import { Tooltip } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
-import LocationCityIcon from "@mui/icons-material/LocationCity";
 import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
-import { deepOrange } from "@mui/material/colors";
-import Badge from "@mui/material/Badge";
 import { pink } from "@mui/material/colors";
-import TiffView from "./TiffView";
 
 import ProjectView from "./ProjectView";
 
@@ -161,8 +157,6 @@ export default function MapView({ client_id, projects }) {
       <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
         <MapSection />
       </Box>
-
-      {/* <TiffView /> */}
     </Box>
   );
 }

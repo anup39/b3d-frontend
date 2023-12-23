@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { SHPLoader } from "@loaders.gl/shapefile";
 import { load } from "@loaders.gl/core";
 
