@@ -3,8 +3,17 @@ import { Box, Button, Tooltip, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import BackupIcon from "@mui/icons-material/Backup";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandMoreLess from "@mui/icons-material/ExpandLess";
+import { pink } from "@mui/material/colors";
+import { useState } from "react";
 
 export default function LayersAndLabelControl({ map }) {
+  const [expandMeasurings, setExpandMeasurings] = useState(true);
+
+  const handleCloseMeasurings = () => {
+    setExpandMeasurings(!expandMeasurings);
+  };
   return (
     <div
       className="maplibregl-ctrl-layer-control"
@@ -30,13 +39,21 @@ export default function LayersAndLabelControl({ map }) {
               color: "#027FFE",
             }}
           >
-            Measurings : <span style={{ color: "#D71A60" }}>Map nov</span>
+            Measurings :{" "}
+            <span style={{ color: "#757575", marginRight: "20px" }}>
+              Map nov
+            </span>
           </Typography>
           <Box></Box>
 
           <Tooltip title="Report">
             <SummarizeIcon
-              sx={{ "&:hover": { cursor: "pointer" }, mt: 1, color: "#d61b60" }}
+              sx={{
+                "&:hover": { cursor: "pointer" },
+                mt: 1,
+                mr: 2,
+                color: "#d61b60",
+              }}
             />
           </Tooltip>
           <Tooltip title="Export">
@@ -51,7 +68,31 @@ export default function LayersAndLabelControl({ map }) {
           </Tooltip>
         </Box>
 
-        <LayersControlPanel map={map} />
+        {expandMeasurings ? <LayersControlPanel map={map} /> : null}
+
+        {expandMeasurings ? (
+          <ExpandMoreLess
+            onClick={handleCloseMeasurings}
+            sx={{
+              ml: "50%",
+              "&:hover": {
+                cursor: "pointer",
+              },
+              color: pink[600],
+            }}
+          />
+        ) : (
+          <ExpandMoreIcon
+            onClick={handleCloseMeasurings}
+            sx={{
+              ml: "50%",
+              "&:hover": {
+                cursor: "pointer",
+              },
+              color: pink[600],
+            }}
+          />
+        )}
       </Box>
     </div>
   );
