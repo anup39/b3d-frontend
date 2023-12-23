@@ -426,7 +426,7 @@ export default function LayersControlPanel({ map }) {
     <div
       style={{
         maxHeight: "50vh",
-        minWidth: "15vw",
+        minWidth: "19vw",
         margin: "15px",
       }}
     >
@@ -457,7 +457,7 @@ export default function LayersControlPanel({ map }) {
               <FormControlLabel
                 slotProps={{
                   typography: {
-                    fontSize: 14,
+                    fontSize: 12,
                     color: "#6A6D70",
                     fontWeight: 900,
                   },
@@ -505,7 +505,7 @@ export default function LayersControlPanel({ map }) {
                 <FormControlLabel
                   slotProps={{
                     typography: {
-                      fontSize: 14,
+                      fontSize: 12,
                       color: "#6A6D70",
                       fontWeight: 900,
                     },
@@ -543,7 +543,7 @@ export default function LayersControlPanel({ map }) {
                     <FormControlLabel
                       slotProps={{
                         typography: {
-                          fontSize: 14,
+                          fontSize: 12,
                           color: "#6A6D70",
                           fontWeight: 900,
                         },
