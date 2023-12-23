@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import {
   setshowShapefileUpload,
   setshowToast,
+  setshowUploadingCategories,
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
@@ -75,67 +76,70 @@ export default function ShapefileForm({
   };
 
   const handleCreateProperty = (event) => {
+    console.log("here");
     event.preventDefault();
-    setLoading(true);
+    // setLoading(true);
+    dispatch(setshowUploadingCategories(true));
+    dispatch(setshowShapefileUpload(false));
 
-    const nameInput = document.getElementById("name");
-    const blob_ = createImagePNG(image);
-    const formData = new FormData();
-    formData.append("client", client_id);
-    formData.append("project", project_id);
-    formData.append("name", nameInput.value);
-    formData.append("status", "Uploaded");
-    formData.append("screenshot_image", blob_, "image.png");
-    formData.append("file_size", uploadedFile.size);
-    formData.append("projection", projection);
-    formData.append("tif_file", uploadedFile);
-    formData.append("file_name", fileName);
-    formData.append("created_by", user_id);
+    // const nameInput = document.getElementById("name");
+    // const blob_ = createImagePNG(image);
+    // const formData = new FormData();
+    // formData.append("client", client_id);
+    // formData.append("project", project_id);
+    // formData.append("name", nameInput.value);
+    // formData.append("status", "Uploaded");
+    // formData.append("screenshot_image", blob_, "image.png");
+    // formData.append("file_size", uploadedFile.size);
+    // formData.append("projection", projection);
+    // formData.append("tif_file", uploadedFile);
+    // formData.append("file_name", fileName);
+    // formData.append("created_by", user_id);
 
-    closeForm();
-    if (onProgressForm) {
-      onProgressForm(true);
-    }
+    // closeForm();
+    // if (onProgressForm) {
+    //   onProgressForm(true);
+    // }
 
-    axios
-      .post(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/`,
-        formData,
-        {
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            onProgressValue(percentCompleted);
-          },
-        }
-      )
-      .then(() => {
-        onProgressValue(true);
-        onProgressForm(false);
-        onProgressValue(0);
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(settoastMessage("Successfully Created Property"));
-        dispatch(settoastType("success"));
-        closeForm();
-        axios
-          .get(
-            `${
-              import.meta.env.VITE_API_DASHBOARD_URL
-            }/raster-data/?project=${project_id}`
-          )
-          .then((res) => {
-            dispatch(setproperties(res.data));
-          });
-      })
-      .catch(() => {
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(settoastMessage("Failed Created Property"));
-        dispatch(settoastType("error"));
-        closeForm();
-      });
+    // axios
+    //   .post(
+    //     `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/`,
+    //     formData,
+    //     {
+    //       onUploadProgress: (progressEvent) => {
+    //         const percentCompleted = Math.round(
+    //           (progressEvent.loaded * 100) / progressEvent.total
+    //         );
+    //         onProgressValue(percentCompleted);
+    //       },
+    //     }
+    //   )
+    //   .then(() => {
+    //     onProgressValue(true);
+    //     onProgressForm(false);
+    //     onProgressValue(0);
+    //     setLoading(false);
+    //     dispatch(setshowToast(true));
+    //     dispatch(settoastMessage("Successfully Created Property"));
+    //     dispatch(settoastType("success"));
+    //     closeForm();
+    //     axios
+    //       .get(
+    //         `${
+    //           import.meta.env.VITE_API_DASHBOARD_URL
+    //         }/raster-data/?project=${project_id}`
+    //       )
+    //       .then((res) => {
+    //         dispatch(setproperties(res.data));
+    //       });
+    //   })
+    //   .catch(() => {
+    //     setLoading(false);
+    //     dispatch(setshowToast(true));
+    //     dispatch(settoastMessage("Failed Created Property"));
+    //     dispatch(settoastType("error"));
+    //     closeForm();
+    //   });
   };
 
   useEffect(() => {
