@@ -10,6 +10,8 @@ import Collapse from "@mui/material/Collapse";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import List from "@mui/material/List";
 import TiffMapView from "./TiffMapView";
+import Badge from "@mui/material/Badge";
+import { pink } from "@mui/material/colors";
 
 const tifs = [
   { id: 1, name: "map nov" },
