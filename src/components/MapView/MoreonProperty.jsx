@@ -47,28 +47,12 @@ export default function MoreonProperty() {
             flexDirection: "column",
             backgroundColor: "#333333",
             // borderRadius: 8,
-            padding: "8px",
+            padding: "4px",
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleDoneClick}
-            sx={{ marginBottom: 1 }}
-          >
-            Upload Ortho
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleDoneClick}
-            sx={{ marginBottom: 1 }}
-          >
-            Upload Mesh
-          </Button>
           <Button variant="contained" color="primary" onClick={handleDoneClick}>
-            Upload Point cloud
+            Upload Ortho
           </Button>
         </Box>
       </Popover>

@@ -62,15 +62,33 @@ export default function MoreonMap() {
             control={<Checkbox sx={{ color: "#d51b60" }} defaultChecked />}
             label="3D View"
           />
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "black",
+            opacity: 0.8,
+          }}
+        >
           <Button
+            // fullWidth
             variant="contained"
             color="primary"
-            fullWidth
-            // sx={{ backgroundColor: "black", color: "#d51b60", opacity: 0.8 }}
-            //   sx={{ color: "#d51b60" }}
             onClick={handleDoneClick}
+            sx={{ margin: 1 }}
           >
-            Save
+            Upload Mesh
+          </Button>
+          <Button
+            //   fullWidth
+            onClick={handleDoneClick}
+            sx={{ margin: 1 }}
+            variant="contained"
+            color="primary"
+          >
+            Upload Point cloud
           </Button>
         </Box>
       </Popover>
