@@ -17,6 +17,7 @@ const initialState = {
   clientId: null,
   showShapefileUpload: false,
   showUploadingCategories: false,
+  showReport: false,
 };
 
 export const DisplaySettings = createSlice({
@@ -71,6 +72,9 @@ export const DisplaySettings = createSlice({
     setshowUploadingCategories: (state, action) => {
       state.showUploadingCategories = action.payload;
     },
+    setshowReport: (state, action) => {
+      state.showReport = action.payload;
+    },
   },
 });
 
@@ -92,6 +96,7 @@ export const {
   setClientId,
   setshowShapefileUpload,
   setshowUploadingCategories,
+  setshowReport,
 } = DisplaySettings.actions;
 
 export default DisplaySettings.reducer;

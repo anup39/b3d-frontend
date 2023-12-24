@@ -170,11 +170,11 @@ export default function MapView({ client_id, projects }) {
             : null}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
+      {/* <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
         <MapSection />
-      </Box>
+      </Box> */}
 
-      {/* <ReportPrint /> */}
+      <ReportPrint />
     </Box>
   );
 }
