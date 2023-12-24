@@ -38,6 +38,15 @@ export default function ReportPrint() {
   return (
     <>
       <Appbar />
+
+      <Grid item>
+        <Box sx={{ ml: "50%", mt: 3 }}>
+          <Button onClick={handlePrint} variant="contained" color="primary">
+            Print
+          </Button>
+        </Box>
+      </Grid>
+
       <Grid
         container
         justifyContent="center"
@@ -62,16 +71,6 @@ export default function ReportPrint() {
                   <Typography sx={{ color: "#666666" }}>
                     Date : 2023-01-45
                   </Typography>
-                </Box>
-                <Box>
-                  {" "}
-                  <Button
-                    onClick={handlePrint}
-                    variant="contained"
-                    color="primary"
-                  >
-                    Print
-                  </Button>
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                   <AdbIcon sx={{ mr: 1 }} />
