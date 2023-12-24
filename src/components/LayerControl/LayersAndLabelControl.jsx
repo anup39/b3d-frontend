@@ -7,12 +7,22 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMoreLess from "@mui/icons-material/ExpandLess";
 import { pink } from "@mui/material/colors";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setshowShapefileUpload } from "../../reducers/DisplaySettings";
 
 export default function LayersAndLabelControl({ map }) {
+  const dispatch = useDispatch();
   const [expandMeasurings, setExpandMeasurings] = useState(true);
+  const showShapefileUpload = useSelector(
+    (state) => state.displaySettings.showShapefileUpload
+  );
 
   const handleCloseMeasurings = () => {
     setExpandMeasurings(!expandMeasurings);
+  };
+
+  const handleImportShapefile = () => {
+    dispatch(setshowShapefileUpload(!showShapefileUpload));
   };
   return (
     <div
@@ -58,6 +68,7 @@ export default function LayersAndLabelControl({ map }) {
           </Tooltip>
           <Tooltip title="Export">
             <BackupIcon
+              onClick={handleImportShapefile}
               sx={{
                 "&:hover": { cursor: "pointer" },
                 mt: 1,

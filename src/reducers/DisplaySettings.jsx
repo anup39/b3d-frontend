@@ -15,6 +15,8 @@ const initialState = {
   deleteUserPopupMessage: "Are you sure you want to delete this user?",
   deleteUserRoleId: null,
   clientId: null,
+  showShapefileUpload: false,
+  showUploadingCategories: false,
 };
 
 export const DisplaySettings = createSlice({
@@ -63,6 +65,12 @@ export const DisplaySettings = createSlice({
     setClientId: (state, action) => {
       state.clientId = action.payload;
     },
+    setshowShapefileUpload: (state, action) => {
+      state.showShapefileUpload = action.payload;
+    },
+    setshowUploadingCategories: (state, action) => {
+      state.showUploadingCategories = action.payload;
+    },
   },
 });
 
@@ -82,6 +90,8 @@ export const {
   setdeleteUserPopupMessage,
   setdeleteUserRoleId,
   setClientId,
+  setshowShapefileUpload,
+  setshowUploadingCategories,
 } = DisplaySettings.actions;
 
 export default DisplaySettings.reducer;

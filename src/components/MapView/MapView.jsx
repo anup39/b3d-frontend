@@ -16,8 +16,10 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { pink } from "@mui/material/colors";
 import ShapefileUpload from "./ShapefileUpload";
+import UploadingCategories from "./UploadingCategories";
 
 import ProjectView from "./ProjectView";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -71,6 +73,13 @@ export default function MapView({ client_id, projects }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
 
+  const showShapefileUpload = useSelector(
+    (state) => state.displaySettings.showShapefileUpload
+  );
+  const showUploadingCategories = useSelector(
+    (state) => state.displaySettings.showUploadingCategories
+  );
+
   const navigate = useNavigate();
 
   const handleDrawerClose = () => {
@@ -83,7 +92,10 @@ export default function MapView({ client_id, projects }) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <ShapefileUpload />
+      {showShapefileUpload ? <ShapefileUpload /> : null}
+
+      {showUploadingCategories ? <UploadingCategories /> : null}
+
       <CssBaseline />
       <Drawer variant="permanent" open={open}>
         {/* Top part */}
