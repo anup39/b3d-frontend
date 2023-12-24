@@ -8,6 +8,7 @@ import DrawControl from "../components/DrawControl/DrawControl";
 import RasterControl from "../components/RasterControl/RasterControl";
 import PopupControl from "../components/PopupControl/PopupControl";
 import TableMeasuringsForMapControl from "../components/TableMeasuringMapControl/TableMeasuringsMapControl";
+import PieChartControl from "../components/PieChartControl/PieChartControl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { useDispatch } from "react-redux";
@@ -127,22 +128,24 @@ export default function Map({ id }) {
       const layer_control = new LayersControl();
       map.addControl(layer_control, "top-left");
       layer_control.updateProject(id);
-      map.addControl(
-        new MaplibreExportControl({
-          PageSize: Size.A3,
-          PageOrientation: PageOrientation.Portrait,
-          Format: Format.PNG,
-          DPI: DPI[96],
-          Crosshair: true,
-          PrintableArea: true,
-        }),
-        "top-right"
-      );
+      // map.addControl(
+      //   new MaplibreExportControl({
+      //     PageSize: Size.A3,
+      //     PageOrientation: PageOrientation.Portrait,
+      //     Format: Format.PNG,
+      //     DPI: DPI[96],
+      //     Crosshair: true,
+      //     PrintableArea: true,
+      //   }),
+      //   "top-right"
+      // );
       map.addControl(new maplibregl.NavigationControl(), "top-right");
       const raster_control = new RasterControl();
       map.addControl(raster_control, "top-left");
       const table_measurings_control = new TableMeasuringsForMapControl();
       map.addControl(table_measurings_control, "bottom-right");
+      const piechart_control = new PieChartControl();
+      map.addControl(piechart_control, "bottom-left");
       raster_control.updateProject(id);
       map.addControl(new DrawControl(), "top-right");
 
