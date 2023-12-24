@@ -1,11 +1,12 @@
 import React from "react";
 import Appbar from "../Common/AppBar";
 import { Box } from "@mui/material";
-import { Typography, Grid } from "@mui/material";
+import { Typography, Grid, Button } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useRef, useEffect } from "react";
 import maplibregl from "maplibre-gl";
 import TableMeasurings from "./TableMeasurings";
+import "./ReportPrint.css";
 
 export default function ReportPrint() {
   const mapContainerReport = useRef(null);
@@ -30,6 +31,10 @@ export default function ReportPrint() {
       map.remove();
     };
   }, []);
+
+  const handlePrint = () => {
+    window.print();
+  };
   return (
     <>
       <Appbar />
@@ -41,64 +46,76 @@ export default function ReportPrint() {
       >
         <Grid item>
           <Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                mt: 5,
-                justifyContent: "space-between",
-              }}
-            >
-              <Box sx={{ mb: 2 }}>
-                <Typography sx={{ color: "#666666" }}>
-                  Measurings for Map nov
-                </Typography>
-                <Typography sx={{ color: "#666666" }}>
-                  Date : 2023-01-45
-                </Typography>
-              </Box>
-              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-                <AdbIcon sx={{ mr: 1 }} />
-                <Typography
-                  variant="h6"
-                  noWrap
-                  component="a"
-                  href="/"
-                  sx={{
-                    mr: 2,
-                    display: { xs: "none", md: "flex" },
-                    fontFamily: "monospace",
-                    fontWeight: 700,
-                    letterSpacing: ".3rem",
-                    color: "#027FFE",
-                    textDecoration: "none",
-                  }}
-                >
-                  B3D
-                </Typography>
-              </Box>
-            </Box>
-            <Box>
-              <div
-                style={{
-                  borderRadius: "12px",
-                  width: "820px",
-                  height: "834px",
+            <div className="print-only">
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  mt: 5,
+                  justifyContent: "space-between",
                 }}
-                ref={mapContainerReport}
-                id="map"
-                className="map"
-              />
-            </Box>
-            <Box sx={{ mt: 10 }}>
-              <TableMeasurings />
-            </Box>
-            <Box sx={{ mt: 10 }}>
-              <TableMeasurings />
-            </Box>
-            <Box sx={{ mt: 10 }}>
-              <TableMeasurings />
-            </Box>
+              >
+                <Box sx={{ mb: 2 }}>
+                  <Typography sx={{ color: "#666666" }}>
+                    Measurings for Map nov
+                  </Typography>
+                  <Typography sx={{ color: "#666666" }}>
+                    Date : 2023-01-45
+                  </Typography>
+                </Box>
+                <Box>
+                  {" "}
+                  <Button
+                    onClick={handlePrint}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Print
+                  </Button>
+                </Box>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+                  <AdbIcon sx={{ mr: 1 }} />
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="a"
+                    href="/"
+                    sx={{
+                      mr: 2,
+                      display: { xs: "none", md: "flex" },
+                      fontFamily: "monospace",
+                      fontWeight: 700,
+                      letterSpacing: ".3rem",
+                      color: "#027FFE",
+                      textDecoration: "none",
+                    }}
+                  >
+                    B3D
+                  </Typography>
+                </Box>
+              </Box>
+              <Box>
+                <div
+                  style={{
+                    borderRadius: "8px",
+                    width: "820px",
+                    height: "834px",
+                  }}
+                  ref={mapContainerReport}
+                  id="map"
+                  className="map"
+                />
+              </Box>
+              <Box sx={{ mt: 10 }}>
+                <TableMeasurings />
+              </Box>
+              <Box sx={{ mt: 10 }}>
+                <TableMeasurings />
+              </Box>
+              <Box sx={{ mt: 10 }}>
+                <TableMeasurings />
+              </Box>
+            </div>
           </Box>
         </Grid>
       </Grid>
