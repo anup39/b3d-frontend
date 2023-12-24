@@ -12,6 +12,7 @@ import {
 import { useDispatch } from "react-redux";
 import AppBar from "../components/Common/AppBar";
 import CategoryGeomForm from "../components/Category/CategoryGeomForm";
+import TableMeasuringsForMap from "../components/MapView/TableMesuringsForMap";
 
 export default function MapSection() {
   const dispatch = useDispatch();
@@ -76,6 +77,8 @@ export default function MapSection() {
       <AppBar />
       <CategoryGeomForm project_id={id} />
       <Map refObj={searchRef} id={id} />
+
+      <TableMeasuringsForMap />
     </div>
   );
 }

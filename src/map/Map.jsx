@@ -33,6 +33,7 @@ export default function Map({ id }) {
       }`,
       center: [103.8574, 2.2739],
       zoom: 10,
+      attributionControl: false,
     });
 
     window.map_global = map;
