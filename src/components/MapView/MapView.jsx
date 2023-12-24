@@ -17,7 +17,8 @@ import Avatar from "@mui/material/Avatar";
 import { pink } from "@mui/material/colors";
 import ShapefileUpload from "./ShapefileUpload";
 import UploadingCategories from "./UploadingCategories";
-import TableMeasuringsForMap from "./TableMesuringsForMap";
+import TableMeasuringsForMap from "../TableMeasuringMapControl/TableMesuringsForMap";
+import ReportPrint from "./ReportPrint";
 
 import ProjectView from "./ProjectView";
 import { useSelector } from "react-redux";
@@ -172,7 +173,8 @@ export default function MapView({ client_id, projects }) {
       <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
         <MapSection />
       </Box>
-      {/* <Box></Box> */}
+
+      {/* <ReportPrint /> */}
     </Box>
   );
 }

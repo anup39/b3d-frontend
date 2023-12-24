@@ -37,7 +37,7 @@ export default function ReportPrint() {
   };
   return (
     <>
-      <Appbar />
+      {/* <Appbar /> */}
 
       <Grid item>
         <Box sx={{ ml: "50%", mt: 3 }}>

@@ -50,7 +50,6 @@ export default function TableMeasuringsForMap() {
   return (
     <Box
       sx={{
-        position: "absolute",
         height: 300,
         width: 700,
         bottom: 5,
