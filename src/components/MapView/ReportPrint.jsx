@@ -48,10 +48,15 @@ export default function ReportPrint() {
                 justifyContent: "space-between",
               }}
             >
-              <Box>
-                <Typography>Measurings for Property A</Typography>
+              <Box sx={{ mb: 2 }}>
+                <Typography sx={{ color: "#666666" }}>
+                  Measurings for Map nov
+                </Typography>
+                <Typography sx={{ color: "#666666" }}>
+                  Date : 2023-01-45
+                </Typography>
               </Box>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                 <AdbIcon sx={{ mr: 1 }} />
                 <Typography
                   variant="h6"
