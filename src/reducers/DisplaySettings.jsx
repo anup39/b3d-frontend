@@ -19,6 +19,7 @@ const initialState = {
   showUploadingCategories: false,
   showReport: false,
   showMap: true,
+  showTableMeasurings: false,
 };
 
 export const DisplaySettings = createSlice({
@@ -79,6 +80,9 @@ export const DisplaySettings = createSlice({
     setshowMap: (state, action) => {
       state.showMap = action.payload;
     },
+    setshowTableMeasurings: (state, action) => {
+      state.showTableMeasurings = action.payload;
+    },
   },
 });
 
@@ -102,6 +106,7 @@ export const {
   setshowUploadingCategories,
   setshowReport,
   setshowMap,
+  setshowTableMeasurings,
 } = DisplaySettings.actions;
 
 export default DisplaySettings.reducer;

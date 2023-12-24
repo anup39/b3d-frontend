@@ -3,6 +3,7 @@ import { Box, Tooltip, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import BackupIcon from "@mui/icons-material/Backup";
+import TableChartIcon from "@mui/icons-material/TableChart";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMoreLess from "@mui/icons-material/ExpandLess";
 import { pink } from "@mui/material/colors";
@@ -12,6 +13,7 @@ import {
   setshowMap,
   setshowReport,
   setshowShapefileUpload,
+  setshowTableMeasurings,
 } from "../../reducers/DisplaySettings";
 
 export default function LayersAndLabelControl({ map }) {
@@ -19,6 +21,9 @@ export default function LayersAndLabelControl({ map }) {
   const [expandMeasurings, setExpandMeasurings] = useState(true);
   const showShapefileUpload = useSelector(
     (state) => state.displaySettings.showShapefileUpload
+  );
+  const showTableMeasurings = useSelector(
+    (state) => state.displaySettings.showTableMeasurings
   );
 
   const handleCloseMeasurings = () => {
@@ -32,6 +37,10 @@ export default function LayersAndLabelControl({ map }) {
   const handleShowReport = () => {
     dispatch(setshowReport(true));
     dispatch(setshowMap(false));
+  };
+
+  const handleMeasuringsTable = () => {
+    dispatch(setshowTableMeasurings(!showTableMeasurings));
   };
   return (
     <div
@@ -76,9 +85,20 @@ export default function LayersAndLabelControl({ map }) {
               }}
             />
           </Tooltip>
-          <Tooltip title="Export">
+          <Tooltip title="Import">
             <BackupIcon
               onClick={handleImportShapefile}
+              sx={{
+                "&:hover": { cursor: "pointer" },
+                mt: 1,
+                mr: 1,
+                color: "#d61b60",
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Table">
+            <TableChartIcon
+              onClick={handleMeasuringsTable}
               sx={{
                 "&:hover": { cursor: "pointer" },
                 mt: 1,
