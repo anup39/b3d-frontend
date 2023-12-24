@@ -1,8 +1,7 @@
 import ReactDOM from "react-dom/client";
 import { store } from "../../store";
 import { Provider } from "react-redux";
-
-import PieCharts from "../Charts/PieCharts";
+import PieChartComp from "./PieChartComp";
 
 export default class PieChartControl {
   onAdd(map) {
@@ -16,7 +15,7 @@ export default class PieChartControl {
             project_id={this._project_id}
           ></RasterLayer> */}
         {/* <RasterControlNew></RasterControlNew> */}
-        <PieCharts />
+        <PieChartComp />
       </Provider>
     );
 

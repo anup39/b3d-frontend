@@ -6,11 +6,13 @@ import BackupIcon from "@mui/icons-material/Backup";
 import TableChartIcon from "@mui/icons-material/TableChart";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMoreLess from "@mui/icons-material/ExpandLess";
+import PieChartIcon from "@mui/icons-material/PieChart";
 import { pink } from "@mui/material/colors";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setshowMap,
+  setshowPiechart,
   setshowReport,
   setshowShapefileUpload,
   setshowTableMeasurings,
@@ -24,6 +26,10 @@ export default function LayersAndLabelControl({ map }) {
   );
   const showTableMeasurings = useSelector(
     (state) => state.displaySettings.showTableMeasurings
+  );
+
+  const showPiechart = useSelector(
+    (state) => state.displaySettings.showPiechart
   );
 
   const handleCloseMeasurings = () => {
@@ -41,6 +47,10 @@ export default function LayersAndLabelControl({ map }) {
 
   const handleMeasuringsTable = () => {
     dispatch(setshowTableMeasurings(!showTableMeasurings));
+  };
+
+  const handlePieChart = () => {
+    dispatch(setshowPiechart(!showPiechart));
   };
   return (
     <div
@@ -99,6 +109,17 @@ export default function LayersAndLabelControl({ map }) {
           <Tooltip title="Table">
             <TableChartIcon
               onClick={handleMeasuringsTable}
+              sx={{
+                "&:hover": { cursor: "pointer" },
+                mt: 1,
+                mr: 1,
+                color: "#d61b60",
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Pie Chart">
+            <PieChartIcon
+              onClick={handlePieChart}
               sx={{
                 "&:hover": { cursor: "pointer" },
                 mt: 1,

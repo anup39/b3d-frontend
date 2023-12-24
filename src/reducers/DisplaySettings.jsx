@@ -20,6 +20,7 @@ const initialState = {
   showReport: false,
   showMap: true,
   showTableMeasurings: false,
+  showPiechart: false,
 };
 
 export const DisplaySettings = createSlice({
@@ -83,6 +84,9 @@ export const DisplaySettings = createSlice({
     setshowTableMeasurings: (state, action) => {
       state.showTableMeasurings = action.payload;
     },
+    setshowPiechart: (state, action) => {
+      state.showPiechart = action.payload;
+    },
   },
 });
 
@@ -107,6 +111,7 @@ export const {
   setshowReport,
   setshowMap,
   setshowTableMeasurings,
+  setshowPiechart,
 } = DisplaySettings.actions;
 
 export default DisplaySettings.reducer;
