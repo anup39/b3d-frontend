@@ -17,6 +17,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setproperties } from "../../reducers/Property";
 import InputShapefileUpload from "./InputShapefileUpload";
+import UploadingCategories from "./UploadingCategories";
+import AutoCompleteMultiple from "./AutoCompleteMultiple";
 
 export default function ShapefileForm({
   client_id,
@@ -228,6 +230,9 @@ export default function ShapefileForm({
                 {loading ? null : "Add Property Map"}
                 {loading ? <CircularProgress /> : null}
               </Button>
+            </Grid>
+            <Grid item xs={12}>
+              {/* <AutoCompleteMultiple /> */}
             </Grid>
             <Grid item xs={12}>
               <Button
