@@ -8,7 +8,11 @@ import ExpandMoreLess from "@mui/icons-material/ExpandLess";
 import { pink } from "@mui/material/colors";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setshowShapefileUpload } from "../../reducers/DisplaySettings";
+import {
+  setshowMap,
+  setshowReport,
+  setshowShapefileUpload,
+} from "../../reducers/DisplaySettings";
 
 export default function LayersAndLabelControl({ map }) {
   const dispatch = useDispatch();
@@ -23,6 +27,11 @@ export default function LayersAndLabelControl({ map }) {
 
   const handleImportShapefile = () => {
     dispatch(setshowShapefileUpload(!showShapefileUpload));
+  };
+
+  const handleShowReport = () => {
+    dispatch(setshowReport(true));
+    dispatch(setshowMap(false));
   };
   return (
     <div
@@ -58,6 +67,7 @@ export default function LayersAndLabelControl({ map }) {
 
           <Tooltip title="Report">
             <SummarizeIcon
+              onClick={handleShowReport}
               sx={{
                 "&:hover": { cursor: "pointer" },
                 mt: 1,
