@@ -17,6 +17,10 @@ const initialState = {
   clientId: null,
   showShapefileUpload: false,
   showUploadingCategories: false,
+  showReport: false,
+  showMap: true,
+  showTableMeasurings: false,
+  showPiechart: false,
 };
 
 export const DisplaySettings = createSlice({
@@ -71,6 +75,18 @@ export const DisplaySettings = createSlice({
     setshowUploadingCategories: (state, action) => {
       state.showUploadingCategories = action.payload;
     },
+    setshowReport: (state, action) => {
+      state.showReport = action.payload;
+    },
+    setshowMap: (state, action) => {
+      state.showMap = action.payload;
+    },
+    setshowTableMeasurings: (state, action) => {
+      state.showTableMeasurings = action.payload;
+    },
+    setshowPiechart: (state, action) => {
+      state.showPiechart = action.payload;
+    },
   },
 });
 
@@ -92,6 +108,10 @@ export const {
   setClientId,
   setshowShapefileUpload,
   setshowUploadingCategories,
+  setshowReport,
+  setshowMap,
+  setshowTableMeasurings,
+  setshowPiechart,
 } = DisplaySettings.actions;
 
 export default DisplaySettings.reducer;

@@ -17,8 +17,8 @@ import Avatar from "@mui/material/Avatar";
 import { pink } from "@mui/material/colors";
 import ShapefileUpload from "./ShapefileUpload";
 import UploadingCategories from "./UploadingCategories";
-import TableMeasuringsForMap from "../TableMeasuringMapControl/TableMesuringsForMap";
 import ReportPrint from "./ReportPrint";
+import { setshowMap } from "../../reducers/DisplaySettings";
 
 import ProjectView from "./ProjectView";
 import { useSelector } from "react-redux";
@@ -81,6 +81,9 @@ export default function MapView({ client_id, projects }) {
   const showUploadingCategories = useSelector(
     (state) => state.displaySettings.showUploadingCategories
   );
+
+  const showReport = useSelector((state) => state.displaySettings.showReport);
+  const showMap = useSelector((state) => state.displaySettings.showMap);
 
   const navigate = useNavigate();
 
@@ -170,11 +173,16 @@ export default function MapView({ client_id, projects }) {
             : null}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
-        <MapSection />
-      </Box>
 
-      {/* <ReportPrint /> */}
+      {showMap ? (
+        <>
+          <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
+            <MapSection />
+          </Box>
+        </>
+      ) : null}
+
+      {showReport ? <ReportPrint /> : null}
     </Box>
   );
 }
