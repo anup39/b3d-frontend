@@ -5,6 +5,7 @@ import { Typography, Grid } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useRef, useEffect } from "react";
 import maplibregl from "maplibre-gl";
+import TableMeasurings from "./TableMeasurings";
 
 export default function ReportPrint() {
   const mapContainerReport = useRef(null);
@@ -79,11 +80,24 @@ export default function ReportPrint() {
             </Box>
             <Box>
               <div
-                style={{ width: "820px", height: "834px" }}
+                style={{
+                  borderRadius: "12px",
+                  width: "820px",
+                  height: "834px",
+                }}
                 ref={mapContainerReport}
                 id="map"
                 className="map"
               />
+            </Box>
+            <Box sx={{ mt: 10 }}>
+              <TableMeasurings />
+            </Box>
+            <Box sx={{ mt: 10 }}>
+              <TableMeasurings />
+            </Box>
+            <Box sx={{ mt: 10 }}>
+              <TableMeasurings />
             </Box>
           </Box>
         </Grid>
