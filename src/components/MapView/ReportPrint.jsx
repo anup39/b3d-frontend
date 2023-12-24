@@ -7,8 +7,11 @@ import { useRef, useEffect } from "react";
 import maplibregl from "maplibre-gl";
 import TableMeasurings from "./TableMeasurings";
 import "./ReportPrint.css";
+import { useDispatch } from "react-redux";
+import { setshowMap, setshowReport } from "../../reducers/DisplaySettings";
 
 export default function ReportPrint() {
+  const dispatch = useDispatch();
   const mapContainerReport = useRef(null);
 
   useEffect(() => {
@@ -35,12 +38,23 @@ export default function ReportPrint() {
   const handlePrint = () => {
     window.print();
   };
+
+  const handleMap = () => {
+    dispatch(setshowMap(true));
+    dispatch(setshowReport(false));
+  };
   return (
     <>
       {/* <Appbar /> */}
-
       <Grid item>
-        <Box sx={{ ml: "50%", mt: 3 }}>
+        <Box sx={{ ml: "10%", mt: 3 }}>
+          <Button onClick={handleMap} variant="contained" color="primary">
+            Map
+          </Button>
+        </Box>
+      </Grid>
+      <Grid item>
+        <Box sx={{ ml: "30%", mt: 3 }}>
           <Button onClick={handlePrint} variant="contained" color="primary">
             Print
           </Button>
