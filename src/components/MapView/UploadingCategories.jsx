@@ -76,7 +76,7 @@ export default function UploadingCategories() {
                 type="submit"
                 // fullWidth
                 variant={loading ? "outlined" : "contained"}
-                sx={{ ml: 35, mb: 0 }}
+                sx={{ ml: "50%", mb: 0 }}
                 disabled={!loaded}
               >
                 {loading ? null : "Add Category"}
@@ -89,7 +89,7 @@ export default function UploadingCategories() {
                 variant="contained"
                 color="error"
                 size="small"
-                sx={{ ml: 40, mb: 0 }}
+                sx={{ ml: "50%", mb: 0 }}
                 // fullWidth
               >
                 Close
