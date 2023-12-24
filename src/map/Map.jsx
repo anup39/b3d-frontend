@@ -7,6 +7,7 @@ import LayersControl from "../components/LayerControl/LayerControl";
 import DrawControl from "../components/DrawControl/DrawControl";
 import RasterControl from "../components/RasterControl/RasterControl";
 import PopupControl from "../components/PopupControl/PopupControl";
+import TableMeasuringsForMapControl from "../components/TableMeasuringMapControl/TableMeasuringsMapControl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { useDispatch } from "react-redux";
@@ -33,6 +34,7 @@ export default function Map({ id }) {
       }`,
       center: [103.8574, 2.2739],
       zoom: 10,
+      attributionControl: false,
     });
 
     window.map_global = map;
@@ -139,6 +141,8 @@ export default function Map({ id }) {
       map.addControl(new maplibregl.NavigationControl(), "top-right");
       const raster_control = new RasterControl();
       map.addControl(raster_control, "top-left");
+      const table_measurings_control = new TableMeasuringsForMapControl();
+      map.addControl(table_measurings_control, "bottom-right");
       raster_control.updateProject(id);
       map.addControl(new DrawControl(), "top-right");
 
