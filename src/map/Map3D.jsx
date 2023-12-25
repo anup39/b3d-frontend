@@ -6,54 +6,69 @@ import { SimpleMeshLayer } from "@deck.gl/mesh-layers";
 import { OBJLoader } from "@loaders.gl/obj";
 import { useEffect, useState } from "react";
 import { load } from "@loaders.gl/core";
+import { CubeGeometry } from "@luma.gl/core";
+import { COORDINATE_SYSTEM } from "deck.gl";
 
 const INITIAL_VIEW_STATE = {
-  longitude: -122.4,
-  latitude: 37.74,
-  zoom: 11,
+  longitude: 11.358708621125103,
+  latitude: 55.399680861903335,
+  // longitude: -300,
+  // latitude: -540,
+  // longitude: -122.45,
+  // latitude: 37.7,
+  zoom: 20,
   maxZoom: 20,
   pitch: 30,
   bearing: 0,
 };
 
 export default function Map3D() {
-  // const mapContainer = useRef(null);
-  const [mesh_, setMesh] = useState(
-    "https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/mesh/minicooper.obj"
-  );
+  const [data, setData] = useState([
+    {
+      position: [-122.45, 37.7],
+      angle: 0,
+      color: [255, 0, 0],
+    },
+    {
+      position: [-122.46, 37.73],
+      angle: 90,
+      color: [0, 255, 0],
+    },
+  ]);
+
+  const SAMPLE_DATA = (([xCount, yCount], spacing) => {
+    console.log("here");
+    console.log([xCount, yCount]);
+    const data = [];
+    for (let x = 0; x < xCount; x++) {
+      for (let y = 0; y < yCount; y++) {
+        data.push({
+          position: [
+            (x - (xCount - 1) / 2) * spacing,
+            (y - (yCount - 1) / 2) * spacing,
+          ],
+          color: [(x / (xCount - 1)) * 255, 128, (y / (yCount - 1)) * 255],
+          orientation: [(x / (xCount - 1)) * 60 - 30, 0, -90],
+        });
+      }
+    }
+    console.log(data);
+    return data;
+  })([10, 10], 120);
 
   const layers = [
     new SimpleMeshLayer({
-      id: "SimpleMeshLayer",
-      data: "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/bart-stations.json",
-
-      /* props from SimpleMeshLayer class */
-
-      getColor: (d) => [Math.sqrt(d.exits), 140, 0],
-      getOrientation: (d) => [0, Math.random() * 180, 0],
-      getPosition: (d) => d.coordinates,
-      // getScale: [1, 1, 1],
-      // getTransformMatrix: [],
-      // getTranslation: [0, 0, 0],
-      // material: true,
-      mesh: mesh_,
-      sizeScale: 30,
-      // texture: null,
-      // textureParameters: null,
-      // wireframe: false,
-
-      /* props inherited from Layer class */
-
-      // autoHighlight: false,
-      // coordinateOrigin: [0, 0, 0],
-      // coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
-      // highlightColor: [0, 0, 128, 128],
+      id: "mesh-layer",
+      data: SAMPLE_DATA,
+      // texture: "texture.png",
+      // mesh: new CubeGeometry(),
+      mesh: "http://137.135.165.161:8000/media/Uploads/OBJData/scene_mesh_textured_53lv7ev.obj",
+      // coordinateSystem: COORDINATE_SYSTEM.CARTESIAN,
       loaders: [OBJLoader],
-      // modelMatrix: null,
-      // opacity: 1,
-      pickable: true,
-      // visible: true,
-      // wrapLongitude: false,
+
+      getPosition: (d) => d.position,
+      getColor: (d) => d.color,
+      getOrientation: (d) => d.orientation,
     }),
   ];
 
@@ -66,16 +81,28 @@ export default function Map3D() {
     );
   }
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    console.log(file, "file");
-    const data = await load(file, OBJLoader);
-    // const temporaryUrl = URL.createObjectURL(file);
-    // console.log(URL.createObjectURL());
-    console.log(data);
+  // const handleFileChange = async (event) => {
+  //   const file = event.target.files[0];
+  //   console.log(file, "file");
+  //   const data = await load(file, OBJLoader);
+  //   console.log(data);
+  //   setMesh(
+  //     "http://137.135.165.161:8000/media/Uploads/OBJData/scene_mesh_textured_53lv7ev.obj"
+  //   );
+  // };
 
-    setMesh(file);
-  };
+  // useEffect(() => {
+  //   const get_data = async () => {
+  //     const data_ = await load(
+  //       "http://137.135.165.161:8000/media/Uploads/OBJData/scene_mesh_textured_53lv7ev.obj",
+  //       OBJLoader
+  //     );
+  //     console.log(data_);
+  //     setData(data_.attributes.POSITION.value);
+  //     console.log(data_.attributes.POSITION);
+  //   };
+  //   console.log(get_data());
+  // }, []);
   return (
     <>
       <div className="h-[80vh] w-full">
@@ -93,15 +120,17 @@ export default function Map3D() {
           <Map
             reuseMaps
             mapLib={maplibregl}
-            mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json"
+            mapStyle={`https://api.maptiler.com/maps/satellite/style.json?key=${
+              import.meta.env.VITE_MAPTILER_TOKEN
+            }`}
             preventStyleDiffing={true}
           />
         </DeckGL>
-        <input
+        {/* <input
           onChange={handleFileChange}
           style={{ zIndex: 10000, position: "absolute" }}
           type="file"
-        />
+        /> */}
       </div>
     </>
   );
