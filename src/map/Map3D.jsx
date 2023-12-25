@@ -4,6 +4,8 @@ import GL from "@luma.gl/constants";
 import { Map } from "react-map-gl";
 import { SimpleMeshLayer } from "@deck.gl/mesh-layers";
 import { OBJLoader } from "@loaders.gl/obj";
+import { useEffect, useState } from "react";
+import { load } from "@loaders.gl/core";
 
 const INITIAL_VIEW_STATE = {
   longitude: -122.4,
@@ -16,6 +18,10 @@ const INITIAL_VIEW_STATE = {
 
 export default function Map3D() {
   // const mapContainer = useRef(null);
+  const [mesh_, setMesh] = useState(
+    "https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/mesh/minicooper.obj"
+  );
+
   const layers = [
     new SimpleMeshLayer({
       id: "SimpleMeshLayer",
@@ -30,7 +36,7 @@ export default function Map3D() {
       // getTransformMatrix: [],
       // getTranslation: [0, 0, 0],
       // material: true,
-      mesh: "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/humanoid_quad.obj",
+      mesh: mesh_,
       sizeScale: 30,
       // texture: null,
       // textureParameters: null,
@@ -59,26 +65,44 @@ export default function Map3D() {
       ${object.name}`
     );
   }
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    console.log(file, "file");
+    const data = await load(file, OBJLoader);
+    // const temporaryUrl = URL.createObjectURL(file);
+    // console.log(URL.createObjectURL());
+    console.log(data);
+
+    setMesh(file);
+  };
   return (
-    <div className="h-[80vh] w-full">
-      <DeckGL
-        layers={layers}
-        initialViewState={INITIAL_VIEW_STATE}
-        controller={true}
-        pickingRadius={5}
-        parameters={{
-          blendFunc: [GL.SRC_ALPHA, GL.ONE, GL.ONE_MINUS_DST_ALPHA, GL.ONE],
-          blendEquation: GL.FUNC_ADD,
-        }}
-        getTooltip={getTooltip}
-      >
-        <Map
-          reuseMaps
-          mapLib={maplibregl}
-          mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json"
-          preventStyleDiffing={true}
+    <>
+      <div className="h-[80vh] w-full">
+        <DeckGL
+          layers={layers}
+          initialViewState={INITIAL_VIEW_STATE}
+          controller={true}
+          pickingRadius={5}
+          parameters={{
+            blendFunc: [GL.SRC_ALPHA, GL.ONE, GL.ONE_MINUS_DST_ALPHA, GL.ONE],
+            blendEquation: GL.FUNC_ADD,
+          }}
+          getTooltip={getTooltip}
+        >
+          <Map
+            reuseMaps
+            mapLib={maplibregl}
+            mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json"
+            preventStyleDiffing={true}
+          />
+        </DeckGL>
+        <input
+          onChange={handleFileChange}
+          style={{ zIndex: 10000, position: "absolute" }}
+          type="file"
         />
-      </DeckGL>
-    </div>
+      </div>
+    </>
   );
 }
