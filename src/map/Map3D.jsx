@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { load } from "@loaders.gl/core";
 import { CubeGeometry } from "@luma.gl/core";
 import { COORDINATE_SYSTEM } from "deck.gl";
+import { LASLoader } from "@loaders.gl/las";
 
 const INITIAL_VIEW_STATE = {
   longitude: 11.358708621125103,
@@ -36,40 +37,39 @@ export default function Map3D() {
     },
   ]);
 
-  const SAMPLE_DATA = (([xCount, yCount], spacing) => {
-    console.log("here");
-    console.log([xCount, yCount]);
-    const data = [];
-    for (let x = 0; x < xCount; x++) {
-      for (let y = 0; y < yCount; y++) {
-        data.push({
-          position: [
-            (x - (xCount - 1) / 2) * spacing,
-            (y - (yCount - 1) / 2) * spacing,
-          ],
-          color: [(x / (xCount - 1)) * 255, 128, (y / (yCount - 1)) * 255],
-          orientation: [(x / (xCount - 1)) * 60 - 30, 0, -90],
-        });
-      }
-    }
-    console.log(data);
-    return data;
-  })([10, 10], 120);
+  // const SAMPLE_DATA = (([xCount, yCount], spacing) => {
+  //   console.log("here");
+  //   console.log([xCount, yCount]);
+  //   const data = [];
+  //   for (let x = 0; x < xCount; x++) {
+  //     for (let y = 0; y < yCount; y++) {
+  //       data.push({
+  //         position: [
+  //           (x - (xCount - 1) / 2) * spacing,
+  //           (y - (yCount - 1) / 2) * spacing,
+  //         ],
+  //         color: [(x / (xCount - 1)) * 255, 128, (y / (yCount - 1)) * 255],
+  //         orientation: [(x / (xCount - 1)) * 60 - 30, 0, -90],
+  //       });
+  //     }
+  //   }
+  //   console.log(data);
+  //   return data;
+  // })([10, 10], 120);
 
   const layers = [
-    new SimpleMeshLayer({
-      id: "mesh-layer",
-      data: SAMPLE_DATA,
-      // texture: "texture.png",
-      // mesh: new CubeGeometry(),
-      mesh: "http://137.135.165.161:8000/media/Uploads/OBJData/scene_mesh_textured_53lv7ev.obj",
-      // coordinateSystem: COORDINATE_SYSTEM.CARTESIAN,
-      loaders: [OBJLoader],
-
-      getPosition: (d) => d.position,
-      getColor: (d) => d.color,
-      getOrientation: (d) => d.orientation,
-    }),
+    // new SimpleMeshLayer({
+    //   id: "mesh-layer",
+    //   data: SAMPLE_DATA,
+    //   // texture: "texture.png",
+    //   // mesh: new CubeGeometry(),
+    //   mesh: "http://137.135.165.161:8000/media/Uploads/OBJData/scene_mesh_textured_53lv7ev.obj",
+    //   // coordinateSystem: COORDINATE_SYSTEM.CARTESIAN,
+    //   loaders: [OBJLoader],
+    //   getPosition: (d) => d.position,
+    //   getColor: (d) => d.color,
+    //   getOrientation: (d) => d.orientation,
+    // }),
   ];
 
   function getTooltip({ object }) {
@@ -91,18 +91,29 @@ export default function Map3D() {
   //   );
   // };
 
-  // useEffect(() => {
-  //   const get_data = async () => {
-  //     const data_ = await load(
-  //       "http://137.135.165.161:8000/media/Uploads/OBJData/scene_mesh_textured_53lv7ev.obj",
-  //       OBJLoader
-  //     );
-  //     console.log(data_);
-  //     setData(data_.attributes.POSITION.value);
-  //     console.log(data_.attributes.POSITION);
-  //   };
-  //   console.log(get_data());
-  // }, []);
+  useEffect(() => {
+    const get_data = async () => {
+      const data_ = await load(
+        "http://137.135.165.161:8000/media/Uploads/OBJData/scene_mesh_textured_53lv7ev.obj",
+        OBJLoader
+      );
+      console.log(data_);
+      // setData(data_.attributes.POSITION.value);
+      // console.log(data_.attributes.POSITION);
+    };
+    get_data();
+
+    const get_data_point_cloud = async () => {
+      const data_ = await load(
+        "http://137.135.165.161:8000/media/Uploads/OBJData/points.las",
+        LASLoader
+      );
+      console.log(data_);
+      // setData(data_.attributes.POSITION.value);
+      // console.log(data_.attributes.POSITION);
+    };
+    get_data_point_cloud();
+  }, []);
   return (
     <>
       <div className="h-[80vh] w-full">
