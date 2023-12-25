@@ -14,6 +14,7 @@ import AppBar from "../components/Common/AppBar";
 import CategoryGeomForm from "../components/Category/CategoryGeomForm";
 import TableMeasuringsForMap from "../components/TableMeasuringMapControl/TableMesuringsForMap";
 import ReportPrint from "../components/MapView/ReportPrint";
+import Map3D from "../map/Map3D";
 
 export default function MapSection() {
   const dispatch = useDispatch();
@@ -77,7 +78,8 @@ export default function MapSection() {
     >
       <AppBar />
       <CategoryGeomForm project_id={id} />
-      <Map refObj={searchRef} id={id} />
+      {/* <Map refObj={searchRef} id={id} /> */}
+      <Map3D />
     </div>
   );
 }
