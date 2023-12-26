@@ -13,14 +13,6 @@ import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { useDispatch } from "react-redux";
 import { setWKTGeometry } from "../reducers/DrawnPolygon";
-import {
-  MaplibreExportControl,
-  Size,
-  PageOrientation,
-  Format,
-  DPI,
-} from "@watergis/maplibre-gl-export";
-import "@watergis/maplibre-gl-export/dist/maplibre-gl-export.css";
 
 export default function Map({ id }) {
   const dispatch = useDispatch();
