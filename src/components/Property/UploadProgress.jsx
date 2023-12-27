@@ -4,12 +4,13 @@ import { Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
+import { setshowProgressFormOpen } from "../../reducers/Property";
 
 export default function UploadProgress() {
   const showProgressFormOpen = useSelector(
     (state) => state.property.showProgressFormOpen
   );
-  const progress = useSelector((state) => state.property.showProgressFormOpen);
+  const progress = useSelector((state) => state.property.progress);
   return (
     <>
       {showProgressFormOpen && (
@@ -46,7 +47,7 @@ export default function UploadProgress() {
             <Grid item xs={12}>
               <Button
                 onClick={() => {
-                  onProgressForm(false);
+                  setshowProgressFormOpen(false);
                 }}
                 variant="contained"
                 color="error"
@@ -63,8 +64,4 @@ export default function UploadProgress() {
   );
 }
 
-UploadProgress.propTypes = {
-  isProgressFormOpen: PropTypes.bool,
-  progress: PropTypes.number,
-  onProgressForm: PropTypes.func,
-};
+UploadProgress.propTypes = {};
