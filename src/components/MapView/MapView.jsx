@@ -132,6 +132,7 @@ export default function MapView({ client_id, projects }) {
                 fontSize: 12,
               }}
             >
+              {/* Add a client Name here  */}
               Anup Properties
             </Typography>
             <Tooltip title="List View">

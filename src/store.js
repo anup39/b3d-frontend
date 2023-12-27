@@ -10,6 +10,7 @@ import MapCategories from "./reducers/MapCategories";
 import DrawnPolygon from "./reducers/DrawnPolygon";
 import Users from "./reducers/Users";
 import Property from "./reducers/Property";
+import MapView from "./reducers/MapView";
 
 export const store = configureStore({
   reducer: {
@@ -24,5 +25,6 @@ export const store = configureStore({
     mapCategories: MapCategories,
     drawnPolygon: DrawnPolygon,
     users: Users,
+    mapView: MapView,
   },
 });
