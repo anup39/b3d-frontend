@@ -26,7 +26,7 @@ export default function DeleteUser() {
   const deleteUserRoleId = useSelector(
     (state) => state.displaySettings.deleteUserRoleId
   );
-  const clientId = useSelector((state) => state.displaySettings.clientId);
+  const clientId = useSelector((state) => state.users.clientId);
 
   const [loading, setLoading] = useState(false);
 

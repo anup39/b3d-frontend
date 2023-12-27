@@ -8,7 +8,7 @@ import maplibregl from "maplibre-gl";
 import TableMeasurings from "./TableMeasurings";
 import "./ReportPrint.css";
 import { useDispatch } from "react-redux";
-import { setshowMap, setshowReport } from "../../reducers/DisplaySettings";
+import { setshowReport, setshowMap } from "../../reducers/MapView";
 
 export default function ReportPrint() {
   const dispatch = useDispatch();

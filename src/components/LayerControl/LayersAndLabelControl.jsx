@@ -11,26 +11,24 @@ import { pink } from "@mui/material/colors";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setshowMap,
-  setshowPiechart,
-  setshowReport,
   setshowShapefileUpload,
+  setshowReport,
+  setshowMap,
   setshowTableMeasurings,
-} from "../../reducers/DisplaySettings";
+  setshowPiechart,
+} from "../../reducers/MapView";
 
 export default function LayersAndLabelControl({ map }) {
   const dispatch = useDispatch();
   const [expandMeasurings, setExpandMeasurings] = useState(true);
   const showShapefileUpload = useSelector(
-    (state) => state.displaySettings.showShapefileUpload
+    (state) => state.mapView.showShapefileUpload
   );
   const showTableMeasurings = useSelector(
-    (state) => state.displaySettings.showTableMeasurings
+    (state) => state.mapView.showTableMeasurings
   );
 
-  const showPiechart = useSelector(
-    (state) => state.displaySettings.showPiechart
-  );
+  const showPiechart = useSelector((state) => state.mapView.showPiechart);
 
   const handleCloseMeasurings = () => {
     setExpandMeasurings(!expandMeasurings);

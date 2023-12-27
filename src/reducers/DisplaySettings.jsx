@@ -14,13 +14,6 @@ const initialState = {
   showDeleteUserPopup: false,
   deleteUserPopupMessage: "Are you sure you want to delete this user?",
   deleteUserRoleId: null,
-  clientId: null,
-  showShapefileUpload: false,
-  showUploadingCategories: false,
-  showReport: false,
-  showMap: true,
-  showTableMeasurings: false,
-  showPiechart: false,
 };
 
 export const DisplaySettings = createSlice({
@@ -66,27 +59,6 @@ export const DisplaySettings = createSlice({
     setdeleteUserRoleId: (state, action) => {
       state.deleteUserRoleId = action.payload;
     },
-    setClientId: (state, action) => {
-      state.clientId = action.payload;
-    },
-    setshowShapefileUpload: (state, action) => {
-      state.showShapefileUpload = action.payload;
-    },
-    setshowUploadingCategories: (state, action) => {
-      state.showUploadingCategories = action.payload;
-    },
-    setshowReport: (state, action) => {
-      state.showReport = action.payload;
-    },
-    setshowMap: (state, action) => {
-      state.showMap = action.payload;
-    },
-    setshowTableMeasurings: (state, action) => {
-      state.showTableMeasurings = action.payload;
-    },
-    setshowPiechart: (state, action) => {
-      state.showPiechart = action.payload;
-    },
   },
 });
 
@@ -105,13 +77,6 @@ export const {
   setshowDeleteUserPopup,
   setdeleteUserPopupMessage,
   setdeleteUserRoleId,
-  setClientId,
-  setshowShapefileUpload,
-  setshowUploadingCategories,
-  setshowReport,
-  setshowMap,
-  setshowTableMeasurings,
-  setshowPiechart,
 } = DisplaySettings.actions;
 
 export default DisplaySettings.reducer;

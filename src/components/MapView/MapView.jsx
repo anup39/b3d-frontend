@@ -18,10 +18,9 @@ import { pink } from "@mui/material/colors";
 import ShapefileUpload from "./ShapefileUpload";
 import UploadingCategories from "./UploadingCategories";
 import ReportPrint from "./ReportPrint";
-import { setshowMap } from "../../reducers/DisplaySettings";
-
 import ProjectView from "./ProjectView";
 import { useSelector } from "react-redux";
+import { setshowMap } from "../../reducers/MapView";
 
 const drawerWidth = 240;
 
@@ -76,14 +75,14 @@ export default function MapView({ client_id, projects }) {
   const [open, setOpen] = React.useState(true);
 
   const showShapefileUpload = useSelector(
-    (state) => state.displaySettings.showShapefileUpload
+    (state) => state.mapView.showShapefileUpload
   );
   const showUploadingCategories = useSelector(
-    (state) => state.displaySettings.showUploadingCategories
+    (state) => state.mapView.showUploadingCategories
   );
 
-  const showReport = useSelector((state) => state.displaySettings.showReport);
-  const showMap = useSelector((state) => state.displaySettings.showMap);
+  const showReport = useSelector((state) => state.mapView.showReport);
+  const showMap = useSelector((state) => state.mapView.showMap);
 
   const navigate = useNavigate();
 
@@ -132,6 +131,7 @@ export default function MapView({ client_id, projects }) {
                 fontSize: 12,
               }}
             >
+              {/* Add a client Name here  */}
               Anup Properties
             </Typography>
             <Tooltip title="List View">

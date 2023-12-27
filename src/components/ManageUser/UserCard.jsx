@@ -7,11 +7,11 @@ import {
   setdeleteUserRoleId,
   setdeleteUserPopupMessage,
   setshowDeleteUserPopup,
-  setClientId,
 } from "../../reducers/DisplaySettings";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Tooltip } from "@mui/material";
+import { setClientId } from "../../reducers/Users";
 
 export default function UserCard({
   id,
@@ -39,6 +39,7 @@ export default function UserCard({
       )
     );
     dispatch(setshowDeleteUserPopup(true));
+    console.log("here setting the client id to the state ");
     dispatch(setClientId(client_id));
   };
 
