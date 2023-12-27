@@ -23,17 +23,8 @@ export default function Properties() {
     <>
       <AppBar></AppBar>
 
-      <PropertyForm
-        client_id={client_id}
-        project_id={project_id}
-        onProgressForm={onProgressForm}
-        onProgressValue={onProgressValue}
-      />
-      <UploadProgress
-        isProgressFormOpen={isProgressFormOpen}
-        onProgressForm={onProgressForm}
-        progress={progress}
-      />
+      <PropertyForm client_id={client_id} project_id={project_id} />
+      <UploadProgress />
 
       <PropertyContainer project_id={project_id} />
     </>
