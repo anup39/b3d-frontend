@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  clientId: null,
+  clientDetail: { client_id: null, client_name: null, client_image: null },
   showShapefileUpload: false,
   showUploadingCategories: false,
   showReport: false,
@@ -9,14 +9,15 @@ const initialState = {
   showMeasuringsPanel: false,
   showTableMeasurings: false,
   showPiechart: false,
+  showTifPanel: false,
 };
 
 export const MapView = createSlice({
   name: "MapView",
   initialState,
   reducers: {
-    setClientId: (state, action) => {
-      state.clientId = action.payload;
+    setClientDetail: (state, action) => {
+      state.clientDetail = action.payload;
     },
     setshowShapefileUpload: (state, action) => {
       state.showShapefileUpload = action.payload;
@@ -39,12 +40,15 @@ export const MapView = createSlice({
     setshowPiechart: (state, action) => {
       state.showPiechart = action.payload;
     },
+    setshowTifPanel: (state, action) => {
+      state.showTifPanel = action.payload;
+    },
   },
 });
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const {
-  setClientId,
+  setClientDetail,
   setshowShapefileUpload,
   setshowUploadingCategories,
   setshowReport,
@@ -52,6 +56,7 @@ export const {
   setshowMeasuringsPanel,
   setshowTableMeasurings,
   setshowPiechart,
+  setshowTifPanel,
 } = MapView.actions;
 
 export default MapView.reducer;

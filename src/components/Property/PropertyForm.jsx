@@ -8,6 +8,7 @@ import maplibregl from "maplibre-gl";
 import { createImagePNG } from "../../maputils/createMapImage";
 import PropTypes from "prop-types";
 import {
+  setshowTifUpload,
   setshowToast,
   settoastMessage,
   settoastType,
@@ -24,7 +25,12 @@ export default function PropertyForm({
 }) {
   const dispatch = useDispatch();
   const mapContainerProperty = useRef();
-  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  // Changed the local state to global state
+  // const [isFormOpen, setIsFormOpen] = useState(false);
+  const showTifUpload = useSelector(
+    (state) => state.displaySettings.showTifUpload
+  );
   const [uploadedFile, setUploadedFile] = useState(null);
   const [projection, setProjection] = useState("");
   const [fileName, setFileName] = useState("");
@@ -35,11 +41,11 @@ export default function PropertyForm({
   const user_id = useSelector((state) => state.auth.user_id);
 
   const openForm = () => {
-    setIsFormOpen(true);
+    dispatch(setshowTifUpload(true));
   };
 
   const closeForm = () => {
-    setIsFormOpen(false);
+    dispatch(setshowTifUpload(false));
     setUploadedFile(null);
     setProjection("");
     setFileName("");
@@ -137,7 +143,7 @@ export default function PropertyForm({
   };
 
   useEffect(() => {
-    if (isFormOpen) {
+    if (showTifUpload) {
       const map = new maplibregl.Map({
         container: mapContainerProperty.current,
         style: `https://api.maptiler.com/maps/satellite/style.json?key=${
@@ -153,7 +159,7 @@ export default function PropertyForm({
         map.remove();
       };
     }
-  }, [isFormOpen]);
+  }, [showTifUpload]);
 
   return (
     <>
@@ -167,7 +173,7 @@ export default function PropertyForm({
           Add Property Map
         </Button>
       </Tooltip>
-      {isFormOpen && (
+      {showTifUpload && (
         <div
           style={{
             position: "fixed",

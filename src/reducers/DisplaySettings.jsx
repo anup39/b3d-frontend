@@ -14,6 +14,7 @@ const initialState = {
   showDeleteUserPopup: false,
   deleteUserPopupMessage: "Are you sure you want to delete this user?",
   deleteUserRoleId: null,
+  showTifUpload: false,
 };
 
 export const DisplaySettings = createSlice({
@@ -59,6 +60,9 @@ export const DisplaySettings = createSlice({
     setdeleteUserRoleId: (state, action) => {
       state.deleteUserRoleId = action.payload;
     },
+    setshowTifUpload: (state, action) => {
+      state.showTifUpload = action.payload;
+    },
   },
 });
 
@@ -77,6 +81,7 @@ export const {
   setshowDeleteUserPopup,
   setdeleteUserPopupMessage,
   setdeleteUserRoleId,
+  setshowTifUpload,
 } = DisplaySettings.actions;
 
 export default DisplaySettings.reducer;

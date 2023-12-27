@@ -10,6 +10,7 @@ import MapView from "../components/MapView/MapView";
 import { Box } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import MapIcon from "@mui/icons-material/Map";
+import { setClientDetail } from "../reducers/MapView";
 
 export default function Projects() {
   const navigate = useNavigate();
@@ -33,6 +34,18 @@ export default function Projects() {
       .then((res) => {
         dispatch(setprojects(res.data));
       });
+
+    // Gettings client_id , client_name and client logo for state
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${client_id}/`)
+      .then((res) => {
+        const client_detail = {
+          client_id: client_id,
+          client_name: res.data.name,
+          client_image: res.data.name.charAt(0).toUpperCase(),
+        };
+        dispatch(setClientDetail(client_detail));
+      });
   }, [client_id, user_id, dispatch]);
 
   const handleViewInMap = () => {
@@ -45,7 +58,6 @@ export default function Projects() {
       {view === "List" ? (
         <div>
           <AppBar />
-
           <Box
             sx={{
               display: "flex",
