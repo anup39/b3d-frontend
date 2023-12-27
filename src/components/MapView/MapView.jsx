@@ -74,6 +74,8 @@ export default function MapView({ client_id, projects }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
 
+  const clientDetail = useSelector((state) => state.mapView.clientDetail);
+
   const showShapefileUpload = useSelector(
     (state) => state.mapView.showShapefileUpload
   );
@@ -117,7 +119,7 @@ export default function MapView({ client_id, projects }) {
             }}
           >
             <Avatar sx={{ bgcolor: pink[500], width: 25, height: 25, ml: 1 }}>
-              A
+              {clientDetail ? clientDetail.client_image : ""}
             </Avatar>
             <Typography
               variant="h6"
@@ -132,7 +134,7 @@ export default function MapView({ client_id, projects }) {
               }}
             >
               {/* Add a client Name here  */}
-              Anup Properties
+              {clientDetail ? clientDetail.client_name : ""}
             </Typography>
             <Tooltip title="List View">
               <ListIcon
