@@ -167,7 +167,6 @@ export default function MapView({ client_id, projects }) {
         <Divider />
         <List>
           {/* Properties */}
-
           {projects
             ? projects.map((project) => (
                 <ProjectView key={project.id} project={project} />

@@ -3,9 +3,12 @@ import Popover from "@mui/material/Popover";
 import Button from "@mui/material/Button";
 import { Box, Tooltip } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { setshowTifUpload } from "../../reducers/DisplaySettings";
+import { useDispatch } from "react-redux";
 
 export default function MoreonProperty() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const dispatch = useDispatch();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -15,8 +18,10 @@ export default function MoreonProperty() {
     setAnchorEl(null);
   };
 
-  const handleDoneClick = () => {
+  const handleUploadOrthoClick = () => {
+    console.log("clicked for upload");
     setAnchorEl(null);
+    dispatch(setshowTifUpload(true));
   };
 
   const open = Boolean(anchorEl);
@@ -50,7 +55,11 @@ export default function MoreonProperty() {
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <Button variant="contained" color="primary" onClick={handleDoneClick}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleUploadOrthoClick}
+          >
             Upload Ortho
           </Button>
         </Box>

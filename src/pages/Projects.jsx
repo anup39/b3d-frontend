@@ -58,7 +58,6 @@ export default function Projects() {
       {view === "List" ? (
         <div>
           <AppBar />
-
           <Box
             sx={{
               display: "flex",
