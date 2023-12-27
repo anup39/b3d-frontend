@@ -1,9 +1,7 @@
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-
 import PropTypes from "prop-types";
-// import { CircularProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setdeleteUserRoleId,
@@ -11,6 +9,9 @@ import {
   setshowDeleteUserPopup,
   setClientId,
 } from "../../reducers/DisplaySettings";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { Tooltip } from "@mui/material";
 
 export default function UserCard({
   id,
@@ -67,10 +68,6 @@ export default function UserCard({
                   <Typography variant="body2" color="text.secondary">
                     <b>Role</b> : {role}
                   </Typography>
-                  {/* <Typography gutterBottom variant="subtitle1" component="div">
-                    <b>Last Login</b> :{" "}
-                    {last_login ? last_login : "Not logged in Yet"}
-                  </Typography> */}
                   <Typography variant="body2" color="text.secondary">
                     <b>Date Joined</b> : {date_joined}
                   </Typography>
@@ -79,14 +76,21 @@ export default function UserCard({
                   {role !== "admin" ? (
                     <>
                       <Grid item>
-                        <button className="btn-main" onClick={handleAssignRole}>
-                          Change Roles
-                        </button>
+                        <Tooltip title="Edit Roles">
+                          <EditIcon
+                            onClick={handleAssignRole}
+                            sx={{ "&:hover": { cursor: "pointer" } }}
+                          />
+                        </Tooltip>
                       </Grid>
+
                       <Grid item>
-                        <button className="btn-main" onClick={handleDeleteUser}>
-                          Delete
-                        </button>
+                        <Tooltip title="Delete Client">
+                          <DeleteIcon
+                            onClick={handleDeleteUser}
+                            sx={{ "&:hover": { cursor: "pointer" } }}
+                          />
+                        </Tooltip>
                       </Grid>
                     </>
                   ) : (
