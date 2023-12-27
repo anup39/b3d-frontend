@@ -8,32 +8,23 @@ import PropertyContainer from "../components/Property/PropertyContainer";
 export default function Properties() {
   const { client_id } = useParams();
   const { project_id } = useParams();
-  const [isProgressFormOpen, setIsProgressFormOpen] = useState(false);
-  const [progress, setProgress] = useState(0);
+  // const [isProgressFormOpen, setIsProgressFormOpen] = useState(false);
+  // const [progress, setProgress] = useState(0);
 
-  const onProgressForm = (value) => {
-    setIsProgressFormOpen(value);
-  };
+  // const onProgressForm = (value) => {
+  //   setIsProgressFormOpen(value);
+  // };
 
-  const onProgressValue = (value) => {
-    setProgress(value);
-  };
+  // const onProgressValue = (value) => {
+  //   setProgress(value);
+  // };
 
   return (
     <>
       <AppBar></AppBar>
 
-      <PropertyForm
-        client_id={client_id}
-        project_id={project_id}
-        onProgressForm={onProgressForm}
-        onProgressValue={onProgressValue}
-      />
-      <UploadProgress
-        isProgressFormOpen={isProgressFormOpen}
-        onProgressForm={onProgressForm}
-        progress={progress}
-      />
+      <PropertyForm client_id={client_id} project_id={project_id} />
+      <UploadProgress />
 
       <PropertyContainer project_id={project_id} />
     </>

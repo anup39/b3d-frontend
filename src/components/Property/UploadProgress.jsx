@@ -3,15 +3,16 @@ import LinearProgressLabel from "../Property/LinearProgressLabel";
 import { Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
-export default function UploadProgress({
-  isProgressFormOpen,
-  onProgressForm,
-  progress,
-}) {
+export default function UploadProgress() {
+  const showProgressFormOpen = useSelector(
+    (state) => state.property.showProgressFormOpen
+  );
+  const progress = useSelector((state) => state.property.showProgressFormOpen);
   return (
     <>
-      {isProgressFormOpen && (
+      {showProgressFormOpen && (
         <div
           style={{
             position: "fixed",

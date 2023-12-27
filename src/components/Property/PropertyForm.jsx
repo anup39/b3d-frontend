@@ -14,15 +14,14 @@ import {
   settoastType,
 } from "../../reducers/DisplaySettings";
 import { useDispatch, useSelector } from "react-redux";
-import { setproperties } from "../../reducers/Property";
+import {
+  setProgress,
+  setproperties,
+  setshowProgressFormOpen,
+} from "../../reducers/Property";
 import InputFileUpload from "./InputFileUpload";
 
-export default function PropertyForm({
-  client_id,
-  project_id,
-  onProgressForm,
-  onProgressValue,
-}) {
+export default function PropertyForm({ client_id, project_id }) {
   const dispatch = useDispatch();
   const mapContainerProperty = useRef();
 
@@ -97,9 +96,8 @@ export default function PropertyForm({
     formData.append("created_by", user_id);
 
     closeForm();
-    if (onProgressForm) {
-      onProgressForm(true);
-    }
+
+    dispatch(setshowProgressFormOpen(true));
 
     axios
       .post(
@@ -110,14 +108,13 @@ export default function PropertyForm({
             const percentCompleted = Math.round(
               (progressEvent.loaded * 100) / progressEvent.total
             );
-            onProgressValue(percentCompleted);
+            dispatch(setProgress(percentCompleted));
           },
         }
       )
       .then(() => {
-        onProgressValue(true);
-        onProgressForm(false);
-        onProgressValue(0);
+        dispatch(setshowProgressFormOpen(false));
+        dispatch(setProgress(0));
         setLoading(false);
         dispatch(setshowToast(true));
         dispatch(settoastMessage("Successfully Created Property"));
@@ -269,7 +266,5 @@ export default function PropertyForm({
 PropertyForm.propTypes = {
   client_id: PropTypes.string,
   project_id: PropTypes.string,
-  onProgressForm: PropTypes.func,
-  onProgressValue: PropTypes.func,
   onSetRasters: PropTypes.func,
 };
