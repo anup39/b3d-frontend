@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -11,6 +11,8 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import List from "@mui/material/List";
 import TiffMapView from "./TiffMapView";
 import MoreonProperty from "./MoreonProperty";
+import PropTypes from "prop-types";
+import axios from "axios";
 
 const tifs = [
   { id: 1, name: "map nov" },
@@ -19,6 +21,19 @@ const tifs = [
 
 export default function ProjectView({ project }) {
   const [openProperties, setOpenProperties] = useState(true);
+  const [tifs, setTifs] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=${
+          project.id
+        }`
+      )
+      .then((res) => {
+        setTifs(res.data);
+      });
+  }, [project]);
   return (
     <Box>
       <ListItem
@@ -60,7 +75,7 @@ export default function ProjectView({ project }) {
         </ListItemButton>
         <Collapse in={openProperties} timeout="auto" unmountOnExit>
           <List sx={{ fontSize: 2 }} component="div" disablePadding>
-            {tifs
+            {tifs && tifs.length > 0
               ? tifs.map((tif) => <TiffMapView key={tif.id} tif={tif} />)
               : null}
           </List>
@@ -69,3 +84,7 @@ export default function ProjectView({ project }) {
     </Box>
   );
 }
+
+ProjectView.propTypes = {
+  project: PropTypes.object,
+};

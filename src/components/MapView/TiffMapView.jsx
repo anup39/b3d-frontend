@@ -8,6 +8,7 @@ import { pink } from "@mui/material/colors";
 import Switch from "@mui/material/Switch";
 import { alpha, styled } from "@mui/material/styles";
 import MoreonMap from "./MoreonMap";
+import PropTypes from "prop-types";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -24,6 +25,7 @@ const PinkSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 export default function TiffMapView({ tif }) {
+  console.log(tif, "tif item");
   return (
     <Box>
       <ListItemButton
@@ -39,7 +41,10 @@ export default function TiffMapView({ tif }) {
         <ListItemIcon sx={{ margin: 0, padding: 0, minWidth: "40px" }}>
           <SatelliteIcon />
         </ListItemIcon>
-        <ListItemText secondary={tif.name} />
+        <ListItemText
+          secondary={tif.name.slice(0, 10)}
+          secondaryTypographyProps={{ fontSize: 13 }}
+        />
         <Checkbox
           size="small"
           {...label}
@@ -60,3 +65,7 @@ export default function TiffMapView({ tif }) {
     </Box>
   );
 }
+
+TiffMapView.propTypes = {
+  tif: PropTypes.object,
+};

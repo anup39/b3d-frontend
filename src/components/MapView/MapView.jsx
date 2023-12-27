@@ -20,7 +20,7 @@ import UploadingCategories from "./UploadingCategories";
 import ReportPrint from "./ReportPrint";
 import ProjectView from "./ProjectView";
 import { useSelector } from "react-redux";
-import { setshowMap } from "../../reducers/MapView";
+import PropTypes from "prop-types";
 
 const drawerWidth = 240;
 
@@ -188,3 +188,8 @@ export default function MapView({ client_id, projects }) {
     </Box>
   );
 }
+
+MapView.propTypes = {
+  client_id: PropTypes.string,
+  projects: PropTypes.array,
+};
