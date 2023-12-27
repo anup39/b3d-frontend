@@ -95,12 +95,12 @@ export default function ProjectCard({
               </Typography> */}
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
-              <Grid item>
+              {/* <Grid item>
                 <button className="btn-main" onClick={handleViewInMap}>
                   View In Map
                 </button>
-              </Grid>
-              <Grid item>
+              </Grid> */}
+              {/* <Grid item>
                 <button
                   disabled
                   className="btn-main"
@@ -108,12 +108,12 @@ export default function ProjectCard({
                 >
                   Manage Users
                 </button>
-              </Grid>
-              <Grid item>
-                {/* <button className="btn-main" onClick={handleDeleteProject}>
+              </Grid> */}
+              {/* <Grid item> */}
+              {/* <button className="btn-main" onClick={handleDeleteProject}>
                   Delete
                 </button> */}
-              </Grid>
+              {/* </Grid> */}
             </Grid>
           </Grid>
           <Grid item xs>

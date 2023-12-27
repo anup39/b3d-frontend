@@ -112,9 +112,9 @@ export default function PropertyCard({
             </Grid>
             <Grid item xs container direction="row" spacing={2}>
               <Grid item>
-                <button className="btn-main" onClick={handleViewInMapProperty}>
+                {/* <button className="btn-main" onClick={handleViewInMapProperty}>
                   View In Map
-                </button>
+                </button> */}
                 {/* <button className="btn-main" onClick={handleGetWMS}>
                   GET WMS/XYZ */}
                 {/* </button> */}

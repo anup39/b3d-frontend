@@ -51,7 +51,7 @@ export default function Projects() {
             sx={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
+              // justifyContent: "space-between",
             }}
           >
             <ProjectForm client_id={client_id} />
