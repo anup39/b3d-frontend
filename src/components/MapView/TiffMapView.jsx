@@ -1,5 +1,4 @@
 import { Box, Tooltip } from "@mui/material";
-import SatelliteIcon from "@mui/icons-material/Satellite";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemButton from "@mui/material/ListItemButton";
 import Checkbox from "@mui/material/Checkbox";
@@ -9,6 +8,7 @@ import Switch from "@mui/material/Switch";
 import { alpha, styled } from "@mui/material/styles";
 import MoreonMap from "./MoreonMap";
 import PropTypes from "prop-types";
+import ButtonBase from "@mui/material/ButtonBase";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -23,6 +23,14 @@ const PinkSwitch = styled(Switch)(({ theme }) => ({
     backgroundColor: pink[600],
   },
 }));
+
+const Img = styled("img")({
+  margin: "auto",
+  display: "block",
+  maxWidth: "100%",
+  maxHeight: "100%",
+  borderRadius: 5,
+});
 
 export default function TiffMapView({ tif }) {
   console.log(tif, "tif item");
@@ -39,7 +47,9 @@ export default function TiffMapView({ tif }) {
         }}
       >
         <ListItemIcon sx={{ margin: 0, padding: 0, minWidth: "40px" }}>
-          <SatelliteIcon />
+          <ButtonBase sx={{ width: 30, height: 30 }}>
+            <Img alt="complex" src={tif.screenshot_image} />
+          </ButtonBase>
         </ListItemIcon>
         <ListItemText
           secondary={tif.name.slice(0, 10)}
