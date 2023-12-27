@@ -49,7 +49,7 @@ const rows = [
 
 export default function TableMeasuringsForMap() {
   const showTableMeasurings = useSelector(
-    (state) => state.displaySettings.showTableMeasurings
+    (state) => state.mapView.showTableMeasurings
   );
   return (
     <>

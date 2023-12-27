@@ -8,9 +8,7 @@ import maplibregl, { FullscreenControl } from "maplibre-gl";
 import { createImagePNG } from "../../maputils/createMapImage";
 import PropTypes from "prop-types";
 import {
-  setshowShapefileUpload,
   setshowToast,
-  setshowUploadingCategories,
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
@@ -19,6 +17,10 @@ import { setproperties } from "../../reducers/Property";
 import InputShapefileUpload from "./InputShapefileUpload";
 import UploadingCategories from "./UploadingCategories";
 import AutoCompleteMultiple from "./AutoCompleteMultiple";
+import {
+  setshowShapefileUpload,
+  setshowUploadingCategories,
+} from "../../reducers/MapView";
 
 export default function ShapefileForm({
   client_id,
