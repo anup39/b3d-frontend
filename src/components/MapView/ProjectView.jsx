@@ -14,11 +14,6 @@ import MoreonProperty from "./MoreonProperty";
 import PropTypes from "prop-types";
 import axios from "axios";
 
-const tifs = [
-  { id: 1, name: "map nov" },
-  { id: 2, name: "map dec" },
-];
-
 export default function ProjectView({ project }) {
   const [openProperties, setOpenProperties] = useState(true);
   const [tifs, setTifs] = useState([]);
