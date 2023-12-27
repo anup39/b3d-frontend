@@ -23,16 +23,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function ClientCard({ id, name, description }) {
   const [properties, setproperties] = useState([]);
-  // const [projects, setprojects] = useState([]);
   const [users, setusers] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const projects = useSelector((state) => state.project.projects);
-  console.log(projects, "projects");
+  // console.log(projects, "projects");
 
   const handleViewInMap = () => {
-    // #use client id
     navigate(`/projects/${id}/Map`);
   };
 
@@ -51,7 +49,6 @@ export default function ClientCard({ id, name, description }) {
     dispatch(setshowDeletePopup(true));
     dispatch(setdeleteId(id));
     dispatch(setdeleteTarget("clients"));
-    ``;
     dispatch(
       setdeletePopupMessage(
         `Are you sure you want to delete Client ${id} and its content?`

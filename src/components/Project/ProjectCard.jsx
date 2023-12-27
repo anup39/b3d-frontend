@@ -6,15 +6,14 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import FolderIcon from "@mui/icons-material/Folder";
-
-import {
-  setdeleteId,
-  setdeletePopupMessage,
-  setdeleteTarget,
-  setshowDeletePopup,
-} from "../../reducers/DisplaySettings";
+// import {
+//   setdeleteId,
+//   setdeletePopupMessage,
+//   setdeleteTarget,
+//   setshowDeletePopup,
+// } from "../../reducers/DisplaySettings";
 
 export default function ProjectCard({
   id,
@@ -22,20 +21,20 @@ export default function ProjectCard({
   name,
   client_name,
   description,
-  created_at,
 }) {
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [properties, setproperties] = useState([]);
   const [users, setusers] = useState([]);
 
-  const handleViewInMap = () => {
-    navigate(`/map/project/${id}`);
-  };
+  // Remaining things to do :
+  // const handleViewInMap = () => {
+  //   navigate(`/map/project/${id}`);
+  // };
 
-  const handleManageUsers = () => {
-    navigate(`/manage-users/${id}`);
-  };
+  // const handleManageUsers = () => {
+  //   navigate(`/manage-users/${id}`);
+  // };
 
   // const handleDeleteProject = () => {
   //   dispatch(setshowDeletePopup(true));
@@ -90,9 +89,6 @@ export default function ProjectCard({
               <Typography variant="body2" gutterBottom>
                 Client Name : {client_name}
               </Typography>
-              {/* <Typography variant="body2" color="text.secondary">
-                Created At: {created_at}
-              </Typography> */}
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               {/* <Grid item>

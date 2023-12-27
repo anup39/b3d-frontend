@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setprojects } from "../reducers/Project";
@@ -8,7 +7,7 @@ import AppBar from "../components/Common/AppBar";
 import ProjectCard from "../components/Project/ProjectCard";
 import ProjectForm from "../components/Project/ProjectForm";
 import MapView from "../components/MapView/MapView";
-import { Box, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import MapIcon from "@mui/icons-material/Map";
 
