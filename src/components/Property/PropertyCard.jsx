@@ -30,11 +30,13 @@ export default function PropertyCard({
   client_name,
   project_name,
 }) {
+  // Remaning things to work in next version
+
   // const navigate = useNavigate();
-  const handleViewInMapProperty = () => {
-    // console.log("map");
-    // navigate(`/map/${properti}/${1}`);
-  };
+  // const handleViewInMapProperty = () => {
+  // console.log("map");
+  // navigate(`/map/${properti}/${1}`);
+  // };
   // const handleDeleteProperty = () => {
   //   console.log("Delete ", id);
   //   navigate(`/map/${id}`);
@@ -87,9 +89,6 @@ export default function PropertyCard({
               <Typography variant="body2" color="text.secondary">
                 <b>File size </b>: {bytesToMB(file_size)} MB
               </Typography>
-              {/* <Typography variant="body2" color="text.secondary">
-                <b>Created At </b>: {created_at}
-              </Typography> */}
               <Typography variant="body2" color="text.secondary">
                 <b>Task ID</b>: {task_id}
               </Typography>

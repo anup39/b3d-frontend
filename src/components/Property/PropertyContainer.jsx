@@ -28,6 +28,8 @@ export default function PropertyContainer({ project_id }) {
     };
   }, [project_id, dispatch]);
 
+  // #Remaning things to work on
+
   // const handleOpenMap = () => {
   //   navigate(`/map/${project_id}`);
   // };

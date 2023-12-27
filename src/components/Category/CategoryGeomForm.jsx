@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setshowGeomFormPopup } from "../../reducers/DisplaySettings";
 import PropTypes from "prop-types";
 import { setWKTGeometry } from "../../reducers/DrawnPolygon";
-import AutoCompleteMap from "../Property/AutoCompleteMap";
+import AutoCompleteMap from "../MapView/AutoCompleteMap";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
