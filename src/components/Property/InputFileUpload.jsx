@@ -4,15 +4,18 @@ import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useRef, useState } from "react";
 import { Grid, Typography } from "@mui/material";
-// import GeoTIFF, { fromUrl, fromUrls, fromBlob } from "geotiff";
-import { fromArrayBuffer } from "geotiff";
 import PropTypes from "prop-types";
-import proj4 from "proj4";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
-import epsgDefinitions from "../../maputils/epsgcodes";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { takeScreenshot } from "../../maputils/createMapImage";
+
+// Checking the Issues here
+
+// import GeoTIFF, { fromUrl, fromUrls, fromBlob } from "geotiff";
+// import { fromArrayBuffer } from "geotiff";
+// import proj4 from "proj4";
+// import epsgDefinitions from "../../maputils/epsgcodes";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -80,6 +83,9 @@ export default function InputFileUpload({
     if (file && file.type === "image/tiff") {
       const reader = new FileReader();
       console.log(reader, "reader");
+
+      // #Here is some issue i didnot get , the extent is the zomming the Map
+
       // reader.onload = async (e) => {
       //   const arrayBuffer = e.target.result;
       //   try {

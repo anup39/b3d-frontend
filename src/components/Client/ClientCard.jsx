@@ -17,19 +17,20 @@ import FolderIcon from "@mui/icons-material/Folder";
 import { setprojects } from "../../reducers/Project";
 import MapIcon from "@mui/icons-material/Map";
 import Tooltip from "@mui/material/Tooltip";
+import AppsIcon from "@mui/icons-material/Apps";
+import PeopleIcon from "@mui/icons-material/People";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function ClientCard({ id, name, description }) {
   const [properties, setproperties] = useState([]);
-  // const [projects, setprojects] = useState([]);
   const [users, setusers] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const projects = useSelector((state) => state.project.projects);
-  console.log(projects, "projects");
+  // console.log(projects, "projects");
 
   const handleViewInMap = () => {
-    // #use client id
     navigate(`/projects/${id}/Map`);
   };
 
@@ -48,7 +49,6 @@ export default function ClientCard({ id, name, description }) {
     dispatch(setshowDeletePopup(true));
     dispatch(setdeleteId(id));
     dispatch(setdeleteTarget("clients"));
-    ``;
     dispatch(
       setdeletePopupMessage(
         `Are you sure you want to delete Client ${id} and its content?`
@@ -110,19 +110,28 @@ export default function ClientCard({ id, name, description }) {
                 </Tooltip>
               </Grid>
               <Grid item>
-                <button className="btn-main" onClick={handleManageClasses}>
-                  Manage Classes
-                </button>
+                <Tooltip title="Manage Class">
+                  <AppsIcon
+                    onClick={handleManageClasses}
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                  />
+                </Tooltip>
               </Grid>
               <Grid item>
-                <button className="btn-main" onClick={handleManageUsers}>
-                  Manage Users
-                </button>
+                <Tooltip title="Manage Users">
+                  <PeopleIcon
+                    onClick={handleManageUsers}
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                  />
+                </Tooltip>
               </Grid>
               <Grid item>
-                <button className="btn-main" onClick={handleDeleteClient}>
-                  Delete
-                </button>
+                <Tooltip title="Delete Client">
+                  <DeleteIcon
+                    onClick={handleDeleteClient}
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                  />
+                </Tooltip>
               </Grid>
             </Grid>
           </Grid>

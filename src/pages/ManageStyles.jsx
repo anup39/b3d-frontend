@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-// import
 
 export default function ManageStyles() {
   const { id } = useParams();
