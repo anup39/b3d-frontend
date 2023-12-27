@@ -6,6 +6,7 @@ const initialState = {
   showUploadingCategories: false,
   showReport: false,
   showMap: true,
+  showMeasuringsPanel: false,
   showTableMeasurings: false,
   showPiechart: false,
 };
@@ -29,6 +30,9 @@ export const MapView = createSlice({
     setshowMap: (state, action) => {
       state.showMap = action.payload;
     },
+    setshowMeasuringsPanel: (state, action) => {
+      state.showMeasuringsPanel = action.payload;
+    },
     setshowTableMeasurings: (state, action) => {
       state.showTableMeasurings = action.payload;
     },
@@ -45,6 +49,7 @@ export const {
   setshowUploadingCategories,
   setshowReport,
   setshowMap,
+  setshowMeasuringsPanel,
   setshowTableMeasurings,
   setshowPiechart,
 } = MapView.actions;
