@@ -27,7 +27,6 @@ export default function ProjectView({ project }) {
         sx={{ display: "block", fontSize: 28 }}
       >
         <ListItemButton
-          onClick={() => setOpenProperties(!openProperties)}
           sx={{
             minHeight: 48,
             justifyContent: open ? "initial" : "center",
@@ -46,14 +45,18 @@ export default function ProjectView({ project }) {
           >
             <LocationCityIcon />
           </ListItemIcon>
-          <MoreonProperty />
+          <MoreonProperty onClick={() => setOpenProperties(!openProperties)} />
 
           <ListItemText
             secondary={project.name}
             sx={{ opacity: open ? 1 : 0 }}
           />
 
-          {openProperties ? <ExpandLess /> : <ExpandMore />}
+          {openProperties ? (
+            <ExpandLess onClick={() => setOpenProperties(!openProperties)} />
+          ) : (
+            <ExpandMore onClick={() => setOpenProperties(!openProperties)} />
+          )}
         </ListItemButton>
         <Collapse in={openProperties} timeout="auto" unmountOnExit>
           <List sx={{ fontSize: 2 }} component="div" disablePadding>
