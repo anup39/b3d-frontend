@@ -95,7 +95,10 @@ const all_categories = [
 
 export default function LayersControlPanel({ map }) {
   const [categories, setCategories] = useState(all_categories);
-  const client_id = useSelector((state) => state.mapCategories.client_id);
+  // const client_id = useSelector((state) => state.mapCategories.client_id);
+  const client_id = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
 
   useEffect(() => {
     axios
