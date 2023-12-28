@@ -10,6 +10,7 @@ const initialState = {
   showTableMeasurings: false,
   showPiechart: false,
   showTifPanel: false,
+  currentMapDetail: { tif_id: null },
 };
 
 export const MapView = createSlice({
@@ -43,6 +44,9 @@ export const MapView = createSlice({
     setshowTifPanel: (state, action) => {
       state.showTifPanel = action.payload;
     },
+    setcurrentMapDetail: (state, action) => {
+      state.currentMapDetail = action.payload;
+    },
   },
 });
 
@@ -57,6 +61,7 @@ export const {
   setshowTableMeasurings,
   setshowPiechart,
   setshowTifPanel,
+  setcurrentMapDetail,
 } = MapView.actions;
 
 export default MapView.reducer;
