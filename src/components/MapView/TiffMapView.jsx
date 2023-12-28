@@ -10,6 +10,8 @@ import MoreonMap from "./MoreonMap";
 import PropTypes from "prop-types";
 import ButtonBase from "@mui/material/ButtonBase";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setshowMeasuringsPanel } from "../../reducers/MapView";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -34,6 +36,7 @@ const Img = styled("img")({
 });
 
 export default function TiffMapView({ tif }) {
+  const dispatch = useDispatch();
   const handleTifChecked = (event, tif_id) => {
     const checked = event.target.checked;
     const id = tif_id;
@@ -81,6 +84,17 @@ export default function TiffMapView({ tif }) {
       }
     }
   };
+  const handleMeasuringsPanelChecked = (event, tif_id) => {
+    console.log(event, tif_id, "measurings ");
+    const checked = event.target.checked;
+    const id = tif_id;
+    const map = window.map_global;
+    if (checked) {
+      dispatch(setshowMeasuringsPanel(true));
+    } else {
+      dispatch(setshowMeasuringsPanel(false));
+    }
+  };
   return (
     <Box>
       <ListItemButton
@@ -116,7 +130,12 @@ export default function TiffMapView({ tif }) {
         />
 
         <Tooltip title="Show Measurings">
-          <PinkSwitch size="small" {...label} defaultChecked={false} />
+          <PinkSwitch
+            onChange={(event) => handleMeasuringsPanelChecked(event, tif.id)}
+            size="small"
+            {...label}
+            defaultChecked={false}
+          />
         </Tooltip>
         <MoreonMap />
       </ListItemButton>
