@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import AppBar from "../components/Common/AppBar";
 import PropertyForm from "../components/Property/PropertyForm";
@@ -22,10 +21,8 @@ export default function Properties() {
   return (
     <>
       <AppBar></AppBar>
-
       <PropertyForm client_id={client_id} project_id={project_id} />
       <UploadProgress />
-
       <PropertyContainer project_id={project_id} />
     </>
   );
