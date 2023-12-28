@@ -20,7 +20,7 @@ import InputFileUpload from "./InputFileUpload";
 import maplibregl from "maplibre-gl";
 import PropTypes from "prop-types";
 
-export default function UploadPropertyForm({ client_id, project_id }) {
+export default function UploadPropertyForm() {
   const dispatch = useDispatch();
   const mapContainerProperty = useRef();
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -31,6 +31,14 @@ export default function UploadPropertyForm({ client_id, project_id }) {
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
+
+  const client_id_property = useSelector(
+    (state) => state.property.client_id_property
+  );
+  const project_id_property = useSelector(
+    (state) => state.property.project_id_property
+  );
+
   const closeForm = () => {
     dispatch(setshowTifUpload(false));
     setUploadedFile(null);
@@ -71,8 +79,8 @@ export default function UploadPropertyForm({ client_id, project_id }) {
     const nameInput = document.getElementById("name");
     const blob_ = createImagePNG(image);
     const formData = new FormData();
-    formData.append("client", client_id);
-    formData.append("project", project_id);
+    formData.append("client", client_id_property);
+    formData.append("project", project_id_property);
     formData.append("name", nameInput.value);
     formData.append("status", "Uploaded");
     formData.append("screenshot_image", blob_, "image.png");
@@ -111,7 +119,7 @@ export default function UploadPropertyForm({ client_id, project_id }) {
           .get(
             `${
               import.meta.env.VITE_API_DASHBOARD_URL
-            }/raster-data/?project=${project_id}`
+            }/raster-data/?project=${client_id_property}`
           )
           .then((res) => {
             dispatch(setproperties(res.data));
