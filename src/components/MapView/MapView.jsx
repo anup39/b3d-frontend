@@ -21,6 +21,8 @@ import ReportPrint from "./ReportPrint";
 import ProjectView from "./ProjectView";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import UploadPropertyForm from "../Property/UploadPropertyForm";
+import UploadProgress from "../Property/UploadProgress";
 
 const drawerWidth = 240;
 
@@ -85,6 +87,12 @@ export default function MapView({ client_id, projects }) {
 
   const showReport = useSelector((state) => state.mapView.showReport);
   const showMap = useSelector((state) => state.mapView.showMap);
+  const showTifUpload = useSelector(
+    (state) => state.displaySettings.showTifUpload
+  );
+  const showProgressFormOpen = useSelector(
+    (state) => state.property.showProgressFormOpen
+  );
 
   const navigate = useNavigate();
 
@@ -101,6 +109,9 @@ export default function MapView({ client_id, projects }) {
       {showShapefileUpload ? <ShapefileUpload /> : null}
 
       {showUploadingCategories ? <UploadingCategories /> : null}
+
+      {showTifUpload ? <UploadPropertyForm /> : null}
+      {showProgressFormOpen ? <UploadProgress /> : null}
 
       <CssBaseline />
       <Drawer variant="permanent" open={open}>
