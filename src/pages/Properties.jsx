@@ -1,31 +1,38 @@
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import AppBar from "../components/Common/AppBar";
-import PropertyForm from "../components/Property/PropertyForm";
 import UploadProgress from "../components/Property/UploadProgress";
 import PropertyContainer from "../components/Property/PropertyContainer";
+import AddPropertyButton from "../components/Property/AddPropertyButton";
+import UploadPropertyForm from "../components/Property/UploadPropertyForm";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import {
+  setClientIdProperty,
+  setProjectIdProperty,
+} from "../reducers/Property";
 
 export default function Properties() {
   const { client_id } = useParams();
   const { project_id } = useParams();
-  // const [isProgressFormOpen, setIsProgressFormOpen] = useState(false);
-  // const [progress, setProgress] = useState(0);
+  const dispatch = useDispatch();
+  const showTifUpload = useSelector(
+    (state) => state.displaySettings.showTifUpload
+  );
+  const showProgressFormOpen = useSelector(
+    (state) => state.property.showProgressFormOpen
+  );
 
-  // const onProgressForm = (value) => {
-  //   setIsProgressFormOpen(value);
-  // };
-
-  // const onProgressValue = (value) => {
-  //   setProgress(value);
-  // };
+  useEffect(() => {
+    dispatch(setClientIdProperty(client_id));
+    dispatch(setProjectIdProperty(project_id));
+  }, [client_id, project_id, dispatch]);
 
   return (
     <>
       <AppBar></AppBar>
-
-      <PropertyForm client_id={client_id} project_id={project_id} />
-      <UploadProgress />
-
+      <AddPropertyButton />
+      {showTifUpload ? <UploadPropertyForm /> : null}
+      {showProgressFormOpen ? <UploadProgress /> : null}
       <PropertyContainer project_id={project_id} />
     </>
   );

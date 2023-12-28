@@ -1,8 +1,7 @@
 import ReactDOM from "react-dom/client";
 import { store } from "../../store";
 import { Provider } from "react-redux";
-import RasterLayer from "./RasterLayer";
-import RasterControlNew from "./RasterControlNew";
+import RasterControlPanel from "./RasterControlPanel";
 
 export default class RasterControl {
   onAdd(map) {
@@ -17,11 +16,7 @@ export default class RasterControl {
     this._project_id = project_id;
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        {/* <RasterLayer
-          map={this._map}
-          project_id={this._project_id}
-        ></RasterLayer> */}
-        <RasterControlNew></RasterControlNew>
+        <RasterControlPanel></RasterControlPanel>
       </Provider>
     );
   }

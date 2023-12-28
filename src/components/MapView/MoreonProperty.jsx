@@ -4,9 +4,14 @@ import Button from "@mui/material/Button";
 import { Box, Tooltip } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { setshowTifUpload } from "../../reducers/DisplaySettings";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import PropTypes from "prop-types";
+import {
+  setClientIdProperty,
+  setProjectIdProperty,
+} from "../../reducers/Property";
 
-export default function MoreonProperty() {
+export default function MoreonProperty({ project_id }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const dispatch = useDispatch();
 
@@ -18,10 +23,16 @@ export default function MoreonProperty() {
     setAnchorEl(null);
   };
 
+  const client_id = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
+
   const handleUploadOrthoClick = () => {
     console.log("clicked for upload");
     setAnchorEl(null);
     dispatch(setshowTifUpload(true));
+    dispatch(setProjectIdProperty(String(project_id)));
+    dispatch(setClientIdProperty(client_id));
   };
 
   const open = Boolean(anchorEl);
@@ -67,3 +78,7 @@ export default function MoreonProperty() {
     </div>
   );
 }
+
+MoreonProperty.propTypes = {
+  project_id: PropTypes.number,
+};

@@ -55,7 +55,10 @@ export default function ProjectView({ project }) {
           >
             <LocationCityIcon />
           </ListItemIcon>
-          <MoreonProperty onClick={() => setOpenProperties(!openProperties)} />
+          <MoreonProperty
+            project_id={project.id}
+            onClick={() => setOpenProperties(!openProperties)}
+          />
 
           <ListItemText
             secondary={project.name}
