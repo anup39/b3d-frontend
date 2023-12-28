@@ -9,6 +9,7 @@ import { alpha, styled } from "@mui/material/styles";
 import MoreonMap from "./MoreonMap";
 import PropTypes from "prop-types";
 import ButtonBase from "@mui/material/ButtonBase";
+import axios from "axios";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -33,7 +34,53 @@ const Img = styled("img")({
 });
 
 export default function TiffMapView({ tif }) {
-  console.log(tif, "tif item");
+  const handleTifChecked = (event, tif_id) => {
+    const checked = event.target.checked;
+    const id = tif_id;
+    const map = window.map_global;
+    if (checked) {
+      axios
+        .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
+        .then((res) => {
+          if (res.data.bounds) {
+            const bounds = res.data.bounds;
+            map.fitBounds(bounds);
+            map.addSource(`${id}-source`, {
+              type: "raster",
+              tiles: [
+                `${
+                  import.meta.env.VITE_API_RASTER_URL
+                }/tile-async/${id}/{z}/{x}/{y}.png`,
+              ],
+              tileSize: 512,
+            });
+
+            map.addLayer({
+              id: `${id}-layer`,
+              type: "raster",
+              source: `${id}-source`,
+              minzoom: 0,
+              maxzoom: 24,
+            });
+            map.moveLayer(`${id}-layer`, "gl-draw-polygon-fill-inactive.cold");
+          }
+        })
+        .catch(() => {});
+    } else {
+      const style = map.getStyle();
+      const existingLayer = style.layers.find(
+        (layer) => layer.id === `${id}-layer`
+      );
+      const existingSource = style.sources[`${id}-source`];
+      if (existingLayer) {
+        map.off("click", `${id}-layer`);
+        map.removeLayer(`${id}-layer`);
+      }
+      if (existingSource) {
+        map.removeSource(`${id}-source`);
+      }
+    }
+  };
   return (
     <Box>
       <ListItemButton
@@ -56,6 +103,7 @@ export default function TiffMapView({ tif }) {
           secondaryTypographyProps={{ fontSize: 13 }}
         />
         <Checkbox
+          onChange={(event) => handleTifChecked(event, tif.id)}
           size="small"
           {...label}
           defaultChecked={false}
