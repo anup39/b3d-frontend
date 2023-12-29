@@ -145,7 +145,7 @@ export default function TiffMapView({ tif }) {
         />
 
         <IconButton
-          disabled={true}
+          disabled={tif.id !== tif_id ? true : false}
           onClick={(event) => handleMeasuringsPanelOpen(event, tif.id)}
           // disabled={true}
         >
