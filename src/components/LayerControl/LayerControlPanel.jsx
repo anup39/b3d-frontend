@@ -47,7 +47,7 @@ const all_categories = [
         ],
       },
     ],
-  },
+},
   {
     id: 2,
     label: "Trees",

@@ -11,7 +11,10 @@ import PropTypes from "prop-types";
 import ButtonBase from "@mui/material/ButtonBase";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setshowMeasuringsPanel } from "../../reducers/MapView";
+import {
+  setcurrentMapDetail,
+  setshowMeasuringsPanel,
+} from "../../reducers/MapView";
 import BorderAllIcon from "@mui/icons-material/BorderAll";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
@@ -70,10 +73,12 @@ export default function TiffMapView({ tif }) {
               maxzoom: 24,
             });
             map.moveLayer(`${id}-layer`, "gl-draw-polygon-fill-inactive.cold");
+            dispatch(setcurrentMapDetail({ tif_id: tif_id }));
           }
         })
         .catch(() => {});
     } else {
+      dispatch(setcurrentMapDetail({ tif_id: null }));
       const style = map.getStyle();
       const existingLayer = style.layers.find(
         (layer) => layer.id === `${id}-layer`
