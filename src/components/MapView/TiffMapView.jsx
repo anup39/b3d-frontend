@@ -44,6 +44,7 @@ export default function TiffMapView({ tif }) {
   const showMeasuringsPanel = useSelector(
     (state) => state.mapView.showMeasuringsPanel
   );
+  const tif_id = useSelector((state) => state.mapView.currentMapDetail.tif_id);
   const handleTifChecked = (event, tif_id) => {
     const checked = event.target.checked;
     const id = tif_id;
@@ -143,23 +144,26 @@ export default function TiffMapView({ tif }) {
           }}
         />
 
-        <Tooltip title="Show Measurings">
-          {/* <PinkSwitch
+        <IconButton
+          disabled={true}
+          onClick={(event) => handleMeasuringsPanelOpen(event, tif.id)}
+          // disabled={true}
+        >
+          <Tooltip title="Show Measurings">
+            {/* <PinkSwitch
             onChange={(event) => handleMeasuringsPanelChecked(event, tif.id)}
             size="small"
             {...label}
             defaultChecked={false}
           /> */}
-          <IconButton disabled={true}>
             <BorderAllIcon
               sx={{
                 fontSize: 18,
-                color: showMeasuringsPanel ? "blue" : "disabled",
+                color: "blue",
               }}
-              onClick={(event) => handleMeasuringsPanelOpen(event, tif.id)}
             />
-          </IconButton>
-        </Tooltip>
+          </Tooltip>
+        </IconButton>
         <MoreonMap />
       </ListItemButton>
     </Box>
