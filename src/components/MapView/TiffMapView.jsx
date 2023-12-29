@@ -145,9 +145,8 @@ export default function TiffMapView({ tif }) {
         />
 
         <IconButton
-          disabled={tif.id !== tif_id ? true : false}
           onClick={(event) => handleMeasuringsPanelOpen(event, tif.id)}
-          // disabled={true}
+          disabled={tif.id === tif_id ? false : true}
         >
           <Tooltip title="Show Measurings">
             {/* <PinkSwitch
@@ -159,7 +158,7 @@ export default function TiffMapView({ tif }) {
             <BorderAllIcon
               sx={{
                 fontSize: 18,
-                color: "blue",
+                color: tif.id === tif_id ? "blue" : "red",
               }}
             />
           </Tooltip>
