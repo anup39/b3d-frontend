@@ -12,7 +12,8 @@ import ButtonBase from "@mui/material/ButtonBase";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setcurrentMapDetail,
+  addSelectedTifId,
+  removeSelectedTifId,
   setshowMeasuringsPanel,
 } from "../../reducers/MapView";
 import BorderAllIcon from "@mui/icons-material/BorderAll";
@@ -44,7 +45,9 @@ export default function TiffMapView({ tif }) {
   const showMeasuringsPanel = useSelector(
     (state) => state.mapView.showMeasuringsPanel
   );
-  const tif_id = useSelector((state) => state.mapView.currentMapDetail.tif_id);
+  const selected_tif_ids = useSelector(
+    (state) => state.mapView.currentMapDetail.selected_tif_ids
+  );
   const handleTifChecked = (event, tif_id) => {
     const checked = event.target.checked;
     const id = tif_id;
@@ -74,12 +77,12 @@ export default function TiffMapView({ tif }) {
               maxzoom: 24,
             });
             map.moveLayer(`${id}-layer`, "gl-draw-polygon-fill-inactive.cold");
-            dispatch(setcurrentMapDetail({ tif_id: tif_id }));
+            dispatch(addSelectedTifId(tif_id));
           }
         })
         .catch(() => {});
     } else {
-      dispatch(setcurrentMapDetail({ tif_id: null }));
+      dispatch(removeSelectedTifId(tif_id));
       const style = map.getStyle();
       const existingLayer = style.layers.find(
         (layer) => layer.id === `${id}-layer`
@@ -110,6 +113,8 @@ export default function TiffMapView({ tif }) {
     console.log("toggle measurings panel clicked ", event, tif_id);
     dispatch(setshowMeasuringsPanel(!showMeasuringsPanel));
   };
+
+  console.log(selected_tif_ids, "slected tif ids");
   return (
     <Box>
       <ListItemButton
@@ -146,7 +151,7 @@ export default function TiffMapView({ tif }) {
 
         <IconButton
           onClick={(event) => handleMeasuringsPanelOpen(event, tif.id)}
-          disabled={tif.id === tif_id ? false : true}
+          disabled={selected_tif_ids.includes(tif.id) ? false : true}
         >
           <Tooltip title="Show Measurings">
             {/* <PinkSwitch
@@ -158,7 +163,7 @@ export default function TiffMapView({ tif }) {
             <BorderAllIcon
               sx={{
                 fontSize: 18,
-                color: tif.id === tif_id ? "blue" : "red",
+                color: selected_tif_ids.includes(tif.id) ? "blue" : "red",
               }}
             />
           </Tooltip>
