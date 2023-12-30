@@ -7,7 +7,7 @@ import { pink } from "@mui/material/colors";
 import Switch from "@mui/material/Switch";
 import { alpha, styled } from "@mui/material/styles";
 import MoreonMap from "./MoreonMap";
-import PropTypes from "prop-types";
+import PropTypes, { array } from "prop-types";
 import ButtonBase from "@mui/material/ButtonBase";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,7 @@ import {
   addSelectedTifId,
   removeSelectedTifId,
   setshowMeasuringsPanel,
+  addcurrentTifMeasuringTable,
 } from "../../reducers/MapView";
 import BorderAllIcon from "@mui/icons-material/BorderAll";
 
@@ -83,6 +84,7 @@ export default function TiffMapView({ tif }) {
         .catch(() => {});
     } else {
       dispatch(removeSelectedTifId(tif_id));
+
       const style = map.getStyle();
       const existingLayer = style.layers.find(
         (layer) => layer.id === `${id}-layer`
@@ -97,20 +99,25 @@ export default function TiffMapView({ tif }) {
       }
     }
   };
-  // const handleMeasuringsPanelChecked = (event, tif_id) => {
-  //   console.log(event, tif_id, "measurings ");
-  //   const checked = event.target.checked;
-  //   const id = tif_id;
-  //   const map = window.map_global;
-  //   if (checked) {
-  //     dispatch(setshowMeasuringsPanel(true));
-  //   } else {
-  //     dispatch(setshowMeasuringsPanel(false));
-  //   }
-  // };
+  const handleMeasuringsPanelChecked = (event, tif_id) => {
+    console.log(event, tif_id, "measurings ");
+    const checked = event.target.checked;
+    const id = tif_id;
+    const map = window.map_global;
+    if (checked) {
+      dispatch(setshowMeasuringsPanel(true));
+    } else {
+      dispatch(setshowMeasuringsPanel(false));
+    }
+  };
 
   const handleMeasuringsPanelOpen = (event, tif_id) => {
     console.log("toggle measurings panel clicked ", event, tif_id);
+    if (!showMeasuringsPanel) {
+      dispatch(addcurrentTifMeasuringTable(tif_id));
+    } else {
+      dispatch(addcurrentTifMeasuringTable(null));
+    }
     dispatch(setshowMeasuringsPanel(!showMeasuringsPanel));
   };
 
@@ -154,18 +161,18 @@ export default function TiffMapView({ tif }) {
           disabled={selected_tif_ids.includes(tif.id) ? false : true}
         >
           <Tooltip title="Show Measurings">
-            {/* <PinkSwitch
-            onChange={(event) => handleMeasuringsPanelChecked(event, tif.id)}
-            size="small"
-            {...label}
-            defaultChecked={false}
-          /> */}
-            <BorderAllIcon
+            <PinkSwitch
+              onChange={(event) => handleMeasuringsPanelChecked(event, tif.id)}
+              size="small"
+              {...label}
+              defaultChecked={false}
+            />
+            {/* <BorderAllIcon
               sx={{
                 fontSize: 18,
                 color: selected_tif_ids.includes(tif.id) ? "blue" : "red",
               }}
-            />
+            /> */}
           </Tooltip>
         </IconButton>
         <MoreonMap />
