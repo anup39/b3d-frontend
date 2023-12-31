@@ -101,9 +101,20 @@ export default function ProjectView({ project }) {
           >
             <LocationCityIcon />
           </ListItemIcon>
+
+          <MoreonProperty
+            project_id={project.id}
+            onClick={() => setOpenProperties(!openProperties)}
+          />
+
+          <ListItemText
+            secondary={project.name}
+            sx={{ opacity: open ? 1 : 0 }}
+          />
+
           <IconButton
             onClick={(event) => handleMeasuringsPanelOpen(event, project.id)}
-            disabled={selected_projects_ids.includes(project.id) ? false : true}
+            // disabled={selected_projects_ids.includes(project.id) ? false : true}
           >
             <Tooltip title="Show Measurings">
               <PinkSwitch
@@ -116,15 +127,6 @@ export default function ProjectView({ project }) {
               />
             </Tooltip>
           </IconButton>
-          <MoreonProperty
-            project_id={project.id}
-            onClick={() => setOpenProperties(!openProperties)}
-          />
-
-          <ListItemText
-            secondary={project.name}
-            sx={{ opacity: open ? 1 : 0 }}
-          />
 
           {openProperties ? (
             <ExpandLess onClick={() => setOpenProperties(!openProperties)} />
