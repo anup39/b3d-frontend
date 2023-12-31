@@ -13,10 +13,39 @@ import TiffMapView from "./TiffMapView";
 import MoreonProperty from "./MoreonProperty";
 import PropTypes from "prop-types";
 import axios from "axios";
+import { IconButton, Tooltip } from "@mui/material";
+import { alpha, styled } from "@mui/material/styles";
+import Switch from "@mui/material/Switch";
+import { pink } from "@mui/material/colors";
+import { useDispatch, useSelector } from "react-redux";
+import { setshowMeasuringsPanel } from "../../reducers/MapView";
+
+const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function ProjectView({ project }) {
+  const dispatch = useDispatch();
   const [openProperties, setOpenProperties] = useState(true);
   const [tifs, setTifs] = useState([]);
+
+  const showMeasuringsPanel = useSelector(
+    (state) => state.mapView.showMeasuringsPanel
+  );
+
+  const selected_projects_ids = useSelector(
+    (state) => state.mapView.currentMapDetail.selected_projects_ids
+  );
+
+  const PinkSwitch = styled(Switch)(({ theme }) => ({
+    "& .MuiSwitch-switchBase.Mui-checked": {
+      color: pink[600],
+      "&:hover": {
+        backgroundColor: alpha(pink[600], theme.palette.action.hoverOpacity),
+      },
+    },
+    "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+      backgroundColor: pink[600],
+    },
+  }));
 
   useEffect(() => {
     axios
@@ -29,6 +58,23 @@ export default function ProjectView({ project }) {
         setTifs(res.data);
       });
   }, [project]);
+
+  const handleMeasuringsPanelChecked = (event, tif_id) => {
+    console.log(event, tif_id, "measurings ");
+    const checked = event.target.checked;
+    const id = tif_id;
+    const map = window.map_global;
+    if (checked) {
+      dispatch(setshowMeasuringsPanel(true));
+    } else {
+      dispatch(setshowMeasuringsPanel(false));
+    }
+  };
+
+  const handleMeasuringsPanelOpen = (event, project_id) => {
+    dispatch(setshowMeasuringsPanel(!showMeasuringsPanel));
+  };
+
   return (
     <Box>
       <ListItem
@@ -55,6 +101,21 @@ export default function ProjectView({ project }) {
           >
             <LocationCityIcon />
           </ListItemIcon>
+          <IconButton
+            onClick={(event) => handleMeasuringsPanelOpen(event, project.id)}
+            disabled={selected_projects_ids.includes(project.id) ? false : true}
+          >
+            <Tooltip title="Show Measurings">
+              <PinkSwitch
+                onChange={(event) =>
+                  handleMeasuringsPanelChecked(event, project.id)
+                }
+                size="small"
+                {...label}
+                defaultChecked={false}
+              />
+            </Tooltip>
+          </IconButton>
           <MoreonProperty
             project_id={project.id}
             onClick={() => setOpenProperties(!openProperties)}
