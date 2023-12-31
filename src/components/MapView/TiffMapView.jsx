@@ -7,13 +7,15 @@ import { pink } from "@mui/material/colors";
 import Switch from "@mui/material/Switch";
 import { alpha, styled } from "@mui/material/styles";
 import MoreonMap from "./MoreonMap";
-import PropTypes from "prop-types";
+import PropTypes, { array } from "prop-types";
 import ButtonBase from "@mui/material/ButtonBase";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setcurrentMapDetail,
+  addSelectedTifId,
+  removeSelectedTifId,
   setshowMeasuringsPanel,
+  addcurrentTifMeasuringTable,
 } from "../../reducers/MapView";
 import BorderAllIcon from "@mui/icons-material/BorderAll";
 
@@ -44,7 +46,9 @@ export default function TiffMapView({ tif }) {
   const showMeasuringsPanel = useSelector(
     (state) => state.mapView.showMeasuringsPanel
   );
-  const tif_id = useSelector((state) => state.mapView.currentMapDetail.tif_id);
+  const selected_tif_ids = useSelector(
+    (state) => state.mapView.currentMapDetail.selected_tif_ids
+  );
   const handleTifChecked = (event, tif_id) => {
     const checked = event.target.checked;
     const id = tif_id;
@@ -74,12 +78,13 @@ export default function TiffMapView({ tif }) {
               maxzoom: 24,
             });
             map.moveLayer(`${id}-layer`, "gl-draw-polygon-fill-inactive.cold");
-            dispatch(setcurrentMapDetail({ tif_id: tif_id }));
+            dispatch(addSelectedTifId(tif_id));
           }
         })
         .catch(() => {});
     } else {
-      dispatch(setcurrentMapDetail({ tif_id: null }));
+      dispatch(removeSelectedTifId(tif_id));
+
       const style = map.getStyle();
       const existingLayer = style.layers.find(
         (layer) => layer.id === `${id}-layer`
@@ -94,22 +99,29 @@ export default function TiffMapView({ tif }) {
       }
     }
   };
-  // const handleMeasuringsPanelChecked = (event, tif_id) => {
-  //   console.log(event, tif_id, "measurings ");
-  //   const checked = event.target.checked;
-  //   const id = tif_id;
-  //   const map = window.map_global;
-  //   if (checked) {
-  //     dispatch(setshowMeasuringsPanel(true));
-  //   } else {
-  //     dispatch(setshowMeasuringsPanel(false));
-  //   }
-  // };
+  const handleMeasuringsPanelChecked = (event, tif_id) => {
+    console.log(event, tif_id, "measurings ");
+    const checked = event.target.checked;
+    const id = tif_id;
+    const map = window.map_global;
+    if (checked) {
+      dispatch(setshowMeasuringsPanel(true));
+    } else {
+      dispatch(setshowMeasuringsPanel(false));
+    }
+  };
 
   const handleMeasuringsPanelOpen = (event, tif_id) => {
     console.log("toggle measurings panel clicked ", event, tif_id);
+    if (!showMeasuringsPanel) {
+      dispatch(addcurrentTifMeasuringTable(tif_id));
+    } else {
+      dispatch(addcurrentTifMeasuringTable(null));
+    }
     dispatch(setshowMeasuringsPanel(!showMeasuringsPanel));
   };
+
+  console.log(selected_tif_ids, "slected tif ids");
   return (
     <Box>
       <ListItemButton
@@ -144,25 +156,25 @@ export default function TiffMapView({ tif }) {
           }}
         />
 
-        <IconButton
-          onClick={(event) => handleMeasuringsPanelOpen(event, tif.id)}
-          disabled={tif.id === tif_id ? false : true}
-        >
-          <Tooltip title="Show Measurings">
-            {/* <PinkSwitch
-            onChange={(event) => handleMeasuringsPanelChecked(event, tif.id)}
-            size="small"
-            {...label}
-            defaultChecked={false}
-          /> */}
-            <BorderAllIcon
+        {/* <IconButton */}
+        {/* onClick={(event) => handleMeasuringsPanelOpen(event, tif.id)} */}
+        {/* disabled={selected_tif_ids.includes(tif.id) ? false : true} */}
+        {/* > */}
+        {/* <Tooltip title="Show Measurings">
+            <PinkSwitch
+              onChange={(event) => handleMeasuringsPanelChecked(event, tif.id)}
+              size="small"
+              {...label}
+              defaultChecked={false}
+            /> */}
+        {/* <BorderAllIcon
               sx={{
                 fontSize: 18,
-                color: tif.id === tif_id ? "blue" : "red",
+                color: selected_tif_ids.includes(tif.id) ? "blue" : "red",
               }}
-            />
-          </Tooltip>
-        </IconButton>
+            /> */}
+        {/* </Tooltip> */}
+        {/* </IconButton> */}
         <MoreonMap />
       </ListItemButton>
     </Box>

@@ -10,7 +10,7 @@ const initialState = {
   showTableMeasurings: false,
   showPiechart: false,
   showTifPanel: false,
-  currentMapDetail: { tif_id: null },
+  currentMapDetail: { selected_tif_ids: [], current_tif_measuring_table: null },
 };
 
 export const MapView = createSlice({
@@ -44,8 +44,21 @@ export const MapView = createSlice({
     setshowTifPanel: (state, action) => {
       state.showTifPanel = action.payload;
     },
-    setcurrentMapDetail: (state, action) => {
-      state.currentMapDetail = action.payload;
+    addSelectedTifId: (state, action) => {
+      const newId = action.payload;
+      state.currentMapDetail.selected_tif_ids.push(newId);
+    },
+
+    removeSelectedTifId: (state, action) => {
+      const idToRemove = action.payload;
+      state.currentMapDetail.selected_tif_ids =
+        state.currentMapDetail.selected_tif_ids.filter(
+          (id) => id !== idToRemove
+        );
+    },
+    addcurrentTifMeasuringTable: (state, action) => {
+      const newId = action.payload;
+      state.currentMapDetail.current_tif_measuring_table = newId;
     },
   },
 });
@@ -61,7 +74,9 @@ export const {
   setshowTableMeasurings,
   setshowPiechart,
   setshowTifPanel,
-  setcurrentMapDetail,
+  addSelectedTifId,
+  removeSelectedTifId,
+  addcurrentTifMeasuringTable,
 } = MapView.actions;
 
 export default MapView.reducer;
