@@ -156,25 +156,25 @@ export default function TiffMapView({ tif }) {
           }}
         />
 
-        <IconButton
-          onClick={(event) => handleMeasuringsPanelOpen(event, tif.id)}
-          disabled={selected_tif_ids.includes(tif.id) ? false : true}
-        >
-          <Tooltip title="Show Measurings">
+        {/* <IconButton */}
+        {/* onClick={(event) => handleMeasuringsPanelOpen(event, tif.id)} */}
+        {/* disabled={selected_tif_ids.includes(tif.id) ? false : true} */}
+        {/* > */}
+        {/* <Tooltip title="Show Measurings">
             <PinkSwitch
               onChange={(event) => handleMeasuringsPanelChecked(event, tif.id)}
               size="small"
               {...label}
               defaultChecked={false}
-            />
-            {/* <BorderAllIcon
+            /> */}
+        {/* <BorderAllIcon
               sx={{
                 fontSize: 18,
                 color: selected_tif_ids.includes(tif.id) ? "blue" : "red",
               }}
             /> */}
-          </Tooltip>
-        </IconButton>
+        {/* </Tooltip> */}
+        {/* </IconButton> */}
         <MoreonMap />
       </ListItemButton>
     </Box>
