@@ -52,6 +52,7 @@ export const MapView = createSlice({
       state.currentMapDetail.selected_projects_ids.push(newId);
     },
 
+    // test
     removeSelectedProjectId: (state, action) => {
       const idToRemove = action.payload;
       state.currentMapDetail.selected_projects_ids =
