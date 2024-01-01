@@ -60,6 +60,7 @@ export const MapView = createSlice({
           (id) => id !== idToRemove
         );
     },
+    // test
     addcurrentProjectMeasuringTable: (state, action) => {
       const newId = action.payload;
       state.currentMapDetail.current_project_measuring_table = newId;
