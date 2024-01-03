@@ -47,7 +47,7 @@ const all_categories = [
         ],
       },
     ],
-},
+  },
   {
     id: 2,
     label: "Trees",
@@ -433,7 +433,7 @@ export default function LayersControlPanel({ map }) {
         margin: "15px",
       }}
     >
-      {categories.map((sd, sdIndex) => (
+      {/* {categories.map((sd, sdIndex) => (
         <div key={sd.id}>
           <Box
             sx={{
@@ -603,7 +603,7 @@ export default function LayersControlPanel({ map }) {
             </Box>
           ))}
         </div>
-      ))}
+      ))} */}
     </div>
   );
 }

@@ -21,6 +21,7 @@ import {
   removeSelectedProjectId,
   setcurrentProjectName,
   setshowMeasuringsPanel,
+  addcurrentProjectMeasuringTable,
 } from "../../reducers/MapView";
 import Checkbox from "@mui/material/Checkbox";
 
@@ -51,10 +52,12 @@ export default function ProjectView({ project }) {
       dispatch(setshowMeasuringsPanel(true));
       dispatch(addSelectedProjectId(id));
       dispatch(setcurrentProjectName(project.name));
+      dispatch(addcurrentProjectMeasuringTable(project_id));
     } else {
       dispatch(setshowMeasuringsPanel(false));
       dispatch(removeSelectedProjectId(id));
       dispatch(setcurrentProjectName(null));
+      dispatch(addcurrentProjectMeasuringTable(null));
     }
   };
 
