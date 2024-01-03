@@ -19,6 +19,7 @@ import { useDispatch } from "react-redux";
 import {
   addSelectedProjectId,
   removeSelectedProjectId,
+  setcurrentProjectName,
   setshowMeasuringsPanel,
 } from "../../reducers/MapView";
 import Checkbox from "@mui/material/Checkbox";
@@ -49,9 +50,11 @@ export default function ProjectView({ project }) {
     if (checked) {
       dispatch(setshowMeasuringsPanel(true));
       dispatch(addSelectedProjectId(id));
+      dispatch(setcurrentProjectName(project.name));
     } else {
       dispatch(setshowMeasuringsPanel(false));
       dispatch(removeSelectedProjectId(id));
+      dispatch(setcurrentProjectName(null));
     }
   };
 

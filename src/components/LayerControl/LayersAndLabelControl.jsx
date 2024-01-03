@@ -30,6 +30,9 @@ export default function LayersAndLabelControl({ map }) {
   const showTableMeasurings = useSelector(
     (state) => state.mapView.showTableMeasurings
   );
+  const current_project_name = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_name
+  );
 
   const showPiechart = useSelector((state) => state.mapView.showPiechart);
 
@@ -82,7 +85,7 @@ export default function LayersAndLabelControl({ map }) {
               >
                 Measurings :{" "}
                 <span style={{ color: "#757575", marginRight: "20px" }}>
-                  Map nov
+                  {current_project_name ? current_project_name : null}
                 </span>
               </Typography>
               <Box></Box>
