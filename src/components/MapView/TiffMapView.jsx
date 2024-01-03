@@ -16,6 +16,7 @@ import axios from "axios";
 //   setshowMeasuringsPanel,
 //   addcurrentTifMeasuringTable,
 // } from "../../reducers/MapView";
+import { useSelector } from "react-redux";
 
 const Img = styled("img")({
   margin: "auto",
@@ -27,7 +28,11 @@ const Img = styled("img")({
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-export default function TiffMapView({ tif }) {
+export default function TiffMapView({ tif, project_id }) {
+  const current_project_measuring_table = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  );
+
   const handleTifChecked = (event, tif_id) => {
     const checked = event.target.checked;
     const id = tif_id;
@@ -111,9 +116,11 @@ export default function TiffMapView({ tif }) {
               color: pink[600],
             },
           }}
+          disabled={
+            current_project_measuring_table === project_id ? false : true
+          }
         />
-
-        <MoreonMap />
+        {current_project_measuring_table === project_id ? <MoreonMap /> : null}
       </ListItemButton>
     </Box>
   );

@@ -12,6 +12,7 @@ import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFrom
 import { Slider } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import ModeIcon from "@mui/icons-material/Mode";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const all_categories = [
   {
@@ -47,7 +48,7 @@ const all_categories = [
         ],
       },
     ],
-},
+  },
   {
     id: 2,
     label: "Trees",
@@ -95,6 +96,7 @@ const all_categories = [
 
 export default function LayersControlPanel({ map }) {
   const [categories, setCategories] = useState(all_categories);
+  const [loading, setLoading] = useState(true);
   // const client_id = useSelector((state) => state.mapCategories.client_id);
   const client_id = useSelector(
     (state) => state.mapView.clientDetail.client_id
@@ -109,6 +111,7 @@ export default function LayersControlPanel({ map }) {
       )
       .then((res) => {
         setCategories(res.data);
+        setLoading(false);
       });
   }, [client_id]);
 
@@ -433,64 +436,19 @@ export default function LayersControlPanel({ map }) {
         margin: "15px",
       }}
     >
-      {categories.map((sd, sdIndex) => (
-        <div key={sd.id}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <ExpandMoreIcon
-                sx={{
-                  transform: sd.expand ? "rotate(360deg)" : "rotate(-90deg)",
-                  fontSize: "20px",
-                  backgroundColor: "#FFFFFF",
-                  color: "black",
-                  marginRight: "4px",
-                  padding: "2px",
-                  "&:hover": {
-                    // backgroundColor: "#9C27B0",
-                    cursor: "pointer",
-                  },
-                }}
-                onClick={(event) => handleChangeExpandSd(event, sdIndex)}
-              />
-              <FormControlLabel
-                slotProps={{
-                  typography: {
-                    fontSize: 12,
-                    color: "#6A6D70",
-                    fontWeight: 900,
-                  },
-                }}
-                label={sd.label}
-                control={
-                  <Checkbox
-                    size="small"
-                    checked={sd.checked}
-                    indeterminate={sd.indeterminate}
-                    onChange={(event) => handleChangesd(event, sdIndex)}
-                  />
-                }
-              />
-            </Box>
-          </Box>
-
-          {sd.sub_category.map((sub, subIndex) => (
+      {!loading ? (
+        categories.map((sd, sdIndex) => (
+          <div key={sd.id}>
             <Box
               sx={{
-                display: sd.expand ? "flex" : "none",
-                flexDirection: "column",
-                ml: 3,
+                display: "flex",
+                alignItems: "center",
               }}
-              key={sub.id}
             >
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <ExpandMoreIcon
                   sx={{
-                    transform: sub.expand ? "rotate(360deg)" : "rotate(-90deg)",
+                    transform: sd.expand ? "rotate(360deg)" : "rotate(-90deg)",
                     fontSize: "20px",
                     backgroundColor: "#FFFFFF",
                     color: "black",
@@ -501,9 +459,7 @@ export default function LayersControlPanel({ map }) {
                       cursor: "pointer",
                     },
                   }}
-                  onClick={(event) =>
-                    handleChangeExpandSub(event, sdIndex, subIndex)
-                  }
+                  onClick={(event) => handleChangeExpandSd(event, sdIndex)}
                 />
                 <FormControlLabel
                   slotProps={{
@@ -513,97 +469,157 @@ export default function LayersControlPanel({ map }) {
                       fontWeight: 900,
                     },
                   }}
-                  label={sub.label}
+                  label={sd.label}
                   control={
                     <Checkbox
                       size="small"
-                      checked={sub.checked}
-                      indeterminate={sub.indeterminate}
-                      onChange={(event) =>
-                        handleChangesub(event, sdIndex, subIndex)
-                      }
+                      checked={sd.checked}
+                      indeterminate={sd.indeterminate}
+                      onChange={(event) => handleChangesd(event, sdIndex)}
                     />
                   }
                 />
               </Box>
+            </Box>
 
-              {sub.category.map((cat, catIndex) => (
-                <Box
-                  sx={{
-                    display: sub.expand ? "flex" : "none",
-                    flexDirection: "column",
-                    ml: 5,
-                  }}
-                  key={cat.id}
-                >
+            {sd.sub_category.map((sub, subIndex) => (
+              <Box
+                sx={{
+                  display: sd.expand ? "flex" : "none",
+                  flexDirection: "column",
+                  ml: 3,
+                }}
+                key={sub.id}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <ExpandMoreIcon
+                    sx={{
+                      transform: sub.expand
+                        ? "rotate(360deg)"
+                        : "rotate(-90deg)",
+                      fontSize: "20px",
+                      backgroundColor: "#FFFFFF",
+                      color: "black",
+                      marginRight: "4px",
+                      padding: "2px",
+                      "&:hover": {
+                        // backgroundColor: "#9C27B0",
+                        cursor: "pointer",
+                      },
+                    }}
+                    onClick={(event) =>
+                      handleChangeExpandSub(event, sdIndex, subIndex)
+                    }
+                  />
+                  <FormControlLabel
+                    slotProps={{
+                      typography: {
+                        fontSize: 12,
+                        color: "#6A6D70",
+                        fontWeight: 900,
+                      },
+                    }}
+                    label={sub.label}
+                    control={
+                      <Checkbox
+                        size="small"
+                        checked={sub.checked}
+                        indeterminate={sub.indeterminate}
+                        onChange={(event) =>
+                          handleChangesub(event, sdIndex, subIndex)
+                        }
+                      />
+                    }
+                  />
+                </Box>
+
+                {sub.category.map((cat, catIndex) => (
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
+                      display: sub.expand ? "flex" : "none",
+                      flexDirection: "column",
+                      ml: 5,
                     }}
+                    key={cat.id}
                   >
-                    <FormControlLabel
-                      slotProps={{
-                        typography: {
-                          fontSize: 12,
-                          color: "#6A6D70",
-                          fontWeight: 900,
-                        },
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
                       }}
-                      label={cat.label}
-                      control={
-                        <Checkbox
-                          size="small"
-                          checked={cat.checked}
-                          onChange={(event) =>
-                            handleChangecat(event, sdIndex, subIndex, catIndex)
-                          }
+                    >
+                      <FormControlLabel
+                        slotProps={{
+                          typography: {
+                            fontSize: 12,
+                            color: "#6A6D70",
+                            fontWeight: 900,
+                          },
+                        }}
+                        label={cat.label}
+                        control={
+                          <Checkbox
+                            size="small"
+                            checked={cat.checked}
+                            onChange={(event) =>
+                              handleChangecat(
+                                event,
+                                sdIndex,
+                                subIndex,
+                                catIndex
+                              )
+                            }
+                          />
+                        }
+                      />
+                      <Slider
+                        onChange={(event, value) =>
+                          handleChangeSlider(event, value, cat)
+                        }
+                        step={0.1}
+                        min={0}
+                        max={1}
+                        size="small"
+                        defaultValue={cat.fill_opacity}
+                        aria-label="Small"
+                        sx={{ maxWidth: 100, margin: 2 }}
+                        valueLabelDisplay="auto"
+                      />
+                      <Tooltip title="Draw Measuring">
+                        <ModeIcon
+                          sx={{
+                            marginRight: "10px",
+                            backgroundColor: "#FFFFF",
+                            color: "#D61B60",
+                            "&:hover": { cursor: "pointer" },
+                          }}
                         />
-                      }
-                    />
-                    <Slider
-                      onChange={(event, value) =>
-                        handleChangeSlider(event, value, cat)
-                      }
-                      step={0.1}
-                      min={0}
-                      max={1}
-                      size="small"
-                      defaultValue={cat.fill_opacity}
-                      aria-label="Small"
-                      sx={{ maxWidth: 100, margin: 2 }}
-                      valueLabelDisplay="auto"
-                    />
-                    <Tooltip title="Draw Measuring">
-                      <ModeIcon
-                        sx={{
-                          marginRight: "10px",
-                          backgroundColor: "#FFFFF",
-                          color: "#D61B60",
-                          "&:hover": { cursor: "pointer" },
-                        }}
-                      />
-                    </Tooltip>
+                      </Tooltip>
 
-                    <Tooltip title="Zoom to Layer">
-                      <ZoomInIcon
-                        onClick={(event) => handleZoomToLayer(event, cat)}
-                        sx={{
-                          marginLeft: "10px",
-                          backgroundColor: "#FFFFF",
-                          color: "#D61B60",
-                          "&:hover": { cursor: "pointer" },
-                        }}
-                      />
-                    </Tooltip>
+                      <Tooltip title="Zoom to Layer">
+                        <ZoomInIcon
+                          onClick={(event) => handleZoomToLayer(event, cat)}
+                          sx={{
+                            marginLeft: "10px",
+                            backgroundColor: "#FFFFF",
+                            color: "#D61B60",
+                            "&:hover": { cursor: "pointer" },
+                          }}
+                        />
+                      </Tooltip>
+                    </Box>
                   </Box>
-                </Box>
-              ))}
-            </Box>
-          ))}
-        </div>
-      ))}
+                ))}
+              </Box>
+            ))}
+          </div>
+        ))
+      ) : (
+        <Box sx={{ display: "flex", marginLeft: "50%" }}>
+          <CircularProgress />
+        </Box>
+      )}
     </div>
   );
 }

@@ -15,11 +15,13 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { Tooltip } from "@mui/material";
 import { pink } from "@mui/material/colors";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addSelectedProjectId,
   removeSelectedProjectId,
+  setcurrentProjectName,
   setshowMeasuringsPanel,
+  addcurrentProjectMeasuringTable,
 } from "../../reducers/MapView";
 import Checkbox from "@mui/material/Checkbox";
 
@@ -42,16 +44,28 @@ export default function ProjectView({ project }) {
       });
   }, [project]);
 
+  // const selected_projects_ids = useSelector(
+  //   (state) => state.mapView.currentMapDetail.selected_projects_ids
+  // );
+
+  const current_project_measuring_table = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  );
+
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
     const id = project_id;
     // const map = window.map_global;
     if (checked) {
       dispatch(setshowMeasuringsPanel(true));
-      dispatch(addSelectedProjectId(id));
+      // dispatch(addSelectedProjectId(id));
+      dispatch(setcurrentProjectName(project.name));
+      dispatch(addcurrentProjectMeasuringTable(project_id));
     } else {
       dispatch(setshowMeasuringsPanel(false));
-      dispatch(removeSelectedProjectId(id));
+      // dispatch(removeSelectedProjectId(id));
+      dispatch(setcurrentProjectName(null));
+      dispatch(addcurrentProjectMeasuringTable(null));
     }
   };
 
@@ -88,8 +102,9 @@ export default function ProjectView({ project }) {
           />
 
           <ListItemText
-            secondary={project.name}
+            secondary={project.name.slice(0, 10)}
             sx={{ opacity: open ? 1 : 0 }}
+            secondaryTypographyProps={{ fontSize: 12 }}
           />
 
           <Tooltip title="Show Measurings">
@@ -99,7 +114,10 @@ export default function ProjectView({ project }) {
               }
               size="small"
               {...label}
-              defaultChecked={false}
+              // defaultChecked={false}
+              checked={
+                current_project_measuring_table === project.id ? true : false
+              }
               sx={{
                 color: pink[600],
                 "&.Mui-checked": {
@@ -118,7 +136,9 @@ export default function ProjectView({ project }) {
         <Collapse in={openProperties} timeout="auto" unmountOnExit>
           <List sx={{ fontSize: 2 }} component="div" disablePadding>
             {tifs && tifs.length > 0
-              ? tifs.map((tif) => <TiffMapView key={tif.id} tif={tif} />)
+              ? tifs.map((tif) => (
+                  <TiffMapView key={tif.id} tif={tif} project_id={project.id} />
+                ))
               : null}
           </List>
         </Collapse>

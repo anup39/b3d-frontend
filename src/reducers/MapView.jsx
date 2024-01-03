@@ -13,6 +13,7 @@ const initialState = {
   currentMapDetail: {
     selected_projects_ids: [],
     current_project_measuring_table: null,
+    current_project_name: null,
   },
 };
 
@@ -67,6 +68,10 @@ export const MapView = createSlice({
       const newId = action.payload;
       state.currentMapDetail.current_project_measuring_table = newId;
     },
+    setcurrentProjectName: (state, action) => {
+      const name = action.payload;
+      state.currentMapDetail.current_project_name = name;
+    },
   },
 });
 
@@ -84,6 +89,7 @@ export const {
   addSelectedProjectId,
   removeSelectedProjectId,
   addcurrentProjectMeasuringTable,
+  setcurrentProjectName,
 } = MapView.actions;
 
 export default MapView.reducer;
