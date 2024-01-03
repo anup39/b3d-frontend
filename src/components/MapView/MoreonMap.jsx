@@ -65,7 +65,7 @@ export default function MoreonMap() {
             opacity: 0.8,
           }}
         >
-          <Button
+          {/* <Button
             // fullWidth
             variant="contained"
             color="primary"
@@ -82,7 +82,7 @@ export default function MoreonMap() {
             sx={{ margin: 1 }}
           >
             Band Information
-          </Button>
+          </Button> */}
           <Button
             // fullWidth
             variant="contained"

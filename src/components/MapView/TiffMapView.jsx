@@ -16,7 +16,8 @@ import axios from "axios";
 //   setshowMeasuringsPanel,
 //   addcurrentTifMeasuringTable,
 // } from "../../reducers/MapView";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setshowTifPanel } from "../../reducers/MapView";
 
 const Img = styled("img")({
   margin: "auto",
@@ -29,6 +30,7 @@ const Img = styled("img")({
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function TiffMapView({ tif, project_id }) {
+  const dispatch = useDispatch();
   const current_project_measuring_table = useSelector(
     (state) => state.mapView.currentMapDetail.current_project_measuring_table
   );
@@ -66,9 +68,10 @@ export default function TiffMapView({ tif, project_id }) {
           }
         })
         .catch(() => {});
+      dispatch(setshowTifPanel(true));
     } else {
       // dispatch(removeSelectedTifId(tif_id));
-
+      dispatch(setshowTifPanel(false));
       const style = map.getStyle();
       const existingLayer = style.layers.find(
         (layer) => layer.id === `${id}-layer`
