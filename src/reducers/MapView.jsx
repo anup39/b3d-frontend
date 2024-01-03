@@ -14,6 +14,7 @@ const initialState = {
     selected_projects_ids: [],
     current_project_measuring_table: null,
     current_project_name: null,
+    current_tif: null,
   },
 };
 
@@ -52,8 +53,6 @@ export const MapView = createSlice({
       const newId = action.payload;
       state.currentMapDetail.selected_projects_ids.push(newId);
     },
-
-    // test
     removeSelectedProjectId: (state, action) => {
       const idToRemove = action.payload;
       state.currentMapDetail.selected_projects_ids =
@@ -61,9 +60,6 @@ export const MapView = createSlice({
           (id) => id !== idToRemove
         );
     },
-    // test
-    // new test
-    // again test
     addcurrentProjectMeasuringTable: (state, action) => {
       const newId = action.payload;
       state.currentMapDetail.current_project_measuring_table = newId;
@@ -71,6 +67,10 @@ export const MapView = createSlice({
     setcurrentProjectName: (state, action) => {
       const name = action.payload;
       state.currentMapDetail.current_project_name = name;
+    },
+    setcurrentTif: (state, action) => {
+      const tif_data = action.payload;
+      state.currentMapDetail.current_tif = tif_data;
     },
   },
 });
@@ -90,6 +90,7 @@ export const {
   removeSelectedProjectId,
   addcurrentProjectMeasuringTable,
   setcurrentProjectName,
+  setcurrentTif,
 } = MapView.actions;
 
 export default MapView.reducer;
