@@ -104,6 +104,7 @@ export default function ProjectView({ project }) {
           <ListItemText
             secondary={project.name}
             sx={{ opacity: open ? 1 : 0 }}
+            secondaryTypographyProps={{ fontSize: 12 }}
           />
 
           <Tooltip title="Show Measurings">
