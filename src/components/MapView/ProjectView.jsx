@@ -102,7 +102,7 @@ export default function ProjectView({ project }) {
           />
 
           <ListItemText
-            secondary={project.name}
+            secondary={project.name.slice(0, 10)}
             sx={{ opacity: open ? 1 : 0 }}
             secondaryTypographyProps={{ fontSize: 12 }}
           />
