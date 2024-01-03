@@ -121,7 +121,9 @@ export default function TiffMapView({ tif, project_id }) {
             current_project_measuring_table === project_id ? false : true
           }
         />
-        {current_project_measuring_table === project_id ? <MoreonMap /> : null}
+        {current_project_measuring_table === project_id ? (
+          <MoreonMap tif={tif} />
+        ) : null}
       </ListItemButton>
     </Box>
   );

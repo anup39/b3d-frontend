@@ -10,6 +10,10 @@ export default function RasterControlNew() {
   const [expandMap, setExpandMap] = useState(true);
   const showTifPanel = useSelector((state) => state.mapView.showTifPanel);
 
+  const current_tif = useSelector(
+    (state) => state.mapView.currentMapDetail.current_tif
+  );
+
   const handleCloseMap = () => {
     setExpandMap(!expandMap);
   };
@@ -36,7 +40,7 @@ export default function RasterControlNew() {
                 fontSize: 15,
               }}
             >
-              map nov
+              {current_tif ? current_tif.name : null}
             </Typography>
           </Box>
 
