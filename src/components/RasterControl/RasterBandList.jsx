@@ -169,7 +169,7 @@ export default function RasterBandList() {
         </Box>
       </Box>
 
-      <Box>
+      {/* <Box>
         {" "}
         <FormControlLabel
           slotProps={{
@@ -184,7 +184,7 @@ export default function RasterBandList() {
             <Checkbox size="small" checked={true} onChange={handleChange2} />
           }
         />
-      </Box>
+      </Box> */}
     </Box>
   );
 }
