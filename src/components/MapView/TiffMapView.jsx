@@ -68,10 +68,8 @@ export default function TiffMapView({ tif, project_id }) {
           }
         })
         .catch(() => {});
-      dispatch(setshowTifPanel(true));
     } else {
       // dispatch(removeSelectedTifId(tif_id));
-      dispatch(setshowTifPanel(false));
       const style = map.getStyle();
       const existingLayer = style.layers.find(
         (layer) => layer.id === `${id}-layer`

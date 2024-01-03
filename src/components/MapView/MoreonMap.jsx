@@ -5,8 +5,11 @@ import { Box, Tooltip } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import { setshowTifPanel } from "../../reducers/MapView";
+import { useDispatch } from "react-redux";
 
 export default function MoreonMap() {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -19,6 +22,11 @@ export default function MoreonMap() {
 
   const handleDoneClick = () => {
     setAnchorEl(null);
+  };
+
+  const handleBandInfoClick = () => {
+    setAnchorEl(null);
+    dispatch(setshowTifPanel(true));
   };
 
   const open = Boolean(anchorEl);
@@ -48,14 +56,14 @@ export default function MoreonMap() {
             control={<Checkbox sx={{ color: "#d51b60" }} defaultChecked />}
             label="Band Information"
           />
-        </Box>
-        <Box sx={{ backgroundColor: "black", color: "white", opacity: 0.8 }}>
+        </Box> */}
+        {/* <Box sx={{ backgroundColor: "black", color: "white", opacity: 0.8 }}>
           <FormControlLabel
             sx={{ margin: 0, marginRight: 1 }}
             control={<Checkbox sx={{ color: "#d51b60" }} defaultChecked />}
             label="3D View"
           />
-        </Box> */}
+        </Box>{" "} */}
 
         <Box
           sx={{
@@ -73,16 +81,16 @@ export default function MoreonMap() {
             sx={{ margin: 1 }}
           >
             3D View
-          </Button>
+          </Button> */}
           <Button
             // fullWidth
             variant="contained"
             color="primary"
-            onClick={handleDoneClick}
+            onClick={handleBandInfoClick}
             sx={{ margin: 1 }}
           >
             Band Information
-          </Button> */}
+          </Button>
           <Button
             // fullWidth
             variant="contained"
