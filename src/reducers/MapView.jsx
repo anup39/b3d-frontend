@@ -88,8 +88,9 @@ export const MapView = createSlice({
       const tif_data = action.payload;
       state.currentMapDetail.current_tif = tif_data;
     },
-    setcurrentMeasuringCategories: (state, action) => {
+    setCategoriesState: (state, action) => {
       const current_measuring_categories = action.payload;
+      console.log(current_measuring_categories, "payload");
       state.currentMapDetail.current_measuring_categories =
         current_measuring_categories;
     },
@@ -112,7 +113,7 @@ export const {
   addcurrentProjectMeasuringTable,
   setcurrentProjectName,
   setcurrentTif,
-  setcurrentMeasuringCategories,
+  setCategoriesState,
 } = MapView.actions;
 
 export default MapView.reducer;
