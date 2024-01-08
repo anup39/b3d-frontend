@@ -6,10 +6,10 @@ import DoneIcon from "@mui/icons-material/Done";
 import { Tooltip } from "@mui/material";
 
 export default function RasterBandList() {
-  const [checked, setChecked] = React.useState([0]);
+  const [checked, setChecked] = React.useState(false);
 
   const handleChange2 = (event) => {
-    setChecked([event.target.checked, checked[1]]);
+    setChecked(event.target.checked);
   };
 
   const handleColorChange = () => {
@@ -41,7 +41,12 @@ export default function RasterBandList() {
           }}
           label="Red Channel"
           control={
-            <Checkbox size="small" checked={true} onChange={handleChange2} />
+            <Checkbox
+              size="small"
+              // checked={checked}
+              defaultChecked={false}
+              onChange={handleChange2}
+            />
           }
         />
 
@@ -86,7 +91,11 @@ export default function RasterBandList() {
           }}
           label="Green Channel"
           control={
-            <Checkbox size="small" checked={true} onChange={handleChange2} />
+            <Checkbox
+              size="small"
+              defaultChecked={false}
+              onChange={handleChange2}
+            />
           }
         />
         <Box
@@ -133,9 +142,13 @@ export default function RasterBandList() {
               fontWeight: 900,
             },
           }}
-          label="Red Channel"
+          label="Blue Channel"
           control={
-            <Checkbox size="small" checked={true} onChange={handleChange2} />
+            <Checkbox
+              size="small"
+              defaultChecked={false}
+              onChange={handleChange2}
+            />
           }
         />
 
@@ -169,7 +182,7 @@ export default function RasterBandList() {
         </Box>
       </Box>
 
-      <Box>
+      {/* <Box>
         {" "}
         <FormControlLabel
           slotProps={{
@@ -184,7 +197,7 @@ export default function RasterBandList() {
             <Checkbox size="small" checked={true} onChange={handleChange2} />
           }
         />
-      </Box>
+      </Box> */}
     </Box>
   );
 }

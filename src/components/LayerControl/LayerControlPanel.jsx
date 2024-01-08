@@ -4,7 +4,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { PropTypes } from "prop-types";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
@@ -13,6 +13,7 @@ import { Slider } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import ModeIcon from "@mui/icons-material/Mode";
 import CircularProgress from "@mui/material/CircularProgress";
+import { setCategoriesState } from "../../reducers/MapView";
 
 const all_categories = [
   {
@@ -95,6 +96,7 @@ const all_categories = [
 ];
 
 export default function LayersControlPanel({ map }) {
+  const dispatch = useDispatch();
   const [categories, setCategories] = useState(all_categories);
   const [loading, setLoading] = useState(true);
   // const client_id = useSelector((state) => state.mapCategories.client_id);
@@ -102,20 +104,35 @@ export default function LayersControlPanel({ map }) {
     (state) => state.mapView.clientDetail.client_id
   );
 
+  const current_measuring_categories = useSelector(
+    (state) => state.mapView.currentMapDetail.current_measuring_categories
+  );
+
   useEffect(() => {
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/map-measurings/?client=${client_id}`
-      )
-      .then((res) => {
-        setCategories(res.data);
-        setLoading(false);
-      });
-  }, [client_id]);
+    if (current_measuring_categories) {
+      setCategories(current_measuring_categories);
+      setLoading(false);
+    } else {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/map-measurings/?client=${client_id}`
+        )
+        .then((res) => {
+          dispatch(setCategoriesState(res.data));
+          setLoading(false);
+        });
+    }
+  }, [client_id, dispatch, current_measuring_categories]);
+
+  useEffect(() => {
+    const deepCopy = JSON.parse(JSON.stringify(current_measuring_categories));
+    setCategories(deepCopy);
+  }, [current_measuring_categories]);
 
   const handleChangesd = (event, sdIndex) => {
+    console.log(categories, "update categores");
     const updatedCategories = [...categories];
     updatedCategories[sdIndex].checked = event.target.checked;
     updatedCategories[sdIndex].indeterminate = false;
@@ -179,6 +196,7 @@ export default function LayersControlPanel({ map }) {
       });
     });
     setCategories(updatedCategories);
+    dispatch(setCategoriesState(updatedCategories));
   };
 
   // TODO: Here small issue , when the categories are empty for sub category , in this case when i selected any catgroy it will be automatically checked
@@ -272,6 +290,7 @@ export default function LayersControlPanel({ map }) {
     }
 
     setCategories(updatedCategories);
+    dispatch(setCategoriesState(updatedCategories));
   };
 
   const handleChangecat = (event, sdIndex, subIndex, catIndex) => {
@@ -391,6 +410,7 @@ export default function LayersControlPanel({ map }) {
     }
 
     setCategories(updatedCategories);
+    dispatch(setCategoriesState(updatedCategories));
   };
 
   const handleChangeExpandSd = (event, sdIndex) => {
@@ -398,6 +418,7 @@ export default function LayersControlPanel({ map }) {
     updatedCategories[sdIndex].expand = !updatedCategories[sdIndex].expand;
 
     setCategories(updatedCategories);
+    dispatch(setCategoriesState(updatedCategories));
   };
 
   const handleChangeExpandSub = (event, sdIndex, subIndex) => {
@@ -405,6 +426,7 @@ export default function LayersControlPanel({ map }) {
     updatedCategories[sdIndex].sub_category[subIndex].expand =
       !updatedCategories[sdIndex].sub_category[subIndex].expand;
     setCategories(updatedCategories);
+    dispatch(setCategoriesState(updatedCategories));
   };
 
   const handleChangeSlider = (event, value, cat) => {
@@ -437,6 +459,7 @@ export default function LayersControlPanel({ map }) {
       }}
     >
       {!loading ? (
+        categories &&
         categories.map((sd, sdIndex) => (
           <div key={sd.id}>
             <Box

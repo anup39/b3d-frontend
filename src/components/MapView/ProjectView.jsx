@@ -22,6 +22,7 @@ import {
   setcurrentProjectName,
   setshowMeasuringsPanel,
   addcurrentProjectMeasuringTable,
+  setCategoriesState,
 } from "../../reducers/MapView";
 import Checkbox from "@mui/material/Checkbox";
 
@@ -57,11 +58,13 @@ export default function ProjectView({ project }) {
     const id = project_id;
     // const map = window.map_global;
     if (checked) {
+      dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(true));
       // dispatch(addSelectedProjectId(id));
       dispatch(setcurrentProjectName(project.name));
       dispatch(addcurrentProjectMeasuringTable(project_id));
     } else {
+      dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(false));
       // dispatch(removeSelectedProjectId(id));
       dispatch(setcurrentProjectName(null));

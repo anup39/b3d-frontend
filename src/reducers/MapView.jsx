@@ -11,10 +11,26 @@ const initialState = {
   showPiechart: false,
   showTifPanel: false,
   currentMapDetail: {
-    selected_projects_ids: [],
+    // selected_projects_ids: [],
     current_project_measuring_table: null,
     current_project_name: null,
     current_tif: null,
+    current_measuring_categories: null,
+    current_band_infomation: {
+      selected_band_tif: null,
+      band_red: {
+        selected: false,
+        color: "red",
+      },
+      band_green: {
+        selected: false,
+        color: "green",
+      },
+      band_blue: {
+        selected: false,
+        color: "blue",
+      },
+    },
   },
 };
 
@@ -49,17 +65,17 @@ export const MapView = createSlice({
     setshowTifPanel: (state, action) => {
       state.showTifPanel = action.payload;
     },
-    addSelectedProjectId: (state, action) => {
-      const newId = action.payload;
-      state.currentMapDetail.selected_projects_ids.push(newId);
-    },
-    removeSelectedProjectId: (state, action) => {
-      const idToRemove = action.payload;
-      state.currentMapDetail.selected_projects_ids =
-        state.currentMapDetail.selected_projects_ids.filter(
-          (id) => id !== idToRemove
-        );
-    },
+    // addSelectedProjectId: (state, action) => {
+    //   const newId = action.payload;
+    //   state.currentMapDetail.selected_projects_ids.push(newId);
+    // },
+    // removeSelectedProjectId: (state, action) => {
+    //   const idToRemove = action.payload;
+    //   state.currentMapDetail.selected_projects_ids =
+    //     state.currentMapDetail.selected_projects_ids.filter(
+    //       (id) => id !== idToRemove
+    //     );
+    // },
     addcurrentProjectMeasuringTable: (state, action) => {
       const newId = action.payload;
       state.currentMapDetail.current_project_measuring_table = newId;
@@ -71,6 +87,12 @@ export const MapView = createSlice({
     setcurrentTif: (state, action) => {
       const tif_data = action.payload;
       state.currentMapDetail.current_tif = tif_data;
+    },
+    setCategoriesState: (state, action) => {
+      const current_measuring_categories = action.payload;
+      console.log(current_measuring_categories, "payload");
+      state.currentMapDetail.current_measuring_categories =
+        current_measuring_categories;
     },
   },
 });
@@ -91,6 +113,7 @@ export const {
   addcurrentProjectMeasuringTable,
   setcurrentProjectName,
   setcurrentTif,
+  setCategoriesState,
 } = MapView.actions;
 
 export default MapView.reducer;
