@@ -108,6 +108,10 @@ export default function LayersControlPanel({ map }) {
     (state) => state.mapView.currentMapDetail.current_measuring_categories
   );
 
+  const project_id = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  );
+
   useEffect(() => {
     if (current_measuring_categories) {
       setCategories(current_measuring_categories);
@@ -164,12 +168,9 @@ export default function LayersControlPanel({ map }) {
                   layerId: layerId,
                   sourceId: sourceId,
                   url: `${
-                    import.meta.env.VITE_API_MAP_URL
-                  }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
-                    cat.id
-                  }`,
-                  source_layer:
-                    "function_zxy_query_app_polygondata_by_category",
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/category-geojson/?project=${project_id}&category=${cat.id}`,
+                  source_layer: sourceId,
                   showPopup: true,
                   style: {
                     fill_color: categoryStyle.fill,
@@ -178,6 +179,7 @@ export default function LayersControlPanel({ map }) {
                   },
                   zoomToLayer: false,
                   extent: [],
+                  geomType: "geojson",
                   fillType: "fill",
                   trace: false,
                   component: "map",
@@ -235,12 +237,11 @@ export default function LayersControlPanel({ map }) {
                     layerId: layerId,
                     sourceId: sourceId,
                     url: `${
-                      import.meta.env.VITE_API_MAP_URL
-                    }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
+                      import.meta.env.VITE_API_DASHBOARD_URL
+                    }/category-geojson/?project=${project_id}&category=${
                       cat.id
                     }`,
-                    source_layer:
-                      "function_zxy_query_app_polygondata_by_category",
+                    source_layer: sourceId,
                     showPopup: true,
                     style: {
                       fill_color: categoryStyle.fill,
@@ -249,6 +250,7 @@ export default function LayersControlPanel({ map }) {
                     },
                     zoomToLayer: false,
                     extent: [],
+                    geomType: "geojson",
                     fillType: "fill",
                     trace: false,
                     component: "map",
@@ -324,11 +326,9 @@ export default function LayersControlPanel({ map }) {
               layerId: layerId,
               sourceId: sourceId,
               url: `${
-                import.meta.env.VITE_API_MAP_URL
-              }/function_zxy_query_app_polygondata_by_category/{z}/{x}/{y}?category=${
-                cat.id
-              }`,
-              source_layer: "function_zxy_query_app_polygondata_by_category",
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-geojson/?project=${project_id}&category=${cat.id}`,
+              source_layer: sourceId,
               showPopup: true,
               style: {
                 fill_color: categoryStyle.fill,
@@ -337,6 +337,7 @@ export default function LayersControlPanel({ map }) {
               },
               zoomToLayer: false,
               extent: [],
+              geomType: "geojson",
               fillType: "fill",
               trace: false,
               component: "map",
