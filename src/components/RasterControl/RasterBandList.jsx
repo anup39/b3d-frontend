@@ -4,12 +4,20 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import DoneIcon from "@mui/icons-material/Done";
 import { Tooltip } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentBandCheckedInfomation } from "../../reducers/MapView";
 
 export default function RasterBandList() {
-  const [checked, setChecked] = React.useState(false);
+  const dispatch = useDispatch();
+  const current_band_infomation = useSelector(
+    (state) => state.mapView.currentMapDetail.current_band_infomation
+  );
+  // const [checked, setChecked] = React.useState(false);
 
-  const handleChange2 = (event) => {
-    setChecked(event.target.checked);
+  const handleChange = (event, band) => {
+    const checked = event.target.checked;
+    // setChecked(event.target.checked);
+    dispatch(setCurrentBandCheckedInfomation({ checked, band }));
   };
 
   const handleColorChange = () => {
@@ -43,9 +51,11 @@ export default function RasterBandList() {
           control={
             <Checkbox
               size="small"
-              // checked={checked}
-              defaultChecked={false}
-              onChange={handleChange2}
+              checked={current_band_infomation.band_red.checked}
+              // defaultChecked={false}
+              onChange={(event) => {
+                handleChange(event, "red");
+              }}
             />
           }
         />
@@ -93,8 +103,11 @@ export default function RasterBandList() {
           control={
             <Checkbox
               size="small"
-              defaultChecked={false}
-              onChange={handleChange2}
+              // defaultChecked={false}
+              checked={current_band_infomation.band_green.checked}
+              onChange={(event) => {
+                handleChange(event, "green");
+              }}
             />
           }
         />
@@ -146,8 +159,11 @@ export default function RasterBandList() {
           control={
             <Checkbox
               size="small"
-              defaultChecked={false}
-              onChange={handleChange2}
+              checked={current_band_infomation.band_blue.checked}
+              // defaultChecked={false}
+              onChange={(event) => {
+                handleChange(event, "blue");
+              }}
             />
           }
         />

@@ -16,18 +16,18 @@ const initialState = {
     current_project_name: null,
     current_tif: null,
     current_measuring_categories: null,
+    selected_band_tif: null,
     current_band_infomation: {
-      selected_band_tif: null,
       band_red: {
-        selected: false,
+        checked: false,
         color: "red",
       },
       band_green: {
-        selected: false,
+        checked: false,
         color: "green",
       },
       band_blue: {
-        selected: false,
+        checked: false,
         color: "blue",
       },
     },
@@ -94,6 +94,37 @@ export const MapView = createSlice({
       state.currentMapDetail.current_measuring_categories =
         current_measuring_categories;
     },
+    setCurrentBandCheckedInfomation: (state, action) => {
+      const { checked, band } = action.payload;
+      if (band === "red") {
+        state.currentMapDetail.current_band_infomation.band_red.checked =
+          checked;
+      }
+      if (band === "green") {
+        state.currentMapDetail.current_band_infomation.band_green.checked =
+          checked;
+      }
+      if (band === "blue") {
+        state.currentMapDetail.current_band_infomation.band_blue.checked =
+          checked;
+      }
+    },
+    resetCurrentBandCheckedInfomation: (state) => {
+      state.currentMapDetail.current_band_infomation = {
+        band_red: {
+          checked: false,
+          color: "red",
+        },
+        band_green: {
+          checked: false,
+          color: "green",
+        },
+        band_blue: {
+          checked: false,
+          color: "blue",
+        },
+      };
+    },
   },
 });
 
@@ -114,6 +145,8 @@ export const {
   setcurrentProjectName,
   setcurrentTif,
   setCategoriesState,
+  setCurrentBandCheckedInfomation,
+  resetCurrentBandCheckedInfomation,
 } = MapView.actions;
 
 export default MapView.reducer;
