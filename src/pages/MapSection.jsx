@@ -78,7 +78,7 @@ export default function MapSection() {
       }}
     >
       <AppBar />
-      <CategoryGeomForm project_id={id} />
+      <CategoryGeomForm />
       <Map refObj={searchRef} id={id} />
       {/* <Map3D /> */}
       {/* <ThreeScene /> */}
