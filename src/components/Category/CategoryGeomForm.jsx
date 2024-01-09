@@ -7,7 +7,6 @@ import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setshowGeomFormPopup } from "../../reducers/DisplaySettings";
-import PropTypes from "prop-types";
 import { setWKTGeometry } from "../../reducers/DrawnPolygon";
 import AutoCompleteMap from "../MapView/AutoCompleteMap";
 
