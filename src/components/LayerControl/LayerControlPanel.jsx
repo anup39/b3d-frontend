@@ -583,6 +583,12 @@ export default function LayersControlPanel({ map }) {
                         label={cat.label}
                         control={
                           <Checkbox
+                            sx={{
+                              color: cat.fill_color,
+                              "&.Mui-checked": {
+                                color: cat.fill_color,
+                              },
+                            }}
                             size="small"
                             checked={cat.checked}
                             onChange={(event) =>
