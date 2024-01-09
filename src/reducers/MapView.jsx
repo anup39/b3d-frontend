@@ -16,18 +16,18 @@ const initialState = {
     current_project_name: null,
     current_tif: null,
     current_measuring_categories: null,
+    selected_tif: null,
     current_band_infomation: {
-      selected_band_tif: null,
       band_red: {
-        selected: false,
+        checked: false,
         color: "red",
       },
       band_green: {
-        selected: false,
+        checked: false,
         color: "green",
       },
       band_blue: {
-        selected: false,
+        checked: false,
         color: "blue",
       },
     },
@@ -88,11 +88,58 @@ export const MapView = createSlice({
       const tif_data = action.payload;
       state.currentMapDetail.current_tif = tif_data;
     },
+    setSelectedTif: (state, action) => {
+      const tif_data = action.payload;
+      state.currentMapDetail.selected_tif = tif_data;
+    },
     setCategoriesState: (state, action) => {
       const current_measuring_categories = action.payload;
       console.log(current_measuring_categories, "payload");
       state.currentMapDetail.current_measuring_categories =
         current_measuring_categories;
+    },
+    setCurrentBandCheckedInfomation: (state, action) => {
+      const { checked, band } = action.payload;
+      if (band === "red") {
+        state.currentMapDetail.current_band_infomation.band_red.checked =
+          checked;
+      }
+      if (band === "green") {
+        state.currentMapDetail.current_band_infomation.band_green.checked =
+          checked;
+      }
+      if (band === "blue") {
+        state.currentMapDetail.current_band_infomation.band_blue.checked =
+          checked;
+      }
+    },
+    setCurrentBandColorInfomation: (state, action) => {
+      const { color, band } = action.payload;
+      if (band === "red") {
+        state.currentMapDetail.current_band_infomation.band_red.color = color;
+      }
+      if (band === "green") {
+        state.currentMapDetail.current_band_infomation.band_green.color = color;
+      }
+      if (band === "blue") {
+        state.currentMapDetail.current_band_infomation.band_blue.color = color;
+      }
+    },
+    resetCurrentBandCheckedInfomation: (state) => {
+      state.currentMapDetail.current_band_infomation = {
+        band_red: {
+          checked: false,
+          color: "#FF0000",
+        },
+        band_green: {
+          checked: false,
+          color: "#00FF00",
+        },
+        band_blue: {
+          checked: false,
+          color: "#0000FF",
+        },
+      };
     },
   },
 });
@@ -113,7 +160,11 @@ export const {
   addcurrentProjectMeasuringTable,
   setcurrentProjectName,
   setcurrentTif,
+  setSelectedTif,
   setCategoriesState,
+  setCurrentBandCheckedInfomation,
+  setCurrentBandColorInfomation,
+  resetCurrentBandCheckedInfomation,
 } = MapView.actions;
 
 export default MapView.reducer;

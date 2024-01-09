@@ -17,7 +17,7 @@ import axios from "axios";
 //   addcurrentTifMeasuringTable,
 // } from "../../reducers/MapView";
 import { useDispatch, useSelector } from "react-redux";
-import { setshowTifPanel } from "../../reducers/MapView";
+import { setcurrentTif, setshowTifPanel } from "../../reducers/MapView";
 
 const Img = styled("img")({
   margin: "auto",
@@ -66,6 +66,7 @@ export default function TiffMapView({ tif, project_id }) {
             map.moveLayer(`${id}-layer`, "gl-draw-polygon-fill-inactive.cold");
             // dispatch(addSelectedTifId(tif_id));
           }
+          dispatch(setcurrentTif(tif));
         })
         .catch(() => {});
     } else {
@@ -78,6 +79,7 @@ export default function TiffMapView({ tif, project_id }) {
       if (existingLayer) {
         map.off("click", `${id}-layer`);
         map.removeLayer(`${id}-layer`);
+        dispatch(setcurrentTif(null));
       }
       if (existingSource) {
         map.removeSource(`${id}-source`);

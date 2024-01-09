@@ -3,12 +3,20 @@ import Popover from "@mui/material/Popover";
 import Button from "@mui/material/Button";
 import { Box, Tooltip } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { setcurrentTif, setshowTifPanel } from "../../reducers/MapView";
-import { useDispatch } from "react-redux";
+import {
+  resetCurrentBandCheckedInfomation,
+  setSelectedTif,
+  setshowTifPanel,
+} from "../../reducers/MapView";
+import { useDispatch, useSelector } from "react-redux";
+import PropTypes from "prop-types";
 
 export default function MoreonMap({ tif }) {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const selected_tif = useSelector(
+    (state) => state.mapView.currentMapDetail.selected_tif
+  );
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -25,7 +33,10 @@ export default function MoreonMap({ tif }) {
   const handleBandInfoClick = () => {
     setAnchorEl(null);
     dispatch(setshowTifPanel(true));
-    dispatch(setcurrentTif(tif));
+    dispatch(setSelectedTif(tif));
+    if (selected_tif?.id !== tif.id) {
+      dispatch(resetCurrentBandCheckedInfomation());
+    }
   };
 
   const open = Boolean(anchorEl);
@@ -113,3 +124,7 @@ export default function MoreonMap({ tif }) {
     </div>
   );
 }
+
+MoreonMap.propTypes = {
+  tif: PropTypes.object,
+};

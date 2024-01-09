@@ -2,18 +2,118 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import DoneIcon from "@mui/icons-material/Done";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Tooltip } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setCurrentBandCheckedInfomation,
+  setCurrentBandColorInfomation,
+} from "../../reducers/MapView";
+import axios from "axios";
 
 export default function RasterBandList() {
-  const [checked, setChecked] = React.useState(false);
+  const dispatch = useDispatch();
+  const current_band_infomation = useSelector(
+    (state) => state.mapView.currentMapDetail.current_band_infomation
+  );
+  const selected_tif = useSelector(
+    (state) => state.mapView.currentMapDetail.selected_tif
+  );
 
-  const handleChange2 = (event) => {
-    setChecked(event.target.checked);
+  const handleChange = (event, band) => {
+    const checked = event.target.checked;
+    dispatch(setCurrentBandCheckedInfomation({ checked, band }));
+    // Map logic here
+    // console.log(
+    //   selected_tif.id,
+    //   band,
+    //   current_band_infomation.band_red.color,
+    //   current_band_infomation.band_red.checked
+    // );
+    const map = window.map_global;
+    const id = selected_tif.id;
+    if (checked) {
+      axios
+        .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
+        .then((res) => {
+          if (res.data.bounds) {
+            const bounds = res.data.bounds;
+            map.fitBounds(bounds);
+            map.addSource(`${id}-${band}-source`, {
+              type: "raster",
+              tiles: [
+                `${
+                  import.meta.env.VITE_API_RASTER_URL
+                }/tile-singleband-async/${id}/${band}/ffff/{z}/{x}/{y}.png`,
+              ],
+              tileSize: 512,
+            });
+
+            map.addLayer({
+              id: `${id}-${band}-layer`,
+              type: "raster",
+              source: `${id}-${band}-source`,
+              minzoom: 0,
+              maxzoom: 24,
+            });
+            map.moveLayer(
+              `${id}-${band}-layer`,
+              "gl-draw-polygon-fill-inactive.cold"
+            );
+            // dispatch(addSelectedTifId(tif_id));
+          }
+          // dispatch(setcurrentTif(tif));
+        })
+        .catch(() => {});
+    } else {
+      // dispatch(removeSelectedTifId(tif_id));
+      const style = map.getStyle();
+      const existingLayer = style.layers.find(
+        (layer) => layer.id === `${id}-${band}-layer`
+      );
+      const existingSource = style.sources[`${id}-${band}-source`];
+      if (existingLayer) {
+        map.off("click", `${id}-${band}-layer`);
+        map.removeLayer(`${id}-${band}-layer`);
+        // dispatch(setcurrentTif(null));
+      }
+      if (existingSource) {
+        map.removeSource(`${id}-${band}-source`);
+      }
+    }
   };
 
-  const handleColorChange = () => {
-    console.log("color");
+  const handleColorChange = (event, band) => {
+    const color = event.target.value;
+    dispatch(setCurrentBandColorInfomation({ color, band }));
+  };
+
+  const handleDoneColorChange = (band) => {
+    // Logic to hit api call for tif
+    if (band === "red") {
+      console.log(
+        selected_tif.id,
+        band,
+        current_band_infomation.band_red.color,
+        current_band_infomation.band_red.checked
+      );
+    }
+    if (band === "green") {
+      console.log(
+        selected_tif.id,
+        band,
+        current_band_infomation.band_green.color,
+        current_band_infomation.band_green.checked
+      );
+    }
+    if (band === "blue") {
+      console.log(
+        selected_tif.id,
+        band,
+        current_band_infomation.band_blue.color,
+        current_band_infomation.band_blue.checked
+      );
+    }
   };
 
   return (
@@ -43,9 +143,11 @@ export default function RasterBandList() {
           control={
             <Checkbox
               size="small"
-              // checked={checked}
-              defaultChecked={false}
-              onChange={handleChange2}
+              checked={current_band_infomation.band_red.checked}
+              // defaultChecked={false}
+              onChange={(event) => {
+                handleChange(event, "red");
+              }}
             />
           }
         />
@@ -59,12 +161,14 @@ export default function RasterBandList() {
           }}
         >
           <input
-            onChange={handleColorChange}
+            onChange={(event) => {
+              handleColorChange(event, "red");
+            }}
             style={{ width: "25px", height: "20px", margin: "2px" }}
             type="color"
             id="favcolor"
             name="favcolor"
-            value="#ff0000"
+            value={current_band_infomation.band_red.color}
           ></input>
           <Tooltip
             sx={{
@@ -75,7 +179,10 @@ export default function RasterBandList() {
             }}
             title="Apply Color Map"
           >
-            <DoneIcon sx={{ color: "#D51B60" }} />
+            <CheckCircleIcon
+              onClick={() => handleDoneColorChange("red")}
+              sx={{ color: "#D51B60" }}
+            />
           </Tooltip>
         </Box>
       </Box>
@@ -93,8 +200,11 @@ export default function RasterBandList() {
           control={
             <Checkbox
               size="small"
-              defaultChecked={false}
-              onChange={handleChange2}
+              // defaultChecked={false}
+              checked={current_band_infomation.band_green.checked}
+              onChange={(event) => {
+                handleChange(event, "green");
+              }}
             />
           }
         />
@@ -107,12 +217,14 @@ export default function RasterBandList() {
           }}
         >
           <input
-            onChange={handleColorChange}
+            onChange={(event) => {
+              handleColorChange(event, "green");
+            }}
             style={{ width: "25px", height: "20px", margin: "2px" }}
             type="color"
             id="favcolor"
             name="favcolor"
-            value="#228B22"
+            value={current_band_infomation.band_green.color}
           ></input>
           <Tooltip
             sx={{
@@ -123,7 +235,10 @@ export default function RasterBandList() {
             }}
             title="Apply Color Map"
           >
-            <DoneIcon sx={{ color: "#D51B60" }} />
+            <CheckCircleIcon
+              onClick={() => handleDoneColorChange("green")}
+              sx={{ color: "#D51B60" }}
+            />
           </Tooltip>
         </Box>
       </Box>
@@ -146,8 +261,11 @@ export default function RasterBandList() {
           control={
             <Checkbox
               size="small"
-              defaultChecked={false}
-              onChange={handleChange2}
+              checked={current_band_infomation.band_blue.checked}
+              // defaultChecked={false}
+              onChange={(event) => {
+                handleChange(event, "blue");
+              }}
             />
           }
         />
@@ -161,12 +279,14 @@ export default function RasterBandList() {
           }}
         >
           <input
-            onChange={handleColorChange}
+            onChange={(event) => {
+              handleColorChange(event, "blue");
+            }}
             style={{ width: "25px", height: "20px", margin: "2px" }}
             type="color"
             id="favcolor"
             name="favcolor"
-            value="#0000FF"
+            value={current_band_infomation.band_blue.color}
           ></input>
           <Tooltip
             sx={{
@@ -177,7 +297,10 @@ export default function RasterBandList() {
             }}
             title="Apply Color Map"
           >
-            <DoneIcon sx={{ color: "#D51B60" }} />
+            <CheckCircleIcon
+              onClick={() => handleDoneColorChange("blue")}
+              sx={{ color: "#D51B60" }}
+            />
           </Tooltip>
         </Box>
       </Box>
