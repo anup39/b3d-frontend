@@ -16,7 +16,7 @@ const initialState = {
     current_project_name: null,
     current_tif: null,
     current_measuring_categories: null,
-    selected_band_tif: null,
+    selected_tif: null,
     current_band_infomation: {
       band_red: {
         checked: false,
@@ -88,6 +88,10 @@ export const MapView = createSlice({
       const tif_data = action.payload;
       state.currentMapDetail.current_tif = tif_data;
     },
+    setSelectedTif: (state, action) => {
+      const tif_data = action.payload;
+      state.currentMapDetail.selected_tif = tif_data;
+    },
     setCategoriesState: (state, action) => {
       const current_measuring_categories = action.payload;
       console.log(current_measuring_categories, "payload");
@@ -144,6 +148,7 @@ export const {
   addcurrentProjectMeasuringTable,
   setcurrentProjectName,
   setcurrentTif,
+  setSelectedTif,
   setCategoriesState,
   setCurrentBandCheckedInfomation,
   resetCurrentBandCheckedInfomation,
