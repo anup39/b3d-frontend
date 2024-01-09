@@ -9,6 +9,7 @@ import {
   setCurrentBandCheckedInfomation,
   setCurrentBandColorInfomation,
 } from "../../reducers/MapView";
+import axios from "axios";
 
 export default function RasterBandList() {
   const dispatch = useDispatch();
@@ -22,31 +23,63 @@ export default function RasterBandList() {
   const handleChange = (event, band) => {
     const checked = event.target.checked;
     dispatch(setCurrentBandCheckedInfomation({ checked, band }));
-
     // Map logic here
-    if (band === "red") {
-      console.log(
-        selected_tif.id,
-        band,
-        current_band_infomation.band_red.color,
-        current_band_infomation.band_red.checked
+    // console.log(
+    //   selected_tif.id,
+    //   band,
+    //   current_band_infomation.band_red.color,
+    //   current_band_infomation.band_red.checked
+    // );
+    const map = window.map_global;
+    const id = selected_tif.id;
+    if (checked) {
+      axios
+        .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
+        .then((res) => {
+          if (res.data.bounds) {
+            const bounds = res.data.bounds;
+            map.fitBounds(bounds);
+            map.addSource(`${id}-${band}-source`, {
+              type: "raster",
+              tiles: [
+                `${
+                  import.meta.env.VITE_API_RASTER_URL
+                }/tile-async/${id}/{z}/{x}/{y}.png`,
+              ],
+              tileSize: 512,
+            });
+
+            map.addLayer({
+              id: `${id}-${band}-layer`,
+              type: "raster",
+              source: `${id}-${band}-source`,
+              minzoom: 0,
+              maxzoom: 24,
+            });
+            map.moveLayer(
+              `${id}-${band}-layer`,
+              "gl-draw-polygon-fill-inactive.cold"
+            );
+            // dispatch(addSelectedTifId(tif_id));
+          }
+          // dispatch(setcurrentTif(tif));
+        })
+        .catch(() => {});
+    } else {
+      // dispatch(removeSelectedTifId(tif_id));
+      const style = map.getStyle();
+      const existingLayer = style.layers.find(
+        (layer) => layer.id === `${id}-${band}-layer`
       );
-    }
-    if (band === "green") {
-      console.log(
-        selected_tif.id,
-        band,
-        current_band_infomation.band_green.color,
-        current_band_infomation.band_green.checked
-      );
-    }
-    if (band === "blue") {
-      console.log(
-        selected_tif.id,
-        band,
-        current_band_infomation.band_blue.color,
-        current_band_infomation.band_blue.checked
-      );
+      const existingSource = style.sources[`${id}-${band}-source`];
+      if (existingLayer) {
+        map.off("click", `${id}-${band}-layer`);
+        map.removeLayer(`${id}-${band}-layer`);
+        // dispatch(setcurrentTif(null));
+      }
+      if (existingSource) {
+        map.removeSource(`${id}-${band}-source`);
+      }
     }
   };
 
