@@ -5,15 +5,13 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 
-export default function AutoCompleteMap({
-  onItemSelected,
-  category,
-  project_id,
-}) {
+export default function AutoCompleteMap({ onItemSelected, category }) {
   const [options, setOptions] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
-  const client_id = useSelector((state) => state.mapCategories.client_id);
+  const client_id = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
 
   useEffect(() => {
     if (client_id) {
@@ -24,6 +22,7 @@ export default function AutoCompleteMap({
           }/${category}/?client=${parseInt(client_id)}`
         )
         .then((response) => {
+          console.log(response.data, "dropdown data");
           setOptions(response.data);
         })
         .catch((error) => {
@@ -61,5 +60,5 @@ export default function AutoCompleteMap({
 AutoCompleteMap.propTypes = {
   onItemSelected: PropTypes.func.isRequired,
   category: PropTypes.string,
-  project_id: PropTypes.string,
+  // project_id: PropTypes.string,
 };

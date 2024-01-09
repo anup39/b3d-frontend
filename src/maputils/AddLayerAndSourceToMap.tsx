@@ -18,6 +18,7 @@ interface AddLayerProps {
   style: { fill_color: string; fill_opacity: string; stroke_color: string };
   zoomToLayer: boolean;
   extent: LngLatBounds;
+  geomType: string;
   fillType: string;
   trace: boolean;
   component: string;
@@ -33,6 +34,7 @@ function AddLayerAndSourceToMap({
   style,
   zoomToLayer,
   extent,
+  geomType,
   fillType,
   trace,
 }: AddLayerProps) {
@@ -42,13 +44,21 @@ function AddLayerAndSourceToMap({
     map.fitBounds(extent);
   }
 
-  const newSource: SourceSpecification = {
-    type: "vector",
-    tiles: [url],
-    promoteId: "id",
-  };
+  if (geomType && geomType === "geojson") {
+    const newSourceGeojson: SourceSpecification = {
+      type: "geojson",
+      data: url,
+    };
+    map.addSource(sourceId, newSourceGeojson);
+  } else {
+    const newSource: SourceSpecification = {
+      type: "vector",
+      tiles: [url],
+      promoteId: "id",
+    };
 
-  map.addSource(sourceId, newSource);
+    map.addSource(sourceId, newSource);
+  }
 
   if (fillType && fillType === "point") {
     const newLayer: CircleLayerSpecification = {
@@ -81,7 +91,7 @@ function AddLayerAndSourceToMap({
       id: layerId,
       type: "fill",
       source: sourceId,
-      "source-layer": source_layer,
+      // "source-layer": source_layer,
       layout: {},
       paint: {
         "fill-color": style.fill_color,
@@ -126,7 +136,7 @@ function AddLayerAndSourceToMap({
             {
               source: sourceId,
               id: hoveredStateId,
-              sourceLayer: source_layer,
+              // sourceLayer: source_layer,
             },
             { hover: false }
           );
@@ -138,7 +148,7 @@ function AddLayerAndSourceToMap({
             source: sourceId,
             // @ts-ignore
             id: hoveredStateId,
-            sourceLayer: source_layer,
+            // sourceLayer: source_layer,
           },
           { hover: true }
         );
@@ -151,7 +161,7 @@ function AddLayerAndSourceToMap({
           {
             source: sourceId,
             id: hoveredStateId,
-            sourceLayer: source_layer,
+            // sourceLayer: source_layer,
           },
           { hover: false }
         );

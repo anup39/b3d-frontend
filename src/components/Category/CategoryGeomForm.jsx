@@ -7,7 +7,6 @@ import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setshowGeomFormPopup } from "../../reducers/DisplaySettings";
-import PropTypes from "prop-types";
 import { setWKTGeometry } from "../../reducers/DrawnPolygon";
 import AutoCompleteMap from "../MapView/AutoCompleteMap";
 
@@ -15,7 +14,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function CategoryGeomForm({ project_id }) {
+export default function CategoryGeomForm() {
   const dispatch = useDispatch();
   const isFormOpen = useSelector(
     (state) => state.displaySettings.showGeomFormPopup
@@ -27,7 +26,12 @@ export default function CategoryGeomForm({ project_id }) {
     useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
-  const client_id = useSelector((state) => state.mapCategories.client_id);
+  const client_id = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
+  const project_id = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  );
 
   const handleCreateCategoryStyle = (event) => {
     event.preventDefault();
@@ -43,7 +47,7 @@ export default function CategoryGeomForm({ project_id }) {
           .then((res) => {
             const data = {
               client: parseInt(client_id),
-              // project: parseInt(project_id),
+              project: parseInt(project_id),
               standard_category: res.data.standard_category,
               sub_category: res.data.sub_category,
               category: selectedCategoryId,
@@ -91,6 +95,8 @@ export default function CategoryGeomForm({ project_id }) {
   const closeForm = () => {
     dispatch(setshowGeomFormPopup("none"));
   };
+
+  // console.log(project_id, "project id ");
 
   return (
     <div style={{ display: isFormOpen }}>
@@ -155,7 +161,6 @@ export default function CategoryGeomForm({ project_id }) {
               <AutoCompleteMap
                 onItemSelected={(id) => setSelectedCategoryId(id)}
                 category={"category"}
-                project_id={project_id}
               />
             </Grid>
             <Grid item xs={12}>
@@ -187,5 +192,5 @@ export default function CategoryGeomForm({ project_id }) {
   );
 }
 CategoryGeomForm.propTypes = {
-  project_id: PropTypes.string,
+  // project_id: PropTypes.string,
 };
