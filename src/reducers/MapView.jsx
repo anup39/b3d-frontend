@@ -113,19 +113,31 @@ export const MapView = createSlice({
           checked;
       }
     },
+    setCurrentBandColorInfomation: (state, action) => {
+      const { color, band } = action.payload;
+      if (band === "red") {
+        state.currentMapDetail.current_band_infomation.band_red.color = color;
+      }
+      if (band === "green") {
+        state.currentMapDetail.current_band_infomation.band_green.color = color;
+      }
+      if (band === "blue") {
+        state.currentMapDetail.current_band_infomation.band_blue.color = color;
+      }
+    },
     resetCurrentBandCheckedInfomation: (state) => {
       state.currentMapDetail.current_band_infomation = {
         band_red: {
           checked: false,
-          color: "red",
+          color: "#FF0000",
         },
         band_green: {
           checked: false,
-          color: "green",
+          color: "#00FF00",
         },
         band_blue: {
           checked: false,
-          color: "blue",
+          color: "#0000FF",
         },
       };
     },
@@ -151,6 +163,7 @@ export const {
   setSelectedTif,
   setCategoriesState,
   setCurrentBandCheckedInfomation,
+  setCurrentBandColorInfomation,
   resetCurrentBandCheckedInfomation,
 } = MapView.actions;
 

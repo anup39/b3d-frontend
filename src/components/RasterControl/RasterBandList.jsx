@@ -2,10 +2,13 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import DoneIcon from "@mui/icons-material/Done";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentBandCheckedInfomation } from "../../reducers/MapView";
+import {
+  setCurrentBandCheckedInfomation,
+  setCurrentBandColorInfomation,
+} from "../../reducers/MapView";
 
 export default function RasterBandList() {
   const dispatch = useDispatch();
@@ -20,8 +23,9 @@ export default function RasterBandList() {
     dispatch(setCurrentBandCheckedInfomation({ checked, band }));
   };
 
-  const handleColorChange = () => {
-    console.log("color");
+  const handleColorChange = (event, band) => {
+    const color = event.target.value;
+    dispatch(setCurrentBandColorInfomation({ color, band }));
   };
 
   return (
@@ -69,12 +73,14 @@ export default function RasterBandList() {
           }}
         >
           <input
-            onChange={handleColorChange}
+            onChange={(event) => {
+              handleColorChange(event, "red");
+            }}
             style={{ width: "25px", height: "20px", margin: "2px" }}
             type="color"
             id="favcolor"
             name="favcolor"
-            value="#ff0000"
+            value={current_band_infomation.band_red.color}
           ></input>
           <Tooltip
             sx={{
@@ -85,7 +91,7 @@ export default function RasterBandList() {
             }}
             title="Apply Color Map"
           >
-            <DoneIcon sx={{ color: "#D51B60" }} />
+            <CheckCircleIcon sx={{ color: "#D51B60" }} />
           </Tooltip>
         </Box>
       </Box>
@@ -120,12 +126,14 @@ export default function RasterBandList() {
           }}
         >
           <input
-            onChange={handleColorChange}
+            onChange={(event) => {
+              handleColorChange(event, "green");
+            }}
             style={{ width: "25px", height: "20px", margin: "2px" }}
             type="color"
             id="favcolor"
             name="favcolor"
-            value="#228B22"
+            value={current_band_infomation.band_green.color}
           ></input>
           <Tooltip
             sx={{
@@ -136,7 +144,7 @@ export default function RasterBandList() {
             }}
             title="Apply Color Map"
           >
-            <DoneIcon sx={{ color: "#D51B60" }} />
+            <CheckCircleIcon sx={{ color: "#D51B60" }} />
           </Tooltip>
         </Box>
       </Box>
@@ -177,12 +185,14 @@ export default function RasterBandList() {
           }}
         >
           <input
-            onChange={handleColorChange}
+            onChange={(event) => {
+              handleColorChange(event, "blue");
+            }}
             style={{ width: "25px", height: "20px", margin: "2px" }}
             type="color"
             id="favcolor"
             name="favcolor"
-            value="#0000FF"
+            value={current_band_infomation.band_blue.color}
           ></input>
           <Tooltip
             sx={{
@@ -193,7 +203,7 @@ export default function RasterBandList() {
             }}
             title="Apply Color Map"
           >
-            <DoneIcon sx={{ color: "#D51B60" }} />
+            <CheckCircleIcon sx={{ color: "#D51B60" }} />
           </Tooltip>
         </Box>
       </Box>
