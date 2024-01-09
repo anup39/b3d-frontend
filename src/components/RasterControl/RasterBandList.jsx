@@ -15,17 +15,72 @@ export default function RasterBandList() {
   const current_band_infomation = useSelector(
     (state) => state.mapView.currentMapDetail.current_band_infomation
   );
-  // const [checked, setChecked] = React.useState(false);
+  const selected_tif = useSelector(
+    (state) => state.mapView.currentMapDetail.selected_tif
+  );
 
   const handleChange = (event, band) => {
     const checked = event.target.checked;
-    // setChecked(event.target.checked);
     dispatch(setCurrentBandCheckedInfomation({ checked, band }));
+
+    // Map logic here
+    if (band === "red") {
+      console.log(
+        selected_tif.id,
+        band,
+        current_band_infomation.band_red.color,
+        current_band_infomation.band_red.checked
+      );
+    }
+    if (band === "green") {
+      console.log(
+        selected_tif.id,
+        band,
+        current_band_infomation.band_green.color,
+        current_band_infomation.band_green.checked
+      );
+    }
+    if (band === "blue") {
+      console.log(
+        selected_tif.id,
+        band,
+        current_band_infomation.band_blue.color,
+        current_band_infomation.band_blue.checked
+      );
+    }
   };
 
   const handleColorChange = (event, band) => {
     const color = event.target.value;
     dispatch(setCurrentBandColorInfomation({ color, band }));
+  };
+
+  const handleDoneColorChange = (band) => {
+    // Logic to hit api call for tif
+    if (band === "red") {
+      console.log(
+        selected_tif.id,
+        band,
+        current_band_infomation.band_red.color,
+        current_band_infomation.band_red.checked
+      );
+    }
+    if (band === "green") {
+      console.log(
+        selected_tif.id,
+        band,
+        current_band_infomation.band_green.color,
+        current_band_infomation.band_green.checked
+      );
+    }
+    if (band === "blue") {
+      console.log(
+        selected_tif.id,
+        band,
+        current_band_infomation.band_blue.color,
+        current_band_infomation.band_blue.checked
+      );
+    }
   };
 
   return (
@@ -91,7 +146,10 @@ export default function RasterBandList() {
             }}
             title="Apply Color Map"
           >
-            <CheckCircleIcon sx={{ color: "#D51B60" }} />
+            <CheckCircleIcon
+              onClick={() => handleDoneColorChange("red")}
+              sx={{ color: "#D51B60" }}
+            />
           </Tooltip>
         </Box>
       </Box>
@@ -144,7 +202,10 @@ export default function RasterBandList() {
             }}
             title="Apply Color Map"
           >
-            <CheckCircleIcon sx={{ color: "#D51B60" }} />
+            <CheckCircleIcon
+              onClick={() => handleDoneColorChange("green")}
+              sx={{ color: "#D51B60" }}
+            />
           </Tooltip>
         </Box>
       </Box>
@@ -203,7 +264,10 @@ export default function RasterBandList() {
             }}
             title="Apply Color Map"
           >
-            <CheckCircleIcon sx={{ color: "#D51B60" }} />
+            <CheckCircleIcon
+              onClick={() => handleDoneColorChange("blue")}
+              sx={{ color: "#D51B60" }}
+            />
           </Tooltip>
         </Box>
       </Box>
