@@ -44,7 +44,7 @@ export default function RasterBandList() {
               tiles: [
                 `${
                   import.meta.env.VITE_API_RASTER_URL
-                }/tile-async/${id}/{z}/{x}/{y}.png`,
+                }/tile-singleband-async/${id}/${band}/ffff/{z}/{x}/{y}.png`,
               ],
               tileSize: 512,
             });
