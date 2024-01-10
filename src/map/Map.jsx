@@ -51,7 +51,8 @@ export default function Map({ id }) {
 
         document
           .getElementById("polygon-box")
-          .addEventListener("click", function () {
+          .addEventListener("click", function (event) {
+            console.log(event, "event");
             draw.deleteAll();
             draw.changeMode("draw_polygon");
           });
