@@ -195,7 +195,7 @@ export default function Save() {
                       source.setData(
                         `${
                           import.meta.env.VITE_API_DASHBOARD_URL
-                        }/category-geojson/?project=${project_id}&category=${category_id}`
+                        }/category-polygon-geojson/?project=${project_id}&category=${category_id}`
                       );
                     }
                     const drawInstance = window.map_global.draw;

@@ -69,12 +69,13 @@ function AddLayerAndSourceToMap({
     map.addSource(sourceId, newSource);
   }
 
-  if (fillType && fillType === "point") {
+  if (fillType && fillType === "circle") {
+    console.log(style, "style");
     const newLayer: CircleLayerSpecification = {
       id: layerId,
       type: "circle",
       source: sourceId,
-      "source-layer": source_layer,
+      // "source-layer": source_layer,
       layout: {},
       paint: {
         "circle-color": style.fill_color,
@@ -82,7 +83,7 @@ function AddLayerAndSourceToMap({
           "case",
           ["boolean", ["feature-state", "hover"], false],
           13,
-          4,
+          7,
         ],
         "circle-stroke-width": 1,
         "circle-stroke-color": [

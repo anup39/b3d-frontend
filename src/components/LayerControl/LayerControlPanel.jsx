@@ -169,13 +169,37 @@ export default function LayersControlPanel({ map }) {
               )
               .then((response) => {
                 const categoryStyle = response.data[0];
+                let url = null;
+                let fillType = null;
+                if (cat.type_of_geometry === "Point") {
+                  url = `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/category-point-geojson/?project=${project_id}&category=${
+                    cat.id
+                  }`;
+                  fillType = "circle";
+                }
+                if (cat.type_of_geometry === "LineString") {
+                  url = `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/category-linestring-geojson/?project=${project_id}&category=${
+                    cat.id
+                  }`;
+                  fillType = "line";
+                }
+                if (cat.type_of_geometry === "Polygon") {
+                  url = `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/category-polygon-geojson/?project=${project_id}&category=${
+                    cat.id
+                  }`;
+                  fillType = "fill";
+                }
                 AddLayerAndSourceToMap({
                   map: map,
                   layerId: layerId,
                   sourceId: sourceId,
-                  url: `${
-                    import.meta.env.VITE_API_DASHBOARD_URL
-                  }/category-geojson/?project=${project_id}&category=${cat.id}`,
+                  url: url,
                   source_layer: sourceId,
                   showPopup: true,
                   style: {
@@ -186,7 +210,7 @@ export default function LayersControlPanel({ map }) {
                   zoomToLayer: false,
                   extent: [],
                   geomType: "geojson",
-                  fillType: "fill",
+                  fillType: fillType,
                   trace: false,
                   component: "map",
                 });
@@ -238,15 +262,37 @@ export default function LayersControlPanel({ map }) {
                 )
                 .then((response) => {
                   const categoryStyle = response.data[0];
+                  let url = null;
+                  let fillType = null;
+                  if (cat.type_of_geometry === "Point") {
+                    url = `${
+                      import.meta.env.VITE_API_DASHBOARD_URL
+                    }/category-point-geojson/?project=${project_id}&category=${
+                      cat.id
+                    }`;
+                    fillType = "circle";
+                  }
+                  if (cat.type_of_geometry === "LineString") {
+                    url = `${
+                      import.meta.env.VITE_API_DASHBOARD_URL
+                    }/category-linestring-geojson/?project=${project_id}&category=${
+                      cat.id
+                    }`;
+                    fillType = "line";
+                  }
+                  if (cat.type_of_geometry === "Polygon") {
+                    url = `${
+                      import.meta.env.VITE_API_DASHBOARD_URL
+                    }/category-polygon-geojson/?project=${project_id}&category=${
+                      cat.id
+                    }`;
+                    fillType = "fill";
+                  }
                   AddLayerAndSourceToMap({
                     map: map,
                     layerId: layerId,
                     sourceId: sourceId,
-                    url: `${
-                      import.meta.env.VITE_API_DASHBOARD_URL
-                    }/category-geojson/?project=${project_id}&category=${
-                      cat.id
-                    }`,
+                    url: url,
                     source_layer: sourceId,
                     showPopup: true,
                     style: {
@@ -257,7 +303,7 @@ export default function LayersControlPanel({ map }) {
                     zoomToLayer: false,
                     extent: [],
                     geomType: "geojson",
-                    fillType: "fill",
+                    fillType: fillType,
                     trace: false,
                     component: "map",
                   });
@@ -327,13 +373,37 @@ export default function LayersControlPanel({ map }) {
           )
           .then((response) => {
             const categoryStyle = response.data[0];
+            let url = null;
+            let fillType = null;
+            if (cat.type_of_geometry === "Point") {
+              url = `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-point-geojson/?project=${project_id}&category=${
+                cat.id
+              }`;
+              fillType = "circle";
+            }
+            if (cat.type_of_geometry === "LineString") {
+              url = `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-linestring-geojson/?project=${project_id}&category=${
+                cat.id
+              }`;
+              fillType = "line";
+            }
+            if (cat.type_of_geometry === "Polygon") {
+              url = `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-polygon-geojson/?project=${project_id}&category=${
+                cat.id
+              }`;
+              fillType = "fill";
+            }
             AddLayerAndSourceToMap({
               map: map,
               layerId: layerId,
               sourceId: sourceId,
-              url: `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/category-geojson/?project=${project_id}&category=${cat.id}`,
+              url: url,
               source_layer: sourceId,
               showPopup: true,
               style: {
@@ -344,7 +414,7 @@ export default function LayersControlPanel({ map }) {
               zoomToLayer: false,
               extent: [],
               geomType: "geojson",
-              fillType: "fill",
+              fillType: fillType,
               trace: false,
               component: "map",
             });
