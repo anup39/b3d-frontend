@@ -7,7 +7,7 @@ import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setshowGeomFormPopup } from "../../reducers/DisplaySettings";
-import { setWKTGeometry } from "../../reducers/DrawnPolygon";
+import { setWKTGeometry } from "../../reducers/DrawnGeometry";
 import AutoCompleteMap from "../MapView/AutoCompleteMap";
 
 const Alert = React.forwardRef(function Alert(props, ref) {

@@ -1,6 +1,6 @@
 import { Tooltip, IconButton } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { setWKTGeometry } from "../../reducers/DrawnPolygon";
+import { setWKTGeometry } from "../../reducers/DrawnGeometry";
 import { useDispatch } from "react-redux";
 
 export default function Cancel() {

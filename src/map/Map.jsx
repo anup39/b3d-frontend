@@ -12,7 +12,7 @@ import PieChartControl from "../components/PieChartControl/PieChartControl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { useDispatch } from "react-redux";
-import { setWKTGeometry } from "../reducers/DrawnPolygon";
+import { setWKTGeometry } from "../reducers/DrawnGeometry";
 
 export default function Map({ id }) {
   const dispatch = useDispatch();
