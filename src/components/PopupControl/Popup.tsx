@@ -1,4 +1,5 @@
-import React from "react";
+import { useSelector } from "react-redux";
+import { Button } from "@mui/material";
 
 interface PopupProps {
   properties: {
@@ -9,10 +10,11 @@ interface PopupProps {
     mill_long: string;
     mill_lat: string;
   };
-  trace: boolean;
+  feature_id: number;
 }
 
-const Popup = ({ properties, trace }: PopupProps) => {
+const Popup = ({ properties, feature_id }: PopupProps) => {
+  const state = useSelector((state) => state.drawnPolygon);
   const propertyElements = properties
     ? Object.entries(properties).map(([key, value]) => (
         <div key={key}>
@@ -21,11 +23,44 @@ const Popup = ({ properties, trace }: PopupProps) => {
       ))
     : null;
 
+  const handleDeleteCategory = (properties, feature_id) => {
+    console.log(properties, feature_id);
+  };
+  const handleEditCategory = (properties, feature_id) => {
+    console.log(properties, feature_id);
+  };
   return (
     <>
       {properties ? (
-        <div className="maplibregl-ctrl-layer-control">
+        <div>
           <div>{propertyElements}</div>
+          <div style={{ display: "flex", gap: 2 }}>
+            <Button
+              sx={{
+                backgroundColor: "#D51B60",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "black",
+                },
+              }}
+              onClick={() => handleDeleteCategory(properties, feature_id)}
+            >
+              Delete
+            </Button>
+            <Button
+              sx={{
+                backgroundColor: "#D51B60",
+                color: "white",
+
+                "&:hover": {
+                  backgroundColor: "black",
+                },
+              }}
+              onClick={() => handleEditCategory(properties, feature_id)}
+            >
+              Edit
+            </Button>
+          </div>
         </div>
       ) : null}
     </>

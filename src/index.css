@@ -31,5 +31,12 @@
   font-size: large;
   padding: 5px;
   background-color: #D51B60;
+  color: #EBEBEB;
 
+
+}
+
+.maplibregl-popup-close-button:hover {
+  background-color: black;
+ 
 }

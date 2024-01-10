@@ -18,7 +18,7 @@ export default function Map({ id }) {
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
-  const popUpRef = useRef(new maplibregl.Popup({ offset: 15 }));
+  const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
 
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -73,7 +73,7 @@ export default function Map({ id }) {
     if (map) {
       const layer_control = new LayersControl();
       map.addControl(layer_control, "top-left");
-      layer_control.updateProject(id);
+      layer_control.updateProject(id, popUpRef);
       // map.addControl(
       //   new MaplibreExportControl({
       //     PageSize: Size.A3,

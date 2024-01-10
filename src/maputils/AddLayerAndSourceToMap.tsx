@@ -12,22 +12,15 @@ import { store } from "../store";
 import { Provider } from "react-redux";
 import Popup from "../components/PopupControl/Popup";
 import ReactDOM, { Root } from "react-dom/client";
+import { RefObject } from "react";
 
 function getPopupHTML(properties) {
   let html = "";
-  function handleEditClick() {
-    console.log("Editing  ");
-  }
-  function handleDeleteClick() {
-    console.log("Deleting ");
-  }
+
   for (const [key, value] of Object.entries(properties)) {
     html += `<b>${key}:</b> ${value}<br> `;
   }
-  return (
-    html +
-    `<button onclick="handleDeleteClick()" class='popup-delete'>Delete</button> <button onclick='handleEditClick()' class='popup-edit'>Edit</button>`
-  );
+  return html;
 }
 
 interface AddLayerProps {
@@ -44,6 +37,7 @@ interface AddLayerProps {
   fillType: string;
   trace: boolean;
   component: string;
+  popUpRef: RefObject<HTMLDivElement>;
 }
 
 function AddLayerAndSourceToMap({
@@ -52,6 +46,7 @@ function AddLayerAndSourceToMap({
   sourceId,
   url,
   source_layer,
+  popUpRef,
   showPopup,
   style,
   zoomToLayer,
@@ -160,9 +155,9 @@ function AddLayerAndSourceToMap({
       if (!features.length) {
         return;
       } else {
-        const popup = new maplibregl.Popup({
-          closeOnClick: true,
-        });
+        // const popup = new maplibregl.Popup({
+        //   closeOnClick: true,
+        // });
 
         const feature = features[0];
         // const popup_name: string = "PopupControl";
@@ -175,34 +170,32 @@ function AddLayerAndSourceToMap({
         // @ts-ignore
 
         // @ts-ignore
-        console.log(feature.id, "id");
-        console.log(feature.properties, "propertrie");
+        // console.log(feature.id, "id");
+        // console.log(feature.properties, "propertrie");
         // popup_control.updatePopup(feature.properties, trace);
 
-        const popups = document.getElementsByClassName("maplibregl-popup");
+        // const popups = document.getElementsByClassName("maplibregl-popup");
 
-        if (popups.length) {
-          popups[0].remove();
-        }
-
-        if (popup.isOpen()) {
-          popup.remove();
-        } else {
-          // const container = document.createElement("div");
-          // const root = ReactDOM.createRoot(container);
-          // root.render(
-          //   <Provider store={store}>
-          //     <Popup properties={feature.properties} trace={false} />
-          //   </Provider>
-          // );
-
-          popup
-            .setLngLat(e.lngLat)
-            .setHTML(getPopupHTML(feature.properties))
-            .addTo(map);
-        }
-
+        // if (popups.length) {
+        //   popups[0].remove();
         // }
+        console.log(feature, "feature");
+        console.log(popUpRef.current);
+
+        if (!popUpRef.current.isOpen()) {
+          const container = document.createElement("div");
+          const root = ReactDOM.createRoot(container);
+          root.render(
+            <Provider store={store}>
+              <Popup properties={feature.properties} feature_id={feature.id} />
+            </Provider>
+          );
+          popUpRef.current
+            .setLngLat(e.lngLat)
+            .setDOMContent(container)
+            .addTo(map);
+          // }
+        }
       }
       console.log(map, "map");
     });

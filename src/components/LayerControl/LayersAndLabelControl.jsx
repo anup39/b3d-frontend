@@ -18,7 +18,7 @@ import {
   setshowPiechart,
 } from "../../reducers/MapView";
 
-export default function LayersAndLabelControl({ map }) {
+export default function LayersAndLabelControl({ map, popUpRef }) {
   const dispatch = useDispatch();
   const [expandMeasurings, setExpandMeasurings] = useState(true);
   const showMeasuringsPanel = useSelector(
@@ -136,7 +136,9 @@ export default function LayersAndLabelControl({ map }) {
               </Tooltip>
             </Box>
 
-            {expandMeasurings ? <LayersControlPanel map={map} /> : null}
+            {expandMeasurings ? (
+              <LayersControlPanel map={map} popUpRef={popUpRef} />
+            ) : null}
 
             {expandMeasurings ? (
               <ExpandMoreLess

@@ -13,11 +13,13 @@ export default class LayersControl {
     return this._container;
   }
 
-  updateProject(project_id) {
+  updateProject(project_id, popUpRef) {
     this._project_id = project_id;
+    this._popUpRef = popUpRef;
+
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        <LayersAndLabelControl map={this._map} />
+        <LayersAndLabelControl map={this._map} popUpRef={this._popUpRef} />
       </Provider>
     );
   }

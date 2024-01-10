@@ -101,7 +101,7 @@ const all_categories = [
   },
 ];
 
-export default function LayersControlPanel({ map }) {
+export default function LayersControlPanel({ map, popUpRef }) {
   const dispatch = useDispatch();
   const [categories, setCategories] = useState(all_categories);
   const [loading, setLoading] = useState(true);
@@ -201,6 +201,7 @@ export default function LayersControlPanel({ map }) {
                   sourceId: sourceId,
                   url: url,
                   source_layer: sourceId,
+                  popUpRef: popUpRef,
                   showPopup: true,
                   style: {
                     fill_color: categoryStyle.fill,
@@ -294,6 +295,7 @@ export default function LayersControlPanel({ map }) {
                     sourceId: sourceId,
                     url: url,
                     source_layer: sourceId,
+                    popUpRef: popUpRef,
                     showPopup: true,
                     style: {
                       fill_color: categoryStyle.fill,
@@ -405,6 +407,7 @@ export default function LayersControlPanel({ map }) {
               sourceId: sourceId,
               url: url,
               source_layer: sourceId,
+              popUpRef: popUpRef,
               showPopup: true,
               style: {
                 fill_color: categoryStyle.fill,
