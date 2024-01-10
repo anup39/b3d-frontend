@@ -14,12 +14,16 @@ import Tooltip from "@mui/material/Tooltip";
 import ModeIcon from "@mui/icons-material/Mode";
 import CircularProgress from "@mui/material/CircularProgress";
 import { setCategoriesState } from "../../reducers/MapView";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+import PolylineIcon from "@mui/icons-material/Polyline";
 import {
   setCategoryId,
   setCategoryViewName,
   setTypeOfGeometry,
   setWKTGeometry,
 } from "../../reducers/DrawnGeometry";
+import { NullLoader } from "@loaders.gl/core";
 
 const all_categories = [
   {
@@ -783,6 +787,16 @@ export default function LayersControlPanel({ map, popUpRef }) {
                           />
                         }
                       />
+                      {cat.type_of_geometry === "LineString" ? (
+                        <ShowChartIcon size="small" sx={{ fontSize: 17 }} />
+                      ) : null}
+                      {cat.type_of_geometry === "Polygon" ? (
+                        <PolylineIcon size="small" sx={{ fontSize: 17 }} />
+                      ) : null}
+                      {cat.type_of_geometry === "Point" ? (
+                        <MyLocationIcon size="small" sx={{ fontSize: 17 }} />
+                      ) : null}
+
                       <Slider
                         onChange={(event, value) =>
                           handleChangeSlider(event, value, cat)
