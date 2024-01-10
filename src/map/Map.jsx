@@ -141,8 +141,8 @@ export default function Map({ id }) {
       raster_control.updateProject(id);
       map.addControl(new DrawControl(), "top-right");
 
-      const popup_control = new PopupControl();
-      map.addControl(popup_control, "bottom-left");
+      // const popup_control = new PopupControl();
+      // map.addControl(popup_control, "bottom-left");
     }
   }, [map, id]);
 
