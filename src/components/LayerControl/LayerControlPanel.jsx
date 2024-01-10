@@ -16,6 +16,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { setCategoriesState } from "../../reducers/MapView";
 import {
   setCategoryId,
+  setCategoryViewName,
   setTypeOfGeometry,
   setWKTGeometry,
 } from "../../reducers/DrawnGeometry";
@@ -462,6 +463,7 @@ export default function LayersControlPanel({ map }) {
     dispatch(setWKTGeometry(null));
     dispatch(setTypeOfGeometry(null));
     dispatch(setCategoryId(null));
+    dispatch(setCategoryViewName(null));
     const type_of_geometry = cat.type_of_geometry;
     if (type_of_geometry === "Polygon") {
       draw.changeMode("draw_polygon");
@@ -478,11 +480,12 @@ export default function LayersControlPanel({ map }) {
       const type_of_geometry = feature[0].geometry.type;
       if (type_of_geometry === "Point") {
         const coordinates = geometry.coordinates;
-        const wktCoordinates_final = `POINT ((${coordinates[0]} ${coordinates[1]}))`;
+        const wktCoordinates_final = `POINT (${coordinates[0]} ${coordinates[1]})`;
         console.log(wktCoordinates_final, "wkt point");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
         dispatch(setCategoryId(cat.id));
+        dispatch(setCategoryViewName(cat.view_name));
       }
       if (type_of_geometry === "Polygon") {
         const coordinates = geometry.coordinates[0];
@@ -494,17 +497,19 @@ export default function LayersControlPanel({ map }) {
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
         dispatch(setCategoryId(cat.id));
+        dispatch(setCategoryViewName(cat.view_name));
       }
       if (type_of_geometry === "LineString") {
         const coordinates = geometry.coordinates;
         const wktCoordinates = coordinates
           .map((coord) => `${coord[0]} ${coord[1]}`)
           .join(", ");
-        const wktCoordinates_final = `LINESTRING ((${wktCoordinates}))`;
+        const wktCoordinates_final = `LINESTRING (${wktCoordinates})`;
         console.log(wktCoordinates_final, "wkt line string");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
         dispatch(setCategoryId(cat.id));
+        dispatch(setCategoryViewName(cat.view_name));
       }
     });
     map.on("draw.update", function (event) {
@@ -513,11 +518,12 @@ export default function LayersControlPanel({ map }) {
       const type_of_geometry = feature[0].geometry.type;
       if (type_of_geometry === "Point") {
         const coordinates = geometry.coordinates;
-        const wktCoordinates_final = `POINT ((${coordinates[0]} ${coordinates[1]}))`;
+        const wktCoordinates_final = `POINT (${coordinates[0]} ${coordinates[1]})`;
         console.log(wktCoordinates_final, "wkt point");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
         dispatch(setCategoryId(cat.id));
+        dispatch(setCategoryViewName(cat.view_name));
       }
       if (type_of_geometry === "Polygon") {
         const coordinates = geometry.coordinates[0];
@@ -529,17 +535,19 @@ export default function LayersControlPanel({ map }) {
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
         dispatch(setCategoryId(cat.id));
+        dispatch(setCategoryViewName(cat.view_name));
       }
       if (type_of_geometry === "LineString") {
         const coordinates = geometry.coordinates;
         const wktCoordinates = coordinates
           .map((coord) => `${coord[0]} ${coord[1]}`)
           .join(", ");
-        const wktCoordinates_final = `LINESTRING ((${wktCoordinates}))`;
+        const wktCoordinates_final = `LINESTRING (${wktCoordinates})`;
         console.log(wktCoordinates_final, "wkt line string");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
         dispatch(setCategoryId(cat.id));
+        dispatch(setCategoryViewName(cat.view_name));
       }
     });
   };

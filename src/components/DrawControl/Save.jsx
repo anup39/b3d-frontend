@@ -10,6 +10,7 @@ import { setshowMapLoader } from "../../reducers/MapView";
 import axios from "axios";
 import {
   setCategoryId,
+  setCategoryViewName,
   setTypeOfGeometry,
   setWKTGeometry,
 } from "../../reducers/DrawnGeometry";
@@ -27,8 +28,12 @@ export default function Save() {
     (state) => state.mapView.currentMapDetail.current_project_measuring_table
   );
   const category_id = useSelector((state) => state.drawnPolygon.category_id);
+  const category_view_name = useSelector(
+    (state) => state.drawnPolygon.category_view_name
+  );
+
   const handleSave = () => {
-    if (wkt_geometry && type_of_geometry && category_id) {
+    if (wkt_geometry && type_of_geometry && category_id && category_view_name) {
       // dispatch(setshowGeomFormPopup("block"));
       dispatch(setshowMapLoader(true));
       const selectedCategoryId = category_id;
@@ -50,93 +55,40 @@ export default function Save() {
           if (type_of_geometry === "Point") {
             axios
               .post(
-                `${import.meta.env.VITE_API_DASHBOARD_URL}/polygon-data/`,
-                data
-              )
-              .then(() => {
-                setOpenCategoryStyleSuccessToast(true);
-                setOpenCategoryStyleErrorToast(false);
-                setTimeout(() => {
-                  setOpenCategoryStyleSuccessToast(false);
-                  closeForm();
-                  if (window.map_global) {
-                    const drawInstance = window.map_global.draw;
-                    drawInstance.deleteAll();
-                    drawInstance.changeMode("simple_select");
-                    dispatch(setWKTGeometry(null));
-                  }
-                }, 3000);
-              })
-              .catch(() => {
-                setOpenCategoryStyleErrorToast(true);
-                setOpenCategoryStyleSuccessToast(false);
-                setTimeout(() => {
-                  setOpenCategoryStyleErrorToast(false);
-                  closeForm();
-                  if (window.map_global) {
-                    const drawInstance = window.map_global.draw;
-                    drawInstance.deleteAll();
-                    drawInstance.changeMode("simple_select");
-                    dispatch(setWKTGeometry(null));
-                  }
-                }, 3000);
-              });
-          }
-          if (type_of_geometry === "LineString") {
-            axios
-              .post(
-                `${import.meta.env.VITE_API_DASHBOARD_URL}/polygon-data/`,
-                data
-              )
-              .then(() => {
-                setOpenCategoryStyleSuccessToast(true);
-                setOpenCategoryStyleErrorToast(false);
-                setTimeout(() => {
-                  setOpenCategoryStyleSuccessToast(false);
-                  closeForm();
-                  if (window.map_global) {
-                    const drawInstance = window.map_global.draw;
-                    drawInstance.deleteAll();
-                    drawInstance.changeMode("simple_select");
-                    dispatch(setWKTGeometry(null));
-                  }
-                }, 3000);
-              })
-              .catch(() => {
-                setOpenCategoryStyleErrorToast(true);
-                setOpenCategoryStyleSuccessToast(false);
-                setTimeout(() => {
-                  setOpenCategoryStyleErrorToast(false);
-                  closeForm();
-                  if (window.map_global) {
-                    const drawInstance = window.map_global.draw;
-                    drawInstance.deleteAll();
-                    drawInstance.changeMode("simple_select");
-                    dispatch(setWKTGeometry(null));
-                  }
-                }, 3000);
-              });
-          }
-          if (type_of_geometry === "Polygon") {
-            console.log(data, "data for polygon");
-            axios
-              .post(
-                `${import.meta.env.VITE_API_DASHBOARD_URL}/polygon-data/`,
+                `${import.meta.env.VITE_API_DASHBOARD_URL}/point-data/`,
                 data
               )
               .then(() => {
                 dispatch(setshowToast(true));
                 dispatch(settoastType("success"));
-                dispatch(settoastMessage("Successfully created the Category"));
+                dispatch(
+                  settoastMessage(
+                    `Successfully created the Category ${category_view_name}`
+                  )
+                );
                 setTimeout(() => {
                   dispatch(setshowMapLoader(false));
                   if (window.map_global) {
+                    const sourceId =
+                      String(client_id) + category_view_name + "source";
+                    const layerId =
+                      String(client_id) + category_view_name + "layer";
+                    const map = window.map_global;
+                    if (map.getSource(sourceId) && map.getLayer(layerId)) {
+                      const source = map.getSource(sourceId);
+                      source.setData(
+                        `${
+                          import.meta.env.VITE_API_DASHBOARD_URL
+                        }/category-geojson/?project=${project_id}&category=${category_id}`
+                      );
+                    }
                     const drawInstance = window.map_global.draw;
                     drawInstance.deleteAll();
                     drawInstance.changeMode("simple_select");
                     dispatch(setWKTGeometry(null));
                     dispatch(setTypeOfGeometry(null));
                     dispatch(setCategoryId(null));
+                    dispatch(setCategoryViewName(null));
                   }
                 }, 3000);
               })
@@ -153,6 +105,123 @@ export default function Save() {
                     dispatch(setWKTGeometry(null));
                     dispatch(setTypeOfGeometry(null));
                     dispatch(setCategoryId(null));
+                    dispatch(setCategoryViewName(null));
+                  }
+                }, 3000);
+              });
+          }
+          if (type_of_geometry === "LineString") {
+            axios
+              .post(
+                `${import.meta.env.VITE_API_DASHBOARD_URL}/linestring-data/`,
+                data
+              )
+              .then(() => {
+                dispatch(setshowToast(true));
+                dispatch(settoastType("success"));
+                dispatch(
+                  settoastMessage(
+                    `Successfully created the Category ${category_view_name}`
+                  )
+                );
+                setTimeout(() => {
+                  dispatch(setshowMapLoader(false));
+                  if (window.map_global) {
+                    const sourceId =
+                      String(client_id) + category_view_name + "source";
+                    const layerId =
+                      String(client_id) + category_view_name + "layer";
+                    const map = window.map_global;
+                    if (map.getSource(sourceId) && map.getLayer(layerId)) {
+                      const source = map.getSource(sourceId);
+                      source.setData(
+                        `${
+                          import.meta.env.VITE_API_DASHBOARD_URL
+                        }/category-geojson/?project=${project_id}&category=${category_id}`
+                      );
+                    }
+                    const drawInstance = window.map_global.draw;
+                    drawInstance.deleteAll();
+                    drawInstance.changeMode("simple_select");
+                    dispatch(setWKTGeometry(null));
+                    dispatch(setTypeOfGeometry(null));
+                    dispatch(setCategoryId(null));
+                    dispatch(setCategoryViewName(null));
+                  }
+                }, 3000);
+              })
+              .catch(() => {
+                dispatch(setshowToast(true));
+                dispatch(settoastType("error"));
+                dispatch(settoastMessage("Failed to create the Category"));
+                setTimeout(() => {
+                  dispatch(setshowMapLoader(false));
+                  if (window.map_global) {
+                    const drawInstance = window.map_global.draw;
+                    drawInstance.deleteAll();
+                    drawInstance.changeMode("simple_select");
+                    dispatch(setWKTGeometry(null));
+                    dispatch(setTypeOfGeometry(null));
+                    dispatch(setCategoryId(null));
+                    dispatch(setCategoryViewName(null));
+                  }
+                }, 3000);
+              });
+          }
+          if (type_of_geometry === "Polygon") {
+            axios
+              .post(
+                `${import.meta.env.VITE_API_DASHBOARD_URL}/polygon-data/`,
+                data
+              )
+              .then(() => {
+                dispatch(setshowToast(true));
+                dispatch(settoastType("success"));
+                dispatch(
+                  settoastMessage(
+                    `Successfully created the Category ${category_view_name}`
+                  )
+                );
+                setTimeout(() => {
+                  dispatch(setshowMapLoader(false));
+                  if (window.map_global) {
+                    const sourceId =
+                      String(client_id) + category_view_name + "source";
+                    const layerId =
+                      String(client_id) + category_view_name + "layer";
+                    const map = window.map_global;
+                    if (map.getSource(sourceId) && map.getLayer(layerId)) {
+                      const source = map.getSource(sourceId);
+                      source.setData(
+                        `${
+                          import.meta.env.VITE_API_DASHBOARD_URL
+                        }/category-geojson/?project=${project_id}&category=${category_id}`
+                      );
+                    }
+                    const drawInstance = window.map_global.draw;
+                    drawInstance.deleteAll();
+                    drawInstance.changeMode("simple_select");
+                    dispatch(setWKTGeometry(null));
+                    dispatch(setTypeOfGeometry(null));
+                    dispatch(setCategoryId(null));
+                    dispatch(setCategoryViewName(null));
+                  }
+                }, 3000);
+              })
+              .catch(() => {
+                dispatch(setshowToast(true));
+                dispatch(settoastType("error"));
+                dispatch(settoastMessage("Failed to create the Category"));
+                setTimeout(() => {
+                  dispatch(setshowMapLoader(false));
+                  if (window.map_global) {
+                    const drawInstance = window.map_global.draw;
+                    drawInstance.deleteAll();
+                    drawInstance.changeMode("simple_select");
+                    dispatch(setWKTGeometry(null));
+                    dispatch(setTypeOfGeometry(null));
+                    dispatch(setCategoryId(null));
+                    dispatch(setCategoryViewName(null));
                   }
                 }, 3000);
               });
