@@ -14,7 +14,11 @@ import Tooltip from "@mui/material/Tooltip";
 import ModeIcon from "@mui/icons-material/Mode";
 import CircularProgress from "@mui/material/CircularProgress";
 import { setCategoriesState } from "../../reducers/MapView";
-import { setWKTGeometry } from "../../reducers/DrawnGeometry";
+import {
+  setCategoryId,
+  setTypeOfGeometry,
+  setWKTGeometry,
+} from "../../reducers/DrawnGeometry";
 
 const all_categories = [
   {
@@ -454,9 +458,10 @@ export default function LayersControlPanel({ map }) {
 
   const handleDraw = (event, cat) => {
     const draw = map.draw;
-    console.log(cat.type_of_geometry);
     draw.deleteAll();
     dispatch(setWKTGeometry(null));
+    dispatch(setTypeOfGeometry(type_of_geometry));
+    dispatch(setCategoryId(cat.id));
     const type_of_geometry = cat.type_of_geometry;
     if (type_of_geometry === "Polygon") {
       draw.changeMode("draw_polygon");
@@ -468,29 +473,74 @@ export default function LayersControlPanel({ map }) {
       draw.changeMode("draw_point");
     }
     map.on("draw.create", function (event) {
-      console.log(event, "event of draw create");
       const feature = event.features;
-
       const geometry = feature[0].geometry;
-      const coordinates = geometry.coordinates[0];
-      const wktCoordinates = coordinates
-        .map((coord) => `${coord[0]} ${coord[1]}`)
-        .join(", ");
-      const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-      dispatch(setWKTGeometry(wktCoordinates_final));
+      const type_of_geometry = feature[0].geometry.type;
+      if (type_of_geometry === "Point") {
+        const coordinates = geometry.coordinates;
+        const wktCoordinates_final = `POINT ((${coordinates[0]} ${coordinates[1]}))`;
+        console.log(wktCoordinates_final, "wkt point");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setCategoryId(cat.id));
+      }
+      if (type_of_geometry === "Polygon") {
+        const coordinates = geometry.coordinates[0];
+        const wktCoordinates = coordinates
+          .map((coord) => `${coord[0]} ${coord[1]}`)
+          .join(", ");
+        const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
+        console.log(wktCoordinates_final, "wkt polygon ");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setCategoryId(cat.id));
+      }
+      if (type_of_geometry === "LineString") {
+        const coordinates = geometry.coordinates;
+        const wktCoordinates = coordinates
+          .map((coord) => `${coord[0]} ${coord[1]}`)
+          .join(", ");
+        const wktCoordinates_final = `LINESTRING ((${wktCoordinates}))`;
+        console.log(wktCoordinates_final, "wkt line string");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setCategoryId(cat.id));
+      }
     });
     map.on("draw.update", function (event) {
-      console.log(event, "event of draw create");
-
       const feature = event.features;
-
       const geometry = feature[0].geometry;
-      const coordinates = geometry.coordinates[0];
-      const wktCoordinates = coordinates
-        .map((coord) => `${coord[0]} ${coord[1]}`)
-        .join(", ");
-      const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-      dispatch(setWKTGeometry(wktCoordinates_final));
+      const type_of_geometry = feature[0].geometry.type;
+      if (type_of_geometry === "Point") {
+        const coordinates = geometry.coordinates;
+        const wktCoordinates_final = `POINT ((${coordinates[0]} ${coordinates[1]}))`;
+        console.log(wktCoordinates_final, "wkt point");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setCategoryId(cat.id));
+      }
+      if (type_of_geometry === "Polygon") {
+        const coordinates = geometry.coordinates[0];
+        const wktCoordinates = coordinates
+          .map((coord) => `${coord[0]} ${coord[1]}`)
+          .join(", ");
+        const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
+        console.log(wktCoordinates_final, "wkt polygon ");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setCategoryId(cat.id));
+      }
+      if (type_of_geometry === "LineString") {
+        const coordinates = geometry.coordinates;
+        const wktCoordinates = coordinates
+          .map((coord) => `${coord[0]} ${coord[1]}`)
+          .join(", ");
+        const wktCoordinates_final = `LINESTRING ((${wktCoordinates}))`;
+        console.log(wktCoordinates_final, "wkt line string");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setCategoryId(cat.id));
+      }
     });
   };
 
