@@ -23,7 +23,7 @@ export default function Save() {
       dispatch(setshowMapLoader(true));
     } else {
       dispatch(setshowToast(true));
-      dispatch(settoastType("info"));
+      dispatch(settoastType("error"));
       dispatch(
         settoastMessage("No category drawn in map. Please draw category")
       );

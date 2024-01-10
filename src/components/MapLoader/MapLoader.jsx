@@ -13,6 +13,7 @@ export default function MapLoader() {
         height: "100%",
         background: "rgba(0, 0, 0, 0.5)", // Semi-transparent backdrop
         zIndex: 9999, // Higher z-index to cover other elements
+        borderRadius: 10,
       }}
     >
       <div
@@ -24,6 +25,7 @@ export default function MapLoader() {
           background: "#fff",
           padding: "20px",
           zIndex: 10000,
+          borderRadius: 10,
         }}
       >
         <Box>
