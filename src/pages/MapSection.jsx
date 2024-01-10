@@ -9,19 +9,22 @@ import {
   setProjectName,
   setClient,
 } from "../reducers/MapCategories";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AppBar from "../components/Common/AppBar";
 import CategoryGeomForm from "../components/Category/CategoryGeomForm";
 import TableMeasuringsForMap from "../components/TableMeasuringMapControl/TableMesuringsForMap";
 import ReportPrint from "../components/MapView/ReportPrint";
 import Map3D from "../map/Map3D";
 import ThreeScene from "../map/MapThree";
+import MapLoader from "../components/MapLoader/MapLoader";
 
 export default function MapSection() {
   const dispatch = useDispatch();
   const { level } = useParams();
   const { id } = useParams();
   const searchRef = useRef(null);
+
+  const showMapLoader = useSelector((state) => state.mapView.showMapLoader);
   // useEffect(() => {
   //   axios
   //     .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/${level}s/${id}/`)
@@ -79,6 +82,7 @@ export default function MapSection() {
     >
       <AppBar />
       <CategoryGeomForm />
+      {showMapLoader ? <MapLoader /> : null}
       <Map refObj={searchRef} id={id} />
       {/* <Map3D /> */}
       {/* <ThreeScene /> */}

@@ -1,16 +1,24 @@
 import { Tooltip, IconButton } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { setWKTGeometry } from "../../reducers/DrawnPolygon";
+import {
+  setCategoryId,
+  setTypeOfGeometry,
+  setWKTGeometry,
+  setCategoryViewName,
+} from "../../reducers/DrawnGeometry";
 import { useDispatch } from "react-redux";
 
 export default function Cancel() {
   const dispatch = useDispatch();
   const handleCancelDraw = () => {
     if (window.map_global) {
-      const drawInstance = window.map_global.draw;
-      drawInstance.deleteAll();
-      drawInstance.changeMode("simple_select");
+      const draw = window.map_global.draw;
+      draw.deleteAll();
+      draw.changeMode("simple_select");
       dispatch(setWKTGeometry(null));
+      dispatch(setTypeOfGeometry(null));
+      dispatch(setCategoryId(null));
+      dispatch(setCategoryViewName(null));
     }
   };
   return (
@@ -20,10 +28,8 @@ export default function Cancel() {
           onClick={handleCancelDraw}
           id="cancel-draw"
           sx={{
-            "& .MuiSvgIcon-root": {
-              fontSize: 24,
-              color: "#9C27B0",
-            },
+            "&:hover": { cursor: "pointer" },
+            color: "#d61b60",
           }}
           aria-label="Cancel"
         >

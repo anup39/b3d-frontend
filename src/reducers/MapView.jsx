@@ -10,6 +10,7 @@ const initialState = {
   showTableMeasurings: false,
   showPiechart: false,
   showTifPanel: false,
+  showMapLoader: false,
   currentMapDetail: {
     // selected_projects_ids: [],
     current_project_measuring_table: null,
@@ -76,6 +77,9 @@ export const MapView = createSlice({
     //       (id) => id !== idToRemove
     //     );
     // },
+    setshowMapLoader: (state, action) => {
+      state.showMapLoader = action.payload;
+    },
     addcurrentProjectMeasuringTable: (state, action) => {
       const newId = action.payload;
       state.currentMapDetail.current_project_measuring_table = newId;
@@ -155,6 +159,7 @@ export const {
   setshowTableMeasurings,
   setshowPiechart,
   setshowTifPanel,
+  setshowMapLoader,
   addSelectedProjectId,
   removeSelectedProjectId,
   addcurrentProjectMeasuringTable,

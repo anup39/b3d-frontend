@@ -12,12 +12,13 @@ import PieChartControl from "../components/PieChartControl/PieChartControl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { useDispatch } from "react-redux";
-import { setWKTGeometry } from "../reducers/DrawnPolygon";
+import { setWKTGeometry } from "../reducers/DrawnGeometry";
 
 export default function Map({ id }) {
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
+  const popUpRef = useRef(new maplibregl.Popup({ offset: 15 }));
 
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -48,53 +49,6 @@ export default function Map({ id }) {
         // 1 Draw and its layer
         map.addControl(draw);
         map.draw = draw;
-
-        document
-          .getElementById("polygon-box")
-          .addEventListener("click", function () {
-            draw.deleteAll();
-            draw.changeMode("draw_polygon");
-          });
-
-        document
-          .getElementById("linestring-box")
-          .addEventListener("click", function () {
-            draw.deleteAll();
-            draw.changeMode("draw_line_string");
-          });
-
-        document
-          .getElementById("point-box")
-          .addEventListener("click", function () {
-            draw.deleteAll();
-            draw.changeMode("draw_point");
-          });
-
-        map.on("draw.create", function (event) {
-          console.log(event, "event of draw create");
-          const feature = event.features;
-
-          const geometry = feature[0].geometry;
-          const coordinates = geometry.coordinates[0];
-          const wktCoordinates = coordinates
-            .map((coord) => `${coord[0]} ${coord[1]}`)
-            .join(", ");
-          const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-          dispatch(setWKTGeometry(wktCoordinates_final));
-        });
-        map.on("draw.update", function (event) {
-          console.log(event, "event of draw create");
-
-          const feature = event.features;
-
-          const geometry = feature[0].geometry;
-          const coordinates = geometry.coordinates[0];
-          const wktCoordinates = coordinates
-            .map((coord) => `${coord[0]} ${coord[1]}`)
-            .join(", ");
-          const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-          dispatch(setWKTGeometry(wktCoordinates_final));
-        });
       });
     }
   }, [map, dispatch]);
@@ -141,8 +95,8 @@ export default function Map({ id }) {
       raster_control.updateProject(id);
       map.addControl(new DrawControl(), "top-right");
 
-      const popup_control = new PopupControl();
-      map.addControl(popup_control, "bottom-left");
+      // const popup_control = new PopupControl();
+      // map.addControl(popup_control, "bottom-left");
     }
   }, [map, id]);
 

@@ -7,6 +7,28 @@ import {
   LayerSpecification,
   IControl,
 } from "maplibre-gl";
+import maplibregl from "maplibre-gl";
+import { store } from "../store";
+import { Provider } from "react-redux";
+import Popup from "../components/PopupControl/Popup";
+import ReactDOM, { Root } from "react-dom/client";
+
+function getPopupHTML(properties) {
+  let html = "";
+  function handleEditClick() {
+    console.log("Editing  ");
+  }
+  function handleDeleteClick() {
+    console.log("Deleting ");
+  }
+  for (const [key, value] of Object.entries(properties)) {
+    html += `<b>${key}:</b> ${value}<br> `;
+  }
+  return (
+    html +
+    `<button onclick="handleDeleteClick()" class='popup-delete'>Delete</button> <button onclick='handleEditClick()' class='popup-edit'>Edit</button>`
+  );
+}
 
 interface AddLayerProps {
   map: Map;
@@ -60,12 +82,13 @@ function AddLayerAndSourceToMap({
     map.addSource(sourceId, newSource);
   }
 
-  if (fillType && fillType === "point") {
+  if (fillType && fillType === "circle") {
+    console.log(style, "style");
     const newLayer: CircleLayerSpecification = {
       id: layerId,
       type: "circle",
       source: sourceId,
-      "source-layer": source_layer,
+      // "source-layer": source_layer,
       layout: {},
       paint: {
         "circle-color": style.fill_color,
@@ -73,14 +96,34 @@ function AddLayerAndSourceToMap({
           "case",
           ["boolean", ["feature-state", "hover"], false],
           13,
-          4,
+          7,
         ],
         "circle-stroke-width": 1,
         "circle-stroke-color": [
           "case",
           ["boolean", ["feature-state", "hover"], false],
-          "red",
           "black",
+          "black",
+        ],
+      },
+    };
+    map.addLayer(newLayer);
+    // map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
+  } else if (fillType && fillType === "line") {
+    console.log(style, "style for line");
+    const newLayer: LayerSpecification = {
+      id: layerId,
+      type: "line",
+      source: sourceId,
+      // "source-layer": source_layer,
+      layout: {},
+      paint: {
+        "line-color": style.fill_color,
+        "line-width": [
+          "case",
+          ["boolean", ["feature-state", "hover"], false],
+          5,
+          3,
         ],
       },
     };
@@ -110,52 +153,64 @@ function AddLayerAndSourceToMap({
   let hoveredStateId: null = null!;
 
   if (showPopup) {
-    map.on("mousemove", layerId, (e) => {
+    map.on("click", layerId, (e) => {
+      console.log(map, "map");
       const features = map.queryRenderedFeatures(e.point);
+
       if (!features.length) {
         return;
       } else {
+        const popup = new maplibregl.Popup({
+          closeOnClick: true,
+        });
+
         const feature = features[0];
-        const popup_name: string = "PopupControl";
+        // const popup_name: string = "PopupControl";
         // @ts-ignore
-        const popup_index = map._controls.indexOf(popup_name);
+        // const popup_index = map._controls.indexOf(popup_name);
 
-        if (popup_index) {
-          const popup_control: IControl =
-            map._controls[map._controls.length - 2];
-          // @ts-ignore
-
-          // @ts-ignore
-          popup_control.updatePopup(feature.properties, trace);
-        }
-      }
-      // @ts-ignore
-      if (e.features.length > 0) {
-        if (hoveredStateId) {
-          map.setFeatureState(
-            {
-              source: sourceId,
-              id: hoveredStateId,
-              // sourceLayer: source_layer,
-            },
-            { hover: false }
-          );
-        }
+        // if (popup_index) {
+        // const popup_control: IControl =
+        // map._controls[map._controls.length - 2];
         // @ts-ignore
-        hoveredStateId = e.features[0].id;
-        map.setFeatureState(
-          {
-            source: sourceId,
-            // @ts-ignore
-            id: hoveredStateId,
-            // sourceLayer: source_layer,
-          },
-          { hover: true }
-        );
+
+        // @ts-ignore
+        console.log(feature.id, "id");
+        console.log(feature.properties, "propertrie");
+        // popup_control.updatePopup(feature.properties, trace);
+
+        const popups = document.getElementsByClassName("maplibregl-popup");
+
+        if (popups.length) {
+          popups[0].remove();
+        }
+
+        if (popup.isOpen()) {
+          popup.remove();
+        } else {
+          // const container = document.createElement("div");
+          // const root = ReactDOM.createRoot(container);
+          // root.render(
+          //   <Provider store={store}>
+          //     <Popup properties={feature.properties} trace={false} />
+          //   </Provider>
+          // );
+
+          popup
+            .setLngLat(e.lngLat)
+            .setHTML(getPopupHTML(feature.properties))
+            .addTo(map);
+        }
+
+        // }
       }
+      console.log(map, "map");
     });
+  }
 
-    map.on("mouseleave", layerId, () => {
+  map.on("mousemove", layerId, (e) => {
+    // @ts-ignore
+    if (e.features.length > 0) {
       if (hoveredStateId) {
         map.setFeatureState(
           {
@@ -166,8 +221,32 @@ function AddLayerAndSourceToMap({
           { hover: false }
         );
       }
-    });
-  }
+      // @ts-ignore
+      hoveredStateId = e.features[0].id;
+      map.setFeatureState(
+        {
+          source: sourceId,
+          // @ts-ignore
+          id: hoveredStateId,
+          // sourceLayer: source_layer,
+        },
+        { hover: true }
+      );
+    }
+  });
+
+  map.on("mouseleave", layerId, () => {
+    if (hoveredStateId) {
+      map.setFeatureState(
+        {
+          source: sourceId,
+          id: hoveredStateId,
+          // sourceLayer: source_layer,
+        },
+        { hover: false }
+      );
+    }
+  });
 }
 
 export default AddLayerAndSourceToMap;

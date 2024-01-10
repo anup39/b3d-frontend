@@ -7,7 +7,7 @@ import StandardCategory from "./reducers/StandardCategory";
 import SubCategory from "./reducers/SubCategory";
 import Category from "./reducers/Category";
 import MapCategories from "./reducers/MapCategories";
-import DrawnPolygon from "./reducers/DrawnPolygon";
+import DrawnPolygon from "./reducers/DrawnGeometry";
 import Users from "./reducers/Users";
 import Property from "./reducers/Property";
 import MapView from "./reducers/MapView";

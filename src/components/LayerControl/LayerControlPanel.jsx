@@ -14,6 +14,12 @@ import Tooltip from "@mui/material/Tooltip";
 import ModeIcon from "@mui/icons-material/Mode";
 import CircularProgress from "@mui/material/CircularProgress";
 import { setCategoriesState } from "../../reducers/MapView";
+import {
+  setCategoryId,
+  setCategoryViewName,
+  setTypeOfGeometry,
+  setWKTGeometry,
+} from "../../reducers/DrawnGeometry";
 
 const all_categories = [
   {
@@ -163,13 +169,37 @@ export default function LayersControlPanel({ map }) {
               )
               .then((response) => {
                 const categoryStyle = response.data[0];
+                let url = null;
+                let fillType = null;
+                if (cat.type_of_geometry === "Point") {
+                  url = `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/category-point-geojson/?project=${project_id}&category=${
+                    cat.id
+                  }`;
+                  fillType = "circle";
+                }
+                if (cat.type_of_geometry === "LineString") {
+                  url = `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/category-linestring-geojson/?project=${project_id}&category=${
+                    cat.id
+                  }`;
+                  fillType = "line";
+                }
+                if (cat.type_of_geometry === "Polygon") {
+                  url = `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/category-polygon-geojson/?project=${project_id}&category=${
+                    cat.id
+                  }`;
+                  fillType = "fill";
+                }
                 AddLayerAndSourceToMap({
                   map: map,
                   layerId: layerId,
                   sourceId: sourceId,
-                  url: `${
-                    import.meta.env.VITE_API_DASHBOARD_URL
-                  }/category-geojson/?project=${project_id}&category=${cat.id}`,
+                  url: url,
                   source_layer: sourceId,
                   showPopup: true,
                   style: {
@@ -180,7 +210,7 @@ export default function LayersControlPanel({ map }) {
                   zoomToLayer: false,
                   extent: [],
                   geomType: "geojson",
-                  fillType: "fill",
+                  fillType: fillType,
                   trace: false,
                   component: "map",
                 });
@@ -232,15 +262,37 @@ export default function LayersControlPanel({ map }) {
                 )
                 .then((response) => {
                   const categoryStyle = response.data[0];
+                  let url = null;
+                  let fillType = null;
+                  if (cat.type_of_geometry === "Point") {
+                    url = `${
+                      import.meta.env.VITE_API_DASHBOARD_URL
+                    }/category-point-geojson/?project=${project_id}&category=${
+                      cat.id
+                    }`;
+                    fillType = "circle";
+                  }
+                  if (cat.type_of_geometry === "LineString") {
+                    url = `${
+                      import.meta.env.VITE_API_DASHBOARD_URL
+                    }/category-linestring-geojson/?project=${project_id}&category=${
+                      cat.id
+                    }`;
+                    fillType = "line";
+                  }
+                  if (cat.type_of_geometry === "Polygon") {
+                    url = `${
+                      import.meta.env.VITE_API_DASHBOARD_URL
+                    }/category-polygon-geojson/?project=${project_id}&category=${
+                      cat.id
+                    }`;
+                    fillType = "fill";
+                  }
                   AddLayerAndSourceToMap({
                     map: map,
                     layerId: layerId,
                     sourceId: sourceId,
-                    url: `${
-                      import.meta.env.VITE_API_DASHBOARD_URL
-                    }/category-geojson/?project=${project_id}&category=${
-                      cat.id
-                    }`,
+                    url: url,
                     source_layer: sourceId,
                     showPopup: true,
                     style: {
@@ -251,7 +303,7 @@ export default function LayersControlPanel({ map }) {
                     zoomToLayer: false,
                     extent: [],
                     geomType: "geojson",
-                    fillType: "fill",
+                    fillType: fillType,
                     trace: false,
                     component: "map",
                   });
@@ -321,13 +373,37 @@ export default function LayersControlPanel({ map }) {
           )
           .then((response) => {
             const categoryStyle = response.data[0];
+            let url = null;
+            let fillType = null;
+            if (cat.type_of_geometry === "Point") {
+              url = `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-point-geojson/?project=${project_id}&category=${
+                cat.id
+              }`;
+              fillType = "circle";
+            }
+            if (cat.type_of_geometry === "LineString") {
+              url = `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-linestring-geojson/?project=${project_id}&category=${
+                cat.id
+              }`;
+              fillType = "line";
+            }
+            if (cat.type_of_geometry === "Polygon") {
+              url = `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-polygon-geojson/?project=${project_id}&category=${
+                cat.id
+              }`;
+              fillType = "fill";
+            }
             AddLayerAndSourceToMap({
               map: map,
               layerId: layerId,
               sourceId: sourceId,
-              url: `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/category-geojson/?project=${project_id}&category=${cat.id}`,
+              url: url,
               source_layer: sourceId,
               showPopup: true,
               style: {
@@ -338,7 +414,7 @@ export default function LayersControlPanel({ map }) {
               zoomToLayer: false,
               extent: [],
               geomType: "geojson",
-              fillType: "fill",
+              fillType: fillType,
               trace: false,
               component: "map",
             });
@@ -441,7 +517,13 @@ export default function LayersControlPanel({ map }) {
     const existingLayer = style.layers.find((layer) => layer.id === layerId);
 
     if (existingLayer) {
-      map.setPaintProperty(layerId, "fill-opacity", parseFloat(value));
+      if (cat.type_of_geometry === "Polygon") {
+        map.setPaintProperty(layerId, "fill-opacity", parseFloat(value));
+      } else if (cat.type_of_geometry === "LineString") {
+        map.setPaintProperty(layerId, "line-opacity", parseFloat(value));
+      } else {
+        map.setPaintProperty(layerId, "circle-opacity", parseFloat(value));
+      }
     }
   };
 
@@ -449,6 +531,101 @@ export default function LayersControlPanel({ map }) {
     console.log(event);
     console.log(cat);
     map.fitBounds(cat.extent.extent);
+  };
+
+  const handleDraw = (event, cat) => {
+    const draw = map.draw;
+    draw.deleteAll();
+    dispatch(setWKTGeometry(null));
+    dispatch(setTypeOfGeometry(null));
+    dispatch(setCategoryId(null));
+    dispatch(setCategoryViewName(null));
+    const type_of_geometry = cat.type_of_geometry;
+    if (type_of_geometry === "Polygon") {
+      draw.changeMode("draw_polygon");
+    }
+    if (type_of_geometry === "LineString") {
+      draw.changeMode("draw_line_string");
+    }
+    if (type_of_geometry === "Point") {
+      draw.changeMode("draw_point");
+    }
+    map.on("draw.create", function (event) {
+      const feature = event.features;
+      const geometry = feature[0].geometry;
+      const type_of_geometry = feature[0].geometry.type;
+      if (type_of_geometry === "Point") {
+        const coordinates = geometry.coordinates;
+        const wktCoordinates_final = `POINT (${coordinates[0]} ${coordinates[1]})`;
+        console.log(wktCoordinates_final, "wkt point");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setCategoryId(cat.id));
+        dispatch(setCategoryViewName(cat.view_name));
+      }
+      if (type_of_geometry === "Polygon") {
+        const coordinates = geometry.coordinates[0];
+        const wktCoordinates = coordinates
+          .map((coord) => `${coord[0]} ${coord[1]}`)
+          .join(", ");
+        const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
+        console.log(wktCoordinates_final, "wkt polygon ");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setCategoryId(cat.id));
+        dispatch(setCategoryViewName(cat.view_name));
+      }
+      if (type_of_geometry === "LineString") {
+        const coordinates = geometry.coordinates;
+        const wktCoordinates = coordinates
+          .map((coord) => `${coord[0]} ${coord[1]}`)
+          .join(", ");
+        const wktCoordinates_final = `LINESTRING (${wktCoordinates})`;
+        console.log(wktCoordinates_final, "wkt line string");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setCategoryId(cat.id));
+        dispatch(setCategoryViewName(cat.view_name));
+      }
+    });
+    map.on("draw.update", function (event) {
+      const feature = event.features;
+      const geometry = feature[0].geometry;
+      const type_of_geometry = feature[0].geometry.type;
+      if (type_of_geometry === "Point") {
+        const coordinates = geometry.coordinates;
+        const wktCoordinates_final = `POINT (${coordinates[0]} ${coordinates[1]})`;
+        console.log(wktCoordinates_final, "wkt point");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setCategoryId(cat.id));
+        dispatch(setCategoryViewName(cat.view_name));
+      }
+      if (type_of_geometry === "Polygon") {
+        const coordinates = geometry.coordinates[0];
+        const wktCoordinates = coordinates
+          .map((coord) => `${coord[0]} ${coord[1]}`)
+          .join(", ");
+        const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
+        console.log(wktCoordinates_final, "wkt polygon ");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setCategoryId(cat.id));
+        dispatch(setCategoryViewName(cat.view_name));
+      }
+      if (type_of_geometry === "LineString") {
+        const coordinates = geometry.coordinates;
+        const wktCoordinates = coordinates
+          .map((coord) => `${coord[0]} ${coord[1]}`)
+          .join(", ");
+        const wktCoordinates_final = `LINESTRING (${wktCoordinates})`;
+        console.log(wktCoordinates_final, "wkt line string");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setCategoryId(cat.id));
+        dispatch(setCategoryViewName(cat.view_name));
+      }
+    });
   };
 
   return (
@@ -618,6 +795,7 @@ export default function LayersControlPanel({ map }) {
                       />
                       <Tooltip title="Draw Measuring">
                         <ModeIcon
+                          onClick={(event) => handleDraw(event, cat)}
                           sx={{
                             marginRight: "10px",
                             backgroundColor: "#FFFFF",
