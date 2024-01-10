@@ -18,6 +18,7 @@ export default function Map({ id }) {
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
+  const popUpRef = useRef(new maplibregl.Popup({ offset: 15 }));
 
   useEffect(() => {
     const map = new maplibregl.Map({

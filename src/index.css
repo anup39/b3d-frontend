@@ -12,6 +12,24 @@
   background-color : #EBEBEB;
   color: black
 }
+.popup-delete{
+  cursor: pointer;
+  color: white;
+  background-color: #D51B60;
+  padding: 2;
+  border-radius: "5px";
+}
+.popup-edit{
+  cursor: pointer;
+  color: white;
+  background-color: #D51B60;
+  padding: 2;
+  border-radius: "5px";
+}
 
+.maplibregl-popup-close-button{
+  font-size: large;
+  padding: 5px;
+  background-color: #D51B60;
 
-
+}

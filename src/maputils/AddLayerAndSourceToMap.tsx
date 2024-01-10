@@ -8,13 +8,26 @@ import {
   IControl,
 } from "maplibre-gl";
 import maplibregl from "maplibre-gl";
+import { store } from "../store";
+import { Provider } from "react-redux";
+import Popup from "../components/PopupControl/Popup";
+import ReactDOM, { Root } from "react-dom/client";
 
 function getPopupHTML(properties) {
   let html = "";
-  for (const [key, value] of Object.entries(properties)) {
-    html += `<b>${key}:</b> ${value}<br>`;
+  function handleEditClick() {
+    console.log("Editing  ");
   }
-  return html;
+  function handleDeleteClick() {
+    console.log("Deleting ");
+  }
+  for (const [key, value] of Object.entries(properties)) {
+    html += `<b>${key}:</b> ${value}<br> `;
+  }
+  return (
+    html +
+    `<button onclick="handleDeleteClick()" class='popup-delete'>Delete</button> <button onclick='handleEditClick()' class='popup-edit'>Edit</button>`
+  );
 }
 
 interface AddLayerProps {
@@ -175,6 +188,14 @@ function AddLayerAndSourceToMap({
         if (popup.isOpen()) {
           popup.remove();
         } else {
+          // const container = document.createElement("div");
+          // const root = ReactDOM.createRoot(container);
+          // root.render(
+          //   <Provider store={store}>
+          //     <Popup properties={feature.properties} trace={false} />
+          //   </Provider>
+          // );
+
           popup
             .setLngLat(e.lngLat)
             .setHTML(getPopupHTML(feature.properties))
