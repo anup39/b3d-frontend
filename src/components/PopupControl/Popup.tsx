@@ -34,8 +34,9 @@ const Popup = ({ properties, feature_id }: PopupProps) => {
       {properties ? (
         <div>
           <div>{propertyElements}</div>
-          <div style={{ display: "flex", gap: 2 }}>
+          <div style={{ display: "flex", gap: 15 }}>
             <Button
+              size="small"
               sx={{
                 backgroundColor: "#D51B60",
                 color: "white",
@@ -48,6 +49,7 @@ const Popup = ({ properties, feature_id }: PopupProps) => {
               Delete
             </Button>
             <Button
+              size="small"
               sx={{
                 backgroundColor: "#D51B60",
                 color: "white",
