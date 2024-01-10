@@ -182,20 +182,20 @@ function AddLayerAndSourceToMap({
         console.log(feature, "feature");
         console.log(popUpRef.current);
 
-        if (!popUpRef.current.isOpen()) {
-          const container = document.createElement("div");
-          const root = ReactDOM.createRoot(container);
-          root.render(
-            <Provider store={store}>
-              <Popup properties={feature.properties} feature_id={feature.id} />
-            </Provider>
-          );
-          popUpRef.current
-            .setLngLat(e.lngLat)
-            .setDOMContent(container)
-            .addTo(map);
-          // }
-        }
+        // if (popUpRef.current.isOpen()) {
+        const container = document.createElement("div");
+        const root = ReactDOM.createRoot(container);
+        root.render(
+          <Provider store={store}>
+            <Popup properties={feature.properties} feature_id={feature.id} />
+          </Provider>
+        );
+        popUpRef.current
+          .setLngLat(e.lngLat)
+          .setDOMContent(container)
+          .addTo(map);
+        // }
+        // }
       }
       console.log(map, "map");
     });
