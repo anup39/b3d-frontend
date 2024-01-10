@@ -14,6 +14,7 @@ import Tooltip from "@mui/material/Tooltip";
 import ModeIcon from "@mui/icons-material/Mode";
 import CircularProgress from "@mui/material/CircularProgress";
 import { setCategoriesState } from "../../reducers/MapView";
+import { setWKTGeometry } from "../../reducers/DrawnGeometry";
 
 const all_categories = [
   {
@@ -451,6 +452,48 @@ export default function LayersControlPanel({ map }) {
     map.fitBounds(cat.extent.extent);
   };
 
+  const handleDraw = (event, cat) => {
+    console.log(map, "map");
+    const draw = map.draw;
+    draw.deleteAll();
+    dispatch(setWKTGeometry(null));
+    const type_of_geometry = cat.type_of_geometry;
+    if (type_of_geometry === "Polygon") {
+      draw.changeMode("draw_polygon");
+    }
+    if (type_of_geometry === "LineString") {
+      draw.changeMode("draw_line_string");
+    }
+    if (type_of_geometry === "Point") {
+      draw.changeMode("draw_point");
+    }
+    map.on("draw.create", function (event) {
+      console.log(event, "event of draw create");
+      const feature = event.features;
+
+      const geometry = feature[0].geometry;
+      const coordinates = geometry.coordinates[0];
+      const wktCoordinates = coordinates
+        .map((coord) => `${coord[0]} ${coord[1]}`)
+        .join(", ");
+      const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
+      dispatch(setWKTGeometry(wktCoordinates_final));
+    });
+    map.on("draw.update", function (event) {
+      console.log(event, "event of draw create");
+
+      const feature = event.features;
+
+      const geometry = feature[0].geometry;
+      const coordinates = geometry.coordinates[0];
+      const wktCoordinates = coordinates
+        .map((coord) => `${coord[0]} ${coord[1]}`)
+        .join(", ");
+      const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
+      dispatch(setWKTGeometry(wktCoordinates_final));
+    });
+  };
+
   return (
     <div
       style={{
@@ -618,6 +661,7 @@ export default function LayersControlPanel({ map }) {
                       />
                       <Tooltip title="Draw Measuring">
                         <ModeIcon
+                          onClick={(event) => handleDraw(event, cat)}
                           sx={{
                             marginRight: "10px",
                             backgroundColor: "#FFFFF",

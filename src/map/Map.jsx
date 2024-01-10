@@ -48,54 +48,6 @@ export default function Map({ id }) {
         // 1 Draw and its layer
         map.addControl(draw);
         map.draw = draw;
-
-        document
-          .getElementById("polygon-box")
-          .addEventListener("click", function (event) {
-            console.log(event, "event");
-            draw.deleteAll();
-            draw.changeMode("draw_polygon");
-          });
-
-        document
-          .getElementById("linestring-box")
-          .addEventListener("click", function () {
-            draw.deleteAll();
-            draw.changeMode("draw_line_string");
-          });
-
-        document
-          .getElementById("point-box")
-          .addEventListener("click", function () {
-            draw.deleteAll();
-            draw.changeMode("draw_point");
-          });
-
-        map.on("draw.create", function (event) {
-          console.log(event, "event of draw create");
-          const feature = event.features;
-
-          const geometry = feature[0].geometry;
-          const coordinates = geometry.coordinates[0];
-          const wktCoordinates = coordinates
-            .map((coord) => `${coord[0]} ${coord[1]}`)
-            .join(", ");
-          const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-          dispatch(setWKTGeometry(wktCoordinates_final));
-        });
-        map.on("draw.update", function (event) {
-          console.log(event, "event of draw create");
-
-          const feature = event.features;
-
-          const geometry = feature[0].geometry;
-          const coordinates = geometry.coordinates[0];
-          const wktCoordinates = coordinates
-            .map((coord) => `${coord[0]} ${coord[1]}`)
-            .join(", ");
-          const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-          dispatch(setWKTGeometry(wktCoordinates_final));
-        });
       });
     }
   }, [map, dispatch]);
