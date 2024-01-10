@@ -96,6 +96,27 @@ function AddLayerAndSourceToMap({
     };
     map.addLayer(newLayer);
     // map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
+  } else if (fillType && fillType === "line") {
+    console.log(style, "style for line");
+    const newLayer: LayerSpecification = {
+      id: layerId,
+      type: "line",
+      source: sourceId,
+      // "source-layer": source_layer,
+      layout: {},
+      paint: {
+        "line-color": style.fill_color,
+        "line-width": 3,
+        // "fill-opacity": [
+        //   "case",
+        //   ["boolean", ["feature-state", "hover"], false],
+        //   0.8,
+        //   parseFloat(style.fill_opacity),
+        // ],
+      },
+    };
+    map.addLayer(newLayer);
+    // map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
   } else {
     const newLayer: LayerSpecification = {
       id: layerId,

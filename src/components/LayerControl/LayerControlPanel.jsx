@@ -517,7 +517,13 @@ export default function LayersControlPanel({ map }) {
     const existingLayer = style.layers.find((layer) => layer.id === layerId);
 
     if (existingLayer) {
-      map.setPaintProperty(layerId, "fill-opacity", parseFloat(value));
+      if (cat.type_of_geometry === "Polygon") {
+        map.setPaintProperty(layerId, "fill-opacity", parseFloat(value));
+      } else if (cat.type_of_geometry === "LineString") {
+        map.setPaintProperty(layerId, "line-opacity", parseFloat(value));
+      } else {
+        map.setPaintProperty(layerId, "circle-opacity", parseFloat(value));
+      }
     }
   };
 

@@ -79,7 +79,7 @@ export default function Save() {
                       source.setData(
                         `${
                           import.meta.env.VITE_API_DASHBOARD_URL
-                        }/category-geojson/?project=${project_id}&category=${category_id}`
+                        }/category-point-geojson/?project=${project_id}&category=${category_id}`
                       );
                     }
                     const drawInstance = window.map_global.draw;
@@ -137,7 +137,7 @@ export default function Save() {
                       source.setData(
                         `${
                           import.meta.env.VITE_API_DASHBOARD_URL
-                        }/category-geojson/?project=${project_id}&category=${category_id}`
+                        }/category-linestring-geojson/?project=${project_id}&category=${category_id}`
                       );
                     }
                     const drawInstance = window.map_global.draw;
