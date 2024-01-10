@@ -89,7 +89,7 @@ function AddLayerAndSourceToMap({
         "circle-stroke-color": [
           "case",
           ["boolean", ["feature-state", "hover"], false],
-          "red",
+          "black",
           "black",
         ],
       },
@@ -106,13 +106,12 @@ function AddLayerAndSourceToMap({
       layout: {},
       paint: {
         "line-color": style.fill_color,
-        "line-width": 3,
-        // "fill-opacity": [
-        //   "case",
-        //   ["boolean", ["feature-state", "hover"], false],
-        //   0.8,
-        //   parseFloat(style.fill_opacity),
-        // ],
+        "line-width": [
+          "case",
+          ["boolean", ["feature-state", "hover"], false],
+          5,
+          3,
+        ],
       },
     };
     map.addLayer(newLayer);

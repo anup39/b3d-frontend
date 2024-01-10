@@ -231,7 +231,9 @@ export default function Save() {
       dispatch(setshowToast(true));
       dispatch(settoastType("error"));
       dispatch(
-        settoastMessage("No category drawn in map. Please draw category")
+        settoastMessage(
+          "No category drawn or edited in map. Please draw or edit category in Map"
+        )
       );
     }
   };
