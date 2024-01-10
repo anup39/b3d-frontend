@@ -16,6 +16,7 @@ import TableMeasuringsForMap from "../components/TableMeasuringMapControl/TableM
 import ReportPrint from "../components/MapView/ReportPrint";
 import Map3D from "../map/Map3D";
 import ThreeScene from "../map/MapThree";
+import MapLoader from "../components/MapLoader/MapLoader";
 
 export default function MapSection() {
   const dispatch = useDispatch();
@@ -79,6 +80,7 @@ export default function MapSection() {
     >
       <AppBar />
       <CategoryGeomForm />
+      <MapLoader />
       <Map refObj={searchRef} id={id} />
       {/* <Map3D /> */}
       {/* <ThreeScene /> */}
