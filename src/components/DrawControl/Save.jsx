@@ -18,10 +18,8 @@ export default function Save() {
           onClick={handleSave}
           id="save-draw"
           sx={{
-            "& .MuiSvgIcon-root": {
-              fontSize: 24,
-              color: "#9C27B0",
-            },
+            "&:hover": { cursor: "pointer" },
+            color: "#d61b60",
           }}
           aria-label="Save"
         >

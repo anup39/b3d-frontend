@@ -460,8 +460,8 @@ export default function LayersControlPanel({ map }) {
     const draw = map.draw;
     draw.deleteAll();
     dispatch(setWKTGeometry(null));
-    dispatch(setTypeOfGeometry(type_of_geometry));
-    dispatch(setCategoryId(cat.id));
+    dispatch(setTypeOfGeometry(null));
+    dispatch(setCategoryId(null));
     const type_of_geometry = cat.type_of_geometry;
     if (type_of_geometry === "Polygon") {
       draw.changeMode("draw_polygon");
