@@ -453,8 +453,8 @@ export default function LayersControlPanel({ map }) {
   };
 
   const handleDraw = (event, cat) => {
-    console.log(map, "map");
     const draw = map.draw;
+    console.log(cat.type_of_geometry);
     draw.deleteAll();
     dispatch(setWKTGeometry(null));
     const type_of_geometry = cat.type_of_geometry;
