@@ -129,6 +129,7 @@ export default function Save() {
                 dispatch(settoastType("success"));
                 dispatch(settoastMessage("Successfully created the Category"));
                 setTimeout(() => {
+                  dispatch(setshowMapLoader(false));
                   if (window.map_global) {
                     const drawInstance = window.map_global.draw;
                     drawInstance.deleteAll();
@@ -144,6 +145,7 @@ export default function Save() {
                 dispatch(settoastType("error"));
                 dispatch(settoastMessage("Failed to create the Category"));
                 setTimeout(() => {
+                  dispatch(setshowMapLoader(false));
                   if (window.map_global) {
                     const drawInstance = window.map_global.draw;
                     drawInstance.deleteAll();
