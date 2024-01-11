@@ -29,7 +29,6 @@ export default function DeletePopup() {
   const [loading, setLoading] = useState(false);
 
   const handleDeleteProject = (event) => {
-    console.log("here");
     event.preventDefault();
     setLoading(true);
     axios

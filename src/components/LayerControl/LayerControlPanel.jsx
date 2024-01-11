@@ -14,12 +14,18 @@ import Tooltip from "@mui/material/Tooltip";
 import ModeIcon from "@mui/icons-material/Mode";
 import CircularProgress from "@mui/material/CircularProgress";
 import { setCategoriesState } from "../../reducers/MapView";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+import PolylineIcon from "@mui/icons-material/Polyline";
 import {
   setCategoryId,
   setCategoryViewName,
   setTypeOfGeometry,
   setWKTGeometry,
+  setMode,
+  setFeatureId,
 } from "../../reducers/DrawnGeometry";
+import { NullLoader } from "@loaders.gl/core";
 
 const all_categories = [
   {
@@ -101,7 +107,7 @@ const all_categories = [
   },
 ];
 
-export default function LayersControlPanel({ map }) {
+export default function LayersControlPanel({ map, popUpRef }) {
   const dispatch = useDispatch();
   const [categories, setCategories] = useState(all_categories);
   const [loading, setLoading] = useState(true);
@@ -116,6 +122,11 @@ export default function LayersControlPanel({ map }) {
 
   const project_id = useSelector(
     (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  );
+
+  const mode = useSelector((state) => state.drawnPolygon.mode);
+  const category_view_name = useSelector(
+    (state) => state.drawnPolygon.category_view_name
   );
 
   useEffect(() => {
@@ -142,7 +153,6 @@ export default function LayersControlPanel({ map }) {
   }, [current_measuring_categories]);
 
   const handleChangesd = (event, sdIndex) => {
-    console.log(categories, "update categores");
     const updatedCategories = [...categories];
     updatedCategories[sdIndex].checked = event.target.checked;
     updatedCategories[sdIndex].indeterminate = false;
@@ -201,6 +211,7 @@ export default function LayersControlPanel({ map }) {
                   sourceId: sourceId,
                   url: url,
                   source_layer: sourceId,
+                  popUpRef: popUpRef,
                   showPopup: true,
                   style: {
                     fill_color: categoryStyle.fill,
@@ -294,6 +305,7 @@ export default function LayersControlPanel({ map }) {
                     sourceId: sourceId,
                     url: url,
                     source_layer: sourceId,
+                    popUpRef: popUpRef,
                     showPopup: true,
                     style: {
                       fill_color: categoryStyle.fill,
@@ -405,6 +417,7 @@ export default function LayersControlPanel({ map }) {
               sourceId: sourceId,
               url: url,
               source_layer: sourceId,
+              popUpRef: popUpRef,
               showPopup: true,
               style: {
                 fill_color: categoryStyle.fill,
@@ -507,10 +520,6 @@ export default function LayersControlPanel({ map }) {
   };
 
   const handleChangeSlider = (event, value, cat) => {
-    console.log(event);
-    console.log(value);
-    console.log(cat, "cat index");
-
     const layerId = String(client_id) + cat.view_name + "layer";
 
     const style = map.getStyle();
@@ -528,8 +537,6 @@ export default function LayersControlPanel({ map }) {
   };
 
   const handleZoomToLayer = (event, cat) => {
-    console.log(event);
-    console.log(cat);
     map.fitBounds(cat.extent.extent);
   };
 
@@ -540,6 +547,12 @@ export default function LayersControlPanel({ map }) {
     dispatch(setTypeOfGeometry(null));
     dispatch(setCategoryId(null));
     dispatch(setCategoryViewName(null));
+    dispatch(setFeatureId(null));
+
+    if (mode && mode === "Edit") {
+      const layerId = String(client_id) + category_view_name + "layer";
+      map.setFilter(layerId, null);
+    }
     const type_of_geometry = cat.type_of_geometry;
     if (type_of_geometry === "Polygon") {
       draw.changeMode("draw_polygon");
@@ -550,6 +563,9 @@ export default function LayersControlPanel({ map }) {
     if (type_of_geometry === "Point") {
       draw.changeMode("draw_point");
     }
+    dispatch(setCategoryId(cat.id));
+    dispatch(setCategoryViewName(cat.view_name));
+    dispatch(setMode("Draw"));
     map.on("draw.create", function (event) {
       const feature = event.features;
       const geometry = feature[0].geometry;
@@ -560,8 +576,6 @@ export default function LayersControlPanel({ map }) {
         console.log(wktCoordinates_final, "wkt point");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
-        dispatch(setCategoryId(cat.id));
-        dispatch(setCategoryViewName(cat.view_name));
       }
       if (type_of_geometry === "Polygon") {
         const coordinates = geometry.coordinates[0];
@@ -572,8 +586,6 @@ export default function LayersControlPanel({ map }) {
         console.log(wktCoordinates_final, "wkt polygon ");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
-        dispatch(setCategoryId(cat.id));
-        dispatch(setCategoryViewName(cat.view_name));
       }
       if (type_of_geometry === "LineString") {
         const coordinates = geometry.coordinates;
@@ -584,11 +596,12 @@ export default function LayersControlPanel({ map }) {
         console.log(wktCoordinates_final, "wkt line string");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
-        dispatch(setCategoryId(cat.id));
-        dispatch(setCategoryViewName(cat.view_name));
       }
     });
+
     map.on("draw.update", function (event) {
+      const draw = map.draw;
+      console.log(draw, "draw update");
       const feature = event.features;
       const geometry = feature[0].geometry;
       const type_of_geometry = feature[0].geometry.type;
@@ -598,8 +611,6 @@ export default function LayersControlPanel({ map }) {
         console.log(wktCoordinates_final, "wkt point");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
-        dispatch(setCategoryId(cat.id));
-        dispatch(setCategoryViewName(cat.view_name));
       }
       if (type_of_geometry === "Polygon") {
         const coordinates = geometry.coordinates[0];
@@ -610,8 +621,6 @@ export default function LayersControlPanel({ map }) {
         console.log(wktCoordinates_final, "wkt polygon ");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
-        dispatch(setCategoryId(cat.id));
-        dispatch(setCategoryViewName(cat.view_name));
       }
       if (type_of_geometry === "LineString") {
         const coordinates = geometry.coordinates;
@@ -622,8 +631,6 @@ export default function LayersControlPanel({ map }) {
         console.log(wktCoordinates_final, "wkt line string");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
-        dispatch(setCategoryId(cat.id));
-        dispatch(setCategoryViewName(cat.view_name));
       }
     });
   };
@@ -780,6 +787,16 @@ export default function LayersControlPanel({ map }) {
                           />
                         }
                       />
+                      {cat.type_of_geometry === "LineString" ? (
+                        <ShowChartIcon size="small" sx={{ fontSize: 17 }} />
+                      ) : null}
+                      {cat.type_of_geometry === "Polygon" ? (
+                        <PolylineIcon size="small" sx={{ fontSize: 17 }} />
+                      ) : null}
+                      {cat.type_of_geometry === "Point" ? (
+                        <MyLocationIcon size="small" sx={{ fontSize: 17 }} />
+                      ) : null}
+
                       <Slider
                         onChange={(event, value) =>
                           handleChangeSlider(event, value, cat)

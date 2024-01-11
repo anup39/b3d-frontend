@@ -28,7 +28,6 @@ export default function ClientCard({ id, name, description }) {
   const dispatch = useDispatch();
 
   const projects = useSelector((state) => state.project.projects);
-  // console.log(projects, "projects");
 
   const handleViewInMap = () => {
     navigate(`/projects/${id}/Map`);
