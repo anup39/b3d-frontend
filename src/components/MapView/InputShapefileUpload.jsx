@@ -99,32 +99,32 @@ export default function InputShapefileUpload({
       });
 
       // Add layers for different feature types
-      map.addLayer({
-        id: "line-layer",
-        type: "line",
-        source: "geojson-data",
-        layout: {
-          "line-join": "round",
-          "line-cap": "round",
-        },
-        paint: {
-          "line-color": ["get", "stroke"],
-          "line-width": 2,
-        },
-        filter: ["==", "$type", "LineString"],
-      });
+      // map.addLayer({
+      //   id: "line-layer",
+      //   type: "line",
+      //   source: "geojson-data",
+      //   layout: {
+      //     "line-join": "round",
+      //     "line-cap": "round",
+      //   },
+      //   paint: {
+      //     "line-color": ["get", "stroke"],
+      //     "line-width": 2,
+      //   },
+      //   filter: ["==", "$type", "LineString"],
+      // });
 
-      map.addLayer({
-        id: "polygon-layer",
-        type: "fill",
-        source: "geojson-data",
-        paint: {
-          "fill-color": ["get", "fill"],
-          "fill-opacity": 0.6,
-          "fill-outline-color": ["get", "stroke"],
-        },
-        filter: ["==", "$type", "Polygon"],
-      });
+      // map.addLayer({
+      //   id: "polygon-layer",
+      //   type: "fill",
+      //   source: "geojson-data",
+      //   paint: {
+      //     "fill-color": ["get", "fill"],
+      //     "fill-opacity": 0.6,
+      //     "fill-outline-color": ["get", "stroke"],
+      //   },
+      //   filter: ["==", "$type", "Polygon"],
+      // });
 
       map.addLayer({
         id: "circle-layer",
@@ -132,15 +132,16 @@ export default function InputShapefileUpload({
         source: "geojson-data",
         paint: {
           "circle-radius": 6,
-          "circle-color": ["get", "fill"],
+          // "circle-color": ["get", "fill"],
+          "circle-color": "blue",
         },
-        filter: ["==", "$type", "Point"],
+        // filter: ["==", "$type", "Point"],
       });
 
       // Add popups to features
       map.on("click", function (e) {
         var features = map.queryRenderedFeatures(e.point, {
-          layers: ["line-layer", "polygon-layer", "circle-layer"],
+          layers: ["circle-layer"],
         });
 
         if (!features.length) {
@@ -200,7 +201,7 @@ export default function InputShapefileUpload({
         Upload Shapefile or Geojson File
         <VisuallyHiddenInput
           type="file"
-          accept=".zip , .json"
+          accept=".zip , .json,.shp"
           ref={fileInputRef}
           onChange={handleFileChange}
           required
