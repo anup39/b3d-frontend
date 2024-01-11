@@ -15,9 +15,10 @@ interface PopupProps {
     mill_lat: string;
   };
   feature_id: number;
+  features: any;
 }
 
-const Popup = ({ properties, feature_id }: PopupProps) => {
+const Popup = ({ properties, feature_id, features }: PopupProps) => {
   const dispatch = useDispatch();
   // const state = useSelector((state) => state.drawnPolygon);
   const client_id = useSelector(
@@ -130,64 +131,23 @@ const Popup = ({ properties, feature_id }: PopupProps) => {
     }
   };
   const handleEditCategory = (properties, feature_id) => {
-    // console.log(properties, feature_id);
-    const map = window.map_global;
-    // map.on("click", (e) => {
-    //   console.log(e);
-    // });
-    const feature = {
-      id: 65,
-      type: "Feature",
-      geometry: {
-        type: "Polygon",
-        coordinates: [
-          [
-            [103.85288198135186, 2.323813462091607],
-            [103.86962550867833, 2.283847366844142],
-            [103.93101844221007, 2.29593025797314],
-            [103.89846158351799, 2.325672322860825],
-            [103.90125217140604, 2.342401959330829],
-            [103.85288198135186, 2.323813462091607],
-          ],
-        ],
-      },
-      properties: {},
-    };
-    map.draw.add(feature);
+    // First remove the poup content
     const popups = document.getElementsByClassName("maplibregl-popup");
-
     if (popups.length) {
       popups[0].remove();
     }
-    const sourceId = String(client_id) + properties.view_name + "source";
+    const map = window.map_global;
+    map.draw.deleteAll();
+    map.draw.add(features[0]);
     const layerId = String(client_id) + properties.view_name + "layer";
-    console.log(sourceId);
-    // RemoveSourceAndLayerFromMap({ map, layerId, sourceId });
-    console.log(current_measuring_categories);
-    console.log(properties.category_id);
-    const popupContent = document.getElementById("popup-custom");
-
-    // Loop through the elements and hide them
-
-    // popupContent.style.display = "none";
     const layer = map.getLayer(layerId);
-    const filterCondition = ["!=", ["id"], 65];
+    map.setFilter(layerId, null);
     const existingFilter = layer.filter || ["all"];
-
-    // Update the filter with the new condition
+    const filterCondition = ["!=", ["id"], feature_id];
     const updatedFilter = ["all", existingFilter, filterCondition];
-    // Apply the updated filter to the layer
     map.setFilter(layerId, updatedFilter);
-    console.log(layer);
+    console.log(features, "features");
     // Loop through the elements and hide them
-
-    // dispatch(set)
-    // console.log(featureIds);
-    // map.draw.changeMode("draw_polygon");
-    // map.draw.add(
-    //   "http://137.135.165.161:8000/api/category-polygon-geojson/?project=14&category=25"
-    // );
-    // map.draw.changeMode("draw_polygon");
   };
   return (
     <>

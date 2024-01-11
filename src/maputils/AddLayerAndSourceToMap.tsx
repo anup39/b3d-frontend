@@ -189,7 +189,11 @@ function AddLayerAndSourceToMap({
         const root = ReactDOM.createRoot(container);
         root.render(
           <Provider store={store}>
-            <Popup properties={feature.properties} feature_id={feature.id} />
+            <Popup
+              properties={feature.properties}
+              feature_id={feature.id}
+              features={features}
+            />
           </Provider>
         );
         popUpRef.current
