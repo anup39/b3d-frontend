@@ -13,11 +13,20 @@ import { SHPLoader } from "@loaders.gl/shapefile";
 import { load } from "@loaders.gl/core";
 import { JSONLoader } from "@loaders.gl/json";
 import * as turf from "@turf/turf";
+import maplibregl from "maplibre-gl";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
+function getPopupHTML(properties) {
+  let html = "";
+
+  for (const [key, value] of Object.entries(properties)) {
+    html += `<b>${key}:</b> ${value}<br> `;
+  }
+  return html;
+}
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -81,22 +90,77 @@ export default function InputShapefileUpload({
     onSetFilesize(file_size + " " + "MB");
     onProjection(`EPSG:${4326}`);
 
+    const map = window.mapshapefile;
+
     if (data) {
-      window.mapshapefile.addSource("geojson-source", {
+      map.addSource("geojson-data", {
         type: "geojson",
         data: data,
       });
 
-      window.mapshapefile.addLayer({
-        id: "geojson-layer",
-        type: "fill",
-        source: "geojson-source",
-        layout: {},
-        paint: {
-          "fill-color": "red",
-          "fill-opacity": 1,
-          "fill-outline-color": "black",
+      // Add layers for different feature types
+      map.addLayer({
+        id: "line-layer",
+        type: "line",
+        source: "geojson-data",
+        layout: {
+          "line-join": "round",
+          "line-cap": "round",
         },
+        paint: {
+          "line-color": ["get", "stroke"],
+          "line-width": 2,
+        },
+        filter: ["==", "$type", "LineString"],
+      });
+
+      map.addLayer({
+        id: "polygon-layer",
+        type: "fill",
+        source: "geojson-data",
+        paint: {
+          "fill-color": ["get", "fill"],
+          "fill-opacity": 0.6,
+          "fill-outline-color": ["get", "stroke"],
+        },
+        filter: ["==", "$type", "Polygon"],
+      });
+
+      map.addLayer({
+        id: "circle-layer",
+        type: "circle",
+        source: "geojson-data",
+        paint: {
+          "circle-radius": 6,
+          "circle-color": ["get", "fill"],
+        },
+        filter: ["==", "$type", "Point"],
+      });
+
+      // Add popups to features
+      map.on("click", function (e) {
+        var features = map.queryRenderedFeatures(e.point, {
+          layers: ["line-layer", "polygon-layer", "circle-layer"],
+        });
+
+        if (!features.length) {
+          return;
+        }
+
+        var feature = features[0];
+
+        var popup = new maplibregl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(getPopupHTML(feature.properties))
+          .addTo(map);
+      });
+
+      // Change the cursor to a pointer when the mouse is over a feature
+      map.on("mousemove", function (e) {
+        var features = map.queryRenderedFeatures(e.point, {
+          layers: ["line-layer", "polygon-layer", "circle-layer"],
+        });
+        map.getCanvas().style.cursor = features.length ? "pointer" : "";
       });
       const extent = turf.bbox(data);
       window.mapshapefile.fitBounds(extent);
