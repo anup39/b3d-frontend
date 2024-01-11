@@ -14,6 +14,7 @@ import {
   setTypeOfGeometry,
   setWKTGeometry,
   setMode,
+  setFeatureId,
 } from "../../reducers/DrawnGeometry";
 
 export default function Save() {
@@ -29,6 +30,8 @@ export default function Save() {
     (state) => state.mapView.currentMapDetail.current_project_measuring_table
   );
   const category_id = useSelector((state) => state.drawnPolygon.category_id);
+  const feature_id = useSelector((state) => state.drawnPolygon.feature_id);
+
   const category_view_name = useSelector(
     (state) => state.drawnPolygon.category_view_name
   );
@@ -100,6 +103,7 @@ export default function Save() {
                       dispatch(setCategoryId(null));
                       dispatch(setCategoryViewName(null));
                       dispatch(setMode(null));
+                      dispatch(setFeatureId(null));
                     }
                   }, 3000);
                 })
@@ -118,6 +122,7 @@ export default function Save() {
                       dispatch(setCategoryId(null));
                       dispatch(setCategoryViewName(null));
                       dispatch(setMode(null));
+                      dispatch(setFeatureId(null));
                     }
                   }, 3000);
                 });
@@ -152,6 +157,7 @@ export default function Save() {
                           }/category-linestring-geojson/?project=${project_id}&category=${category_id}`
                         );
                       }
+
                       const drawInstance = window.map_global.draw;
                       drawInstance.deleteAll();
                       drawInstance.changeMode("simple_select");
@@ -160,6 +166,7 @@ export default function Save() {
                       dispatch(setCategoryId(null));
                       dispatch(setCategoryViewName(null));
                       dispatch(setMode(null));
+                      dispatch(setFeatureId(null));
                     }
                   }, 3000);
                 })
@@ -178,6 +185,7 @@ export default function Save() {
                       dispatch(setCategoryId(null));
                       dispatch(setCategoryViewName(null));
                       dispatch(setMode(null));
+                      dispatch(setFeatureId(null));
                     }
                   }, 3000);
                 });
@@ -220,6 +228,7 @@ export default function Save() {
                       dispatch(setCategoryId(null));
                       dispatch(setCategoryViewName(null));
                       dispatch(setMode(null));
+                      dispatch(setFeatureId(null));
                     }
                   }, 3000);
                 })
@@ -238,6 +247,7 @@ export default function Save() {
                       dispatch(setCategoryId(null));
                       dispatch(setCategoryViewName(null));
                       dispatch(setMode(null));
+                      dispatch(setFeatureId(null));
                     }
                   }, 3000);
                 });
@@ -246,7 +256,7 @@ export default function Save() {
       } else {
         console.log("Edit mode");
         dispatch(setshowMapLoader(true));
-        const selectedCategoryId = category_id;
+        // const selectedCategoryId = category_id;
         const data = {
           geom: wkt_geometry,
         };
@@ -255,7 +265,7 @@ export default function Save() {
             .put(
               `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/point-data/${selectedCategoryId}/`,
+              }/point-data/${feature_id}/`,
               data
             )
             .then(() => {
@@ -282,6 +292,9 @@ export default function Save() {
                       }/category-point-geojson/?project=${project_id}&category=${category_id}`
                     );
                   }
+                  if (mode === "Edit") {
+                    map.setFilter(layerId, null);
+                  }
                   const drawInstance = window.map_global.draw;
                   drawInstance.deleteAll();
                   drawInstance.changeMode("simple_select");
@@ -290,6 +303,7 @@ export default function Save() {
                   dispatch(setCategoryId(null));
                   dispatch(setCategoryViewName(null));
                   dispatch(setMode(null));
+                  dispatch(setFeatureId(null));
                 }
               }, 3000);
             })
@@ -308,6 +322,7 @@ export default function Save() {
                   dispatch(setCategoryId(null));
                   dispatch(setCategoryViewName(null));
                   dispatch(setMode(null));
+                  dispatch(setFeatureId(null));
                 }
               }, 3000);
             });
@@ -317,7 +332,7 @@ export default function Save() {
             .put(
               `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/linestring-data/${selectedCategoryId}/`,
+              }/linestring-data/${feature_id}/`,
               data
             )
             .then(() => {
@@ -344,6 +359,9 @@ export default function Save() {
                       }/category-linestring-geojson/?project=${project_id}&category=${category_id}`
                     );
                   }
+                  if (mode === "Edit") {
+                    map.setFilter(layerId, null);
+                  }
                   const drawInstance = window.map_global.draw;
                   drawInstance.deleteAll();
                   drawInstance.changeMode("simple_select");
@@ -352,6 +370,7 @@ export default function Save() {
                   dispatch(setCategoryId(null));
                   dispatch(setCategoryViewName(null));
                   dispatch(setMode(null));
+                  dispatch(setFeatureId(null));
                 }
               }, 3000);
             })
@@ -370,6 +389,7 @@ export default function Save() {
                   dispatch(setCategoryId(null));
                   dispatch(setCategoryViewName(null));
                   dispatch(setMode(null));
+                  dispatch(setFeatureId(null));
                 }
               }, 3000);
             });
@@ -379,7 +399,7 @@ export default function Save() {
             .put(
               `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/polygon-data/${selectedCategoryId}/`,
+              }/polygon-data/${feature_id}/`,
               data
             )
             .then(() => {
@@ -406,6 +426,9 @@ export default function Save() {
                       }/category-polygon-geojson/?project=${project_id}&category=${category_id}`
                     );
                   }
+                  if (mode === "Edit") {
+                    map.setFilter(layerId, null);
+                  }
                   const drawInstance = window.map_global.draw;
                   drawInstance.deleteAll();
                   drawInstance.changeMode("simple_select");
@@ -414,6 +437,7 @@ export default function Save() {
                   dispatch(setCategoryId(null));
                   dispatch(setCategoryViewName(null));
                   dispatch(setMode(null));
+                  dispatch(setFeatureId(null));
                 }
               }, 3000);
             })
@@ -432,6 +456,7 @@ export default function Save() {
                   dispatch(setCategoryId(null));
                   dispatch(setCategoryViewName(null));
                   dispatch(setMode(null));
+                  dispatch(setFeatureId(null));
                 }
               }, 3000);
             });

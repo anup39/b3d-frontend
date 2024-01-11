@@ -23,6 +23,7 @@ import {
   setTypeOfGeometry,
   setWKTGeometry,
   setMode,
+  setFeatureId,
 } from "../../reducers/DrawnGeometry";
 import { NullLoader } from "@loaders.gl/core";
 
@@ -546,6 +547,8 @@ export default function LayersControlPanel({ map, popUpRef }) {
     dispatch(setTypeOfGeometry(null));
     dispatch(setCategoryId(null));
     dispatch(setCategoryViewName(null));
+    dispatch(setFeatureId(null));
+
     if (mode && mode === "Edit") {
       const layerId = String(client_id) + category_view_name + "layer";
       map.setFilter(layerId, null);

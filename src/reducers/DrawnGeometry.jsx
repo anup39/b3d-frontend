@@ -6,6 +6,7 @@ const initialState = {
   category_id: null,
   category_view_name: null,
   mode: null,
+  feature_id: null,
 };
 
 export const DrawnGeometry = createSlice({
@@ -27,6 +28,9 @@ export const DrawnGeometry = createSlice({
     setMode: (state, action) => {
       state.mode = action.payload;
     },
+    setFeatureId: (state, action) => {
+      state.feature_id = action.payload;
+    },
   },
 });
 
@@ -37,6 +41,7 @@ export const {
   setCategoryId,
   setCategoryViewName,
   setMode,
+  setFeatureId,
 } = DrawnGeometry.actions;
 
 export default DrawnGeometry.reducer;

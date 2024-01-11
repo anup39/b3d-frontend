@@ -10,6 +10,7 @@ import {
   setTypeOfGeometry,
   setWKTGeometry,
   setMode,
+  setFeatureId,
 } from "../../reducers/DrawnGeometry";
 
 interface PopupProps {
@@ -39,6 +40,10 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
   );
 
   const category_id = useSelector((state) => state.drawnPolygon.category_id);
+  const category_view_name = useSelector(
+    (state) => state.drawnPolygon.category_view_name
+  );
+
   const propertyElements = properties
     ? Object.entries(properties).map(([key, value]) => (
         <div key={key}>
@@ -140,6 +145,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     dispatch(setCategoryId(properties.category_id));
     dispatch(setCategoryViewName(properties.view_name));
     dispatch(setMode("Edit"));
+    dispatch(setFeatureId(feature_id));
     const popups = document.getElementsByClassName("maplibregl-popup");
     if (popups.length) {
       popups[0].remove();
@@ -148,9 +154,13 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     const draw = map.draw;
     draw.deleteAll();
     draw.add(features[0]);
+    if (category_view_name) {
+      const layerId = String(client_id) + category_view_name + "layer";
+      map.setFilter(layerId, null);
+    }
     const layerId = String(client_id) + properties.view_name + "layer";
-    const layer = map.getLayer(layerId);
     map.setFilter(layerId, null);
+    const layer = map.getLayer(layerId);
     const existingFilter = layer.filter || ["all"];
     const filterCondition = ["!=", ["id"], feature_id];
     const updatedFilter = ["all", existingFilter, filterCondition];

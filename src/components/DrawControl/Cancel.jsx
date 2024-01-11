@@ -6,6 +6,7 @@ import {
   setWKTGeometry,
   setCategoryViewName,
   setMode,
+  setFeatureId,
 } from "../../reducers/DrawnGeometry";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -32,6 +33,7 @@ export default function Cancel() {
       dispatch(setCategoryId(null));
       dispatch(setCategoryViewName(null));
       dispatch(setMode(null));
+      dispatch(setFeatureId(null));
     }
   };
   return (
