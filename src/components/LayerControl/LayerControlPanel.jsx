@@ -787,15 +787,6 @@ export default function LayersControlPanel({ map, popUpRef }) {
                           />
                         }
                       />
-                      {cat.type_of_geometry === "LineString" ? (
-                        <ShowChartIcon size="small" sx={{ fontSize: 17 }} />
-                      ) : null}
-                      {cat.type_of_geometry === "Polygon" ? (
-                        <PolylineIcon size="small" sx={{ fontSize: 17 }} />
-                      ) : null}
-                      {cat.type_of_geometry === "Point" ? (
-                        <MyLocationIcon size="small" sx={{ fontSize: 17 }} />
-                      ) : null}
 
                       <Slider
                         onChange={(event, value) =>
@@ -810,17 +801,46 @@ export default function LayersControlPanel({ map, popUpRef }) {
                         sx={{ maxWidth: 100, margin: 2 }}
                         valueLabelDisplay="auto"
                       />
-                      <Tooltip title="Draw Measuring">
-                        <ModeIcon
-                          onClick={(event) => handleDraw(event, cat)}
-                          sx={{
-                            marginRight: "10px",
-                            backgroundColor: "#FFFFF",
-                            color: "#D61B60",
-                            "&:hover": { cursor: "pointer" },
-                          }}
-                        />
-                      </Tooltip>
+
+                      {/* <ModeIcon /> */}
+
+                      {cat.type_of_geometry === "LineString" ? (
+                        <Tooltip title="Draw LineString">
+                          <ShowChartIcon
+                            onClick={(event) => handleDraw(event, cat)}
+                            sx={{
+                              marginRight: "10px",
+                              backgroundColor: "#FFFFF",
+                              color: "#D61B60",
+                              "&:hover": { cursor: "pointer" },
+                            }}
+                          />
+                        </Tooltip>
+                      ) : cat.type_of_geometry === "Polygon" ? (
+                        <Tooltip title="Draw Polygon">
+                          <PolylineIcon
+                            onClick={(event) => handleDraw(event, cat)}
+                            sx={{
+                              marginRight: "10px",
+                              backgroundColor: "#FFFFF",
+                              color: "#D61B60",
+                              "&:hover": { cursor: "pointer" },
+                            }}
+                          />
+                        </Tooltip>
+                      ) : (
+                        <Tooltip title="Draw Point">
+                          <MyLocationIcon
+                            onClick={(event) => handleDraw(event, cat)}
+                            sx={{
+                              marginRight: "10px",
+                              backgroundColor: "#FFFFF",
+                              color: "#D61B60",
+                              "&:hover": { cursor: "pointer" },
+                            }}
+                          />
+                        </Tooltip>
+                      )}
 
                       <Tooltip title="Zoom to Layer">
                         <ZoomInIcon
