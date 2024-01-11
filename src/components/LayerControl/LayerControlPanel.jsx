@@ -22,6 +22,7 @@ import {
   setCategoryViewName,
   setTypeOfGeometry,
   setWKTGeometry,
+  setMode,
 } from "../../reducers/DrawnGeometry";
 import { NullLoader } from "@loaders.gl/core";
 
@@ -572,6 +573,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
         dispatch(setTypeOfGeometry(type_of_geometry));
         dispatch(setCategoryId(cat.id));
         dispatch(setCategoryViewName(cat.view_name));
+        dispatch(setMode("Draw"));
       }
       if (type_of_geometry === "Polygon") {
         const coordinates = geometry.coordinates[0];
@@ -584,6 +586,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
         dispatch(setTypeOfGeometry(type_of_geometry));
         dispatch(setCategoryId(cat.id));
         dispatch(setCategoryViewName(cat.view_name));
+        dispatch(setMode("Draw"));
       }
       if (type_of_geometry === "LineString") {
         const coordinates = geometry.coordinates;
@@ -596,6 +599,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
         dispatch(setTypeOfGeometry(type_of_geometry));
         dispatch(setCategoryId(cat.id));
         dispatch(setCategoryViewName(cat.view_name));
+        dispatch(setMode("Draw"));
       }
     });
     map.on("draw.update", function (event) {
@@ -612,6 +616,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
         dispatch(setTypeOfGeometry(type_of_geometry));
         dispatch(setCategoryId(cat.id));
         dispatch(setCategoryViewName(cat.view_name));
+        dispatch(setMode("Draw"));
       }
       if (type_of_geometry === "Polygon") {
         const coordinates = geometry.coordinates[0];
@@ -624,6 +629,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
         dispatch(setTypeOfGeometry(type_of_geometry));
         dispatch(setCategoryId(cat.id));
         dispatch(setCategoryViewName(cat.view_name));
+        dispatch(setMode("Draw"));
       }
       if (type_of_geometry === "LineString") {
         const coordinates = geometry.coordinates;
@@ -636,6 +642,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
         dispatch(setTypeOfGeometry(type_of_geometry));
         dispatch(setCategoryId(cat.id));
         dispatch(setCategoryViewName(cat.view_name));
+        dispatch(setMode("Draw"));
       }
     });
   };
