@@ -78,7 +78,6 @@ function AddLayerAndSourceToMap({
   }
 
   if (fillType && fillType === "circle") {
-    console.log(style, "style");
     const newLayer: CircleLayerSpecification = {
       id: layerId,
       type: "circle",
@@ -105,7 +104,6 @@ function AddLayerAndSourceToMap({
     map.addLayer(newLayer);
     // map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
   } else if (fillType && fillType === "line") {
-    console.log(style, "style for line");
     const newLayer: LayerSpecification = {
       id: layerId,
       type: "line",
@@ -150,7 +148,6 @@ function AddLayerAndSourceToMap({
 
   if (showPopup) {
     map.on("click", layerId, (e) => {
-      console.log(map, "map");
       const features = map.queryRenderedFeatures(e.point);
 
       if (!features.length) {
@@ -180,8 +177,6 @@ function AddLayerAndSourceToMap({
         // if (popups.length) {
         //   popups[0].remove();
         // }
-        console.log(feature, "feature");
-        console.log(popUpRef.current);
 
         // if (popUpRef.current.isOpen()) {
         const container = document.createElement("div");
@@ -203,7 +198,6 @@ function AddLayerAndSourceToMap({
         // }
         // }
       }
-      console.log(map, "map");
     });
   }
 

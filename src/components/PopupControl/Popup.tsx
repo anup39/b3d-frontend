@@ -4,6 +4,13 @@ import axios from "axios";
 import { setshowMapLoader } from "../../reducers/MapView";
 import { Map, LayerSpecification } from "maplibre-gl";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
+import {
+  setCategoryId,
+  setCategoryViewName,
+  setTypeOfGeometry,
+  setWKTGeometry,
+  setMode,
+} from "../../reducers/DrawnGeometry";
 
 interface PopupProps {
   properties: {
@@ -41,7 +48,6 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     : null;
 
   const handleDeleteCategory = (properties, feature_id) => {
-    console.log(properties, feature_id);
     dispatch(setshowMapLoader(true));
     if (properties.type_of_geometry === "Polygon") {
       axios
@@ -57,7 +63,6 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
           const map = window.map_global;
           if (map.getSource(sourceId) && map.getLayer(layerId)) {
             const source = map.getSource(sourceId);
-            console.log(map, "map");
             const popups = document.getElementsByClassName("maplibregl-popup");
 
             if (popups.length) {
@@ -86,7 +91,6 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
           const map = window.map_global;
           if (map.getSource(sourceId) && map.getLayer(layerId)) {
             const source = map.getSource(sourceId);
-            console.log(map, "map");
             const popups = document.getElementsByClassName("maplibregl-popup");
 
             if (popups.length) {
@@ -113,7 +117,6 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
           const map = window.map_global;
           if (map.getSource(sourceId) && map.getLayer(layerId)) {
             const source = map.getSource(sourceId);
-            console.log(map, "map");
             const popups = document.getElementsByClassName("maplibregl-popup");
 
             if (popups.length) {
@@ -132,13 +135,19 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
   };
   const handleEditCategory = (properties, feature_id) => {
     // First remove the poup content
+    dispatch(setWKTGeometry(null));
+    dispatch(setTypeOfGeometry(null));
+    dispatch(setCategoryId(properties.category_id));
+    dispatch(setCategoryViewName(properties.view_name));
+    dispatch(setMode("Edit"));
     const popups = document.getElementsByClassName("maplibregl-popup");
     if (popups.length) {
       popups[0].remove();
     }
     const map = window.map_global;
-    map.draw.deleteAll();
-    map.draw.add(features[0]);
+    const draw = map.draw;
+    draw.deleteAll();
+    draw.add(features[0]);
     const layerId = String(client_id) + properties.view_name + "layer";
     const layer = map.getLayer(layerId);
     map.setFilter(layerId, null);
@@ -146,8 +155,41 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     const filterCondition = ["!=", ["id"], feature_id];
     const updatedFilter = ["all", existingFilter, filterCondition];
     map.setFilter(layerId, updatedFilter);
-    console.log(features, "features");
     // Loop through the elements and hide them
+    map.on("draw.update", function (event) {
+      const draw = map.draw;
+      console.log(draw, "draw update");
+      const feature = event.features;
+      const geometry = feature[0].geometry;
+      const type_of_geometry = feature[0].geometry.type;
+      if (type_of_geometry === "Point") {
+        const coordinates = geometry.coordinates;
+        const wktCoordinates_final = `POINT (${coordinates[0]} ${coordinates[1]})`;
+        console.log(wktCoordinates_final, "wkt point");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+      }
+      if (type_of_geometry === "Polygon") {
+        const coordinates = geometry.coordinates[0];
+        const wktCoordinates = coordinates
+          .map((coord) => `${coord[0]} ${coord[1]}`)
+          .join(", ");
+        const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
+        console.log(wktCoordinates_final, "wkt polygon ");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+      }
+      if (type_of_geometry === "LineString") {
+        const coordinates = geometry.coordinates;
+        const wktCoordinates = coordinates
+          .map((coord) => `${coord[0]} ${coord[1]}`)
+          .join(", ");
+        const wktCoordinates_final = `LINESTRING (${wktCoordinates})`;
+        console.log(wktCoordinates_final, "wkt line string");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+      }
+    });
   };
   return (
     <>

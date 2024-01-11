@@ -96,8 +96,6 @@ export default function CategoryGeomForm() {
     dispatch(setshowGeomFormPopup("none"));
   };
 
-  // console.log(project_id, "project id ");
-
   return (
     <div style={{ display: isFormOpen }}>
       <Snackbar

@@ -98,7 +98,6 @@ export const MapView = createSlice({
     },
     setCategoriesState: (state, action) => {
       const current_measuring_categories = action.payload;
-      console.log(current_measuring_categories, "payload");
       state.currentMapDetail.current_measuring_categories =
         current_measuring_categories;
     },

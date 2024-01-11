@@ -22,7 +22,6 @@ export default function AutoCompleteMap({ onItemSelected, category }) {
           }/${category}/?client=${parseInt(client_id)}`
         )
         .then((response) => {
-          console.log(response.data, "dropdown data");
           setOptions(response.data);
         })
         .catch((error) => {
