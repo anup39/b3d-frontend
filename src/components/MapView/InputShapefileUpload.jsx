@@ -60,13 +60,13 @@ export default function InputShapefileUpload({
   const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
   const [openrasterErrorMessage, setOpenrasterErrorMessage] = useState("");
 
-  useEffect(() => {
-    if (loaded) {
-      takeScreenshot(window.mapproperty).then(function (data) {
-        onImage(data);
-      });
-    }
-  }, [loaded, onImage]);
+  // useEffect(() => {
+  //   if (loaded) {
+  //     takeScreenshot(window.mapproperty).then(function (data) {
+  //       onImage(data);
+  //     });
+  //   }
+  // }, [loaded, onImage]);
 
   const handleFileChange = async (e) => {
     setOpenrasterErrorToast(false);
