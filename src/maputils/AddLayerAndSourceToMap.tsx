@@ -141,6 +141,7 @@ function AddLayerAndSourceToMap({
           parseFloat(style.fill_opacity),
         ],
       },
+      // filter: ["!=", ["id"], 65],
     };
     map.addLayer(newLayer);
     // map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
@@ -184,6 +185,7 @@ function AddLayerAndSourceToMap({
 
         // if (popUpRef.current.isOpen()) {
         const container = document.createElement("div");
+        container.id = "popup-custom";
         const root = ReactDOM.createRoot(container);
         root.render(
           <Provider store={store}>

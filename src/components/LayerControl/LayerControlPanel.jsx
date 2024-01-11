@@ -542,6 +542,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
 
   const handleDraw = (event, cat) => {
     const draw = map.draw;
+    console.log(draw, "draw");
     draw.deleteAll();
     dispatch(setWKTGeometry(null));
     dispatch(setTypeOfGeometry(null));
@@ -558,6 +559,8 @@ export default function LayersControlPanel({ map, popUpRef }) {
       draw.changeMode("draw_point");
     }
     map.on("draw.create", function (event) {
+      const draw = map.draw;
+      console.log(draw, "draw");
       const feature = event.features;
       const geometry = feature[0].geometry;
       const type_of_geometry = feature[0].geometry.type;
@@ -596,6 +599,8 @@ export default function LayersControlPanel({ map, popUpRef }) {
       }
     });
     map.on("draw.update", function (event) {
+      const draw = map.draw;
+      console.log(draw, "draw");
       const feature = event.features;
       const geometry = feature[0].geometry;
       const type_of_geometry = feature[0].geometry.type;
