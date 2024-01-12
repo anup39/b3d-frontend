@@ -44,6 +44,9 @@ export default function ShapefileForm({
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
 
+  const layers = useSelector((state) => state.uploadMeasuring.layers);
+  console.log(layers);
+
   //   const openForm = () => {
   //     setIsFormOpen(true);
   //   };
@@ -191,7 +194,7 @@ export default function ShapefileForm({
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "300px",
+            width: "500px",
             background: "#fff",
             padding: "20px",
             zIndex: 10000,
@@ -218,33 +221,47 @@ export default function ShapefileForm({
               />
               <Grid item>
                 <div
-                  style={{ width: "100%", height: "160px" }}
+                  style={{ width: "100%", height: "350px" }}
                   ref={mapContainerShapefile}
                   id="mapproperty"
                   className="mapproperty"
                 >
-                  <FormGroup
-                    sx={{
-                      position: "absolute",
-                      top: 5,
-                      left: 5,
-                      zIndex: 1000,
-                      backgroundColor: "white",
-                      borderRadius: 3,
-                    }}
-                  >
-                    <FormControlLabel
-                      slotProps={{
-                        typography: {
-                          fontSize: 10,
-                          color: "#6A6D70",
-                          fontWeight: 900,
-                        },
+                  {layers && layers.length > 0 ? (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: 5,
+                        left: 5,
+                        zIndex: 1000,
+                        backgroundColor: "white",
+                        borderRadius: 3,
                       }}
-                      control={<Checkbox size="small" defaultChecked />}
-                      label="Label"
-                    />
-                  </FormGroup>
+                    >
+                      {layers.map((layer, index) => (
+                        <FormGroup sx={{ margin: 0, padding: 0 }} key={index}>
+                          <FormControlLabel
+                            key={index}
+                            slotProps={{
+                              typography: {
+                                fontSize: 10,
+                                color: "#6A6D70",
+                                fontWeight: 900,
+                              },
+                            }}
+                            control={
+                              <Checkbox
+                                key={index}
+                                size="small"
+                                defaultChecked
+                              />
+                            }
+                            label={layer}
+                            sx={{ margin: 0, padding: 0 }}
+                          />
+                        </FormGroup>
+                      ))}
+                    </Box>
+                  ) : null}
                 </div>
               </Grid>
             </Grid>

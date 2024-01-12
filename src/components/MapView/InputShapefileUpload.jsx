@@ -1,14 +1,15 @@
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Grid, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import maplibregl from "maplibre-gl";
 import { setshowMapLoader } from "../../reducers/MapView";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { setLayers } from "../../reducers/UploadMeasuring";
 
 function getPopupHTML(properties) {
   let html = "";
@@ -83,12 +84,13 @@ export default function InputShapefileUpload({
 
     dispatch(setshowMapLoader(true));
     axios.get("http://137.135.165.161:8000/api/upload-geojson/").then((res) => {
+      dispatch(setLayers(res.data.layers));
       dispatch(setshowMapLoader(false));
 
-      res.data.map((geojson, index) => {
+      res.data.geojson.map((geojson, index) => {
         map.addSource(`geojson-${index}`, {
           type: "geojson",
-          data: geojson,
+          data: geojson.geojson,
         });
         //   // Add layers for different feature types
 
