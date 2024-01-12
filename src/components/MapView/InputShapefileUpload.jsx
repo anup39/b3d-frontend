@@ -9,7 +9,7 @@ import maplibregl from "maplibre-gl";
 import { setshowMapLoader } from "../../reducers/MapView";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { setLayers } from "../../reducers/UploadMeasuring";
+import { setCurrentFile, setLayers } from "../../reducers/UploadMeasuring";
 import {
   setshowToast,
   settoastMessage,
@@ -94,6 +94,8 @@ export default function InputShapefileUpload({
   const dispatch = useDispatch();
 
   const handleFileChange = async (e) => {
+    dispatch(setLayers([]));
+    dispatch(setCurrentFile(null));
     const map = window.mapshapefile;
     removeLayersAndSources(map);
 
@@ -133,6 +135,7 @@ export default function InputShapefileUpload({
       .post("http://137.135.165.161:8000/api/upload-geojson/", formData)
       .then((res) => {
         dispatch(setLayers(res.data.layers));
+        dispatch(setCurrentFile(res.data.file));
         dispatch(setshowMapLoader(false));
 
         res.data.result.map((layer, index) => {
