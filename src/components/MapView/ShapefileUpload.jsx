@@ -25,6 +25,7 @@ import {
   setshowShapefileUpload,
   setshowUploadingCategories,
 } from "../../reducers/MapView";
+import { setLayers } from "../../reducers/UploadMeasuring";
 
 export default function ShapefileForm({
   client_id,
@@ -54,6 +55,7 @@ export default function ShapefileForm({
   const closeForm = () => {
     // setIsFormOpen(false);
     dispatch(setshowShapefileUpload(false));
+    dispatch(setLayers([]));
     setUploadedFile(null);
     setProjection("");
     setFileName("");

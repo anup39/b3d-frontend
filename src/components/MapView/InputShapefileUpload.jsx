@@ -199,17 +199,6 @@ export default function InputShapefileUpload({
             .setHTML(getPopupHTML(feature.properties))
             .addTo(map);
         });
-
-        // map.on("mousemove", function (e) {
-        //   var features = map.queryRenderedFeatures(e.point, {
-        //     layers: [
-        //       `circle-${layer.layername}`,
-        //       `polygon-${layer.layername}`,
-        //       `line-${layer.layername}`,
-        //     ],
-        //   });
-        //   map.getCanvas().style.cursor = features.length ? "pointer" : "";
-        // });
       });
     });
   };
