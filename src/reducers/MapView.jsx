@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   clientDetail: { client_id: null, client_name: null, client_image: null },
   showShapefileUpload: false,
-  showUploadingCategories: false,
+  showUploadingCategories: true,
   showReport: false,
   showMap: true,
   showMeasuringsPanel: false,

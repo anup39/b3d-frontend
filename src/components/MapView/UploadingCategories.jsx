@@ -5,6 +5,10 @@ import PropTypes from "prop-types";
 import CategoryTransfer from "./AutoCompleteMultiple";
 import CategoryList from "./CategoriesList";
 import { Box } from "@mui/material";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import AutoCompleteMap from "../MapView/AutoCompleteMap";
 
 export default function UploadingCategories() {
   //   const [isFormOpen, setIsFormOpen] = useState(true);
@@ -15,6 +19,11 @@ export default function UploadingCategories() {
   //   const openForm = () => {
   //     setIsFormOpen(true);
   //   };
+
+  const layers = [
+    { layername: "layer1", extent: "extent1" },
+    { layername: "layer2", extent: "extent2" },
+  ];
 
   const closeForm = () => {
     setLoaded(false);
@@ -60,28 +69,48 @@ export default function UploadingCategories() {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                {/* <CategoryList /> */}
-                <CategoryTransfer category={"category"} />
-              </Box>
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                type="submit"
-                // fullWidth
-                variant={loading ? "outlined" : "contained"}
-                sx={{ ml: "50%", mb: 0 }}
-                disabled={!loaded}
-              >
-                {loading ? null : "Add Category"}
-                {loading ? <CircularProgress /> : null}
-              </Button>
+              {layers.map((layer, index) => (
+                <Box
+                  key={index}
+                  sx={{ display: "flex", gap: 4, marginBottom: 3 }}
+                >
+                  <FormGroup sx={{ margin: 0, padding: 0 }}>
+                    <FormControlLabel
+                      key={index}
+                      slotProps={{
+                        typography: {
+                          fontSize: 10,
+                          color: "#6A6D70",
+                          fontWeight: 900,
+                        },
+                      }}
+                      control={
+                        <Checkbox
+                          // onChange={(event) =>
+                          //   handleLayerChange(
+                          //     event,
+                          //     layer.layername,
+                          //     layer.extent
+                          //   )
+                          // }
+                          key={index}
+                          size="small"
+                          defaultChecked
+                          sx={{
+                            "&:hover": { backgroundColor: "transparent" },
+                          }}
+                        />
+                      }
+                      label={layer.layername}
+                      sx={{ margin: 0, padding: 0 }}
+                    />
+                  </FormGroup>
+                  <AutoCompleteMap
+                    onItemSelected={(id) => setSelectedCategoryId(id)}
+                    category={"category"}
+                  />
+                </Box>
+              ))}
             </Grid>
             <Grid item xs={12}>
               <Button
