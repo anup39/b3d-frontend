@@ -1,33 +1,21 @@
-import Tooltip from "@mui/material/Tooltip";
-import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
-import axios from "axios";
 import maplibregl, { FullscreenControl } from "maplibre-gl";
-import { createImagePNG } from "../../maputils/createMapImage";
 import PropTypes from "prop-types";
-import {
-  setshowToast,
-  settoastMessage,
-  settoastType,
-} from "../../reducers/DisplaySettings";
 import { useDispatch, useSelector } from "react-redux";
-import { setproperties } from "../../reducers/Property";
 import InputShapefileUpload from "./InputShapefileUpload";
-import UploadingCategories from "./UploadingCategories";
-import AutoCompleteMultiple from "./AutoCompleteMultiple";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import { Box } from "@mui/material";
 import {
   setshowShapefileUpload,
   setshowUploadingCategories,
 } from "../../reducers/MapView";
+import { setCurrentFile, setLayers } from "../../reducers/UploadMeasuring";
 
-export default function ShapefileForm({
-  client_id,
-  project_id,
-  onProgressForm,
-  onProgressValue,
-}) {
+export default function ShapefileForm({}) {
   const dispatch = useDispatch();
   const mapContainerShapefile = useRef();
   //   const [isFormOpen, setIsFormOpen] = useState(true);
@@ -38,15 +26,14 @@ export default function ShapefileForm({
   const [image, setImage] = useState();
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const user_id = useSelector((state) => state.auth.user_id);
 
-  //   const openForm = () => {
-  //     setIsFormOpen(true);
-  //   };
+  const layers = useSelector((state) => state.uploadMeasuring.layers);
 
   const closeForm = () => {
     // setIsFormOpen(false);
     dispatch(setshowShapefileUpload(false));
+    dispatch(setLayers([]));
+    dispatch(setCurrentFile(null));
     setUploadedFile(null);
     setProjection("");
     setFileName("");
@@ -80,74 +67,12 @@ export default function ShapefileForm({
   };
 
   const handleCreateProperty = (event) => {
-    console.log("here");
     event.preventDefault();
-    // setLoading(true);
     dispatch(setshowUploadingCategories(true));
     dispatch(setshowShapefileUpload(false));
-
-    // const nameInput = document.getElementById("name");
-    // const blob_ = createImagePNG(image);
-    // const formData = new FormData();
-    // formData.append("client", client_id);
-    // formData.append("project", project_id);
-    // formData.append("name", nameInput.value);
-    // formData.append("status", "Uploaded");
-    // formData.append("screenshot_image", blob_, "image.png");
-    // formData.append("file_size", uploadedFile.size);
-    // formData.append("projection", projection);
-    // formData.append("tif_file", uploadedFile);
-    // formData.append("file_name", fileName);
-    // formData.append("created_by", user_id);
-
-    // closeForm();
-    // if (onProgressForm) {
-    //   onProgressForm(true);
-    // }
-
-    // axios
-    //   .post(
-    //     `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/`,
-    //     formData,
-    //     {
-    //       onUploadProgress: (progressEvent) => {
-    //         const percentCompleted = Math.round(
-    //           (progressEvent.loaded * 100) / progressEvent.total
-    //         );
-    //         onProgressValue(percentCompleted);
-    //       },
-    //     }
-    //   )
-    //   .then(() => {
-    //     onProgressValue(true);
-    //     onProgressForm(false);
-    //     onProgressValue(0);
-    //     setLoading(false);
-    //     dispatch(setshowToast(true));
-    //     dispatch(settoastMessage("Successfully Created Property"));
-    //     dispatch(settoastType("success"));
-    //     closeForm();
-    //     axios
-    //       .get(
-    //         `${
-    //           import.meta.env.VITE_API_DASHBOARD_URL
-    //         }/raster-data/?project=${project_id}`
-    //       )
-    //       .then((res) => {
-    //         dispatch(setproperties(res.data));
-    //       });
-    //   })
-    //   .catch(() => {
-    //     setLoading(false);
-    //     dispatch(setshowToast(true));
-    //     dispatch(settoastMessage("Failed Created Property"));
-    //     dispatch(settoastType("error"));
-    //     closeForm();
-    //   });
   };
 
   useEffect(() => {
-    // if (isFormOpen) {
     const map = new maplibregl.Map({
       container: mapContainerShapefile.current,
       style: `https://api.maptiler.com/maps/satellite/style.json?key=${
@@ -163,12 +88,27 @@ export default function ShapefileForm({
     return () => {
       map.remove();
     };
-    // }
   }, []);
+
+  const handleLayerChange = (event, layer, extent) => {
+    const map = window.mapshapefile;
+    console.log(map);
+    console.log(event.target.checked);
+    console.log(layer);
+    if (event.target.checked) {
+      map.setLayoutProperty(`line-${layer}`, "visibility", "visible");
+      map.setLayoutProperty(`polygon-${layer}`, "visibility", "visible");
+      map.setLayoutProperty(`circle-${layer}`, "visibility", "visible");
+      map.fitBounds(extent);
+    } else {
+      map.setLayoutProperty(`line-${layer}`, "visibility", "none");
+      map.setLayoutProperty(`polygon-${layer}`, "visibility", "none");
+      map.setLayoutProperty(`circle-${layer}`, "visibility", "none");
+    }
+  };
 
   return (
     <>
-      {/* {isFormOpen && ( */}
       <div
         style={{
           position: "fixed",
@@ -187,7 +127,7 @@ export default function ShapefileForm({
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "300px",
+            width: "500px",
             background: "#fff",
             padding: "20px",
             zIndex: 10000,
@@ -214,11 +154,59 @@ export default function ShapefileForm({
               />
               <Grid item>
                 <div
-                  style={{ width: "100%", height: "160px" }}
+                  style={{ width: "100%", height: "350px" }}
                   ref={mapContainerShapefile}
                   id="mapproperty"
                   className="mapproperty"
-                />
+                >
+                  {layers && layers.length > 0 ? (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: 5,
+                        left: 5,
+                        zIndex: 1000,
+                        backgroundColor: "white",
+                        borderRadius: 3,
+                        paddingRight: 1,
+                      }}
+                    >
+                      {layers.map((layer, index) => (
+                        <FormGroup sx={{ margin: 0, padding: 0 }} key={index}>
+                          <FormControlLabel
+                            key={index}
+                            slotProps={{
+                              typography: {
+                                fontSize: 10,
+                                color: "#6A6D70",
+                                fontWeight: 900,
+                              },
+                            }}
+                            control={
+                              <Checkbox
+                                onChange={(event) =>
+                                  handleLayerChange(
+                                    event,
+                                    layer.layername,
+                                    layer.extent
+                                  )
+                                }
+                                key={index}
+                                size="small"
+                                defaultChecked
+                                sx={{
+                                  "&:hover": { backgroundColor: "transparent" },
+                                }}
+                              />
+                            }
+                            label={layer.layername}
+                            sx={{ margin: 0, padding: 0 }}
+                          />
+                        </FormGroup>
+                      ))}
+                    </Box>
+                  ) : null}
+                </div>
               </Grid>
             </Grid>
             <Grid item xs={12}>
@@ -232,9 +220,6 @@ export default function ShapefileForm({
                 {loading ? null : "Add Property Map"}
                 {loading ? <CircularProgress /> : null}
               </Button>
-            </Grid>
-            <Grid item xs={12}>
-              {/* <AutoCompleteMultiple /> */}
             </Grid>
             <Grid item xs={12}>
               <Button

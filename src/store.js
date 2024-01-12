@@ -11,6 +11,7 @@ import DrawnPolygon from "./reducers/DrawnGeometry";
 import Users from "./reducers/Users";
 import Property from "./reducers/Property";
 import MapView from "./reducers/MapView";
+import UploadMeasuring from "./reducers/UploadMeasuring";
 
 export const store = configureStore({
   reducer: {
@@ -26,5 +27,6 @@ export const store = configureStore({
     drawnPolygon: DrawnPolygon,
     users: Users,
     mapView: MapView,
+    uploadMeasuring: UploadMeasuring,
   },
 });

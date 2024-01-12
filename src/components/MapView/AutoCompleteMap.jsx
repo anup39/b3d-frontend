@@ -35,7 +35,7 @@ export default function AutoCompleteMap({ onItemSelected, category }) {
       id="combo-box-demo"
       options={options}
       getOptionLabel={(option) => option.full_name}
-      sx={{ width: 300 }}
+      sx={{ width: 400 }}
       renderInput={(params) => (
         <TextField
           {...params}

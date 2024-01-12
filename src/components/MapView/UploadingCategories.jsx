@@ -5,6 +5,11 @@ import PropTypes from "prop-types";
 import CategoryTransfer from "./AutoCompleteMultiple";
 import CategoryList from "./CategoriesList";
 import { Box } from "@mui/material";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import AutoCompleteMap from "../MapView/AutoCompleteMap";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 export default function UploadingCategories() {
   //   const [isFormOpen, setIsFormOpen] = useState(true);
@@ -15,6 +20,18 @@ export default function UploadingCategories() {
   //   const openForm = () => {
   //     setIsFormOpen(true);
   //   };
+
+  const layers = [
+    { layername: "layer1", extent: "extent1" },
+    { layername: "layer2", extent: "extent2" },
+    { layername: "layer3", extent: "extent3" },
+    { layername: "layer4", extent: "extent4" },
+    { layername: "layer5", extent: "extent5" },
+    { layername: "layer6", extent: "extent6" },
+    { layername: "layer7", extent: "extent7" },
+    { layername: "layer8", extent: "extent8" },
+    { layername: "layer9", extent: "extent9" },
+  ];
 
   const closeForm = () => {
     setLoaded(false);
@@ -59,41 +76,79 @@ export default function UploadingCategories() {
                 available classes from file{" "}
               </Typography>
             </Grid>
+            <Grid item xs={12} sx={{ maxHeight: "400px", overflow: "scroll" }}>
+              {layers.map((layer, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    display: "flex",
+                    gap: 4,
+                    marginBottom: 3,
+                    alignItems: "center",
+                  }}
+                >
+                  <FormGroup sx={{ margin: 0, padding: 0 }}>
+                    <FormControlLabel
+                      key={index}
+                      slotProps={{
+                        typography: {
+                          fontSize: 15,
+                          color: "#6A6D70",
+                          fontWeight: 900,
+                        },
+                      }}
+                      control={
+                        <Checkbox
+                          // onChange={(event) =>
+                          //   handleLayerChange(
+                          //     event,
+                          //     layer.layername,
+                          //     layer.extent
+                          //   )
+                          // }
+                          key={index}
+                          size="small"
+                          // defaultChecked
+                          sx={{
+                            "&:hover": { backgroundColor: "transparent" },
+                          }}
+                        />
+                      }
+                      label={layer.layername}
+                      sx={{ margin: 0, padding: 0 }}
+                    />
+                  </FormGroup>
+                  <ArrowForwardIosIcon />
+                  <AutoCompleteMap
+                    onItemSelected={(id) => setSelectedCategoryId(id)}
+                    category={"category"}
+                  />
+                </Box>
+              ))}
+            </Grid>
             <Grid item xs={12}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                {/* <CategoryList /> */}
-                <CategoryTransfer category={"category"} />
+              <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+                <Button
+                  onClick={closeForm}
+                  variant="contained"
+                  color="error"
+                  size="small"
+                  // sx={{ ml: "50%", mb: 0 }}
+                  // fullWidth
+                >
+                  Done
+                </Button>
+                <Button
+                  onClick={closeForm}
+                  variant="contained"
+                  color="error"
+                  size="small"
+                  // sx={{ ml: "50%", mb: 0 }}
+                  // fullWidth
+                >
+                  Close
+                </Button>
               </Box>
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                type="submit"
-                // fullWidth
-                variant={loading ? "outlined" : "contained"}
-                sx={{ ml: "50%", mb: 0 }}
-                disabled={!loaded}
-              >
-                {loading ? null : "Add Category"}
-                {loading ? <CircularProgress /> : null}
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                onClick={closeForm}
-                variant="contained"
-                color="error"
-                size="small"
-                sx={{ ml: "50%", mb: 0 }}
-                // fullWidth
-              >
-                Close
-              </Button>
             </Grid>
           </Grid>
         </form>
