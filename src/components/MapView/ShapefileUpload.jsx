@@ -252,6 +252,7 @@ export default function ShapefileForm({
                         zIndex: 1000,
                         backgroundColor: "white",
                         borderRadius: 3,
+                        paddingRight: 1,
                       }}
                     >
                       {layers.map((layer, index) => (

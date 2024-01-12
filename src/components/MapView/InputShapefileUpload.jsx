@@ -177,53 +177,41 @@ export default function InputShapefileUpload({
         window.mapshapefile.fitBounds(layer.extent, {
           padding: { top: 15, bottom: 30, left: 15, right: 5 },
         });
-        console.log(window.mapshapefile, "map");
+        // Add popups to features
+
+        map.on("click", function (e) {
+          const features = map.queryRenderedFeatures(e.point);
+
+          if (!features.length) {
+            return;
+          }
+
+          var feature = features[0];
+
+          const popups = document.getElementsByClassName("maplibregl-popup");
+
+          if (popups.length) {
+            popups[0].remove();
+          }
+
+          var popup = new maplibregl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(getPopupHTML(feature.properties))
+            .addTo(map);
+        });
+
+        // map.on("mousemove", function (e) {
+        //   var features = map.queryRenderedFeatures(e.point, {
+        //     layers: [
+        //       `circle-${layer.layername}`,
+        //       `polygon-${layer.layername}`,
+        //       `line-${layer.layername}`,
+        //     ],
+        //   });
+        //   map.getCanvas().style.cursor = features.length ? "pointer" : "";
+        // });
       });
     });
-
-    // if (data) {
-
-    // }
-
-    // //   // Add popups to features
-    // map.on("click", function (e) {
-    //   var features = map.queryRenderedFeatures(e.point, {
-    //     layers: ["circle-layer", "polygon-layer", "line-layer"],
-    //   });
-
-    //   if (!features.length) {
-    //     return;
-    //   }
-
-    //   var feature = features[0];
-
-    //   var popup = new maplibregl.Popup()
-    //     .setLngLat(e.lngLat)
-    //     .setHTML(getPopupHTML(feature.properties))
-    //     .addTo(map);
-    // });
-
-    // map.on("mousemove", function (e) {
-    //   var features = map.queryRenderedFeatures(e.point, {
-    //     layers: ["line-layer", "polygon-layer", "circle-layer"],
-    //   });
-    //   map.getCanvas().style.cursor = features.length ? "pointer" : "";
-    // });
-    // // const extent = turf.bbox(output);
-    // window.mapshapefile.fitBounds(
-    //   [
-    //     11.24136113248206, 55.35918737681596, 11.447001880438957,
-    //     55.43793891466265,
-    //   ],
-    //   {
-    //     padding: { top: 15, bottom: 30, left: 15, right: 5 },
-    //   }
-    // );
-    // Calculate the extent
-    // } else {
-    //   setOpenrasterErrorToast(true);
-    //   setOpenrasterErrorMessage("Please select a tiff file.");
-    // }
   };
 
   return (
