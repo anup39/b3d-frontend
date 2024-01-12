@@ -9,6 +9,7 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteMap from "../MapView/AutoCompleteMap";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 export default function UploadingCategories() {
   //   const [isFormOpen, setIsFormOpen] = useState(true);
@@ -72,14 +73,19 @@ export default function UploadingCategories() {
               {layers.map((layer, index) => (
                 <Box
                   key={index}
-                  sx={{ display: "flex", gap: 4, marginBottom: 3 }}
+                  sx={{
+                    display: "flex",
+                    gap: 4,
+                    marginBottom: 3,
+                    alignItems: "center",
+                  }}
                 >
                   <FormGroup sx={{ margin: 0, padding: 0 }}>
                     <FormControlLabel
                       key={index}
                       slotProps={{
                         typography: {
-                          fontSize: 10,
+                          fontSize: 15,
                           color: "#6A6D70",
                           fontWeight: 900,
                         },
@@ -105,6 +111,7 @@ export default function UploadingCategories() {
                       sx={{ margin: 0, padding: 0 }}
                     />
                   </FormGroup>
+                  <ArrowForwardIosIcon />
                   <AutoCompleteMap
                     onItemSelected={(id) => setSelectedCategoryId(id)}
                     category={"category"}
@@ -113,16 +120,28 @@ export default function UploadingCategories() {
               ))}
             </Grid>
             <Grid item xs={12}>
-              <Button
-                onClick={closeForm}
-                variant="contained"
-                color="error"
-                size="small"
-                sx={{ ml: "50%", mb: 0 }}
-                // fullWidth
-              >
-                Close
-              </Button>
+              <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+                <Button
+                  onClick={closeForm}
+                  variant="contained"
+                  color="error"
+                  size="small"
+                  // sx={{ ml: "50%", mb: 0 }}
+                  // fullWidth
+                >
+                  Done
+                </Button>
+                <Button
+                  onClick={closeForm}
+                  variant="contained"
+                  color="error"
+                  size="small"
+                  // sx={{ ml: "50%", mb: 0 }}
+                  // fullWidth
+                >
+                  Close
+                </Button>
+              </Box>
             </Grid>
           </Grid>
         </form>
