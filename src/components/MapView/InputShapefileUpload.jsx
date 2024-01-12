@@ -10,6 +10,11 @@ import { setshowMapLoader } from "../../reducers/MapView";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setLayers } from "../../reducers/UploadMeasuring";
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../../reducers/DisplaySettings";
 
 function getPopupHTML(properties) {
   let html = "";
@@ -63,6 +68,9 @@ export default function InputShapefileUpload({
   const dispatch = useDispatch();
 
   const handleFileChange = async (e) => {
+    const map = window.mapshapefile;
+    console.log(map);
+
     onDoneLoaded(false);
     onImage();
     RemoveSourceAndLayerFromMap({
@@ -80,127 +88,147 @@ export default function InputShapefileUpload({
     onSetFilesize(file_size + " " + "MB");
     onProjection(`EPSG:${4326}`);
 
-    const map = window.mapshapefile;
-
     dispatch(setshowMapLoader(true));
-    axios.get("http://137.135.165.161:8000/api/upload-geojson/").then((res) => {
-      dispatch(setLayers(res.data.layers));
-      dispatch(setshowMapLoader(false));
 
-      res.data.result.map((layer, index) => {
-        map.addSource(`${layer.layername}`, {
-          type: "geojson",
-          data: layer.geojson,
+    const fileextension = file.name.split(".").pop();
+    console.log(fileextension, "fileextension");
+    let type_of_file = "Geojson";
+    if (fileextension === "zip") {
+      type_of_file = "Shapefile";
+    } else if (fileextension === "geojson" || fileextension === "json") {
+      type_of_file = "Geojson";
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type_of_file", type_of_file);
+
+    axios
+      .post("http://137.135.165.161:8000/api/upload-geojson/", formData)
+      .then((res) => {
+        dispatch(setLayers(res.data.layers));
+        dispatch(setshowMapLoader(false));
+
+        res.data.result.map((layer, index) => {
+          map.addSource(`${layer.layername}`, {
+            type: "geojson",
+            data: layer.geojson,
+          });
+          //   // Add layers for different feature types
+
+          map.addLayer({
+            id: `line-${layer.layername}`,
+            type: "line",
+            source: `${layer.layername}`,
+            layout: {
+              "line-join": "round",
+              "line-cap": "round",
+            },
+            paint: {
+              "line-color": [
+                "coalesce", // Use the first non-null value
+                ["get", "fill"], // Try to get the "fill" property
+                getRandomHexColor(), // Use a random color if "fill" is not present
+              ],
+              "line-width": 2,
+            },
+            filter: ["==", "$type", "LineString"],
+          });
+
+          map.addLayer({
+            id: `polygon-${layer.layername}`,
+            type: "fill",
+            source: `${layer.layername}`,
+            paint: {
+              "fill-color": [
+                "coalesce", // Use the first non-null value
+                ["get", "fill"], // Try to get the "fill" property
+                getRandomHexColor(), // Use a random color if "fill" is not present
+              ],
+              "fill-opacity": 0.6,
+              "fill-outline-color": "black",
+            },
+            filter: ["==", "$type", "Polygon"],
+          });
+
+          map.addLayer({
+            id: `circle-${layer.layername}`,
+            type: "circle",
+            source: `${layer.layername}`,
+            paint: {
+              "circle-radius": 6,
+              "circle-color": [
+                "coalesce", // Use the first non-null value
+                ["get", "marker-color"], // Try to get the "fill" property
+                getRandomHexColor(), // Use a random color if "fill" is not present
+              ],
+            },
+            filter: ["==", "$type", "Point"],
+          });
+          // map.on("click", function (e) {
+          //   var features = map.queryRenderedFeatures(e.point, {
+          //     layers: [
+          //       `line-layer-${index}`,
+          //       `polygon-layer-${index}`,
+          //       `circle-layer-${index}`,
+          //     ],
+          //   });
+
+          //   if (!features.length) {
+          //     return;
+          //   }
+
+          //   var feature = features[0];
+
+          //   var popup = new maplibregl.Popup()
+          //     .setLngLat(e.lngLat)
+          //     .setHTML(getPopupHTML(feature.properties))
+          //     .addTo(map);
+          // });
+          // map.on("mousemove", function (e) {
+          //   var features = map.queryRenderedFeatures(e.point, {
+          //     layers: [
+          //       `line-layer-${index}`,
+          //       `polygon-layer-${index}`,
+          //       `circle-layer-${index}`,
+          //     ],
+          //   });
+          //   map.getCanvas().style.cursor = features.length ? "pointer" : "";
+          // });
+          // const extent = turf.bbox(output);
+          window.mapshapefile.fitBounds(layer.extent, {
+            padding: { top: 15, bottom: 30, left: 15, right: 5 },
+          });
+          // Add popups to features
+
+          map.on("click", function (e) {
+            const features = map.queryRenderedFeatures(e.point);
+
+            if (!features.length) {
+              return;
+            }
+
+            var feature = features[0];
+
+            const popups = document.getElementsByClassName("maplibregl-popup");
+
+            if (popups.length) {
+              popups[0].remove();
+            }
+
+            var popup = new maplibregl.Popup()
+              .setLngLat(e.lngLat)
+              .setHTML(getPopupHTML(feature.properties))
+              .addTo(map);
+          });
         });
-        //   // Add layers for different feature types
-
-        map.addLayer({
-          id: `line-${layer.layername}`,
-          type: "line",
-          source: `${layer.layername}`,
-          layout: {
-            "line-join": "round",
-            "line-cap": "round",
-          },
-          paint: {
-            "line-color": [
-              "coalesce", // Use the first non-null value
-              ["get", "fill"], // Try to get the "fill" property
-              getRandomHexColor(), // Use a random color if "fill" is not present
-            ],
-            "line-width": 2,
-          },
-          filter: ["==", "$type", "LineString"],
-        });
-
-        map.addLayer({
-          id: `polygon-${layer.layername}`,
-          type: "fill",
-          source: `${layer.layername}`,
-          paint: {
-            "fill-color": [
-              "coalesce", // Use the first non-null value
-              ["get", "fill"], // Try to get the "fill" property
-              getRandomHexColor(), // Use a random color if "fill" is not present
-            ],
-            "fill-opacity": 0.6,
-            "fill-outline-color": "black",
-          },
-          filter: ["==", "$type", "Polygon"],
-        });
-
-        map.addLayer({
-          id: `circle-${layer.layername}`,
-          type: "circle",
-          source: `${layer.layername}`,
-          paint: {
-            "circle-radius": 6,
-            "circle-color": [
-              "coalesce", // Use the first non-null value
-              ["get", "marker-color"], // Try to get the "fill" property
-              getRandomHexColor(), // Use a random color if "fill" is not present
-            ],
-          },
-          filter: ["==", "$type", "Point"],
-        });
-        // map.on("click", function (e) {
-        //   var features = map.queryRenderedFeatures(e.point, {
-        //     layers: [
-        //       `line-layer-${index}`,
-        //       `polygon-layer-${index}`,
-        //       `circle-layer-${index}`,
-        //     ],
-        //   });
-
-        //   if (!features.length) {
-        //     return;
-        //   }
-
-        //   var feature = features[0];
-
-        //   var popup = new maplibregl.Popup()
-        //     .setLngLat(e.lngLat)
-        //     .setHTML(getPopupHTML(feature.properties))
-        //     .addTo(map);
-        // });
-        // map.on("mousemove", function (e) {
-        //   var features = map.queryRenderedFeatures(e.point, {
-        //     layers: [
-        //       `line-layer-${index}`,
-        //       `polygon-layer-${index}`,
-        //       `circle-layer-${index}`,
-        //     ],
-        //   });
-        //   map.getCanvas().style.cursor = features.length ? "pointer" : "";
-        // });
-        // const extent = turf.bbox(output);
-        window.mapshapefile.fitBounds(layer.extent, {
-          padding: { top: 15, bottom: 30, left: 15, right: 5 },
-        });
-        // Add popups to features
-
-        map.on("click", function (e) {
-          const features = map.queryRenderedFeatures(e.point);
-
-          if (!features.length) {
-            return;
-          }
-
-          var feature = features[0];
-
-          const popups = document.getElementsByClassName("maplibregl-popup");
-
-          if (popups.length) {
-            popups[0].remove();
-          }
-
-          var popup = new maplibregl.Popup()
-            .setLngLat(e.lngLat)
-            .setHTML(getPopupHTML(feature.properties))
-            .addTo(map);
-        });
+      })
+      .catch(() => {
+        dispatch(setshowMapLoader(false));
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Failed to upload file"));
+        dispatch(settoastType("error"));
       });
-    });
   };
 
   return (
