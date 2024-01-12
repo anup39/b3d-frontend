@@ -103,7 +103,11 @@ export default function InputShapefileUpload({
             "line-cap": "round",
           },
           paint: {
-            "line-color": getRandomHexColor(),
+            "line-color": [
+              "coalesce", // Use the first non-null value
+              ["get", "fill"], // Try to get the "fill" property
+              getRandomHexColor(), // Use a random color if "fill" is not present
+            ],
             "line-width": 2,
           },
           filter: ["==", "$type", "LineString"],
@@ -114,11 +118,12 @@ export default function InputShapefileUpload({
           type: "fill",
           source: `${layer.layername}`,
           paint: {
-            // "fill-color": ["get", "fill"],
-            "fill-color": getRandomHexColor(),
-
+            "fill-color": [
+              "coalesce", // Use the first non-null value
+              ["get", "fill"], // Try to get the "fill" property
+              getRandomHexColor(), // Use a random color if "fill" is not present
+            ],
             "fill-opacity": 0.6,
-            // "fill-outline-color": ["get", "stroke"],
             "fill-outline-color": "black",
           },
           filter: ["==", "$type", "Polygon"],
@@ -130,8 +135,11 @@ export default function InputShapefileUpload({
           source: `${layer.layername}`,
           paint: {
             "circle-radius": 6,
-            // "circle-color": ["get", "fill"],
-            "circle-color": getRandomHexColor(),
+            "circle-color": [
+              "coalesce", // Use the first non-null value
+              ["get", "marker-color"], // Try to get the "fill" property
+              getRandomHexColor(), // Use a random color if "fill" is not present
+            ],
           },
           filter: ["==", "$type", "Point"],
         });
