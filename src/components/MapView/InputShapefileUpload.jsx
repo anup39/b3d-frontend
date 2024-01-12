@@ -34,6 +34,17 @@ function bytesToMB(bytes) {
   return (bytes / 1048576).toFixed(2);
 }
 
+function getRandomHexColor() {
+  // Generate a random integer between 0 and 16777215 (0xFFFFFF in decimal)
+  const randomColor = Math.floor(Math.random() * 16777215);
+
+  // Convert the decimal color to a hexadecimal string
+  const hexColor = randomColor.toString(16);
+
+  // Pad the hex string with zeros if necessary
+  return "#" + "0".repeat(6 - hexColor.length) + hexColor;
+}
+
 export default function InputShapefileUpload({
   onFileUpload,
   onProjection,
@@ -90,7 +101,7 @@ export default function InputShapefileUpload({
             "line-cap": "round",
           },
           paint: {
-            "line-color": ["get", "stroke"],
+            "line-color": getRandomHexColor(),
             "line-width": 2,
           },
           filter: ["==", "$type", "LineString"],
@@ -102,7 +113,7 @@ export default function InputShapefileUpload({
           source: `geojson-${index}`,
           paint: {
             // "fill-color": ["get", "fill"],
-            "fill-color": "red",
+            "fill-color": getRandomHexColor(),
 
             "fill-opacity": 0.6,
             // "fill-outline-color": ["get", "stroke"],
@@ -118,7 +129,7 @@ export default function InputShapefileUpload({
           paint: {
             "circle-radius": 6,
             // "circle-color": ["get", "fill"],
-            "circle-color": "blue",
+            "circle-color": getRandomHexColor(),
           },
           filter: ["==", "$type", "Point"],
         });

@@ -17,6 +17,10 @@ import { setproperties } from "../../reducers/Property";
 import InputShapefileUpload from "./InputShapefileUpload";
 import UploadingCategories from "./UploadingCategories";
 import AutoCompleteMultiple from "./AutoCompleteMultiple";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import { Box } from "@mui/material";
 import {
   setshowShapefileUpload,
   setshowUploadingCategories,
@@ -218,7 +222,30 @@ export default function ShapefileForm({
                   ref={mapContainerShapefile}
                   id="mapproperty"
                   className="mapproperty"
-                />
+                >
+                  <FormGroup
+                    sx={{
+                      position: "absolute",
+                      top: 5,
+                      left: 5,
+                      zIndex: 1000,
+                      backgroundColor: "white",
+                      borderRadius: 3,
+                    }}
+                  >
+                    <FormControlLabel
+                      slotProps={{
+                        typography: {
+                          fontSize: 10,
+                          color: "#6A6D70",
+                          fontWeight: 900,
+                        },
+                      }}
+                      control={<Checkbox size="small" defaultChecked />}
+                      label="Label"
+                    />
+                  </FormGroup>
+                </div>
               </Grid>
             </Grid>
             <Grid item xs={12}>
