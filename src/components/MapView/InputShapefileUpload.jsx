@@ -24,6 +24,32 @@ function getPopupHTML(properties) {
   }
   return html;
 }
+
+function removeLayersAndSources(map) {
+  const mapStyle = map.getStyle();
+
+  if (mapStyle && mapStyle.layers) {
+    const pattern = /(line|polygon|circle)/;
+
+    mapStyle.layers.forEach((layer) => {
+      // Check if the layer name contains "line," "polygon," or "circle"
+      if (pattern.test(layer.id)) {
+        const sourceId = layer.source;
+        map.removeLayer(layer.id);
+
+        // Check if other layers are using the same source
+        const layersWithSameSource = mapStyle.layers.filter(
+          (l) => l.source === sourceId
+        );
+
+        // Remove the associated source only if no other layers are using it
+        if (layersWithSameSource.length === 0) {
+          map.removeSource(sourceId);
+        }
+      }
+    });
+  }
+}
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -69,7 +95,7 @@ export default function InputShapefileUpload({
 
   const handleFileChange = async (e) => {
     const map = window.mapshapefile;
-    console.log(map);
+    removeLayersAndSources(map);
 
     onDoneLoaded(false);
     onImage();
