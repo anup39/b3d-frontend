@@ -24,6 +24,13 @@ export default function UploadingCategories() {
   const layers = [
     { layername: "layer1", extent: "extent1" },
     { layername: "layer2", extent: "extent2" },
+    { layername: "layer3", extent: "extent3" },
+    { layername: "layer4", extent: "extent4" },
+    { layername: "layer5", extent: "extent5" },
+    { layername: "layer6", extent: "extent6" },
+    { layername: "layer7", extent: "extent7" },
+    { layername: "layer8", extent: "extent8" },
+    { layername: "layer9", extent: "extent9" },
   ];
 
   const closeForm = () => {
@@ -69,7 +76,7 @@ export default function UploadingCategories() {
                 available classes from file{" "}
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{ maxHeight: "400px", overflow: "scroll" }}>
               {layers.map((layer, index) => (
                 <Box
                   key={index}
@@ -101,7 +108,7 @@ export default function UploadingCategories() {
                           // }
                           key={index}
                           size="small"
-                          defaultChecked
+                          // defaultChecked
                           sx={{
                             "&:hover": { backgroundColor: "transparent" },
                           }}
