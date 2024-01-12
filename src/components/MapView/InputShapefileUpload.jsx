@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import maplibregl from "maplibre-gl";
 import { setshowMapLoader } from "../../reducers/MapView";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setCurrentFile, setLayers } from "../../reducers/UploadMeasuring";
 import {
@@ -18,7 +18,6 @@ import {
 
 function getPopupHTML(properties) {
   let html = "";
-
   for (const [key, value] of Object.entries(properties)) {
     html += `<b>${key}:</b> ${value}<br> `;
   }
@@ -30,9 +29,7 @@ function removeLayersAndSources(map) {
 
   if (mapStyle && mapStyle.layers) {
     const pattern = /(line|polygon|circle)/;
-
     mapStyle.layers.forEach((layer) => {
-      // Check if the layer name contains "line," "polygon," or "circle"
       if (pattern.test(layer.id)) {
         const sourceId = layer.source;
         map.removeLayer(layer.id);
@@ -67,13 +64,8 @@ function bytesToMB(bytes) {
 }
 
 function getRandomHexColor() {
-  // Generate a random integer between 0 and 16777215 (0xFFFFFF in decimal)
   const randomColor = Math.floor(Math.random() * 16777215);
-
-  // Convert the decimal color to a hexadecimal string
   const hexColor = randomColor.toString(16);
-
-  // Pad the hex string with zeros if necessary
   return "#" + "0".repeat(6 - hexColor.length) + hexColor;
 }
 
@@ -87,8 +79,6 @@ export default function InputShapefileUpload({
   projection,
   fileName,
   filesize,
-  image,
-  loaded,
 }) {
   const fileInputRef = useRef();
   const dispatch = useDispatch();
@@ -98,7 +88,6 @@ export default function InputShapefileUpload({
     dispatch(setCurrentFile(null));
     const map = window.mapshapefile;
     removeLayersAndSources(map);
-
     onDoneLoaded(false);
     onImage();
     RemoveSourceAndLayerFromMap({
@@ -115,9 +104,7 @@ export default function InputShapefileUpload({
     const file_size = bytesToMB(file.size);
     onSetFilesize(file_size + " " + "MB");
     onProjection(`EPSG:${4326}`);
-
     dispatch(setshowMapLoader(true));
-
     const fileextension = file.name.split(".").pop();
     console.log(fileextension, "fileextension");
     let type_of_file = "Geojson";
@@ -126,7 +113,6 @@ export default function InputShapefileUpload({
     } else if (fileextension === "geojson" || fileextension === "json") {
       type_of_file = "Geojson";
     }
-
     const formData = new FormData();
     formData.append("file", file);
     formData.append("type_of_file", type_of_file);
@@ -137,14 +123,11 @@ export default function InputShapefileUpload({
         dispatch(setLayers(res.data.layers));
         dispatch(setCurrentFile(res.data.file));
         dispatch(setshowMapLoader(false));
-
-        res.data.result.map((layer, index) => {
+        res.data.result.map((layer) => {
           map.addSource(`${layer.layername}`, {
             type: "geojson",
             data: layer.geojson,
           });
-          //   // Add layers for different feature types
-
           map.addLayer({
             id: `line-${layer.layername}`,
             type: "line",
@@ -194,37 +177,6 @@ export default function InputShapefileUpload({
             },
             filter: ["==", "$type", "Point"],
           });
-          // map.on("click", function (e) {
-          //   var features = map.queryRenderedFeatures(e.point, {
-          //     layers: [
-          //       `line-layer-${index}`,
-          //       `polygon-layer-${index}`,
-          //       `circle-layer-${index}`,
-          //     ],
-          //   });
-
-          //   if (!features.length) {
-          //     return;
-          //   }
-
-          //   var feature = features[0];
-
-          //   var popup = new maplibregl.Popup()
-          //     .setLngLat(e.lngLat)
-          //     .setHTML(getPopupHTML(feature.properties))
-          //     .addTo(map);
-          // });
-          // map.on("mousemove", function (e) {
-          //   var features = map.queryRenderedFeatures(e.point, {
-          //     layers: [
-          //       `line-layer-${index}`,
-          //       `polygon-layer-${index}`,
-          //       `circle-layer-${index}`,
-          //     ],
-          //   });
-          //   map.getCanvas().style.cursor = features.length ? "pointer" : "";
-          // });
-          // const extent = turf.bbox(output);
           window.mapshapefile.fitBounds(layer.extent, {
             padding: { top: 15, bottom: 30, left: 15, right: 5 },
           });
@@ -244,7 +196,6 @@ export default function InputShapefileUpload({
             if (popups.length) {
               popups[0].remove();
             }
-
             var popup = new maplibregl.Popup()
               .setLngLat(e.lngLat)
               .setHTML(getPopupHTML(feature.properties))
