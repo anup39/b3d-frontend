@@ -87,17 +87,17 @@ export default function InputShapefileUpload({
       dispatch(setLayers(res.data.layers));
       dispatch(setshowMapLoader(false));
 
-      res.data.geojson.map((geojson, index) => {
-        map.addSource(`geojson-${index}`, {
+      res.data.result.map((layer, index) => {
+        map.addSource(`${layer.layername}`, {
           type: "geojson",
-          data: geojson.geojson,
+          data: layer.geojson,
         });
         //   // Add layers for different feature types
 
         map.addLayer({
-          id: `line-layer-${index}`,
+          id: `line-${layer.layername}`,
           type: "line",
-          source: `geojson-${index}`,
+          source: `${layer.layername}`,
           layout: {
             "line-join": "round",
             "line-cap": "round",
@@ -110,9 +110,9 @@ export default function InputShapefileUpload({
         });
 
         map.addLayer({
-          id: `polygon-layer-${index}`,
+          id: `polygon-${layer.layername}`,
           type: "fill",
-          source: `geojson-${index}`,
+          source: `${layer.layername}`,
           paint: {
             // "fill-color": ["get", "fill"],
             "fill-color": getRandomHexColor(),
@@ -125,9 +125,9 @@ export default function InputShapefileUpload({
         });
 
         map.addLayer({
-          id: `circle-layer-${index}`,
+          id: `circle-${layer.layername}`,
           type: "circle",
-          source: `geojson-${index}`,
+          source: `${layer.layername}`,
           paint: {
             "circle-radius": 6,
             // "circle-color": ["get", "fill"],
@@ -135,46 +135,41 @@ export default function InputShapefileUpload({
           },
           filter: ["==", "$type", "Point"],
         });
-        map.on("click", function (e) {
-          var features = map.queryRenderedFeatures(e.point, {
-            layers: [
-              `line-layer-${index}`,
-              `polygon-layer-${index}`,
-              `circle-layer-${index}`,
-            ],
-          });
+        // map.on("click", function (e) {
+        //   var features = map.queryRenderedFeatures(e.point, {
+        //     layers: [
+        //       `line-layer-${index}`,
+        //       `polygon-layer-${index}`,
+        //       `circle-layer-${index}`,
+        //     ],
+        //   });
 
-          if (!features.length) {
-            return;
-          }
+        //   if (!features.length) {
+        //     return;
+        //   }
 
-          var feature = features[0];
+        //   var feature = features[0];
 
-          var popup = new maplibregl.Popup()
-            .setLngLat(e.lngLat)
-            .setHTML(getPopupHTML(feature.properties))
-            .addTo(map);
-        });
-        map.on("mousemove", function (e) {
-          var features = map.queryRenderedFeatures(e.point, {
-            layers: [
-              `line-layer-${index}`,
-              `polygon-layer-${index}`,
-              `circle-layer-${index}`,
-            ],
-          });
-          map.getCanvas().style.cursor = features.length ? "pointer" : "";
-        });
+        //   var popup = new maplibregl.Popup()
+        //     .setLngLat(e.lngLat)
+        //     .setHTML(getPopupHTML(feature.properties))
+        //     .addTo(map);
+        // });
+        // map.on("mousemove", function (e) {
+        //   var features = map.queryRenderedFeatures(e.point, {
+        //     layers: [
+        //       `line-layer-${index}`,
+        //       `polygon-layer-${index}`,
+        //       `circle-layer-${index}`,
+        //     ],
+        //   });
+        //   map.getCanvas().style.cursor = features.length ? "pointer" : "";
+        // });
         // const extent = turf.bbox(output);
-        window.mapshapefile.fitBounds(
-          [
-            11.24136113248206, 55.35918737681596, 11.447001880438957,
-            55.43793891466265,
-          ],
-          {
-            padding: { top: 15, bottom: 30, left: 15, right: 5 },
-          }
-        );
+        window.mapshapefile.fitBounds(layer.extent, {
+          padding: { top: 15, bottom: 30, left: 15, right: 5 },
+        });
+        console.log(window.mapshapefile, "map");
       });
     });
 

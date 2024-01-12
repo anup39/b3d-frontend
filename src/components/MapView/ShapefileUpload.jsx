@@ -173,6 +173,23 @@ export default function ShapefileForm({
     // }
   }, []);
 
+  const handleLayerChange = (event, layer, extent) => {
+    const map = window.mapshapefile;
+    console.log(map);
+    console.log(event.target.checked);
+    console.log(layer);
+    if (event.target.checked) {
+      map.setLayoutProperty(`line-${layer}`, "visibility", "visible");
+      map.setLayoutProperty(`polygon-${layer}`, "visibility", "visible");
+      map.setLayoutProperty(`circle-${layer}`, "visibility", "visible");
+      map.fitBounds(extent);
+    } else {
+      map.setLayoutProperty(`line-${layer}`, "visibility", "none");
+      map.setLayoutProperty(`polygon-${layer}`, "visibility", "none");
+      map.setLayoutProperty(`circle-${layer}`, "visibility", "none");
+    }
+  };
+
   return (
     <>
       {/* {isFormOpen && ( */}
@@ -250,12 +267,22 @@ export default function ShapefileForm({
                             }}
                             control={
                               <Checkbox
+                                onChange={(event) =>
+                                  handleLayerChange(
+                                    event,
+                                    layer.layername,
+                                    layer.extent
+                                  )
+                                }
                                 key={index}
                                 size="small"
                                 defaultChecked
+                                sx={{
+                                  "&:hover": { backgroundColor: "transparent" },
+                                }}
                               />
                             }
-                            label={layer}
+                            label={layer.layername}
                             sx={{ margin: 0, padding: 0 }}
                           />
                         </FormGroup>
