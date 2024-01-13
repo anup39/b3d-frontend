@@ -16,7 +16,7 @@ export default class TableMeasuringsForMapControl {
             project_id={this._project_id}
           ></RasterLayer> */}
         {/* <RasterControlNew></RasterControlNew> */}
-        <TableMeasuringsForMap />
+        <TableMeasuringsForMap width={820} />
       </Provider>
     );
 

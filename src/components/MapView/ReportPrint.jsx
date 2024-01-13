@@ -6,9 +6,16 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { useRef, useEffect } from "react";
 import maplibregl from "maplibre-gl";
 import TableMeasurings from "./TableMeasurings";
+import TableMeasuringsForMap from "../TableMeasuringMapControl/TableMesuringsForMap";
 import "./ReportPrint.css";
 import { useDispatch } from "react-redux";
-import { setshowReport, setshowMap } from "../../reducers/MapView";
+import {
+  setshowReport,
+  setshowMap,
+  setshowPiechart,
+  setshowTableMeasurings,
+} from "../../reducers/MapView";
+import PieChartComp from "../PieChartControl/PieChartComp";
 
 export default function ReportPrint() {
   const dispatch = useDispatch();
@@ -40,6 +47,8 @@ export default function ReportPrint() {
   };
 
   const handleMap = () => {
+    dispatch(setshowPiechart(false));
+    dispatch(setshowTableMeasurings(false));
     dispatch(setshowMap(true));
     dispatch(setshowReport(false));
   };
@@ -119,15 +128,15 @@ export default function ReportPrint() {
                   className="map"
                 />
               </Box>
-              <Box sx={{ mt: 10 }}>
-                <TableMeasurings />
+
+              <Box sx={{ mt: 5 }}>
+                <TableMeasuringsForMap width={820} />
               </Box>
-              <Box sx={{ mt: 10 }}>
-                <TableMeasurings />
+              <Box sx={{ ml: "40%" }}>
+                <PieChartComp />
               </Box>
-              <Box sx={{ mt: 10 }}>
-                <TableMeasurings />
-              </Box>
+
+              <Box sx={{ mt: 10 }}>{/* <TableMeasurings /> */}</Box>
             </div>
           </Box>
         </Grid>

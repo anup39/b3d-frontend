@@ -54,6 +54,23 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
   };
 
   const handleShowReport = () => {
+    if (currentClient && currentProject) {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
+        )
+        .then((res) => {
+          if (res.data.rows.length > 0) {
+            dispatch(setTableSummationData(res.data.rows));
+          } else {
+            dispatch(setTableSummationData([]));
+          }
+        });
+    }
+    dispatch(setshowTableMeasurings(!showTableMeasurings));
+    dispatch(setshowPiechart(!showPiechart));
     dispatch(setshowReport(true));
     dispatch(setshowMap(false));
   };

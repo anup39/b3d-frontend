@@ -52,14 +52,14 @@ const columns = [
   {
     field: "description",
     type: "string",
-    width: 140,
+    width: 170,
     editable: false,
     headerName: "description",
   },
   {
     field: "count",
     type: "number",
-    width: 90,
+    width: 100,
     editable: false,
     headerName: "count",
   },
@@ -73,7 +73,7 @@ const columns = [
   {
     field: "length",
     type: "number",
-    width: 100,
+    width: 130,
     editable: false,
     headerName: "length",
   },
@@ -138,7 +138,7 @@ const rows = [
   },
 ];
 
-export default function TableMeasuringsForMap() {
+export default function TableMeasuringsForMap({ width, checkboxSelection }) {
   const dispatch = useDispatch();
   const showTableMeasurings = useSelector(
     (state) => state.mapView.showTableMeasurings
@@ -175,8 +175,8 @@ export default function TableMeasuringsForMap() {
       {showTableMeasurings && columns ? (
         <Box
           sx={{
-            height: 300,
-            width: 800,
+            height: 260,
+            width: width,
             bottom: 5,
             right: 5,
             backgroundColor: "white",
@@ -194,7 +194,7 @@ export default function TableMeasuringsForMap() {
               },
             }}
             pageSizeOptions={[5]}
-            checkboxSelection
+            checkboxSelection={checkboxSelection}
             disableRowSelectionOnClick
           />
         </Box>
