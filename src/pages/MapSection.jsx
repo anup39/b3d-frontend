@@ -22,7 +22,7 @@ export default function MapSection() {
   const dispatch = useDispatch();
   const { level } = useParams();
   const { id } = useParams();
-  const searchRef = useRef(null);
+  // const searchRef = useRef(null);
 
   const showMapLoader = useSelector((state) => state.mapView.showMapLoader);
   // useEffect(() => {
@@ -83,7 +83,7 @@ export default function MapSection() {
       <AppBar />
       <CategoryGeomForm />
       {showMapLoader ? <MapLoader /> : null}
-      <Map refObj={searchRef} id={id} />
+      <Map id={id} />
       {/* <Map3D /> */}
       {/* <ThreeScene /> */}
     </div>

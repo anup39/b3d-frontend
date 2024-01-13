@@ -14,13 +14,26 @@ import {
   setshowMap,
   setshowPiechart,
   setshowTableMeasurings,
+  setCurrentMapExtent,
 } from "../../reducers/MapView";
 import PieChartComp from "../PieChartControl/PieChartComp";
+import { useSelector } from "react-redux";
+import Map from "../../map/Map";
 
 export default function ReportPrint() {
   const dispatch = useDispatch();
   const mapContainerReport = useRef(null);
+  const [map, setMap] = React.useState(null);
 
+  const currentClient = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
+  const currentProject = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  );
+  const currentMapExtent = useSelector(
+    (state) => state.mapView.printDetails.currentMapExtent
+  );
   useEffect(() => {
     const map = new maplibregl.Map({
       container: mapContainerReport.current,
@@ -35,12 +48,23 @@ export default function ReportPrint() {
     map.addControl(new maplibregl.NavigationControl(), "top-right");
 
     window.map_report = map;
-    // setMap(map);
+
+    setMap(map);
 
     return () => {
       map.remove();
     };
   }, []);
+
+  useEffect(() => {
+    // console.log(currentMapExtent);
+    if (map && currentMapExtent) {
+      console.log(currentMapExtent);
+      map.on("load", () => {
+        map.fitBounds(currentMapExtent);
+      });
+    }
+  }, [currentMapExtent, map]);
 
   const handlePrint = () => {
     window.print();
@@ -126,7 +150,9 @@ export default function ReportPrint() {
                   ref={mapContainerReport}
                   id="map"
                   className="map"
-                />
+                >
+                  {/* <Map id={String(currentProject)}></Map> */}
+                </div>
               </Box>
 
               <Box sx={{ mt: 5 }}>

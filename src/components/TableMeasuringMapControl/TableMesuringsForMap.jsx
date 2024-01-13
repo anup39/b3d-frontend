@@ -14,7 +14,7 @@ import { render } from "react-dom";
 
 const renderCell = (params) => {
   const { color, type_of_geometry } = params.value;
-  console.log(params, "params");
+  // console.log(params, "params");
   let icon;
 
   if (type_of_geometry === "Polygon") {

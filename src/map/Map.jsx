@@ -13,12 +13,18 @@ import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { useDispatch } from "react-redux";
 import { setWKTGeometry } from "../reducers/DrawnGeometry";
+import { useSelector } from "react-redux";
 
 export default function Map({ id }) {
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
   const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
+
+  // const showReport = useSelector((state) => state.mapView.showReport);
+  const currentMapExtent = useSelector(
+    (state) => state.mapView.printDetails.currentMapExtent
+  );
 
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -41,6 +47,9 @@ export default function Map({ id }) {
 
   useEffect(() => {
     if (map) {
+      if (currentMapExtent) {
+        map.fitBounds(currentMapExtent, { padding: 20 });
+      }
       map.on("load", () => {
         const draw = new MapboxDraw({
           displayControlsDefault: false,
@@ -51,7 +60,7 @@ export default function Map({ id }) {
         map.draw = draw;
       });
     }
-  }, [map, dispatch]);
+  }, [map, dispatch, currentMapExtent]);
 
   // useEffect(() => {
   //   if (map) {
@@ -101,7 +110,16 @@ export default function Map({ id }) {
     }
   }, [map, id]);
 
-  return <div ref={mapContainer} id="map" className="map" />;
+  return (
+    <>
+      <div
+        // style={{ borderRadius: "8px", width: "820px", height: "834px" }}
+        ref={mapContainer}
+        id="map"
+        className="map"
+      />
+    </>
+  );
 }
 
 Map.propTypes = {

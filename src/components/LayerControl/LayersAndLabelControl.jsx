@@ -17,6 +17,7 @@ import {
   setshowTableMeasurings,
   setshowPiechart,
   setTableSummationData,
+  setCurrentMapExtent,
 } from "../../reducers/MapView";
 import axios from "axios";
 
@@ -73,6 +74,10 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     dispatch(setshowPiechart(!showPiechart));
     dispatch(setshowReport(true));
     dispatch(setshowMap(false));
+
+    const map = window.map_global;
+    const bounds = map.getBounds();
+    dispatch(setCurrentMapExtent(bounds.toArray()));
   };
 
   const handleMeasuringsTable = () => {
