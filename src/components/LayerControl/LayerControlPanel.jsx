@@ -14,9 +14,9 @@ import Tooltip from "@mui/material/Tooltip";
 import ModeIcon from "@mui/icons-material/Mode";
 import CircularProgress from "@mui/material/CircularProgress";
 import { setCategoriesState } from "../../reducers/MapView";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
+import RectangleIcon from "@mui/icons-material/Rectangle";
+import CircleIcon from "@mui/icons-material/Circle";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
-import PolylineIcon from "@mui/icons-material/Polyline";
 import {
   setCategoryId,
   setCategoryViewName,
@@ -811,31 +811,31 @@ export default function LayersControlPanel({ map, popUpRef }) {
                             sx={{
                               marginRight: "10px",
                               backgroundColor: "#FFFFF",
-                              color: "#D61B60",
+                              color: cat.fill_color,
                               "&:hover": { cursor: "pointer" },
                             }}
                           />
                         </Tooltip>
                       ) : cat.type_of_geometry === "Polygon" ? (
                         <Tooltip title="Draw Polygon">
-                          <PolylineIcon
+                          <RectangleIcon
                             onClick={(event) => handleDraw(event, cat)}
                             sx={{
                               marginRight: "10px",
                               backgroundColor: "#FFFFF",
-                              color: "#D61B60",
+                              color: cat.fill_color,
                               "&:hover": { cursor: "pointer" },
                             }}
                           />
                         </Tooltip>
                       ) : (
                         <Tooltip title="Draw Point">
-                          <MyLocationIcon
+                          <CircleIcon
                             onClick={(event) => handleDraw(event, cat)}
                             sx={{
                               marginRight: "10px",
                               backgroundColor: "#FFFFF",
-                              color: "#D61B60",
+                              color: cat.fill_color,
                               "&:hover": { cursor: "pointer" },
                             }}
                           />

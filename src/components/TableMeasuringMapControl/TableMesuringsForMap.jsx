@@ -144,26 +144,24 @@ export default function TableMeasuringsForMap() {
     (state) => state.mapView.currentMapDetail.current_project_measuring_table
   );
 
-  // const columns = useSelector(
-  //   (state) => state.mapView.tableSummationDataColumns
-  // );
+  const rows = useSelector((state) => state.mapView.tableSummationData);
 
   useEffect(() => {
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
-      )
-      .then((res) => {
-        // if (showTableMeasurings && res.data.columns.length > 0) {
-        //   // dispatch(setTableSummationData(res.data));
-        //   // dispatch(setTableSummationDataColumns(res.data.columns));
-        //   console.log(res.data.columns);
-        // } else {
-        //   dispatch(setTableSummationDataColumns([]));
-        // }
-      });
+    if (currentClient && currentProject) {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
+        )
+        .then((res) => {
+          if (showTableMeasurings && res.data.rows.length > 0) {
+            dispatch(setTableSummationData(res.data.rows));
+          } else {
+            dispatch(setTableSummationData([]));
+          }
+        });
+    }
   }, [showTableMeasurings, currentClient, currentProject, dispatch]);
   return (
     <>
