@@ -20,11 +20,24 @@ import {
   setdistinct,
 } from "../../reducers/UploadMeasuring";
 import axios from "axios";
+import { setProgress, setshowProgressFormOpen } from "../../reducers/Property";
+import {
+  setshowToast,
+  settoastType,
+  settoastMessage,
+} from "../../reducers/DisplaySettings";
 
 export default function UploadingCategories() {
   const dispatch = useDispatch();
   const distinct = useSelector((state) => state.uploadMeasuring.distinct);
   const currentfile = useSelector((state) => state.uploadMeasuring.currentfile);
+  const currentClient = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
+  const currentProject = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  );
+  const currentUser = useSelector((state) => state.auth.user_id);
 
   const closeForm = () => {
     dispatch(setshowShapefileUpload(false));
@@ -47,19 +60,43 @@ export default function UploadingCategories() {
     }
     const data = new FormData();
     data.append("result", JSON.stringify(checkedCategories));
-    data.append("file", currentfile);
+    data.append("filename", currentfile);
     data.append("type_of_file", type_of_file);
+    data.append("client_id", currentClient);
+    data.append("project_id", currentProject);
+    data.append("user_id", currentUser);
     console.log(data);
     if (checkedCategories.length > 0) {
       closeForm();
-      setshowMapLoader(true);
+      dispatch(setshowMapLoader(true));
+      // dispatch(setshowProgressFormOpen(true));
       axios
-        .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/save-upload/`, data)
+        .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/save-upload/`, data, {
+          // onUploadProgress: (progressEvent) => {
+          //   const percentCompleted = Math.round(
+          //     (progressEvent.loaded * 100) / progressEvent.total
+          //   );
+          //   dispatch(setProgress(percentCompleted));
+          // },
+        })
         .then((response) => {
           console.log(response);
-          setshowMapLoader(false);
+          // dispatch(setshowProgressFormOpen(false));
+          // dispatch(setProgress(0));
+          dispatch(setshowMapLoader(false));
+          dispatch(setshowToast(true));
+          dispatch(settoastMessage("Successfully Created Categories"));
+          dispatch(settoastType("success"));
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         })
         .catch((error) => {
+          // dispatch(setshowProgressFormOpen(false));
+          dispatch(setshowMapLoader(false));
+          dispatch(setshowToast(true));
+          dispatch(settoastMessage("Failed Created Categories"));
+          dispatch(settoastType("error"));
           console.error("Error fetching data:", error);
         });
     }
