@@ -57,6 +57,13 @@ const columns = [
     headerName: "description",
   },
   {
+    field: "count",
+    type: "number",
+    width: 90,
+    editable: false,
+    headerName: "count",
+  },
+  {
     field: "area",
     type: "number",
     width: 50,
@@ -66,7 +73,7 @@ const columns = [
   {
     field: "length",
     type: "number",
-    width: 90,
+    width: 100,
     editable: false,
     headerName: "length",
   },
@@ -169,7 +176,7 @@ export default function TableMeasuringsForMap() {
         <Box
           sx={{
             height: 300,
-            width: 700,
+            width: 800,
             bottom: 5,
             right: 5,
             backgroundColor: "white",
