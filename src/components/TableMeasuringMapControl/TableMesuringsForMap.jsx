@@ -144,32 +144,32 @@ export default function TableMeasuringsForMap() {
     (state) => state.mapView.showTableMeasurings
   );
 
-  const currentClient = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
-  const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
-  );
+  // const currentClient = useSelector(
+  //   (state) => state.mapView.clientDetail.client_id
+  // );
+  // const currentProject = useSelector(
+  //   (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  // );
 
   const rows = useSelector((state) => state.mapView.tableSummationData);
 
-  useEffect(() => {
-    if (currentClient && currentProject) {
-      axios
-        .get(
-          `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
-        )
-        .then((res) => {
-          if (showTableMeasurings && res.data.rows.length > 0) {
-            dispatch(setTableSummationData(res.data.rows));
-          } else {
-            dispatch(setTableSummationData([]));
-          }
-        });
-    }
-  }, [showTableMeasurings, currentClient, currentProject, dispatch]);
+  // useEffect(() => {
+  //   if (currentClient && currentProject) {
+  //     axios
+  //       .get(
+  //         `${
+  //           import.meta.env.VITE_API_DASHBOARD_URL
+  //         }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
+  //       )
+  //       .then((res) => {
+  //         if (showTableMeasurings && res.data.rows.length > 0) {
+  //           dispatch(setTableSummationData(res.data.rows));
+  //         } else {
+  //           dispatch(setTableSummationData([]));
+  //         }
+  //       });
+  //   }
+  // }, [showTableMeasurings, currentClient, currentProject, dispatch]);
   return (
     <>
       {showTableMeasurings && columns ? (

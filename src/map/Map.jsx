@@ -92,7 +92,7 @@ export default function Map({ id }) {
       const table_measurings_control = new TableMeasuringsForMapControl();
       map.addControl(table_measurings_control, "bottom-right");
       const piechart_control = new PieChartControl();
-      map.addControl(piechart_control, "bottom-right");
+      map.addControl(piechart_control, "bottom-left");
       raster_control.updateProject(id);
       map.addControl(new DrawControl(), "top-right");
 

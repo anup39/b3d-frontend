@@ -16,7 +16,9 @@ import {
   setshowMap,
   setshowTableMeasurings,
   setshowPiechart,
+  setTableSummationData,
 } from "../../reducers/MapView";
+import axios from "axios";
 
 export default function LayersAndLabelControl({ map, popUpRef }) {
   const dispatch = useDispatch();
@@ -32,6 +34,13 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
   );
   const current_project_name = useSelector(
     (state) => state.mapView.currentMapDetail.current_project_name
+  );
+
+  const currentClient = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
+  const currentProject = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring_table
   );
 
   const showPiechart = useSelector((state) => state.mapView.showPiechart);
@@ -50,10 +59,40 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
   };
 
   const handleMeasuringsTable = () => {
+    if (currentClient && currentProject) {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
+        )
+        .then((res) => {
+          if (res.data.rows.length > 0) {
+            dispatch(setTableSummationData(res.data.rows));
+          } else {
+            dispatch(setTableSummationData([]));
+          }
+        });
+    }
     dispatch(setshowTableMeasurings(!showTableMeasurings));
   };
 
   const handlePieChart = () => {
+    if (currentClient && currentProject) {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
+        )
+        .then((res) => {
+          if (res.data.rows.length > 0) {
+            dispatch(setTableSummationData(res.data.rows));
+          } else {
+            dispatch(setTableSummationData([]));
+          }
+        });
+    }
     dispatch(setshowPiechart(!showPiechart));
   };
   return (
