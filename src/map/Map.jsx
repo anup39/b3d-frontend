@@ -85,13 +85,14 @@ export default function Map({ id }) {
       //   }),
       //   "top-right"
       // );
+
       map.addControl(new maplibregl.NavigationControl(), "top-right");
       const raster_control = new RasterControl();
       map.addControl(raster_control, "top-left");
       const table_measurings_control = new TableMeasuringsForMapControl();
       map.addControl(table_measurings_control, "bottom-right");
       const piechart_control = new PieChartControl();
-      map.addControl(piechart_control, "bottom-left");
+      map.addControl(piechart_control, "bottom-right");
       raster_control.updateProject(id);
       map.addControl(new DrawControl(), "top-right");
 
