@@ -44,7 +44,7 @@ export default function AutoCompleteMap({ category, layer }) {
         <TextField
           {...params}
           sx={{ fontFamily: "Roboto", fontSize: "7px" }}
-          required
+          // required
           label={category}
           variant="outlined"
           value={inputValue}
@@ -60,6 +60,14 @@ export default function AutoCompleteMap({ category, layer }) {
             changeDistinctMatchedCategory({
               id: layer.id,
               matched_category: newValue.id,
+            })
+          );
+        } else {
+          setInputValue("");
+          dispatch(
+            changeDistinctMatchedCategory({
+              id: layer.id,
+              matched_category: null,
             })
           );
         }

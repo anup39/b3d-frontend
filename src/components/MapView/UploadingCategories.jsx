@@ -9,6 +9,7 @@ import AutoCompleteMap from "../MapView/AutoCompleteMap";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  setshowMapLoader,
   setshowShapefileUpload,
   setshowUploadingCategories,
 } from "../../reducers/MapView";
@@ -18,10 +19,12 @@ import {
   setLayers,
   setdistinct,
 } from "../../reducers/UploadMeasuring";
+import axios from "axios";
 
 export default function UploadingCategories() {
   const dispatch = useDispatch();
   const distinct = useSelector((state) => state.uploadMeasuring.distinct);
+  const currentfile = useSelector((state) => state.uploadMeasuring.currentfile);
 
   const closeForm = () => {
     dispatch(setshowShapefileUpload(false));
@@ -33,6 +36,33 @@ export default function UploadingCategories() {
 
   const handleCreateProperty = (event) => {
     event.preventDefault();
+    const checkedCategories = distinct.filter((item) => item.checked);
+    console.log(checkedCategories);
+    const fileextension = currentfile.split(".").pop();
+    let type_of_file = "Geojson";
+    if (fileextension === "zip") {
+      type_of_file = "Shapefile";
+    } else if (fileextension === "geojson" || fileextension === "json") {
+      type_of_file = "Geojson";
+    }
+    const data = new FormData();
+    data.append("result", JSON.stringify(checkedCategories));
+    data.append("file", currentfile);
+    data.append("type_of_file", type_of_file);
+    console.log(data);
+    if (checkedCategories.length > 0) {
+      closeForm();
+      setshowMapLoader(true);
+      axios
+        .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/save-upload/`, data)
+        .then((response) => {
+          console.log(response);
+          setshowMapLoader(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
   };
 
   const handleLayerChange = (event, layer) => {
@@ -126,7 +156,8 @@ export default function UploadingCategories() {
             <Grid item xs={12}>
               <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
                 <Button
-                  onClick={closeForm}
+                  type="submit"
+                  // onClick={closeForm}
                   variant="contained"
                   color="error"
                   size="small"
