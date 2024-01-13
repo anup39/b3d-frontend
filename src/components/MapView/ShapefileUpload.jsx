@@ -10,6 +10,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { Box } from "@mui/material";
 import {
+  setshowMapLoader,
   setshowShapefileUpload,
   setshowUploadingCategories,
 } from "../../reducers/MapView";
@@ -83,15 +84,17 @@ export default function ShapefileForm({}) {
     } else if (fileextension === "geojson" || fileextension === "json") {
       type_of_file = "Geojson";
     }
+    dispatch(setshowMapLoader(true));
     axios
       .get(
         `${
-          import.meta.env.VITE_API_URL
+          import.meta.env.VITE_API_DASHBOARD_URL
         }/upload-categories/?type_of_file=${type_of_file}&filename=${currentfile}`
       )
       .then((response) => {
         console.log(response.data, "response.data");
         dispatch(setdistinct(response.data.distinct));
+        dispatch(setshowMapLoader(false));
       });
   };
 
