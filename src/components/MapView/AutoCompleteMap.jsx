@@ -3,17 +3,17 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { changeDistinctMatchedCategory } from "../../reducers/UploadMeasuring";
 
 export default function AutoCompleteMap({ category, layer }) {
+  const dispatch = useDispatch();
   const [options, setOptions] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
   const client_id = useSelector(
     (state) => state.mapView.clientDetail.client_id
   );
-
-  // console.log(inputValue, "inputValue");
 
   useEffect(() => {
     if (client_id) {
@@ -56,9 +56,12 @@ export default function AutoCompleteMap({ category, layer }) {
           setInputValue(
             newValue.full_name + " " + `(${newValue.type_of_geometry})`
           );
-          // onItemSelected(newValue.id, newValue.standard_category);
-          console.log(newValue, "newValue");
-          console.log(layer, "layer");
+          dispatch(
+            changeDistinctMatchedCategory({
+              id: layer.id,
+              matched_category: newValue.id,
+            })
+          );
         }
       }}
     />
@@ -66,8 +69,6 @@ export default function AutoCompleteMap({ category, layer }) {
 }
 
 AutoCompleteMap.propTypes = {
-  onItemSelected: PropTypes.func.isRequired,
   category: PropTypes.string,
-  // project_id: PropTypes.string,
   layer: PropTypes.object,
 };

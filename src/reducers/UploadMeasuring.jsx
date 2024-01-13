@@ -19,11 +19,30 @@ export const UploadMeasuring = createSlice({
     setdistinct: (state, action) => {
       state.distinct = action.payload;
     },
+    changeDistinctChecked: (state, action) => {
+      const { id, checked } = action.payload;
+      const distinctItem = state.distinct.find((item) => item.id === id);
+      if (distinctItem) {
+        distinctItem.checked = checked;
+      }
+    },
+    changeDistinctMatchedCategory: (state, action) => {
+      const { id, matched_category } = action.payload;
+      const distinctItem = state.distinct.find((item) => item.id === id);
+      if (distinctItem) {
+        distinctItem.matched_category = matched_category;
+      }
+    },
   },
 });
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const { setLayers, setCurrentFile, setdistinct } =
-  UploadMeasuring.actions;
+export const {
+  setLayers,
+  setCurrentFile,
+  setdistinct,
+  changeDistinctChecked,
+  changeDistinctMatchedCategory,
+} = UploadMeasuring.actions;
 
 export default UploadMeasuring.reducer;

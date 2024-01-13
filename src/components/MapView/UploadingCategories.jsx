@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Grid from "@mui/material/Grid";
 import { Button, Typography } from "@mui/material";
 import PropTypes from "prop-types";
@@ -14,6 +13,7 @@ import {
   setshowUploadingCategories,
 } from "../../reducers/MapView";
 import {
+  changeDistinctChecked,
   setCurrentFile,
   setLayers,
   setdistinct,
@@ -22,9 +22,6 @@ import {
 export default function UploadingCategories() {
   const dispatch = useDispatch();
   const distinct = useSelector((state) => state.uploadMeasuring.distinct);
-  // const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-
-  // console.log(selectedCategoryId, "selectedCategoryId");
 
   const closeForm = () => {
     dispatch(setshowShapefileUpload(false));
@@ -39,13 +36,9 @@ export default function UploadingCategories() {
   };
 
   const handleLayerChange = (event, layer) => {
-    if (event.target.checked) {
-      // dispatch(setLayers([...layers, layer]));
-      dispatch(setdistinct([...distinct, layer]));
-    } else {
-      // dispatch(setLayers(layers.filter((item) => item.id !== layer.id)));
-      dispatch(setdistinct(distinct.filter((item) => item.id !== layer.id)));
-    }
+    dispatch(
+      changeDistinctChecked({ id: layer.id, checked: event.target.checked })
+    );
   };
   return (
     <>
