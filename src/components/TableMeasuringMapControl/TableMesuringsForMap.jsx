@@ -9,15 +9,116 @@ import {
 } from "../../reducers/MapView";
 
 const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 14 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 31 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 31 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 11 },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+  {
+    id: 1,
+    standard_category: "Grass",
+    sub_category: "Grass Green",
+    category: "Grass Green Tall",
+    type_of_geometry: "Polygon",
+    description: "Grass measurings",
+    area: "45 sq",
+    length: "56 miles",
+    symbol: "red",
+  },
+  {
+    id: 2,
+    standard_category: "Grass",
+    sub_category: "Grass Green",
+    category: "Grass Green Short",
+    type_of_geometry: "Polygon",
+    description: "Grass measurings",
+    area: "45 sq",
+    length: "56 miles",
+    symbol: "red",
+  },
+  {
+    id: 3,
+    standard_category: "Lake",
+    sub_category: "Lake Depth",
+    category: "Lake Depth Old",
+    type_of_geometry: "LineString",
+    description: "Lake measurings",
+    area: "450 sq",
+    length: "560 miles",
+    symbol: "green",
+  },
+  {
+    id: 4,
+    standard_category: "Pole",
+    sub_category: "Pole Electrical",
+    category: "Pole Electrical Rural",
+    type_of_geometry: "Point",
+    description: "Pole measurings",
+    area: "450 sq",
+    length: "560 miles",
+    symbol: "green",
+  },
+  {
+    id: 5,
+    standard_category: "Pole",
+    sub_category: "Pole Electrical",
+    category: "Pole Electrical Residental",
+    type_of_geometry: "Point",
+    description: "Pole measurings",
+    area: "450 sq",
+    length: "560 miles",
+    symbol: "green",
+  },
+  {
+    id: 6,
+    standard_category: "Pole",
+    sub_category: "Pole Electrical",
+    category: "Pole Electrical Residental",
+    type_of_geometry: "Point",
+    description: "Pole measurings",
+    area: "450 sq",
+    length: "560 miles",
+    symbol: "green",
+  },
+  {
+    id: 7,
+    standard_category: "Pole",
+    sub_category: "Pole Electrical",
+    category: "Pole Electrical Residental",
+    type_of_geometry: "Point",
+    description: "Pole measurings",
+    area: "450 sq",
+    length: "560 miles",
+    symbol: "green",
+  },
+  {
+    id: 8,
+    standard_category: "Pole",
+    sub_category: "Pole Electrical",
+    category: "Pole Electrical Residental",
+    type_of_geometry: "Point",
+    description: "Pole measurings",
+    area: "450 sq",
+    length: "560 miles",
+    symbol: "green",
+  },
+  {
+    id: 9,
+    standard_category: "Pole",
+    sub_category: "Pole Electrical",
+    category: "Pole Electrical Residental",
+    type_of_geometry: "Point",
+    description: "Pole measurings",
+    area: "450 sq",
+    length: "560 miles",
+    symbol: "green",
+  },
+  {
+    id: 10,
+    standard_category: "Pole",
+    sub_category: "Pole Electrical",
+    category: "Pole Electrical Residental",
+    type_of_geometry: "Point",
+    description: "Pole measurings",
+    area: "450 sq",
+    length: "560 miles",
+    symbol: "green",
+  },
 ];
 
 export default function TableMeasuringsForMap() {
@@ -66,12 +167,13 @@ export default function TableMeasuringsForMap() {
           }}
         >
           <DataGrid
+            hideFooter={true}
             rows={rows}
             columns={columns}
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 5,
+                  pageSize: 10,
                 },
               },
             }}
