@@ -33,6 +33,8 @@ const initialState = {
       },
     },
   },
+  tableSummationData: [],
+  tableSummationDataColumns: [],
 };
 
 export const MapView = createSlice({
@@ -144,6 +146,12 @@ export const MapView = createSlice({
         },
       };
     },
+    setTableSummationData: (state, action) => {
+      state.tableSummationData = action.payload;
+    },
+    setTableSummationDataColumns: (state, action) => {
+      state.tableSummationDataColumns = action.payload;
+    },
   },
 });
 
@@ -169,6 +177,8 @@ export const {
   setCurrentBandCheckedInfomation,
   setCurrentBandColorInfomation,
   resetCurrentBandCheckedInfomation,
+  setTableSummationData,
+  setTableSummationDataColumns,
 } = MapView.actions;
 
 export default MapView.reducer;

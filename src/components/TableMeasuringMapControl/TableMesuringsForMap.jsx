@@ -1,39 +1,12 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import { useSelector } from "react-redux";
-
-const columns = [
-  { field: "id", headerName: "ID", width: 90 },
-  {
-    field: "firstName",
-    headerName: "First name",
-    width: 150,
-    editable: true,
-  },
-  {
-    field: "lastName",
-    headerName: "Last name",
-    width: 150,
-    editable: true,
-  },
-  {
-    field: "age",
-    headerName: "Age",
-    type: "number",
-    width: 110,
-    editable: true,
-  },
-  {
-    field: "fullName",
-    headerName: "Full name",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    width: 160,
-    valueGetter: (params) =>
-      `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import {
+  setTableSummationData,
+  setTableSummationDataColumns,
+} from "../../reducers/MapView";
 
 const rows = [
   { id: 1, lastName: "Snow", firstName: "Jon", age: 14 },
@@ -48,12 +21,41 @@ const rows = [
 ];
 
 export default function TableMeasuringsForMap() {
+  const dispatch = useDispatch();
   const showTableMeasurings = useSelector(
     (state) => state.mapView.showTableMeasurings
   );
+
+  const currentClient = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
+  const currentProject = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  );
+
+  const columns = useSelector(
+    (state) => state.mapView.tableSummationDataColumns
+  );
+
+  useEffect(() => {
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
+      )
+      .then((res) => {
+        if (showTableMeasurings && res.data.columns.length > 0) {
+          // dispatch(setTableSummationData(res.data));
+          dispatch(setTableSummationDataColumns(res.data.columns));
+        } else {
+          dispatch(setTableSummationDataColumns([]));
+        }
+      });
+  }, [showTableMeasurings, currentClient, currentProject, dispatch]);
   return (
     <>
-      {showTableMeasurings ? (
+      {showTableMeasurings && columns ? (
         <Box
           sx={{
             height: 300,
