@@ -13,7 +13,12 @@ import {
   setshowShapefileUpload,
   setshowUploadingCategories,
 } from "../../reducers/MapView";
-import { setCurrentFile, setLayers } from "../../reducers/UploadMeasuring";
+import {
+  setCurrentFile,
+  setLayers,
+  setdistinct,
+} from "../../reducers/UploadMeasuring";
+import axios from "axios";
 
 export default function ShapefileForm({}) {
   const dispatch = useDispatch();
@@ -28,6 +33,7 @@ export default function ShapefileForm({}) {
   const [loading, setLoading] = useState(false);
 
   const layers = useSelector((state) => state.uploadMeasuring.layers);
+  const currentfile = useSelector((state) => state.uploadMeasuring.currentfile);
 
   const closeForm = () => {
     // setIsFormOpen(false);
@@ -70,6 +76,23 @@ export default function ShapefileForm({}) {
     event.preventDefault();
     dispatch(setshowUploadingCategories(true));
     dispatch(setshowShapefileUpload(false));
+    const fileextension = currentfile.split(".").pop();
+    let type_of_file = "Geojson";
+    if (fileextension === "zip") {
+      type_of_file = "Shapefile";
+    } else if (fileextension === "geojson" || fileextension === "json") {
+      type_of_file = "Geojson";
+    }
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_URL
+        }/upload-categories/?type_of_file=${type_of_file}&filename=${currentfile}`
+      )
+      .then((response) => {
+        console.log(response.data, "response.data");
+        dispatch(setdistinct(response.data.distinct));
+      });
   };
 
   useEffect(() => {
