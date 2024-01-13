@@ -1,47 +1,112 @@
 import Grid from "@mui/material/Grid";
-import { Button, CircularProgress, Typography } from "@mui/material";
-import { useState } from "react";
+import { Button, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import CategoryTransfer from "./AutoCompleteMultiple";
-import CategoryList from "./CategoriesList";
 import { Box } from "@mui/material";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteMap from "../MapView/AutoCompleteMap";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setshowMapLoader,
+  setshowShapefileUpload,
+  setshowUploadingCategories,
+} from "../../reducers/MapView";
+import {
+  changeDistinctChecked,
+  setCurrentFile,
+  setLayers,
+  setdistinct,
+} from "../../reducers/UploadMeasuring";
+import axios from "axios";
+import { setProgress, setshowProgressFormOpen } from "../../reducers/Property";
+import {
+  setshowToast,
+  settoastType,
+  settoastMessage,
+} from "../../reducers/DisplaySettings";
 
 export default function UploadingCategories() {
-  //   const [isFormOpen, setIsFormOpen] = useState(true);
-  const [loaded, setLoaded] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-
-  //   const openForm = () => {
-  //     setIsFormOpen(true);
-  //   };
-
-  const layers = [
-    { layername: "layer1", extent: "extent1" },
-    { layername: "layer2", extent: "extent2" },
-    { layername: "layer3", extent: "extent3" },
-    { layername: "layer4", extent: "extent4" },
-    { layername: "layer5", extent: "extent5" },
-    { layername: "layer6", extent: "extent6" },
-    { layername: "layer7", extent: "extent7" },
-    { layername: "layer8", extent: "extent8" },
-    { layername: "layer9", extent: "extent9" },
-  ];
+  const dispatch = useDispatch();
+  const distinct = useSelector((state) => state.uploadMeasuring.distinct);
+  const currentfile = useSelector((state) => state.uploadMeasuring.currentfile);
+  const currentClient = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
+  const currentProject = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  );
+  const currentUser = useSelector((state) => state.auth.user_id);
 
   const closeForm = () => {
-    setLoaded(false);
+    dispatch(setshowShapefileUpload(false));
+    dispatch(setLayers([]));
+    dispatch(setCurrentFile(null));
+    dispatch(setdistinct([]));
+    dispatch(setshowUploadingCategories(false));
   };
 
   const handleCreateProperty = (event) => {
     event.preventDefault();
-    setLoading(true);
+    const checkedCategories = distinct.filter((item) => item.checked);
+    console.log(checkedCategories);
+    const fileextension = currentfile.split(".").pop();
+    let type_of_file = "Geojson";
+    if (fileextension === "zip") {
+      type_of_file = "Shapefile";
+    } else if (fileextension === "geojson" || fileextension === "json") {
+      type_of_file = "Geojson";
+    }
+    const data = new FormData();
+    data.append("result", JSON.stringify(checkedCategories));
+    data.append("filename", currentfile);
+    data.append("type_of_file", type_of_file);
+    data.append("client_id", currentClient);
+    data.append("project_id", currentProject);
+    data.append("user_id", currentUser);
+    console.log(data);
+    if (checkedCategories.length > 0) {
+      closeForm();
+      dispatch(setshowMapLoader(true));
+      // dispatch(setshowProgressFormOpen(true));
+      axios
+        .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/save-upload/`, data, {
+          // onUploadProgress: (progressEvent) => {
+          //   const percentCompleted = Math.round(
+          //     (progressEvent.loaded * 100) / progressEvent.total
+          //   );
+          //   dispatch(setProgress(percentCompleted));
+          // },
+        })
+        .then((response) => {
+          console.log(response);
+          // dispatch(setshowProgressFormOpen(false));
+          // dispatch(setProgress(0));
+          dispatch(setshowMapLoader(false));
+          dispatch(setshowToast(true));
+          dispatch(settoastMessage("Successfully Created Categories"));
+          dispatch(settoastType("success"));
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        })
+        .catch((error) => {
+          // dispatch(setshowProgressFormOpen(false));
+          dispatch(setshowMapLoader(false));
+          dispatch(setshowToast(true));
+          dispatch(settoastMessage("Failed Created Categories"));
+          dispatch(settoastType("error"));
+          console.error("Error fetching data:", error);
+        });
+    }
   };
 
+  const handleLayerChange = (event, layer) => {
+    dispatch(
+      changeDistinctChecked({ id: layer.id, checked: event.target.checked })
+    );
+  };
   return (
     <>
       {/* {isFormOpen && ( */}
@@ -77,59 +142,59 @@ export default function UploadingCategories() {
               </Typography>
             </Grid>
             <Grid item xs={12} sx={{ maxHeight: "400px", overflow: "scroll" }}>
-              {layers.map((layer, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    display: "flex",
-                    gap: 4,
-                    marginBottom: 3,
-                    alignItems: "center",
-                  }}
-                >
-                  <FormGroup sx={{ margin: 0, padding: 0 }}>
-                    <FormControlLabel
+              {distinct &&
+                distinct.map((layer, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      gap: 4,
+                      marginBottom: 3,
+                      alignItems: "center",
+                    }}
+                  >
+                    <FormGroup sx={{ margin: 0, padding: 0 }}>
+                      <FormControlLabel
+                        key={index}
+                        slotProps={{
+                          typography: {
+                            fontSize: 15,
+                            color: "#6A6D70",
+                            fontWeight: 900,
+                          },
+                        }}
+                        control={
+                          <Checkbox
+                            onChange={(event) =>
+                              handleLayerChange(event, layer)
+                            }
+                            key={index}
+                            size="small"
+                            // defaultChecked
+                            sx={{
+                              "&:hover": { backgroundColor: "transparent" },
+                            }}
+                          />
+                        }
+                        label={layer.name + `(${layer.type_of_geometry})`}
+                        sx={{ margin: 0, padding: 0 }}
+                      />
+                    </FormGroup>
+                    <ArrowForwardIosIcon />
+                    <AutoCompleteMap
                       key={index}
-                      slotProps={{
-                        typography: {
-                          fontSize: 15,
-                          color: "#6A6D70",
-                          fontWeight: 900,
-                        },
-                      }}
-                      control={
-                        <Checkbox
-                          // onChange={(event) =>
-                          //   handleLayerChange(
-                          //     event,
-                          //     layer.layername,
-                          //     layer.extent
-                          //   )
-                          // }
-                          key={index}
-                          size="small"
-                          // defaultChecked
-                          sx={{
-                            "&:hover": { backgroundColor: "transparent" },
-                          }}
-                        />
-                      }
-                      label={layer.layername}
-                      sx={{ margin: 0, padding: 0 }}
+                      // onItemSelected={(id) => setSelectedCategoryId(id)}
+                      category={"category"}
+                      layer={layer}
                     />
-                  </FormGroup>
-                  <ArrowForwardIosIcon />
-                  <AutoCompleteMap
-                    onItemSelected={(id) => setSelectedCategoryId(id)}
-                    category={"category"}
-                  />
-                </Box>
-              ))}
+                  </Box>
+                ))}
             </Grid>
             <Grid item xs={12}>
               <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
                 <Button
-                  onClick={closeForm}
+                  type="submit"
+                  // onClick={closeForm}
                   variant="contained"
                   color="error"
                   size="small"
@@ -165,94 +230,3 @@ UploadingCategories.propTypes = {
   onProgressValue: PropTypes.func,
   onSetRasters: PropTypes.func,
 };
-
-// import * as React from "react";
-// import Popover from "@mui/material/Popover";
-// import Button from "@mui/material/Button";
-// import { Box, Tooltip } from "@mui/material";
-// import MoreVertIcon from "@mui/icons-material/MoreVert";
-// import FormControlLabel from "@mui/material/FormControlLabel";
-// import Checkbox from "@mui/material/Checkbox";
-
-// export default function UploadingCategories() {
-//   const [anchorEl, setAnchorEl] = React.useState(null);
-
-//   const handleClick = (event) => {
-//     setAnchorEl(event.currentTarget);
-//   };
-
-//   const handleClose = () => {
-//     setAnchorEl(null);
-//   };
-
-//   const handleDoneClick = () => {
-//     setAnchorEl(null);
-//   };
-
-//   const open = Boolean(anchorEl);
-//   const id = open ? "simple-popover" : undefined;
-
-//   return (
-//     <div>
-//       <Tooltip title="Show More">
-//         <MoreVertIcon
-//           onClick={handleClick}
-//           sx={{ fontSize: 16, color: "#d51b60" }}
-//         />
-//       </Tooltip>
-//       <Popover
-//         id={id}
-//         open={open}
-//         anchorEl={anchorEl}
-//         onClose={handleClose}
-//         anchorOrigin={{
-//           vertical: "bottom",
-//           horizontal: "left",
-//         }}
-//       >
-//         <Box sx={{ backgroundColor: "black", color: "white", opacity: 0.8 }}>
-//           <FormControlLabel
-//             sx={{ margin: 0, marginRight: 1 }}
-//             control={<Checkbox sx={{ color: "#d51b60" }} defaultChecked />}
-//             label="Band Information"
-//           />
-//         </Box>
-//         <Box sx={{ backgroundColor: "black", color: "white", opacity: 0.8 }}>
-//           <FormControlLabel
-//             sx={{ margin: 0, marginRight: 1 }}
-//             control={<Checkbox sx={{ color: "#d51b60" }} defaultChecked />}
-//             label="3D View"
-//           />
-//         </Box>
-
-//         <Box
-//           sx={{
-//             display: "flex",
-//             flexDirection: "column",
-//             backgroundColor: "black",
-//             opacity: 0.8,
-//           }}
-//         >
-//           <Button
-//             // fullWidth
-//             variant="contained"
-//             color="primary"
-//             onClick={handleDoneClick}
-//             sx={{ margin: 1 }}
-//           >
-//             Upload Mesh
-//           </Button>
-//           <Button
-//             //   fullWidth
-//             onClick={handleDoneClick}
-//             sx={{ margin: 1 }}
-//             variant="contained"
-//             color="primary"
-//           >
-//             Upload Point cloud
-//           </Button>
-//         </Box>
-//       </Popover>
-//     </div>
-//   );
-// }

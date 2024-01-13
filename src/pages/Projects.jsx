@@ -10,7 +10,7 @@ import MapView from "../components/MapView/MapView";
 import { Box } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import MapIcon from "@mui/icons-material/Map";
-import { setClientDetail } from "../reducers/MapView";
+import { setClientDetail, setshowMeasuringsPanel } from "../reducers/MapView";
 
 export default function Projects() {
   const navigate = useNavigate();
@@ -49,8 +49,11 @@ export default function Projects() {
   }, [client_id, user_id, dispatch]);
 
   const handleViewInMap = () => {
+    // dispatch(setshowMeasuringsPanel(false));
+
     // #use client id
-    navigate(`/projects/${client_id}/Map`);
+    // navigate(`/projects/${client_id}/Map`);
+    window.location.replace(`/projects/${client_id}/Map`);
   };
 
   return (

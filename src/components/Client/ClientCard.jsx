@@ -20,6 +20,7 @@ import Tooltip from "@mui/material/Tooltip";
 import AppsIcon from "@mui/icons-material/Apps";
 import PeopleIcon from "@mui/icons-material/People";
 import DeleteIcon from "@mui/icons-material/Delete";
+// import { setshowMeasuringsPanel } from "../../reducers/MapView";
 
 export default function ClientCard({ id, name, description }) {
   const [properties, setproperties] = useState([]);
@@ -30,7 +31,9 @@ export default function ClientCard({ id, name, description }) {
   const projects = useSelector((state) => state.project.projects);
 
   const handleViewInMap = () => {
-    navigate(`/projects/${id}/Map`);
+    // dispatch(setshowMeasuringsPanel(false));
+    // navigate(`/projects/${id}/Map`);
+    window.location.replace(`/projects/${id}/Map`);
   };
 
   const handleManageClasses = () => {
