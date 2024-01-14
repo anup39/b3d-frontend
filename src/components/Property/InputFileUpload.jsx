@@ -12,10 +12,10 @@ import { takeScreenshot } from "../../maputils/createMapImage";
 
 // Checking the Issues here
 
-// import GeoTIFF, { fromUrl, fromUrls, fromBlob } from "geotiff";
-// import { fromArrayBuffer } from "geotiff";
-// import proj4 from "proj4";
-// import epsgDefinitions from "../../maputils/epsgcodes";
+import GeoTIFF, { fromUrl, fromUrls, fromBlob } from "geotiff";
+import { fromArrayBuffer } from "geotiff";
+import proj4 from "proj4";
+import epsgDefinitions from "../../maputils/epsgcodes";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -38,6 +38,7 @@ function bytesToMB(bytes) {
 }
 
 export default function InputFileUpload({
+  map,
   onFileUpload,
   onProjection,
   onFileName,
@@ -56,25 +57,25 @@ export default function InputFileUpload({
 
   useEffect(() => {
     if (loaded) {
-      takeScreenshot(window.mapproperty).then(function (data) {
+      takeScreenshot(map).then(function (data) {
         onImage(data);
       });
     }
-  }, [loaded, onImage]);
+  }, [loaded, onImage, map]);
 
   const handleFileChange = async (e) => {
     setOpenrasterErrorToast(false);
     onDoneLoaded(false);
     onImage();
     RemoveSourceAndLayerFromMap({
-      map: window.mapproperty,
+      map: map,
       layerId: "geojson-layer",
       sourceId: "geojson-source",
     });
     const file = e.target.files[0];
     console.log(file, "file");
     onFileUpload(file);
-    onDoneLoaded(true);
+    // onDoneLoaded(true);
     onFileName(file.name);
     const file_size = bytesToMB(file.size);
     onSetFilesize(file_size + " " + "MB");
@@ -86,99 +87,102 @@ export default function InputFileUpload({
 
       // #Here is some issue i didnot get , the extent is the zomming the Map
 
-      // reader.onload = async (e) => {
-      //   const arrayBuffer = e.target.result;
-      //   try {
-      //     const tiff = await fromArrayBuffer(arrayBuffer);
-      //     const image_raster = await tiff.getImage();
-      //     //   const data = await image.readRasters();
-      //     const bbox = image_raster.getBoundingBox();
-      //     const geo_Keys = image_raster.geoKeys;
-      //     console.log(geo_Keys, "geokeys");
-      //     const source_bbox = {
-      //       southwest: [bbox[0], bbox[1]],
-      //       northeast: [bbox[2], bbox[3]],
-      //     };
-      //     const source_epsg = geo_Keys.ProjectedCSTypeGeoKey;
+      reader.onload = async (e) => {
+        const arrayBuffer = e.target.result;
+        try {
+          const tiff = await fromArrayBuffer(arrayBuffer);
+          const image_raster = await tiff.getImage();
+          // const data = await image.readRasters();
 
-      //     if (epsgDefinitions.hasOwnProperty(source_epsg)) {
-      //       proj4.defs(`EPSG:${source_epsg}`, epsgDefinitions[source_epsg]);
-      //       proj4.defs("EPSG:4326", epsgDefinitions[4326]);
-      //       const bboxInEPSG4326 = {
-      //         southwest: proj4(
-      //           `EPSG:${source_epsg}`,
-      //           "EPSG:4326",
-      //           source_bbox.southwest
-      //         ),
-      //         northeast: proj4(
-      //           `EPSG:${source_epsg}`,
-      //           "EPSG:4326",
-      //           source_bbox.northeast
-      //         ),
-      //       };
+          const bbox = image_raster.getBoundingBox();
+          console.log(bbox, "bbox");
+          const geo_Keys = image_raster.geoKeys;
+          console.log(geo_Keys, "geokeys");
+          const source_bbox = {
+            southwest: [bbox[0], bbox[1]],
+            northeast: [bbox[2], bbox[3]],
+          };
+          const source_epsg = geo_Keys.ProjectedCSTypeGeoKey;
 
-      //       const bbox_reprojected = [
-      //         bboxInEPSG4326.northeast[0],
-      //         bboxInEPSG4326.northeast[1],
-      //         bboxInEPSG4326.southwest[0],
-      //         bboxInEPSG4326.southwest[1],
-      //       ];
+          if (epsgDefinitions.hasOwnProperty(source_epsg)) {
+            proj4.defs(`EPSG:${source_epsg}`, epsgDefinitions[source_epsg]);
+            proj4.defs("EPSG:4326", epsgDefinitions[4326]);
+            const bboxInEPSG4326 = {
+              southwest: proj4(
+                `EPSG:${source_epsg}`,
+                "EPSG:4326",
+                source_bbox.southwest
+              ),
+              northeast: proj4(
+                `EPSG:${source_epsg}`,
+                "EPSG:4326",
+                source_bbox.northeast
+              ),
+            };
 
-      //       const geoJSONPolygon = {
-      //         type: "Feature",
-      //         geometry: {
-      //           type: "Polygon",
-      //           coordinates: [
-      //             [
-      //               [bbox_reprojected[0], bbox_reprojected[1]],
-      //               [bbox_reprojected[2], bbox_reprojected[1]],
-      //               [bbox_reprojected[2], bbox_reprojected[3]],
-      //               [bbox_reprojected[0], bbox_reprojected[3]],
-      //               [bbox_reprojected[0], bbox_reprojected[1]],
-      //             ],
-      //           ],
-      //         },
-      //         properties: {},
-      //       };
-      //       window.mapproperty.addSource("geojson-source", {
-      //         type: "geojson",
-      //         data: geoJSONPolygon,
-      //       });
+            const bbox_reprojected = [
+              bboxInEPSG4326.northeast[0],
+              bboxInEPSG4326.northeast[1],
+              bboxInEPSG4326.southwest[0],
+              bboxInEPSG4326.southwest[1],
+            ];
+            map.fitBounds(bbox_reprojected);
 
-      //       window.mapproperty.addLayer({
-      //         id: "geojson-layer",
-      //         type: "line",
-      //         source: "geojson-source",
-      //         layout: {},
-      //         paint: {
-      //           "line-color": "red",
-      //           "line-opacity": 1,
-      //         },
-      //       });
+            const geoJSONPolygon = {
+              type: "Feature",
+              geometry: {
+                type: "Polygon",
+                coordinates: [
+                  [
+                    [bbox_reprojected[0], bbox_reprojected[1]],
+                    [bbox_reprojected[2], bbox_reprojected[1]],
+                    [bbox_reprojected[2], bbox_reprojected[3]],
+                    [bbox_reprojected[0], bbox_reprojected[3]],
+                    [bbox_reprojected[0], bbox_reprojected[1]],
+                  ],
+                ],
+              },
+              properties: {},
+            };
+            console.log(geoJSONPolygon, "geoJSONPolygon");
+            map.addSource("geojson-source", {
+              type: "geojson",
+              data: geoJSONPolygon,
+            });
 
-      //       window.mapproperty.fitBounds(bbox_reprojected);
-      //       window.mapproperty.on("moveend", function () {
-      //         onDoneLoaded(true);
-      //       });
-      //     } else {
-      //       setOpenrasterErrorToast(true);
-      //       setOpenrasterErrorMessage(`${source_epsg} cannot be uploaded.`);
-      //     }
+            map.addLayer({
+              id: "geojson-layer",
+              type: "line",
+              source: "geojson-source",
+              layout: {},
+              paint: {
+                "line-color": "red",
+                "line-opacity": 1,
+              },
+            });
 
-      //     onFileName(file.name);
-      //     const file_size = bytesToMB(file.size);
-      //     onSetFilesize(file_size + " " + "MB");
-      //     onProjection(`EPSG:${source_epsg}`);
+            map.on("moveend", function () {
+              onDoneLoaded(true);
+            });
+          } else {
+            setOpenrasterErrorToast(true);
+            setOpenrasterErrorMessage(`${source_epsg} cannot be uploaded.`);
+          }
 
-      //     if (onFileUpload) {
-      //       onFileUpload(file);
-      //     }
-      //   } catch (error) {
-      //     setOpenrasterErrorToast(true);
-      //     setOpenrasterErrorMessage("Please select a valid GeoTIFF file.");
-      //   }
-      // };
-      // reader.readAsArrayBuffer(file);
+          onFileName(file.name);
+          const file_size = bytesToMB(file.size);
+          onSetFilesize(file_size + " " + "MB");
+          onProjection(`EPSG:${source_epsg}`);
+
+          if (onFileUpload) {
+            onFileUpload(file);
+          }
+        } catch (error) {
+          setOpenrasterErrorToast(true);
+          setOpenrasterErrorMessage("Please select a valid GeoTIFF file.");
+        }
+      };
+      reader.readAsArrayBuffer(file);
     } else {
       setOpenrasterErrorToast(true);
       setOpenrasterErrorMessage("Please select a tiff file.");
@@ -240,7 +244,7 @@ export default function InputFileUpload({
                     <b>Generated Thumbnail</b> :
                   </Typography>
                   <img
-                    style={{ height: "75px", width: "125px" }}
+                    style={{ height: "80px", width: "80px" }}
                     id="screenshot-img"
                     src={image ? image : ""}
                     alt="Map Screenshot"
@@ -256,6 +260,7 @@ export default function InputFileUpload({
 }
 
 InputFileUpload.propTypes = {
+  map: PropTypes.object,
   onFileUpload: PropTypes.func,
   onProjection: PropTypes.func,
   onFileName: PropTypes.func,
