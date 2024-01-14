@@ -10,10 +10,11 @@ const RemoveSourceAndLayerFromMap = ({
   sourceId,
 }: RemoveLayerProps) => {
   const style = map.getStyle();
-  const existingLayer = style.layers.find(
+
+  const existingLayer = style?.layers?.find(
     (layer: LayerSpecification) => layer.id === layerId
   );
-  const existingSource = style.sources[sourceId];
+  const existingSource = style?.sources[sourceId];
 
   if (existingLayer) {
     map.removeLayer(layerId);
