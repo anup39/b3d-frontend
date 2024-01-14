@@ -31,6 +31,7 @@ export default function UploadPropertyForm() {
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
+  const [map, setMap] = useState(null);
 
   const client_id_property = useSelector(
     (state) => state.property.client_id_property
@@ -140,11 +141,13 @@ export default function UploadPropertyForm() {
       style: `https://api.maptiler.com/maps/satellite/style.json?key=${
         import.meta.env.VITE_MAPTILER_TOKEN
       }`,
-      center: [103.8574, 2.2739],
+      center: [-107.88716767483929, 38.98772137493235],
       zoom: 10,
+      attributionControl: false,
     });
 
     window.mapproperty = map;
+    setMap(map);
 
     return () => {
       map.remove();
@@ -190,7 +193,8 @@ export default function UploadPropertyForm() {
           </Grid>
           <Grid item xs={12}>
             <InputFileUpload
-              mapref={mapContainerProperty}
+              map={map}
+              // mapref={mapContainerProperty}
               fileName={fileName}
               filesize={filesize}
               projection={projection}

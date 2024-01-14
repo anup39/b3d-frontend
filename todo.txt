@@ -1,18 +1,3 @@
-# Octobor 10 
-
-Hello Carsten, 
-
-Here is the link to the web application : 
-
-http://137.135.165.161/
-
-You can login with this credentials :
-
-username  : super_admin
-password : admin
-
-OR you can create a new User form here http://137.135.165.161/register
-
 Things i was working from our last meeting on Octobor 6 , Friday :
 1) Fixed issues where we were unable to see the category geometry in the Map
 2) Issues when unselecting categories for specific project http://137.135.165.161/manage-classes/
