@@ -30,7 +30,7 @@ export default function MapLoader() {
       >
         <Box>
           <CircularProgress sx={{ margin: 2 }} />
-          <Typography sx={{ marginLeft: 1 }}>Saving..</Typography>
+          <Typography sx={{ marginLeft: 1 }}>Loading..</Typography>
         </Box>
       </div>
     </div>

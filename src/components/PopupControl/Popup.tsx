@@ -2,8 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import axios from "axios";
 import { setshowMapLoader } from "../../reducers/MapView";
-import { Map, LayerSpecification } from "maplibre-gl";
-import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import {
   setCategoryId,
   setCategoryViewName,

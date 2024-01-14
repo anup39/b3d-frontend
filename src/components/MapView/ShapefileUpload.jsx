@@ -118,9 +118,6 @@ export default function ShapefileForm({}) {
 
   const handleLayerChange = (event, layer, extent) => {
     const map = window.mapshapefile;
-    console.log(map);
-    console.log(event.target.checked);
-    console.log(layer);
     if (event.target.checked) {
       map.setLayoutProperty(`line-${layer}`, "visibility", "visible");
       map.setLayoutProperty(`polygon-${layer}`, "visibility", "visible");

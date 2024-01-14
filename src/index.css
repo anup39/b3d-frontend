@@ -40,3 +40,27 @@
   background-color: black;
  
 }
+
+/* For table css */
+
+.MuiDataGrid-columnHeader {
+  background-color:#D51B60;
+}
+.MuiDataGrid-columnHeaderTitle {
+  color: white;
+  /* line-height: 17.07px; */
+}
+
+.MuiDataGrid-columnHeader--sortable{
+  color: white;
+  background-color: #D51B60;
+}
+
+
+/* .MuiDataGrid-aggregationColumnHeader {
+  background-color: red;
+} */
+
+/* .MuiDataGrid-root .MuiDataGrid-row.Mui-selected {
+  background-color: #e9ffe7 !important;
+} */

@@ -16,7 +16,10 @@ import {
   setshowMap,
   setshowTableMeasurings,
   setshowPiechart,
+  setTableSummationData,
+  setCurrentMapExtent,
 } from "../../reducers/MapView";
+import axios from "axios";
 
 export default function LayersAndLabelControl({ map, popUpRef }) {
   const dispatch = useDispatch();
@@ -34,6 +37,13 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     (state) => state.mapView.currentMapDetail.current_project_name
   );
 
+  const currentClient = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
+  const currentProject = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  );
+
   const showPiechart = useSelector((state) => state.mapView.showPiechart);
 
   const handleCloseMeasurings = () => {
@@ -45,15 +55,66 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
   };
 
   const handleShowReport = () => {
+    if (currentClient && currentProject) {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
+        )
+        .then((res) => {
+          if (res.data.rows.length > 0) {
+            dispatch(setTableSummationData(res.data.rows));
+          } else {
+            dispatch(setTableSummationData([]));
+          }
+        });
+    }
+    dispatch(setshowTableMeasurings(!showTableMeasurings));
+    dispatch(setshowPiechart(!showPiechart));
     dispatch(setshowReport(true));
     dispatch(setshowMap(false));
+
+    const map = window.map_global;
+    const bounds = map.getBounds();
+    dispatch(setCurrentMapExtent(bounds.toArray()));
   };
 
   const handleMeasuringsTable = () => {
+    if (currentClient && currentProject) {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
+        )
+        .then((res) => {
+          if (res.data.rows.length > 0) {
+            dispatch(setTableSummationData(res.data.rows));
+          } else {
+            dispatch(setTableSummationData([]));
+          }
+        });
+    }
     dispatch(setshowTableMeasurings(!showTableMeasurings));
   };
 
   const handlePieChart = () => {
+    if (currentClient && currentProject) {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
+        )
+        .then((res) => {
+          if (res.data.rows.length > 0) {
+            dispatch(setTableSummationData(res.data.rows));
+          } else {
+            dispatch(setTableSummationData([]));
+          }
+        });
+    }
     dispatch(setshowPiechart(!showPiechart));
   };
   return (
@@ -69,6 +130,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
+                zIndex: 99999,
               }}
             >
               <Typography
@@ -90,17 +152,21 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
               </Typography>
               <Box></Box>
 
-              <Tooltip title="Report">
-                <SummarizeIcon
-                  onClick={handleShowReport}
-                  sx={{
-                    "&:hover": { cursor: "pointer" },
-                    mt: 1,
-                    mr: 2,
-                    color: "#d61b60",
-                  }}
-                />
-              </Tooltip>
+              {/* <Tooltip title="Report"> */}
+              <SummarizeIcon
+                onClick={handleShowReport}
+                sx={{
+                  "&:hover": { cursor: "pointer" },
+                  mt: 1,
+                  color: "#d61b60",
+                }}
+              />
+              <span
+                style={{ marginTop: "10px", padding: 2, marginRight: "10px" }}
+              >
+                Report
+              </span>
+              {/* </Tooltip> */}
               <Tooltip title="Import">
                 <BackupIcon
                   onClick={handleImportShapefile}
@@ -149,6 +215,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                     cursor: "pointer",
                   },
                   color: pink[600],
+                  // position: "fixed",
                 }}
               />
             ) : (
@@ -160,6 +227,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                     cursor: "pointer",
                   },
                   color: pink[600],
+                  // position: "fixed",
                 }}
               />
             )}

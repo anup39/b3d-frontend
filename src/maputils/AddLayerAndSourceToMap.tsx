@@ -1,27 +1,15 @@
-import axios from "axios";
 import {
   Map,
   LngLatBounds,
   SourceSpecification,
   CircleLayerSpecification,
   LayerSpecification,
-  IControl,
 } from "maplibre-gl";
-import maplibregl from "maplibre-gl";
 import { store } from "../store";
 import { Provider } from "react-redux";
 import Popup from "../components/PopupControl/Popup";
 import ReactDOM, { Root } from "react-dom/client";
 import { RefObject } from "react";
-
-function getPopupHTML(properties) {
-  let html = "";
-
-  for (const [key, value] of Object.entries(properties)) {
-    html += `<b>${key}:</b> ${value}<br> `;
-  }
-  return html;
-}
 
 interface AddLayerProps {
   map: Map;

@@ -1,80 +1,166 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { useSelector } from "react-redux";
+import RectangleIcon from "@mui/icons-material/Rectangle";
+import CircleIcon from "@mui/icons-material/Circle";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+
+const renderCell = (params) => {
+  const { color, type_of_geometry } = params.value;
+  let icon;
+  if (type_of_geometry === "Polygon") {
+    icon = <RectangleIcon sx={{ color: color }} />;
+  } else if (type_of_geometry === "Point") {
+    icon = <CircleIcon sx={{ color: color }} />;
+  } else {
+    icon = <ShowChartIcon sx={{ color: color }} />;
+  }
+
+  return icon;
+};
 
 const columns = [
-  { field: "id", headerName: "ID", width: 90 },
+  // {
+  //   field: "id",
+  //   headerName: "id",
+  //   width: 80,
+  //   type: "number",
+  //   editable: false,
+  // },
   {
-    field: "firstName",
-    headerName: "First name",
-    width: 150,
-    editable: true,
+    field: "symbol",
+    headerName: "symbol",
+    type: "string",
+    width: 80,
+    renderCell: renderCell,
   },
   {
-    field: "lastName",
-    headerName: "Last name",
-    width: 150,
-    editable: true,
+    field: "view_name",
+    headerName: "category",
+    type: "string",
+    width: 290,
   },
   {
-    field: "age",
-    headerName: "Age",
+    field: "description",
+    type: "string",
+    width: 170,
+    editable: false,
+    headerName: "description",
+  },
+  {
+    field: "count",
     type: "number",
-    width: 110,
-    editable: true,
+    width: 100,
+    editable: false,
+    headerName: "count",
   },
   {
-    field: "fullName",
-    headerName: "Full name",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    width: 160,
-    valueGetter: (params) =>
-      `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+    field: "area",
+    type: "number",
+    width: 50,
+    editable: false,
+    headerName: "area",
+  },
+  {
+    field: "length",
+    type: "number",
+    width: 130,
+    editable: false,
+    headerName: "length",
   },
 ];
 
 const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 14 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 31 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 31 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 11 },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+  {
+    id: 1,
+    view_name: "Grass Green Short",
+    description: "Grass measurings",
+    area: 45,
+    length: 56,
+    symbol: { color: "red", type_of_geometry: "Polygon" },
+  },
+  {
+    id: 2,
+    view_name: "Grass Green Short",
+    description: "Grass measurings",
+    area: 45,
+    length: 56,
+    symbol: { color: "red", type_of_geometry: "Polygon" },
+  },
+  {
+    id: 3,
+    view_name: "Grass Green Short",
+    description: "Grass measurings",
+    area: 40,
+    length: 560,
+    symbol: { color: "green", type_of_geometry: "LineString" },
+  },
+  {
+    id: 4,
+    view_name: "Grass Green Short",
+    description: "Grass measurings",
+    area: 450,
+    length: 560,
+    symbol: { color: "blue", type_of_geometry: "Point" },
+  },
+  {
+    id: 5,
+    view_name: "Grass Green Short",
+    description: "Grass measurings",
+    area: 450,
+    length: 560,
+    symbol: { color: "blue", type_of_geometry: "Point" },
+  },
+  {
+    id: 6,
+    view_name: "Grass Green Short",
+    description: "Grass measurings",
+    area: 450,
+    length: 560,
+    symbol: { color: "yellow", type_of_geometry: "Point" },
+  },
+  {
+    id: 7,
+    view_name: "Grass Green Short",
+    description: "Grass measurings",
+    area: 450,
+    length: 560,
+    symbol: "red",
+  },
 ];
 
-export default function TableMeasuringsForMap() {
+export default function TableMeasuringsForMap({ width, checkboxSelection }) {
   const showTableMeasurings = useSelector(
     (state) => state.mapView.showTableMeasurings
   );
+
+  const rows = useSelector((state) => state.mapView.tableSummationData);
+
   return (
     <>
-      {showTableMeasurings ? (
+      {showTableMeasurings && columns ? (
         <Box
           sx={{
-            height: 300,
-            width: 700,
+            height: 260,
+            width: width,
             bottom: 5,
             right: 5,
             backgroundColor: "white",
           }}
         >
           <DataGrid
+            hideFooter={true}
             rows={rows}
             columns={columns}
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 5,
+                  pageSize: 10,
                 },
               },
             }}
             pageSizeOptions={[5]}
-            checkboxSelection
+            checkboxSelection={checkboxSelection}
             disableRowSelectionOnClick
           />
         </Box>

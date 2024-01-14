@@ -19,10 +19,16 @@ import ShapefileUpload from "./ShapefileUpload";
 import UploadingCategories from "./UploadingCategories";
 import ReportPrint from "./ReportPrint";
 import ProjectView from "./ProjectView";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import UploadPropertyForm from "../Property/UploadPropertyForm";
 import UploadProgress from "../Property/UploadProgress";
+import { useEffect } from "react";
+import {
+  setCurrentMapExtent,
+  setCategoriesState,
+  setcurrentTif,
+} from "../../reducers/MapView";
 
 const drawerWidth = 240;
 
@@ -73,6 +79,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MapView({ client_id, projects }) {
+  const dispatch = useDispatch();
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
 
@@ -103,6 +110,12 @@ export default function MapView({ client_id, projects }) {
   const handleListView = () => {
     navigate(`/projects/${client_id}/List`);
   };
+
+  useEffect(() => {
+    dispatch(setCurrentMapExtent(null));
+    dispatch(setCategoriesState(null));
+    dispatch(setcurrentTif(null));
+  }, [dispatch]);
 
   return (
     <Box sx={{ display: "flex" }}>

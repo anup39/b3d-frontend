@@ -23,6 +23,9 @@ import { CesiumIonLoader } from "@loaders.gl/3d-tiles";
 import { ScenegraphLayer } from "@deck.gl/mesh-layers";
 
 import { GLTFLoader } from "@loaders.gl/gltf";
+import { Button } from "@mui/material";
+import { setDisplayType } from "../reducers/MapView";
+import { useDispatch } from "react-redux";
 
 // // const INITIAL_VIEW_STATE = {
 // //   latitude: 47.65,
@@ -267,6 +270,7 @@ export default function App({
   mapStyle = "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
   updateAttributions,
 }) {
+  const dispatch = useDispatch();
   const [initialViewState, setInitialViewState] = useState(INITIAL_VIEW_STATE);
 
   const onTilesetLoad = (tileset) => {
@@ -331,17 +335,38 @@ export default function App({
   }, []);
 
   return (
-    <DeckGL
-      layers={[tile3DLayer]}
-      initialViewState={initialViewState}
-      controller={true}
-    >
-      <Map
-        reuseMaps
-        mapLib={maplibregl}
-        mapStyle={mapStyle}
-        preventStyleDiffing
-      />
-    </DeckGL>
+    <div>
+      <Button
+        onClick={() => {
+          dispatch(setDisplayType("2D"));
+        }}
+        sx={{
+          // position: "absolute",
+          // top: "40%",
+          // right: "50px",
+          margin: "10px",
+          zIndex: 999999,
+          backgroundColor: "white",
+          "&:hover": {
+            backgroundColor: "white",
+          },
+          color: "#D51B60",
+        }}
+      >
+        2D
+      </Button>
+      <DeckGL
+        layers={[tile3DLayer]}
+        initialViewState={initialViewState}
+        controller={true}
+      >
+        <Map
+          reuseMaps
+          mapLib={maplibregl}
+          mapStyle={mapStyle}
+          preventStyleDiffing
+        />
+      </DeckGL>
+    </div>
   );
 }

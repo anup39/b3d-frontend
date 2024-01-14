@@ -9,15 +9,8 @@ import MoreonMap from "./MoreonMap";
 import PropTypes from "prop-types";
 import ButtonBase from "@mui/material/ButtonBase";
 import axios from "axios";
-// import { useDispatch, useSelector } from "react-redux";
-// import {
-//   addSelectedTifId,
-//   removeSelectedTifId,
-//   setshowMeasuringsPanel,
-//   addcurrentTifMeasuringTable,
-// } from "../../reducers/MapView";
 import { useDispatch, useSelector } from "react-redux";
-import { setcurrentTif, setshowTifPanel } from "../../reducers/MapView";
+import { setcurrentTif } from "../../reducers/MapView";
 
 const Img = styled("img")({
   margin: "auto",
@@ -133,4 +126,5 @@ export default function TiffMapView({ tif, project_id }) {
 
 TiffMapView.propTypes = {
   tif: PropTypes.object,
+  project_id: PropTypes.number,
 };

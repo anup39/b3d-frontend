@@ -60,21 +60,6 @@ export default function MoreonMap({ tif }) {
           horizontal: "left",
         }}
       >
-        {/* <Box sx={{ backgroundColor: "black", color: "white", opacity: 0.8 }}>
-          <FormControlLabel
-            sx={{ margin: 0, marginRight: 1 }}
-            control={<Checkbox sx={{ color: "#d51b60" }} defaultChecked />}
-            label="Band Information"
-          />
-        </Box> */}
-        {/* <Box sx={{ backgroundColor: "black", color: "white", opacity: 0.8 }}>
-          <FormControlLabel
-            sx={{ margin: 0, marginRight: 1 }}
-            control={<Checkbox sx={{ color: "#d51b60" }} defaultChecked />}
-            label="3D View"
-          />
-        </Box>{" "} */}
-
         <Box
           sx={{
             display: "flex",
@@ -83,15 +68,6 @@ export default function MoreonMap({ tif }) {
             opacity: 0.8,
           }}
         >
-          {/* <Button
-            // fullWidth
-            variant="contained"
-            color="primary"
-            onClick={handleDoneClick}
-            sx={{ margin: 1 }}
-          >
-            3D View
-          </Button> */}
           <Button
             // fullWidth
             variant="contained"
