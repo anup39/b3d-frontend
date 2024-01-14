@@ -11,7 +11,6 @@ import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import { Slider } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import ModeIcon from "@mui/icons-material/Mode";
 import CircularProgress from "@mui/material/CircularProgress";
 import { setCategoriesState } from "../../reducers/MapView";
 import RectangleIcon from "@mui/icons-material/Rectangle";
@@ -25,7 +24,6 @@ import {
   setMode,
   setFeatureId,
 } from "../../reducers/DrawnGeometry";
-import { NullLoader } from "@loaders.gl/core";
 
 const all_categories = [
   {
@@ -871,4 +869,5 @@ export default function LayersControlPanel({ map, popUpRef }) {
 
 LayersControlPanel.propTypes = {
   map: PropTypes.object,
+  popUpRef: PropTypes.object,
 };

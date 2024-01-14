@@ -137,11 +137,7 @@ export default function InputShapefileUpload({
               "line-cap": "round",
             },
             paint: {
-              "line-color": [
-                "coalesce", // Use the first non-null value
-                ["get", "fill"], // Try to get the "fill" property
-                getRandomHexColor(), // Use a random color if "fill" is not present
-              ],
+              "line-color": ["coalesce", ["get", "fill"], getRandomHexColor()],
               "line-width": 2,
             },
             filter: ["==", "$type", "LineString"],
@@ -152,11 +148,7 @@ export default function InputShapefileUpload({
             type: "fill",
             source: `${layer.layername}`,
             paint: {
-              "fill-color": [
-                "coalesce", // Use the first non-null value
-                ["get", "fill"], // Try to get the "fill" property
-                getRandomHexColor(), // Use a random color if "fill" is not present
-              ],
+              "fill-color": ["coalesce", ["get", "fill"], getRandomHexColor()],
               "fill-opacity": 0.6,
               "fill-outline-color": "black",
             },
@@ -170,9 +162,9 @@ export default function InputShapefileUpload({
             paint: {
               "circle-radius": 6,
               "circle-color": [
-                "coalesce", // Use the first non-null value
-                ["get", "marker-color"], // Try to get the "fill" property
-                getRandomHexColor(), // Use a random color if "fill" is not present
+                "coalesce",
+                ["get", "marker-color"],
+                getRandomHexColor(),
               ],
             },
             filter: ["==", "$type", "Point"],
@@ -181,7 +173,6 @@ export default function InputShapefileUpload({
             padding: { top: 15, bottom: 30, left: 15, right: 5 },
           });
           // Add popups to features
-
           map.on("click", function (e) {
             const features = map.queryRenderedFeatures(e.point);
 
@@ -196,7 +187,7 @@ export default function InputShapefileUpload({
             if (popups.length) {
               popups[0].remove();
             }
-            var popup = new maplibregl.Popup()
+            new maplibregl.Popup()
               .setLngLat(e.lngLat)
               .setHTML(getPopupHTML(feature.properties))
               .addTo(map);

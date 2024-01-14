@@ -6,13 +6,12 @@ import PropTypes from "prop-types";
 import LayersControl from "../components/LayerControl/LayerControl";
 import DrawControl from "../components/DrawControl/DrawControl";
 import RasterControl from "../components/RasterControl/RasterControl";
-import PopupControl from "../components/PopupControl/PopupControl";
+// import PopupControl from "../components/PopupControl/PopupControl";
 import TableMeasuringsForMapControl from "../components/TableMeasuringMapControl/TableMeasuringsMapControl";
 import PieChartControl from "../components/PieChartControl/PieChartControl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { useDispatch } from "react-redux";
-import { setWKTGeometry } from "../reducers/DrawnGeometry";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import AddLayerAndSourceToMap from "../maputils/AddLayerAndSourceToMap";
@@ -25,7 +24,6 @@ export default function Map({ id }) {
   const [map, setMap] = useState();
   const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
 
-  // const showReport = useSelector((state) => state.mapView.showReport);
   const currentMapExtent = useSelector(
     (state) => state.mapView.printDetails.currentMapExtent
   );
@@ -169,7 +167,6 @@ export default function Map({ id }) {
                   `${id}-layer`,
                   "gl-draw-polygon-fill-inactive.cold"
                 );
-                // dispatch(addSelectedTifId(tif_id));
               }
             })
             .catch(() => {});

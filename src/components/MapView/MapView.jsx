@@ -29,7 +29,6 @@ import {
   setCategoriesState,
   setcurrentTif,
 } from "../../reducers/MapView";
-// setCurrentM;
 
 const drawerWidth = 240;
 

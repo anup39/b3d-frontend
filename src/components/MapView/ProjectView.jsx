@@ -17,8 +17,6 @@ import { Tooltip } from "@mui/material";
 import { pink } from "@mui/material/colors";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addSelectedProjectId,
-  removeSelectedProjectId,
   setcurrentProjectName,
   setshowMeasuringsPanel,
   addcurrentProjectMeasuringTable,
@@ -45,9 +43,6 @@ export default function ProjectView({ project }) {
 
   const currentClient = useSelector(
     (state) => state.mapView.clientDetail.client_id
-  );
-  const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
   );
 
   const current_tif = useSelector(
@@ -76,8 +71,6 @@ export default function ProjectView({ project }) {
 
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
-    const id = project_id;
-    // const map = window.map_global;
     if (checked) {
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(true));

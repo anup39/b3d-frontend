@@ -1,11 +1,9 @@
 import React from "react";
-import Appbar from "../Common/AppBar";
 import { Box } from "@mui/material";
 import { Typography, Grid, Button } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useRef, useEffect } from "react";
 import maplibregl from "maplibre-gl";
-import TableMeasurings from "./TableMeasurings";
 import TableMeasuringsForMap from "../TableMeasuringMapControl/TableMesuringsForMap";
 import "./ReportPrint.css";
 import { useDispatch } from "react-redux";
@@ -14,14 +12,11 @@ import {
   setshowMap,
   setshowPiechart,
   setshowTableMeasurings,
-  setCurrentMapExtent,
 } from "../../reducers/MapView";
 import PieChartComp from "../PieChartControl/PieChartComp";
 import { useSelector } from "react-redux";
-import Map from "../../map/Map";
 import axios from "axios";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
-import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 
 export default function ReportPrint() {
   const dispatch = useDispatch();
@@ -44,7 +39,6 @@ export default function ReportPrint() {
     (state) => state.mapView.printDetails.currentMapExtent
   );
 
-  console.log(current_measuring_categories, "current measuring cateogries");
   useEffect(() => {
     const map = new maplibregl.Map({
       container: mapContainerReport.current,
@@ -68,7 +62,6 @@ export default function ReportPrint() {
   }, []);
 
   useEffect(() => {
-    // console.log(currentMapExtent);
     if (map && currentMapExtent) {
       console.log(currentMapExtent);
       map.on("load", () => {
@@ -151,8 +144,6 @@ export default function ReportPrint() {
           .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
           .then((res) => {
             if (res.data.bounds) {
-              // const bounds = res.data.bounds;
-              // map.fitBounds(bounds);
               map.addSource(`${id}-source`, {
                 type: "raster",
                 tiles: [
@@ -170,8 +161,6 @@ export default function ReportPrint() {
                 minzoom: 0,
                 maxzoom: 24,
               });
-              // map.moveLayer(`${id}-layer`);
-              // dispatch(addSelectedTifId(tif_id));
             }
           })
           .catch(() => {});
@@ -218,7 +207,7 @@ export default function ReportPrint() {
         container
         justifyContent="center"
         // alignItems="center"
-        style={{ minHeight: "100vh" }} // Set the height of the container to fill the viewport
+        style={{ minHeight: "100vh" }}
       >
         <Grid item>
           <Box>
@@ -270,9 +259,7 @@ export default function ReportPrint() {
                   ref={mapContainerReport}
                   id="map"
                   className="map"
-                >
-                  {/* <Map id={String(currentProject)}></Map> */}
-                </div>
+                ></div>
               </Box>
 
               <Box sx={{ mt: 5 }}>
@@ -281,8 +268,6 @@ export default function ReportPrint() {
               <Box sx={{ ml: "40%" }}>
                 <PieChartComp />
               </Box>
-
-              <Box sx={{ mt: 10 }}>{/* <TableMeasurings /> */}</Box>
             </div>
           </Box>
         </Grid>

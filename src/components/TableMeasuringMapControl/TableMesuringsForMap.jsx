@@ -1,22 +1,13 @@
-import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import {
-  setTableSummationData,
-  setTableSummationDataColumns,
-} from "../../reducers/MapView";
+import { useSelector } from "react-redux";
 import RectangleIcon from "@mui/icons-material/Rectangle";
 import CircleIcon from "@mui/icons-material/Circle";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
-import { render } from "react-dom";
 
 const renderCell = (params) => {
   const { color, type_of_geometry } = params.value;
-  // console.log(params, "params");
   let icon;
-
   if (type_of_geometry === "Polygon") {
     icon = <RectangleIcon sx={{ color: color }} />;
   } else if (type_of_geometry === "Point") {
@@ -139,37 +130,12 @@ const rows = [
 ];
 
 export default function TableMeasuringsForMap({ width, checkboxSelection }) {
-  const dispatch = useDispatch();
   const showTableMeasurings = useSelector(
     (state) => state.mapView.showTableMeasurings
   );
 
-  // const currentClient = useSelector(
-  //   (state) => state.mapView.clientDetail.client_id
-  // );
-  // const currentProject = useSelector(
-  //   (state) => state.mapView.currentMapDetail.current_project_measuring_table
-  // );
-
   const rows = useSelector((state) => state.mapView.tableSummationData);
 
-  // useEffect(() => {
-  //   if (currentClient && currentProject) {
-  //     axios
-  //       .get(
-  //         `${
-  //           import.meta.env.VITE_API_DASHBOARD_URL
-  //         }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
-  //       )
-  //       .then((res) => {
-  //         if (showTableMeasurings && res.data.rows.length > 0) {
-  //           dispatch(setTableSummationData(res.data.rows));
-  //         } else {
-  //           dispatch(setTableSummationData([]));
-  //         }
-  //       });
-  //   }
-  // }, [showTableMeasurings, currentClient, currentProject, dispatch]);
   return (
     <>
       {showTableMeasurings && columns ? (

@@ -11,31 +11,12 @@ export default class TableMeasuringsForMapControl {
     this._container.className = "maplibregl-ctrl maplibregl-ctrl-group";
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        {/* <RasterLayer
-            map={this._map}
-            project_id={this._project_id}
-          ></RasterLayer> */}
-        {/* <RasterControlNew></RasterControlNew> */}
         <TableMeasuringsForMap width={820} />
       </Provider>
     );
 
     return this._container;
   }
-
-  //   updateProject(project_id) {
-  //     this._project_id = project_id;
-  //     ReactDOM.createRoot(this._container).render(
-  //       <Provider store={store}>
-  //         {/* <RasterLayer
-  //           map={this._map}
-  //           project_id={this._project_id}
-  //         ></RasterLayer> */}
-  //         {/* <RasterControlNew></RasterControlNew> */}
-  //         <TableMeasuringsForMap />
-  //       </Provider>
-  //     );
-  //   }
 
   onRemove() {
     if (this._container && this._container.parentNode) {

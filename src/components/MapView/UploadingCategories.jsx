@@ -20,7 +20,7 @@ import {
   setdistinct,
 } from "../../reducers/UploadMeasuring";
 import axios from "axios";
-import { setProgress, setshowProgressFormOpen } from "../../reducers/Property";
+// import { setProgress, setshowProgressFormOpen } from "../../reducers/Property";
 import {
   setshowToast,
   settoastType,
@@ -109,7 +109,6 @@ export default function UploadingCategories() {
   };
   return (
     <>
-      {/* {isFormOpen && ( */}
       <div
         style={{
           position: "absolute",
@@ -218,7 +217,6 @@ export default function UploadingCategories() {
           </Grid>
         </form>
       </div>
-      {/* )} */}
     </>
   );
 }

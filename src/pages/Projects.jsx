@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setprojects } from "../reducers/Project";
@@ -10,10 +10,9 @@ import MapView from "../components/MapView/MapView";
 import { Box } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import MapIcon from "@mui/icons-material/Map";
-import { setClientDetail, setshowMeasuringsPanel } from "../reducers/MapView";
+import { setClientDetail } from "../reducers/MapView";
 
 export default function Projects() {
-  const navigate = useNavigate();
   const { client_id, view } = useParams();
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.project.projects);
@@ -34,8 +33,6 @@ export default function Projects() {
       .then((res) => {
         dispatch(setprojects(res.data));
       });
-
-    // Gettings client_id , client_name and client logo for state
     axios
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${client_id}/`)
       .then((res) => {
@@ -49,9 +46,6 @@ export default function Projects() {
   }, [client_id, user_id, dispatch]);
 
   const handleViewInMap = () => {
-    // dispatch(setshowMeasuringsPanel(false));
-
-    // #use client id
     // navigate(`/projects/${client_id}/Map`);
     window.location.replace(`/projects/${client_id}/Map`);
   };
