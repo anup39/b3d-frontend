@@ -130,6 +130,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
+                zIndex: 99999,
               }}
             >
               <Typography
@@ -151,17 +152,21 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
               </Typography>
               <Box></Box>
 
-              <Tooltip title="Report">
-                <SummarizeIcon
-                  onClick={handleShowReport}
-                  sx={{
-                    "&:hover": { cursor: "pointer" },
-                    mt: 1,
-                    mr: 2,
-                    color: "#d61b60",
-                  }}
-                />
-              </Tooltip>
+              {/* <Tooltip title="Report"> */}
+              <SummarizeIcon
+                onClick={handleShowReport}
+                sx={{
+                  "&:hover": { cursor: "pointer" },
+                  mt: 1,
+                  color: "#d61b60",
+                }}
+              />
+              <span
+                style={{ marginTop: "10px", padding: 2, marginRight: "10px" }}
+              >
+                Report
+              </span>
+              {/* </Tooltip> */}
               <Tooltip title="Import">
                 <BackupIcon
                   onClick={handleImportShapefile}
@@ -210,6 +215,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                     cursor: "pointer",
                   },
                   color: pink[600],
+                  // position: "fixed",
                 }}
               />
             ) : (
@@ -221,6 +227,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                     cursor: "pointer",
                   },
                   color: pink[600],
+                  // position: "fixed",
                 }}
               />
             )}

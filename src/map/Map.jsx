@@ -16,6 +16,8 @@ import { setWKTGeometry } from "../reducers/DrawnGeometry";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import AddLayerAndSourceToMap from "../maputils/AddLayerAndSourceToMap";
+import { Button } from "@mui/material";
+import { setCurrentMapExtent, setDisplayType } from "../reducers/MapView";
 
 export default function Map({ id }) {
   const dispatch = useDispatch();
@@ -144,8 +146,8 @@ export default function Map({ id }) {
             .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
             .then((res) => {
               if (res.data.bounds) {
-                const bounds = res.data.bounds;
-                map.fitBounds(bounds);
+                // const bounds = res.data.bounds;
+                // map.fitBounds(bounds);
                 map.addSource(`${id}-source`, {
                   type: "raster",
                   tiles: [
@@ -247,7 +249,29 @@ export default function Map({ id }) {
         ref={mapContainer}
         id="map"
         className="map"
-      />
+      >
+        <Button
+          onClick={() => {
+            dispatch(setDisplayType("3D"));
+            const map = window.map_global;
+            const bounds = map.getBounds();
+            dispatch(setCurrentMapExtent(bounds.toArray()));
+          }}
+          sx={{
+            position: "absolute",
+            top: "12px",
+            right: "50px",
+            zIndex: 99999,
+            backgroundColor: "white",
+            "&:hover": {
+              backgroundColor: "white",
+            },
+            color: "#D51B60",
+          }}
+        >
+          3D
+        </Button>
+      </div>
     </>
   );
 }

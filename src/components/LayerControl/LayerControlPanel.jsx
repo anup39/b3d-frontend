@@ -638,9 +638,9 @@ export default function LayersControlPanel({ map, popUpRef }) {
   return (
     <div
       style={{
-        maxHeight: "50vh",
+        maxHeight: "80vh",
         minWidth: "19vw",
-        margin: "15px",
+        margin: "10px",
       }}
     >
       {!loading ? (

@@ -151,8 +151,8 @@ export default function ReportPrint() {
           .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
           .then((res) => {
             if (res.data.bounds) {
-              const bounds = res.data.bounds;
-              map.fitBounds(bounds);
+              // const bounds = res.data.bounds;
+              // map.fitBounds(bounds);
               map.addSource(`${id}-source`, {
                 type: "raster",
                 tiles: [

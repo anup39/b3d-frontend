@@ -22,6 +22,9 @@ export default function MapSection() {
   const dispatch = useDispatch();
   const { level } = useParams();
   const { id } = useParams();
+  const display_type = useSelector(
+    (state) => state.mapView.currentMapDetail.display_type
+  );
   // const searchRef = useRef(null);
 
   const showMapLoader = useSelector((state) => state.mapView.showMapLoader);
@@ -83,8 +86,9 @@ export default function MapSection() {
       <AppBar />
       <CategoryGeomForm />
       {showMapLoader ? <MapLoader /> : null}
-      <Map id={id} />
-      {/* <Map3D /> */}
+
+      {display_type && display_type === "2D" ? <Map id={id} /> : <Map3D />}
+
       {/* <ThreeScene /> */}
     </div>
   );

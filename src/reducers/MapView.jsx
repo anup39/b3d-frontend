@@ -13,6 +13,7 @@ const initialState = {
   showMapLoader: false,
   currentMapDetail: {
     // selected_projects_ids: [],
+    display_type: "2D",
     current_project_measuring_table: null,
     current_project_name: null,
     current_tif: null,
@@ -158,6 +159,9 @@ export const MapView = createSlice({
     setCurrentMapExtent: (state, action) => {
       state.printDetails.currentMapExtent = action.payload;
     },
+    setDisplayType: (state, action) => {
+      state.currentMapDetail.display_type = action.payload;
+    },
   },
 });
 
@@ -186,6 +190,7 @@ export const {
   setTableSummationData,
   setTableSummationDataColumns,
   setCurrentMapExtent,
+  setDisplayType,
 } = MapView.actions;
 
 export default MapView.reducer;
