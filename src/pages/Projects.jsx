@@ -1,16 +1,16 @@
-import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { setprojects } from "../reducers/Project";
-import axios from "axios";
-import AppBar from "../components/Common/AppBar";
-import ProjectCard from "../components/Project/ProjectCard";
-import ProjectForm from "../components/Project/ProjectForm";
-import MapView from "../components/MapView/MapView";
-import { Box } from "@mui/material";
-import Tooltip from "@mui/material/Tooltip";
-import MapIcon from "@mui/icons-material/Map";
-import { setClientDetail } from "../reducers/MapView";
+import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { setprojects } from '../reducers/Project';
+import axios from 'axios';
+import AppBar from '../components/Common/AppBar';
+import ProjectCard from '../components/Project/ProjectCard';
+import ProjectForm from '../components/Project/ProjectForm';
+import MapView from '../components/MapView/MapView';
+import { Box } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
+import MapIcon from '@mui/icons-material/Map';
+import { setClientDetail } from '../reducers/MapView';
 
 export default function Projects() {
   const { client_id, view } = useParams();
@@ -26,7 +26,7 @@ export default function Projects() {
         }/projects/?client=${client_id}`,
         {
           headers: {
-            Authorization: "Token " + localStorage.getItem("token"),
+            Authorization: 'Token ' + localStorage.getItem('token'),
           },
         }
       )
@@ -52,21 +52,21 @@ export default function Projects() {
 
   return (
     <>
-      {view === "List" ? (
+      {view === 'List' ? (
         <div>
           <AppBar />
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
+              display: 'flex',
+              alignItems: 'center',
               // justifyContent: "space-between",
             }}
           >
             <ProjectForm client_id={client_id} />
-            <Tooltip title="MapView">
+            <Tooltip title='MapView'>
               <MapIcon
                 onClick={handleViewInMap}
-                sx={{ "&:hover": { cursor: "pointer" }, mr: 1 }}
+                sx={{ '&:hover': { cursor: 'pointer' }, mr: 1 }}
               />
             </Tooltip>
           </Box>

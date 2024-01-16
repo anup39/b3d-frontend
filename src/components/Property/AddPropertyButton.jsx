@@ -1,7 +1,7 @@
-import Tooltip from "@mui/material/Tooltip";
-import { Button } from "@mui/material";
-import { setshowTifUpload } from "../../reducers/DisplaySettings";
-import { useDispatch } from "react-redux";
+import Tooltip from '@mui/material/Tooltip';
+import { Button } from '@mui/material';
+import { setshowTifUpload } from '../../reducers/DisplaySettings';
+import { useDispatch } from 'react-redux';
 
 export default function AddPropertyButton() {
   const dispatch = useDispatch();
@@ -11,12 +11,12 @@ export default function AddPropertyButton() {
 
   return (
     <>
-      <Tooltip title="Create Property">
+      <Tooltip title='Create Property'>
         <Button
           onClick={openForm}
-          sx={{ margin: "5px", position: "static" }}
-          variant="contained"
-          color="error"
+          sx={{ margin: '5px', position: 'static' }}
+          variant='contained'
+          color='error'
         >
           Add Property Map
         </Button>
