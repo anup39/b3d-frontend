@@ -21,7 +21,11 @@ export default function Routers() {
         <Route exact path="/projects/:client_id/:view" element={<Projects />} />
         <Route
           exact
+<<<<<<< HEAD
           path="/projects/:client_id/inspection/:id"
+=======
+          path='/projects/:client_id/inspection/:inspection_id'
+>>>>>>> 0555f176b6423b458f209a7a2b6c32338fdc46f0
           element={<Inspection />}
         />
         <Route

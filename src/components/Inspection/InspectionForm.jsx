@@ -6,6 +6,7 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 
 export default function InspectionForm() {
+  const [selectedDate, setSelectedDate] = React.useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const dispatch = useDispatch();
   const openForm = () => {
@@ -66,16 +67,27 @@ export default function InspectionForm() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  id="Date"
-                  name="Date"
-                  label="Date"
-                  variant="outlined"
-                  size="small"
-                  InputLabelProps={{ shrink: true }}
-                  required
-                  fullWidth
-                />
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label="Date"
+                    value={selectedDate}
+                    onChange={(newValue) => {
+                      setSelectedDate(newValue);
+                    }}
+                    renderInput={() => (
+                      <TextField
+                        id="Date"
+                        name="Date"
+                        label="Date"
+                        variant="outlined"
+                        size="small"
+                        InputLabelProps={{ shrink: true }}
+                        required
+                        fullWidth
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
               </Grid>
               <Grid item xs={12}>
                 <Button

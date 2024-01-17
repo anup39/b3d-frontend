@@ -1,15 +1,15 @@
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import PropTypes from "prop-types";
-import { useSelector, useDispatch } from "react-redux";
-import { changeDistinctMatchedCategory } from "../../reducers/UploadMeasuring";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { changeDistinctMatchedCategory } from '../../reducers/UploadMeasuring';
 
 export default function AutoCompleteMap({ category, layer }) {
   const dispatch = useDispatch();
   const [options, setOptions] = useState([]);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
 
   const client_id = useSelector(
     (state) => state.mapView.clientDetail.client_id
@@ -27,26 +27,26 @@ export default function AutoCompleteMap({ category, layer }) {
           setOptions(response.data);
         })
         .catch((error) => {
-          console.error("Error fetching data:", error);
+          console.error('Error fetching data:', error);
         });
     }
   }, [client_id, category]);
   return (
     <Autocomplete
       disablePortal
-      id="combo-box-demo"
+      id='combo-box-demo'
       options={options}
       getOptionLabel={(option) =>
-        option.full_name + " " + `(${option.type_of_geometry})`
+        option.full_name + ' ' + `(${option.type_of_geometry})`
       }
-      sx={{ width: 400, fontFamily: "Roboto", fontSize: "7px" }}
+      sx={{ width: 400, fontFamily: 'Roboto', fontSize: '7px' }}
       renderInput={(params) => (
         <TextField
           {...params}
-          sx={{ fontFamily: "Roboto", fontSize: "7px" }}
+          sx={{ fontFamily: 'Roboto', fontSize: '7px' }}
           // required
           label={category}
-          variant="outlined"
+          variant='outlined'
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}
         />
@@ -54,7 +54,7 @@ export default function AutoCompleteMap({ category, layer }) {
       onChange={(event, newValue) => {
         if (newValue) {
           setInputValue(
-            newValue.full_name + " " + `(${newValue.type_of_geometry})`
+            newValue.full_name + ' ' + `(${newValue.type_of_geometry})`
           );
           dispatch(
             changeDistinctMatchedCategory({
@@ -63,7 +63,7 @@ export default function AutoCompleteMap({ category, layer }) {
             })
           );
         } else {
-          setInputValue("");
+          setInputValue('');
           dispatch(
             changeDistinctMatchedCategory({
               id: layer.id,

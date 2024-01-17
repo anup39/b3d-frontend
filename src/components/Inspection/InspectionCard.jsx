@@ -47,7 +47,7 @@ export default function InspectionCard() {
             <Grid container spacing={2}>
               <Grid item>
                 <FolderIcon
-                  sx={{ width: 128, height: 128, color: "#65C9FF" }}
+                  sx={{ width: 128, height: 128, color: "#23C9C9" }}
                 />
               </Grid>
               <Grid item xs={12} sm container>
