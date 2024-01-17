@@ -21,7 +21,7 @@ export default function Routers() {
         <Route exact path='/projects/:client_id/:view' element={<Projects />} />
         <Route
           exact
-          path='/projects/:client_id/inspection/:id'
+          path='/projects/:client_id/inspection/:inspection_id'
           element={<Inspection />}
         />
         <Route
