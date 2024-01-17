@@ -1,32 +1,32 @@
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import FolderIcon from '@mui/icons-material/Folder';
-import Typography from '@mui/material/Typography';
-import ShareIcon from '@mui/icons-material/Share';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import { Tooltip } from '@mui/material';
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import FolderIcon from "@mui/icons-material/Folder";
+import Typography from "@mui/material/Typography";
+import ShareIcon from "@mui/icons-material/Share";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import AssessmentIcon from "@mui/icons-material/Assessment";
+import { Tooltip } from "@mui/material";
 const InpectionData = [
   {
     id: 1,
-    Name: 'Inspection 1',
-    TotalPhoto: '112',
-    InspectedPhoto: '21/112',
-    Date: '2024/1/3',
+    name: "Inspection 1",
+    totalPhoto: "112",
+    inspectedPhoto: "21/112",
+    date: "2024/1/3",
   },
   {
     id: 2,
-    Name: 'Inspection 2',
-    TotalPhoto: '116',
-    InspectedPhoto: '42/116',
-    Date: '2024/2/8',
+    name: "Inspection 2",
+    totalPhoto: "116",
+    inspectedPhoto: "42/116",
+    Date: "2024/2/8",
   },
   {
     id: 3,
-    Name: 'Inspection 3',
-    TotalPhoto: '189',
-    InspectedPhoto: '3/189',
-    Date: '2024/1/12',
+    name: "Inspection 3",
+    TotalPhoto: "189",
+    InspectedPhoto: "3/189",
+    Date: "2024/1/12",
   },
 ];
 
@@ -41,57 +41,57 @@ export default function InspectionCard() {
               margin: 1,
               flexGrow: 1,
               backgroundColor: (theme) =>
-                theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                theme.palette.mode === "dark" ? "#1A2027" : "#fff",
             }}
           >
             <Grid container spacing={2}>
               <Grid item>
                 <FolderIcon
-                  sx={{ width: 128, height: 128, color: '#65C9FF' }}
+                  sx={{ width: 128, height: 128, color: "#65C9FF" }}
                 />
               </Grid>
               <Grid item xs={12} sm container>
-                <Grid item xs container direction='column' spacing={2}>
+                <Grid item xs container direction="column" spacing={2}>
                   <Grid item xs>
                     <Typography
                       gutterBottom
-                      variant='subtitle1'
-                      component='div'
+                      variant="subtitle1"
+                      component="div"
                     >
-                      {item.Name}
+                      {item.name}
                     </Typography>
                   </Grid>
-                  <Grid item xs container direction='row' spacing={1}>
+                  <Grid item xs container direction="row" spacing={1}>
                     <Grid item>
-                      <Tooltip title='Share'>
-                        <ShareIcon sx={{ '&:hover': { cursor: 'pointer' } }} />
+                      <Tooltip title="Share">
+                        <ShareIcon sx={{ "&:hover": { cursor: "pointer" } }} />
                       </Tooltip>
                     </Grid>
                     <Grid item>
-                      <Tooltip title='Upload Photos'>
+                      <Tooltip title="Upload Photos">
                         <AddPhotoAlternateIcon
-                          sx={{ '&:hover': { cursor: 'pointer' } }}
+                          sx={{ "&:hover": { cursor: "pointer" } }}
                         />
                       </Tooltip>
                     </Grid>
                     <Grid item>
-                      <Tooltip title='Report'>
+                      <Tooltip title="Report">
                         <AssessmentIcon
-                          sx={{ '&:hover': { cursor: 'pointer' } }}
+                          sx={{ "&:hover": { cursor: "pointer" } }}
                         />
                       </Tooltip>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid item xs>
-                  <Typography variant='body2' color='text.secondary'>
-                    Total Photos: {item.TotalPhoto}
+                  <Typography variant="body2" color="text.secondary">
+                    Total Photos: {item.totalPhoto}
                   </Typography>
-                  <Typography variant='body2' color='text.secondary'>
-                    Inspected Photos: {item.InspectedPhoto}
+                  <Typography variant="body2" color="text.secondary">
+                    Inspected Photos: {item.inspectedPhoto}
                   </Typography>
-                  <Typography variant='body2' color='text.secondary'>
-                    Date: {item.Date}
+                  <Typography variant="body2" color="text.secondary">
+                    Date: {item.date}
                   </Typography>
                 </Grid>
               </Grid>
