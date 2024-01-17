@@ -1,12 +1,12 @@
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import PropTypes from "prop-types";
-import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import FolderIcon from "@mui/icons-material/Folder";
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import PropTypes from 'prop-types';
+import { Button } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import FolderIcon from '@mui/icons-material/Folder';
 // import {
 //   setdeleteId,
 //   setdeletePopupMessage,
@@ -23,9 +23,12 @@ export default function ProjectCard({
 }) {
   // const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { inspection_id } = useParams();
   const [properties, setproperties] = useState([]);
   const [users, setusers] = useState([]);
-
+  const openInspectionPage = () => {
+    navigate(`/projects/${client_id}/inspection/${inspection_id}`);
+  };
   // Remaining things to do :
   // const handleViewInMap = () => {
   //   navigate(`/map/project/${id}`);
@@ -69,32 +72,32 @@ export default function ProjectCard({
         // maxWidth: 500,
         flexGrow: 1,
         backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+          theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
     >
       <Grid container spacing={2}>
         <Grid item>
-          <FolderIcon sx={{ width: 128, height: 128, color: "#65C9FF" }} />
+          <FolderIcon sx={{ width: 128, height: 128, color: '#65C9FF' }} />
         </Grid>
         <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
+          <Grid item xs container direction='column' spacing={2}>
             <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" component="div">
+              <Typography gutterBottom variant='subtitle1' component='div'>
                 {name}
               </Typography>
-              <Typography variant="body2" gutterBottom>
+              <Typography variant='body2' gutterBottom>
                 {description}
               </Typography>
-              <Typography variant="body2" gutterBottom>
+              <Typography variant='body2' gutterBottom>
                 Client Name : {client_name}
               </Typography>
             </Grid>
-            <Grid item xs container direction="row" spacing={1}>
-              {/* <Grid item>
-                <button className="btn-main" onClick={handleViewInMap}>
-                  View In Map
+            <Grid item xs container direction='row' spacing={1}>
+              <Grid item>
+                <button className='btn-main' onClick={openInspectionPage}>
+                  Inspection
                 </button>
-              </Grid> */}
+              </Grid>
               {/* <Grid item>
                 <button
                   disabled
@@ -112,19 +115,19 @@ export default function ProjectCard({
             </Grid>
           </Grid>
           <Grid item xs>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant='body2' color='text.secondary'>
               Total Maps/Ortho: {properties.length}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant='body2' color='text.secondary'>
               Total Users: {users.length}
             </Typography>
           </Grid>
           <Grid item>
             <Button
-              sx={{ marginTop: "25px" }}
-              variant="contained"
-              color="success"
-              id="orthoButton"
+              sx={{ marginTop: '25px' }}
+              variant='contained'
+              color='success'
+              id='orthoButton'
               onClick={() => {
                 navigate(`/properties/${client_id}/${id}`);
               }}
