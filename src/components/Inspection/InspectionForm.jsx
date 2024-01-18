@@ -1,16 +1,21 @@
 import { Button, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setshowTifUpload } from "../../reducers/DisplaySettings";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import PropTypes from "prop-types";
 
-export default function InspectionForm() {
-  const [selectedDate, setSelectedDate] = React.useState(null);
+export default function InspectionForm({ client_id, project_id }) {
+  // const dispatch = useDispatch();
+  const [selectedDate, setSelectedDate] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const dispatch = useDispatch();
+
+  console.log(client_id, project_id);
+
   const openForm = () => {
-    dispatch(setshowTifUpload(true));
     setIsFormOpen(true);
   };
   const closeForm = () => {
@@ -67,7 +72,7 @@ export default function InspectionForm() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="Date"
                     value={selectedDate}
@@ -117,3 +122,7 @@ export default function InspectionForm() {
     </>
   );
 }
+InspectionForm.propTypes = {
+  client_id: PropTypes.string,
+  project_id: PropTypes.string,
+};
