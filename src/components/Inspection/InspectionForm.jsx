@@ -1,19 +1,21 @@
-import { Button, Tooltip } from '@mui/material';
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { DatePicker } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { setshowTifUpload } from '../../reducers/DisplaySettings';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
+import { Button, Tooltip } from "@mui/material";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import PropTypes from "prop-types";
 
-export default function InspectionForm() {
-  const [selectedDate, setSelectedDate] = React.useState(null);
+export default function InspectionForm({ client_id, project_id }) {
+  // const dispatch = useDispatch();
+  const [selectedDate, setSelectedDate] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const dispatch = useDispatch();
+
+  console.log(client_id, project_id);
+
   const openForm = () => {
-    dispatch(setshowTifUpload(true));
     setIsFormOpen(true);
   };
   const closeForm = () => {
@@ -21,12 +23,12 @@ export default function InspectionForm() {
   };
   return (
     <>
-      <Tooltip title='Add Inspection'>
+      <Tooltip title="Add Inspection">
         <Button
           onClick={openForm}
-          sx={{ margin: '5px' }}
-          variant='contained'
-          color='error'
+          sx={{ margin: "5px" }}
+          variant="contained"
+          color="error"
         >
           Add Inspection
         </Button>
@@ -34,56 +36,56 @@ export default function InspectionForm() {
       {isFormOpen && (
         <div
           style={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            background: 'rgba(0, 0, 0, 0.5)',
+            width: "100%",
+            height: "100%",
+            background: "rgba(0, 0, 0, 0.5)",
             zIndex: 9999,
           }}
         >
           <form
             // onSubmit={handleCreateProject}
             style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '300px',
-              background: '#fff',
-              padding: '20px',
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "300px",
+              background: "#fff",
+              padding: "20px",
               zIndex: 10000,
             }}
           >
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  id='name'
-                  name='name'
-                  label='Name'
-                  variant='outlined'
-                  size='small'
+                  id="name"
+                  name="name"
+                  label="Name"
+                  variant="outlined"
+                  size="small"
                   InputLabelProps={{ shrink: true }}
                   required
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    label='Date'
+                    label="Date"
                     value={selectedDate}
                     onChange={(newValue) => {
                       setSelectedDate(newValue);
                     }}
                     renderInput={() => (
                       <TextField
-                        id='Date'
-                        name='Date'
-                        label='Date'
-                        variant='outlined'
-                        size='small'
+                        id="Date"
+                        name="Date"
+                        label="Date"
+                        variant="outlined"
+                        size="small"
                         InputLabelProps={{ shrink: true }}
                         required
                         fullWidth
@@ -94,9 +96,9 @@ export default function InspectionForm() {
               </Grid>
               <Grid item xs={12}>
                 <Button
-                  type='submit'
+                  type="submit"
                   fullWidth
-                  variant='contained'
+                  variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                 >
                   Add Inspection
@@ -105,9 +107,9 @@ export default function InspectionForm() {
               <Grid item xs={12}>
                 <Button
                   onClick={closeForm}
-                  variant='contained'
-                  color='error'
-                  size='small'
+                  variant="contained"
+                  color="error"
+                  size="small"
                   fullWidth
                 >
                   Close
@@ -120,3 +122,7 @@ export default function InspectionForm() {
     </>
   );
 }
+InspectionForm.propTypes = {
+  client_id: PropTypes.string,
+  project_id: PropTypes.string,
+};
