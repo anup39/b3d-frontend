@@ -1,14 +1,36 @@
-import React, { useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 
 const Dropzone = () => {
   const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
+    console.log(acceptedFiles, "acceptedFiles");
+
+    acceptedFiles?.forEach((file) => {
+      const reader = new FileReader();
+
+      reader.onabort = () => console.log("file reading was aborted");
+      reader.onerror = () => console.log("file reading has failed");
+
+      reader.onload = () => {
+        const arrayBuffer = reader.result;
+        console.log(arrayBuffer, "reader.result");
+      };
+      reader.readAsArrayBuffer(file);
+    });
+    // Todo : Things left to do
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div {...getRootProps()}>
+    <div
+      style={{
+        height: "40px",
+        backgroundColor: "#027FFE",
+        cursor: "pointer",
+        borderRadius: "5px",
+      }}
+      {...getRootProps()}
+    >
       <input {...getInputProps()} />
       {isDragActive ? (
         <p>Drop the files here ...</p>
