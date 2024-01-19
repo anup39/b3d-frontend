@@ -42,7 +42,6 @@ export default function InspectionForm({ client_id, project_id }) {
     console.log(data, "final paylaod");
 
     // #Todo
-
     setTimeout(() => {
       setLoading(false);
       // API call post request to send the data remaining
