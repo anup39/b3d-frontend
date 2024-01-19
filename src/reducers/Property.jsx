@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   showProgressFormOpen: false,
@@ -9,7 +9,7 @@ const initialState = {
 };
 
 export const Property = createSlice({
-  name: "Property",
+  name: 'Property',
   initialState,
   reducers: {
     setproperties: (state, action) => {
