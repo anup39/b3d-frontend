@@ -1,39 +1,56 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   inspection_id: null,
-  name: "",
-  date: "",
+  name: '',
+  date: '',
   type_of_inspection: [
     {
       id: 1,
-      standard_type: "Roof",
-      sub_type: "Tile",
-      type: "Broken",
-      full_type: "Roof | Tile | Broken",
+      standard_type: 'Roof',
+      sub_type: 'Tile',
+      type: 'Broken',
+      full_type: 'Roof | Tile | Broken',
       checked: true,
     },
     {
       id: 2,
-      standard_type: "Roof",
-      sub_type: "Tile",
-      type: "Replace",
-      full_type: "Roof | Tile | Replace",
+      standard_type: 'Roof',
+      sub_type: 'Tile',
+      type: 'Replace',
+      full_type: 'Roof | Tile | Replace',
       checked: true,
     },
     {
       id: 3,
-      standard_type: "Garden",
-      sub_type: "Marble",
-      type: "Broken",
-      full_type: "Garden | Marble | Broken",
+      standard_type: 'Garden',
+      sub_type: 'Marble',
+      type: 'Broken',
+      full_type: 'Garden | Marble | Broken',
       checked: true,
     },
   ],
-  files: [],
+  files: [
+    {
+      id: 1,
+      filename: 'photo1.png',
+      File: null,
+      Lat: null,
+      Long: null,
+      checked: false,
+    },
+    {
+      id: 2,
+      filename: 'photo2.png',
+      File: null,
+      Lat: null,
+      Long: null,
+      checked: false,
+    },
+  ],
 };
 
 export const InspectionUpload = createSlice({
-  name: "InspectionUpload",
+  name: 'InspectionUpload',
   initialState,
   reducers: {
     setshowUploadImagesFormOpen: (state, action) => {
@@ -66,6 +83,18 @@ export const InspectionUpload = createSlice({
         return item;
       });
     },
+    setFilesChecked: (state, action) => {
+      const { id, checked } = action.payload;
+      state.files = state.files.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            checked: checked,
+          };
+        }
+        return item;
+      });
+    },
   },
 });
 
@@ -78,5 +107,6 @@ export const {
   setTypeOfInspection,
   setFiles,
   setTypeofInspectionChecked,
+  setFilesChecked,
 } = InspectionUpload.actions;
 export default InspectionUpload.reducer;
