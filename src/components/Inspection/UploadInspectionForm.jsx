@@ -1,16 +1,20 @@
-import { useState } from "react";
-import { Box, Checkbox, Paper, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid";
-import { useDispatch, useSelector } from "react-redux";
-import Dropzone from "./Dropzone";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import { setTypeofInspectionChecked } from "../../reducers/InspectionUpload";
-import PropTypes from "prop-types";
-import dayjs from "dayjs";
+import { useState } from 'react';
+import { Box, Button, Checkbox, Paper, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import { useDispatch, useSelector } from 'react-redux';
+import Dropzone from './Dropzone';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import {
+  setFilesChecked,
+  setTypeofInspectionChecked,
+} from '../../reducers/InspectionUpload';
+import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
+import { setshowUploadInspection } from '../../reducers/DisplaySettings';
 
 const UploadInspectionForm = ({ client_id, project_id }) => {
   const dispatch = useDispatch();
@@ -18,19 +22,32 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
   const inspection_id = useSelector(
     (state) => state.inspectionUpload.inspection_id
   );
+  console.log('🚀 ~ UploadInspectionForm ~ inspection_id:', inspection_id);
   const inspection = useSelector(
     (state) => state.inspection.inspectionData
   ).filter((inspection) => inspection.id === inspection_id)[0];
+  console.log('🚀 ~ UploadInspectionForm ~ inspection:', inspection);
 
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
   );
+  console.log(
+    '🚀 ~ UploadInspectionForm ~ type_of_inspection:',
+    type_of_inspection
+  );
+
+  const files = useSelector((state) => state.inspectionUpload.files);
+  console.log('🚀 ~ UploadInspectionForm ~ files:', files);
 
   const handleChangeType = (event, type) => {
     const id = type.id;
     dispatch(
       setTypeofInspectionChecked({ id: id, checked: event.target.checked })
     );
+  };
+  const handleChangePhoto = (event, file) => {
+    const id = file.id;
+    dispatch(setFilesChecked({ id: id, checked: event.target.checked }));
   };
 
   const handleUploadPhotos = (event) => {
@@ -42,59 +59,62 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
     <>
       <div
         style={{
-          position: "fixed",
+          position: 'fixed',
           top: 0,
           left: 0,
-          width: "100%",
-          height: "100%",
-          background: "rgba(0, 0, 0, 0.5)",
-          // zIndex: 9999,
+          width: '100%',
+          height: '100vh',
+          background: 'rgba(0, 0, 0, 0.5)',
+          overflow: 'auto',
+          zIndex: 9999,
         }}
       >
         <form
           onSubmit={handleUploadPhotos}
           style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "800px",
-            background: "#fff",
-            padding: "20px",
+            width: '100%',
+            maxWidth: '800px',
+            background: '#fff',
+            padding: '20px',
             zIndex: 10000,
+            margin: '80px auto',
           }}
         >
-          <Grid container>
-            <Grid item xs={9}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={9}>
               <Grid container spacing={2}>
-                <Grid item container xs={5} spacing={2}>
-                  <Grid item xs={12}>
-                    <Typography
-                      gutterBottom
-                      variant="subtitle1"
-                      component="div"
-                    >
-                      Name: {inspection?.name}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["DatePicker"]}>
-                        <DatePicker
-                          defaultValue={dayjs(inspection?.date)}
-                          onChange={(newValue) => setSelectedDate(newValue)}
-                          label="Pick a date "
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </Grid>
-                  <Grid item xs={12}>
+                <Grid item xs={12} md={5}>
+                  <Grid container spacing={2}>
+                    <Grid item>
+                      <Typography
+                        gutterBottom
+                        variant='subtitle1'
+                        component='div'
+                      >
+                        Name: {inspection?.name}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['DatePicker']}>
+                          <DatePicker
+                            defaultValue={dayjs(inspection?.date)}
+                            onChange={(newValue) => setSelectedDate(newValue)}
+                            label='Pick a date '
+                          />
+                        </DemoContainer>
+                      </LocalizationProvider>
+                    </Grid>
                     <Paper
                       sx={{
                         flexGrow: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
                         backgroundColor: (theme) =>
-                          theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-                        height: "300px",
+                          theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                        width: '100%',
+                        height: '200px',
+                        margin: '10px',
                       }}
                     >
                       <Grid container>
@@ -104,100 +124,134 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                               marginLeft: 2,
                               marginTop: 1,
                             }}
-                            variant="body2"
+                            variant='body2'
                             gutterBottom
                           >
                             Type of Inspection
                           </Typography>
                         </Grid>
-                        <Grid container>
-                          <Grid item>
-                            {type_of_inspection.map((type) => (
-                              <FormControlLabel
-                                sx={{ marginLeft: 1 }}
-                                key={type.id}
-                                slotProps={{
-                                  typography: {
-                                    fontSize: 12,
-                                    color: "#6A6D70",
-                                    fontWeight: 900,
-                                  },
-                                }}
-                                label={type?.full_type}
-                                control={
-                                  <Checkbox
-                                    size="small"
-                                    checked={type?.checked}
-                                    // indeterminate={type?.indeterminate}
-                                    onChange={(event) =>
-                                      handleChangeType(event, type)
-                                    }
-                                  />
-                                }
-                              />
-                            ))}
-                          </Grid>
+                        <Grid item>
+                          {type_of_inspection.map((type) => (
+                            <FormControlLabel
+                              sx={{ marginLeft: 1 }}
+                              key={type.id}
+                              slotProps={{
+                                typography: {
+                                  fontSize: 12,
+                                  color: '#6A6D70',
+                                  fontWeight: 900,
+                                },
+                              }}
+                              label={type?.full_type}
+                              control={
+                                <Checkbox
+                                  size='small'
+                                  checked={type?.checked}
+                                  onChange={(event) =>
+                                    handleChangeType(event, type)
+                                  }
+                                />
+                              }
+                            />
+                          ))}
                         </Grid>
                       </Grid>
                     </Paper>
                   </Grid>
                 </Grid>
-                <Grid item container xs={7}>
-                  <Box>Map placement </Box>
+                <Grid item xs={12} md={7}>
+                  <Box>
+                    <Box sx={{ height: '300px' }}>Map placement </Box>
+                  </Box>
                 </Grid>
               </Grid>
             </Grid>
             <Paper
               sx={{
                 flexGrow: 1,
+                display: 'flex',
+                flexDirection: 'column',
                 backgroundColor: (theme) =>
-                  theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+                  theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                height: '350px',
               }}
             >
-              <Box>
-                <Box sx={{ height: "400px" }}>
-                  <Typography sx={{ marginLeft: 1 }}>Files</Typography>
-                </Box>
+              <Box
+                sx={{
+                  width: '200px',
+                  overflow: 'scroll',
+                  flex: '1',
+                }}
+              >
+                <Typography
+                  sx={{
+                    marginLeft: 2,
+                    marginTop: 2,
+                  }}
+                  variant='body2'
+                  gutterBottom
+                >
+                  Total Photos: {inspection?.totalPhoto}
+                </Typography>
+                <Grid container>
+                  <Grid item>
+                    {files.map((file) => (
+                      <FormControlLabel
+                        sx={{ marginLeft: 1 }}
+                        key={file.id}
+                        slotProps={{
+                          typography: {
+                            fontSize: 12,
+                            color: '#6A6D70',
+                            fontWeight: 900,
+                          },
+                        }}
+                        label={file?.filename}
+                        control={
+                          <Checkbox
+                            size='small'
+                            checked={file?.checked}
+                            onChange={(event) => handleChangePhoto(event, file)}
+                          />
+                        }
+                      />
+                    ))}
+                  </Grid>
+                </Grid>
+              </Box>
+              <Box sx={{ flexShrink: 0 }}>
                 <Dropzone />
               </Box>
             </Paper>
           </Grid>
-
-          {/*
-            <Grid item spacing={3}>
-              <Grid item>1</Grid>
-              <Box
-                sx={{
-                  width: '250px',
-                  height: '250px',
-                }}
-              >
-                2
-              </Box>
-              <Grid item>3</Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                type='submit'
-                fullWidth
-                variant={loading ? 'outlined' : 'contained'}
-                sx={{ mt: 3, mb: 2 }}
-              >
-                {loading ? null : 'Add Inspection'}
-                {loading ? <CircularProgress /> : null}
-              </Button>
-            </Grid> */}
-          {/* <Grid item xs={12}>
-              <Button
-                onClick={closeForm}
-                variant='contained'
-                color='error'
-                size='small'
-                fullWidth
-              >
-                Close
-              </Button>
-            </Grid> */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: { xs: 'flex-start', md: 'center' },
+              alignItems: 'center',
+              marginTop: { xs: '10px', md: '10px' },
+            }}
+          >
+            <Button
+              // onClick={openForm}
+              sx={{ margin: '5px' }}
+              variant='contained'
+              color='primary'
+            >
+              Upload Photos
+            </Button>
+            <Button
+              onClick={() => {
+                dispatch(setshowUploadInspection(false));
+              }}
+              sx={{ margin: '5px' }}
+              variant='contained'
+              color='primary'
+            >
+              Cancel
+            </Button>
+          </Box>
+          {/* ... (existing code) */}
         </form>
       </div>
     </>
