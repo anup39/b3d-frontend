@@ -32,7 +32,11 @@ const initialState = {
   files: [
     {
       id: 1,
+<<<<<<< HEAD
       filename: "photo1.png",
+=======
+      filename: '',
+>>>>>>> 1f16d9be31a4e0e20bf82f5da009923637be54cf
       File: null,
       Lat: null,
       Long: null,
@@ -40,7 +44,11 @@ const initialState = {
     },
     {
       id: 2,
+<<<<<<< HEAD
       filename: "photo2.png",
+=======
+      filename: '',
+>>>>>>> 1f16d9be31a4e0e20bf82f5da009923637be54cf
       File: null,
       Lat: null,
       Long: null,
@@ -95,6 +103,19 @@ export const InspectionUpload = createSlice({
         return item;
       });
     },
+    setFile: (state, action) => {
+      const { id, file } = action.payload;
+      state.files = state.files.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            filename: file.name,
+            File: file,
+          };
+        }
+        return item;
+      });
+    },
   },
 });
 
@@ -106,6 +127,7 @@ export const {
   setDate,
   setTypeOfInspection,
   setFiles,
+  setFile,
   setTypeofInspectionChecked,
   setFilesChecked,
 } = InspectionUpload.actions;

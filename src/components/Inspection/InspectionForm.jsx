@@ -21,7 +21,6 @@ export default function InspectionForm({ client_id, project_id }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
-  console.log('🚀 ~ InspectionForm ~ user_id:', user_id);
 
   const openForm = () => {
     setIsFormOpen(true);
