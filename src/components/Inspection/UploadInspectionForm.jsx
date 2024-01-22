@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Box, Button, Checkbox, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,8 +17,10 @@ import {
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { setshowUploadInspection } from "../../reducers/DisplaySettings";
+import maplibregl, { FullscreenControl } from "maplibre-gl";
 
 const UploadInspectionForm = ({ client_id, project_id }) => {
+  const mapContainerPhotos = useRef();
   const dispatch = useDispatch();
   const [selectedDate, setSelectedDate] = useState(null);
   const inspection_id = useSelector(
@@ -59,6 +61,24 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
   useEffect(() => {
     return () => {
       dispatch(resetFile([]));
+    };
+  }, []);
+
+  useEffect(() => {
+    const map = new maplibregl.Map({
+      container: mapContainerPhotos.current,
+      style: `https://api.maptiler.com/maps/satellite/style.json?key=${
+        import.meta.env.VITE_MAPTILER_TOKEN
+      }`,
+      center: [103.8574, 2.2739],
+      zoom: 10,
+      attributionControl: false,
+    });
+    map.addControl(new FullscreenControl());
+    // window.mapshapefile = map;
+
+    return () => {
+      map.remove();
     };
   }, []);
   return (
@@ -167,7 +187,13 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                 </Grid>
                 <Grid item xs={12} md={7}>
                   <Box>
-                    <Box sx={{ height: "300px" }}>Map placement </Box>
+                    {/* <Box sx={{ height: "300px" }}>Map placement </Box> */}
+                    <div
+                      style={{ width: "100%", height: "350px" }}
+                      ref={mapContainerPhotos}
+                      // id="mapproperty"
+                      // className="mapproperty"
+                    ></div>
                   </Box>
                 </Grid>
               </Grid>
