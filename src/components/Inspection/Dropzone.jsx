@@ -1,11 +1,18 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { setFile, setFiles } from '../../reducers/InspectionUpload';
+import { useDispatch, useSelector } from 'react-redux';
 
-const Dropzone = () => {
+const Dropzone = ({ file }) => {
+  const { id } = file;
+  console.log('🚀 ~ Dropzone ~ id:', id);
+  const dispatch = useDispatch();
   const onDrop = useCallback((acceptedFiles) => {
     console.log(acceptedFiles, 'acceptedFiles');
 
     acceptedFiles?.forEach((file) => {
+      console.log('🚀 ~ acceptedFiles?.forEach ~ file:', file);
+
       const reader = new FileReader();
 
       reader.onabort = () => console.log('file reading was aborted');
@@ -14,9 +21,11 @@ const Dropzone = () => {
       reader.onload = () => {
         const arrayBuffer = reader.result;
         console.log(arrayBuffer, 'reader.result');
+        dispatch(setFile({ id, file }));
       };
       reader.readAsArrayBuffer(file);
     });
+
     // Todo : Things left to do
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
