@@ -9,6 +9,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {
+  setFiles,
   setFilesChecked,
   setTypeofInspectionChecked,
 } from '../../reducers/InspectionUpload';
@@ -22,18 +23,12 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
   const inspection_id = useSelector(
     (state) => state.inspectionUpload.inspection_id
   );
-  console.log('🚀 ~ UploadInspectionForm ~ inspection_id:', inspection_id);
   const inspection = useSelector(
     (state) => state.inspection.inspectionData
   ).filter((inspection) => inspection.id === inspection_id)[0];
-  console.log('🚀 ~ UploadInspectionForm ~ inspection:', inspection);
 
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
-  );
-  console.log(
-    '🚀 ~ UploadInspectionForm ~ type_of_inspection:',
-    type_of_inspection
   );
 
   const files = useSelector((state) => state.inspectionUpload.files);
@@ -203,10 +198,10 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                           typography: {
                             fontSize: 12,
                             color: '#6A6D70',
-                            fontWeight: 900,
+                            fontWeight: 600,
                           },
                         }}
-                        label={file?.filename}
+                        label={file?.fileName}
                         control={
                           <Checkbox
                             size='small'
@@ -220,7 +215,9 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                 </Grid>
               </Box>
               <Box sx={{ flexShrink: 0 }}>
-                <Dropzone />
+                {files.map((file) => (
+                  <Dropzone key={file?.id} file={file} />
+                ))}
               </Box>
             </Paper>
           </Grid>
@@ -232,12 +229,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
               marginTop: { xs: '10px', md: '10px' },
             }}
           >
-            <Button
-              // onClick={openForm}
-              sx={{ margin: '5px' }}
-              variant='contained'
-              color='primary'
-            >
+            <Button sx={{ margin: '5px' }} variant='contained' color='primary'>
               Upload Photos
             </Button>
             <Button

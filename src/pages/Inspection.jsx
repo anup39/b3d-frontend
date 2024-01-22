@@ -43,7 +43,6 @@ const Inspection = () => {
   const showUploadInspection = useSelector(
     (state) => state.displaySettings.showUploadInspection
   );
-  console.log('🚀 ~ Inspection ~ showUploadInspection:', showUploadInspection);
 
   // When the component is mounted the data is set the store
   useEffect(() => {
