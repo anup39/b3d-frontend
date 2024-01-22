@@ -1,56 +1,39 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   inspection_id: null,
-  name: '',
-  date: '',
+  name: "",
+  date: "",
   type_of_inspection: [
     {
       id: 1,
-      standard_type: 'Roof',
-      sub_type: 'Tile',
-      type: 'Broken',
-      full_type: 'Roof | Tile | Broken',
+      standard_type: "Roof",
+      sub_type: "Tile",
+      type: "Broken",
+      full_type: "Roof | Tile | Broken",
       checked: true,
     },
     {
       id: 2,
-      standard_type: 'Roof',
-      sub_type: 'Tile',
-      type: 'Replace',
-      full_type: 'Roof | Tile | Replace',
+      standard_type: "Roof",
+      sub_type: "Tile",
+      type: "Replace",
+      full_type: "Roof | Tile | Replace",
       checked: true,
     },
     {
       id: 3,
-      standard_type: 'Garden',
-      sub_type: 'Marble',
-      type: 'Broken',
-      full_type: 'Garden | Marble | Broken',
+      standard_type: "Garden",
+      sub_type: "Marble",
+      type: "Broken",
+      full_type: "Garden | Marble | Broken",
       checked: true,
     },
   ],
-  files: [
-    {
-      id: 1,
-      filename: '',
-      File: null,
-      Lat: null,
-      Long: null,
-      checked: false,
-    },
-    {
-      id: 2,
-      filename: '',
-      File: null,
-      Lat: null,
-      Long: null,
-      checked: false,
-    },
-  ],
+  files: [],
 };
 
 export const InspectionUpload = createSlice({
-  name: 'InspectionUpload',
+  name: "InspectionUpload",
   initialState,
   reducers: {
     setshowUploadImagesFormOpen: (state, action) => {
@@ -85,8 +68,8 @@ export const InspectionUpload = createSlice({
     },
     setFilesChecked: (state, action) => {
       const { id, checked } = action.payload;
-      state.files = state.files.map((item) => {
-        if (item.id === id) {
+      state.files = state.files.map((item, index) => {
+        if (index === id) {
           return {
             ...item,
             checked: checked,
@@ -96,17 +79,15 @@ export const InspectionUpload = createSlice({
       });
     },
     setFile: (state, action) => {
-      const { id, file } = action.payload;
-      state.files = state.files.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            filename: file.name,
-            File: file,
-          };
-        }
-        return item;
-      });
+      const { id, name, file } = action.payload;
+      state.files = [
+        ...state.files,
+        {
+          name: name,
+          file: file,
+          checked: false,
+        },
+      ];
     },
   },
 });
