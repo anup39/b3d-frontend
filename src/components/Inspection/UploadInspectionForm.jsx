@@ -1,20 +1,20 @@
-import { useState } from 'react';
-import { Box, Button, Checkbox, Paper, Typography } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import { useDispatch, useSelector } from 'react-redux';
-import Dropzone from './Dropzone';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import { useState } from "react";
+import { Box, Button, Checkbox, Paper, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import { useDispatch, useSelector } from "react-redux";
+import Dropzone from "./Dropzone";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import {
   setFilesChecked,
   setTypeofInspectionChecked,
-} from '../../reducers/InspectionUpload';
-import PropTypes from 'prop-types';
-import dayjs from 'dayjs';
-import { setshowUploadInspection } from '../../reducers/DisplaySettings';
+} from "../../reducers/InspectionUpload";
+import PropTypes from "prop-types";
+import dayjs from "dayjs";
+import { setshowUploadInspection } from "../../reducers/DisplaySettings";
 
 const UploadInspectionForm = ({ client_id, project_id }) => {
   const dispatch = useDispatch();
@@ -22,22 +22,22 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
   const inspection_id = useSelector(
     (state) => state.inspectionUpload.inspection_id
   );
-  console.log('🚀 ~ UploadInspectionForm ~ inspection_id:', inspection_id);
+  console.log("🚀 ~ UploadInspectionForm ~ inspection_id:", inspection_id);
   const inspection = useSelector(
     (state) => state.inspection.inspectionData
   ).filter((inspection) => inspection.id === inspection_id)[0];
-  console.log('🚀 ~ UploadInspectionForm ~ inspection:', inspection);
+  console.log("🚀 ~ UploadInspectionForm ~ inspection:", inspection);
 
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
   );
   console.log(
-    '🚀 ~ UploadInspectionForm ~ type_of_inspection:',
+    "🚀 ~ UploadInspectionForm ~ type_of_inspection:",
     type_of_inspection
   );
 
   const files = useSelector((state) => state.inspectionUpload.files);
-  console.log('🚀 ~ UploadInspectionForm ~ files:', files);
+  console.log("🚀 ~ UploadInspectionForm ~ files:", files);
 
   const handleChangeType = (event, type) => {
     const id = type.id;
@@ -59,25 +59,25 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
     <>
       <div
         style={{
-          position: 'fixed',
+          position: "fixed",
           top: 0,
           left: 0,
-          width: '100%',
-          height: '100vh',
-          background: 'rgba(0, 0, 0, 0.5)',
-          overflow: 'auto',
-          zIndex: 9999,
+          width: "100%",
+          height: "100vh",
+          background: "rgba(0, 0, 0, 0.5)",
+          overflow: "auto",
+          // zIndex: 9999,
         }}
       >
         <form
           onSubmit={handleUploadPhotos}
           style={{
-            width: '100%',
-            maxWidth: '800px',
-            background: '#fff',
-            padding: '20px',
+            width: "100%",
+            maxWidth: "800px",
+            background: "#fff",
+            padding: "20px",
             zIndex: 10000,
-            margin: '80px auto',
+            margin: "80px auto",
           }}
         >
           <Grid container spacing={2}>
@@ -88,19 +88,19 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                     <Grid item>
                       <Typography
                         gutterBottom
-                        variant='subtitle1'
-                        component='div'
+                        variant="subtitle1"
+                        component="div"
                       >
                         Name: {inspection?.name}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['DatePicker']}>
+                        <DemoContainer components={["DatePicker"]}>
                           <DatePicker
                             defaultValue={dayjs(inspection?.date)}
                             onChange={(newValue) => setSelectedDate(newValue)}
-                            label='Pick a date '
+                            label="Pick a date "
                           />
                         </DemoContainer>
                       </LocalizationProvider>
@@ -108,13 +108,13 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                     <Paper
                       sx={{
                         flexGrow: 1,
-                        display: 'flex',
-                        flexDirection: 'column',
+                        display: "flex",
+                        flexDirection: "column",
                         backgroundColor: (theme) =>
-                          theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                        width: '100%',
-                        height: '200px',
-                        margin: '10px',
+                          theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+                        width: "100%",
+                        height: "200px",
+                        margin: "10px",
                       }}
                     >
                       <Grid container>
@@ -124,7 +124,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                               marginLeft: 2,
                               marginTop: 1,
                             }}
-                            variant='body2'
+                            variant="body2"
                             gutterBottom
                           >
                             Type of Inspection
@@ -138,14 +138,14 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                               slotProps={{
                                 typography: {
                                   fontSize: 12,
-                                  color: '#6A6D70',
+                                  color: "#6A6D70",
                                   fontWeight: 900,
                                 },
                               }}
                               label={type?.full_type}
                               control={
                                 <Checkbox
-                                  size='small'
+                                  size="small"
                                   checked={type?.checked}
                                   onChange={(event) =>
                                     handleChangeType(event, type)
@@ -161,7 +161,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                 </Grid>
                 <Grid item xs={12} md={7}>
                   <Box>
-                    <Box sx={{ height: '300px' }}>Map placement </Box>
+                    <Box sx={{ height: "300px" }}>Map placement </Box>
                   </Box>
                 </Grid>
               </Grid>
@@ -169,18 +169,18 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
             <Paper
               sx={{
                 flexGrow: 1,
-                display: 'flex',
-                flexDirection: 'column',
+                display: "flex",
+                flexDirection: "column",
                 backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                height: '350px',
+                  theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+                height: "350px",
               }}
             >
               <Box
                 sx={{
-                  width: '200px',
-                  overflow: 'scroll',
-                  flex: '1',
+                  width: "200px",
+                  overflow: "scroll",
+                  flex: "1",
                 }}
               >
                 <Typography
@@ -188,7 +188,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                     marginLeft: 2,
                     marginTop: 2,
                   }}
-                  variant='body2'
+                  variant="body2"
                   gutterBottom
                 >
                   Total Photos: {inspection?.totalPhoto}
@@ -202,14 +202,14 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                         slotProps={{
                           typography: {
                             fontSize: 12,
-                            color: '#6A6D70',
+                            color: "#6A6D70",
                             fontWeight: 900,
                           },
                         }}
                         label={file?.filename}
                         control={
                           <Checkbox
-                            size='small'
+                            size="small"
                             checked={file?.checked}
                             onChange={(event) => handleChangePhoto(event, file)}
                           />
@@ -226,17 +226,17 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
           </Grid>
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: { xs: 'flex-start', md: 'center' },
-              alignItems: 'center',
-              marginTop: { xs: '10px', md: '10px' },
+              display: "flex",
+              justifyContent: { xs: "flex-start", md: "center" },
+              alignItems: "center",
+              marginTop: { xs: "10px", md: "10px" },
             }}
           >
             <Button
               // onClick={openForm}
-              sx={{ margin: '5px' }}
-              variant='contained'
-              color='primary'
+              sx={{ margin: "5px" }}
+              variant="contained"
+              color="primary"
             >
               Upload Photos
             </Button>
@@ -244,9 +244,9 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
               onClick={() => {
                 dispatch(setshowUploadInspection(false));
               }}
-              sx={{ margin: '5px' }}
-              variant='contained'
-              color='primary'
+              sx={{ margin: "5px" }}
+              variant="contained"
+              color="primary"
             >
               Cancel
             </Button>
