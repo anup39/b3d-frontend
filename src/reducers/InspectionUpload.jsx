@@ -44,11 +44,7 @@ const initialState = {
     },
     {
       id: 2,
-<<<<<<< HEAD
-      filename: "photo2.png",
-=======
       filename: '',
->>>>>>> 1f16d9be31a4e0e20bf82f5da009923637be54cf
       File: null,
       Lat: null,
       Long: null,
