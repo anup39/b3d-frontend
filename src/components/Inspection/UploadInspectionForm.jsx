@@ -30,9 +30,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
   );
-
   const files = useSelector((state) => state.inspectionUpload.files);
-  console.log("🚀 ~ UploadInspectionForm ~ files:", files);
 
   const handleChangeType = (event, type) => {
     const id = type.id;
@@ -40,9 +38,15 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
       setTypeofInspectionChecked({ id: id, checked: event.target.checked })
     );
   };
-  const handleChangePhoto = (event, file) => {
-    const id = file.id;
+  const handleChangePhoto = (event, file, index) => {
+    const id = index;
+    console.log(id, file.name);
     dispatch(setFilesChecked({ id: id, checked: event.target.checked }));
+    if (event.target.checked) {
+      // plot in the map logic
+    } else {
+      // remove from the map
+    }
   };
 
   const handleUploadPhotos = (event) => {
@@ -186,43 +190,42 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                   variant="body2"
                   gutterBottom
                 >
-                  Total Photos: {inspection?.totalPhoto}
+                  Total Photos: {files.length}
                 </Typography>
                 <Grid container>
                   <Grid item>
-                    {files.map((file) => (
-                      <FormControlLabel
-                        sx={{ marginLeft: 1 }}
-                        key={file.id}
-                        slotProps={{
-                          typography: {
-                            fontSize: 12,
-<<<<<<< HEAD
-                            color: "#6A6D70",
-                            fontWeight: 900,
-=======
-                            color: '#6A6D70',
-                            fontWeight: 600,
->>>>>>> 1f16d9be31a4e0e20bf82f5da009923637be54cf
-                          },
-                        }}
-                        label={file?.fileName}
-                        control={
-                          <Checkbox
-                            size="small"
-                            checked={file?.checked}
-                            onChange={(event) => handleChangePhoto(event, file)}
-                          />
-                        }
-                      />
-                    ))}
+                    {files.length > 0 &&
+                      files.map((file, index) => (
+                        <FormControlLabel
+                          sx={{ marginLeft: 1 }}
+                          key={index}
+                          slotProps={{
+                            typography: {
+                              fontSize: 12,
+                              color: "#6A6D70",
+                              fontWeight: 600,
+                            },
+                          }}
+                          label={file?.name}
+                          control={
+                            <Checkbox
+                              size="small"
+                              checked={file?.checked}
+                              onChange={(event) =>
+                                handleChangePhoto(event, file, index)
+                              }
+                            />
+                          }
+                        />
+                      ))}
                   </Grid>
+                  {files.length == 0 && files ? (
+                    <p style={{ marginLeft: "15px" }}>No photos yet</p>
+                  ) : null}
                 </Grid>
               </Box>
               <Box sx={{ flexShrink: 0 }}>
-                {files.map((file) => (
-                  <Dropzone key={file?.id} file={file} />
-                ))}
+                <Dropzone />
               </Box>
             </Paper>
           </Grid>
@@ -234,16 +237,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
               marginTop: { xs: "10px", md: "10px" },
             }}
           >
-<<<<<<< HEAD
-            <Button
-              // onClick={openForm}
-              sx={{ margin: "5px" }}
-              variant="contained"
-              color="primary"
-            >
-=======
-            <Button sx={{ margin: '5px' }} variant='contained' color='primary'>
->>>>>>> 1f16d9be31a4e0e20bf82f5da009923637be54cf
+            <Button sx={{ margin: "5px" }} variant="contained" color="primary">
               Upload Photos
             </Button>
             <Button

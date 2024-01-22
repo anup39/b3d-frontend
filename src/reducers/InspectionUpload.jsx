@@ -29,28 +29,7 @@ const initialState = {
       checked: true,
     },
   ],
-  files: [
-    {
-      id: 1,
-<<<<<<< HEAD
-      filename: "photo1.png",
-=======
-      filename: '',
->>>>>>> 1f16d9be31a4e0e20bf82f5da009923637be54cf
-      File: null,
-      Lat: null,
-      Long: null,
-      checked: false,
-    },
-    {
-      id: 2,
-      filename: '',
-      File: null,
-      Lat: null,
-      Long: null,
-      checked: false,
-    },
-  ],
+  files: [],
 };
 
 export const InspectionUpload = createSlice({
@@ -89,8 +68,8 @@ export const InspectionUpload = createSlice({
     },
     setFilesChecked: (state, action) => {
       const { id, checked } = action.payload;
-      state.files = state.files.map((item) => {
-        if (item.id === id) {
+      state.files = state.files.map((item, index) => {
+        if (index === id) {
           return {
             ...item,
             checked: checked,
@@ -100,17 +79,15 @@ export const InspectionUpload = createSlice({
       });
     },
     setFile: (state, action) => {
-      const { id, file } = action.payload;
-      state.files = state.files.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            filename: file.name,
-            File: file,
-          };
-        }
-        return item;
-      });
+      const { id, name, file } = action.payload;
+      state.files = [
+        ...state.files,
+        {
+          name: name,
+          file: file,
+          checked: false,
+        },
+      ];
     },
   },
 });
