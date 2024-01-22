@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Checkbox, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import {
+  resetFile,
   setFiles,
   setFilesChecked,
   setTypeofInspectionChecked,
@@ -54,6 +55,12 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
     console.log(selectedDate);
     console.log(client_id, project_id);
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetFile([]));
+    };
+  }, []);
   return (
     <>
       <div

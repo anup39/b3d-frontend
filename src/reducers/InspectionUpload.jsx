@@ -89,6 +89,9 @@ export const InspectionUpload = createSlice({
         },
       ];
     },
+    resetFile: (state, action) => {
+      state.files = action.payload;
+    },
   },
 });
 
@@ -103,5 +106,6 @@ export const {
   setFile,
   setTypeofInspectionChecked,
   setFilesChecked,
+  resetFile,
 } = InspectionUpload.actions;
 export default InspectionUpload.reducer;
