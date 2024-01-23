@@ -94,14 +94,14 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
           overflow: 'auto',
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'start',
           // zIndex: 9999,
         }}
       >
         <form
           onSubmit={handleUploadPhotos}
           style={{
-            width: '100%',
+            width: '80%',
             maxWidth: '800px',
             background: '#fff',
             padding: '20px',
