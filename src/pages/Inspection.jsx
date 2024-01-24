@@ -77,7 +77,12 @@ const Inspection = () => {
       <div>
         {inspection_data && inspection_data.length > 0
           ? inspection_data.map((inspection) => (
-              <InspectionCard key={inspection?.id} inspection={inspection} />
+              <InspectionCard
+                key={inspection?.id}
+                inspection={inspection}
+                client_id={client_id}
+                project_id={project_id}
+              />
             ))
           : null}
       </div>

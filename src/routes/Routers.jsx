@@ -10,6 +10,7 @@ import ManageStyles from "../pages/ManageStyles";
 import Clients from "../pages/Clients";
 import ReportPrint from "../components/MapView/ReportPrint";
 import Inspection from "../pages/Inspection";
+import InspectionFlow from "../pages/InspectionFlow";
 
 export default function Routers() {
   return (
@@ -23,6 +24,11 @@ export default function Routers() {
           exact
           path="/projects/:client_id/inspections/:project_id"
           element={<Inspection />}
+        />
+        <Route
+          exact
+          path="/projects/:client_id/inspections/:project_id/inspection/:inspection_id"
+          element={<InspectionFlow />}
         />
         <Route
           exact
