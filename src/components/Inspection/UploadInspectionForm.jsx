@@ -163,7 +163,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                             Type of Inspection
                           </Typography>
                           <Grid container>
-                            <Grid item container sx={12}>
+                            <Grid item xs={12}>
                               {type_of_inspection.map((type) => (
                                 <FormControlLabel
                                   sx={{ marginLeft: 1 }}
@@ -237,7 +237,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                   Total Photos: {files.length}
                 </Typography>
                 <Grid container>
-                  <Grid item sx={{ display: 'flex', flexDirection: 'column' }}>
+                  <Grid item sx={{ display: "flex", flexDirection: "column" }}>
                     {files.length > 0 &&
                       files.map((file, index) => (
                         <FormControlLabel
