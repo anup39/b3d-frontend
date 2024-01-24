@@ -14,6 +14,7 @@ import MapView from "./reducers/MapView";
 import UploadMeasuring from "./reducers/UploadMeasuring";
 import InspectionUpload from "./reducers/InspectionUpload";
 import Inspection from "./reducers/Inspection";
+import InspectionFlow from "./reducers/InspectionFlow";
 
 export const store = configureStore({
   reducer: {
@@ -32,5 +33,6 @@ export const store = configureStore({
     uploadMeasuring: UploadMeasuring,
     inspection: Inspection,
     inspectionUpload: InspectionUpload,
+    inspectionFlow: InspectionFlow,
   },
 });
