@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import Appbar from '../components/Common/AppBar';
-import { Box, Button, Grid, Typography } from '@mui/material';
-import { Autocomplete, TextField } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { Tooltip } from 'recharts';
-import DoneIcon from '@mui/icons-material/Done';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import CropSquareIcon from '@mui/icons-material/CropSquare';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import Appbar from "../components/Common/AppBar";
+import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
+import { useSelector } from "react-redux";
+import DoneIcon from "@mui/icons-material/Done";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import CropSquareIcon from "@mui/icons-material/CropSquare";
+import { Tooltip } from "@mui/material";
 
 const InspectionFlow = () => {
   const type_of_inspection = useSelector(
@@ -18,19 +18,27 @@ const InspectionFlow = () => {
   return (
     <>
       <Appbar />
-      <Grid container spacing={2} sx={{ margin: '4px' }}>
+      <Grid container spacing={2} sx={{ margin: "4px" }}>
         <Grid item>
           <Grid item>
             <Typography>Lounkær Roof Inspection</Typography>
             <Grid>
-              <Tooltip title='Draw'>
-                <CropSquareIcon sx={{ '&:hover': { cursor: 'pointer' } }} />
+              <Tooltip title="Draw">
+                <IconButton>
+                  <CropSquareIcon sx={{ "&:hover": { cursor: "pointer" } }} />
+                </IconButton>
               </Tooltip>
-              <Tooltip title='Done'>
-                <DoneIcon sx={{ '&:hover': { cursor: 'pointer' } }} />
+              <Tooltip title="Done">
+                <IconButton>
+                  <DoneIcon sx={{ "&:hover": { cursor: "pointer" } }} />
+                </IconButton>
               </Tooltip>
-              <Tooltip title='Delete'>
-                <DeleteOutlineIcon sx={{ '&:hover': { cursor: 'pointer' } }} />
+              <Tooltip title="Delete">
+                <IconButton>
+                  <DeleteOutlineIcon
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                  />
+                </IconButton>
               </Tooltip>
             </Grid>
           </Grid>
@@ -46,15 +54,15 @@ const InspectionFlow = () => {
           <Grid
             item
             container
-            sx={{ display: 'flex', flexDirection: 'column' }}
+            sx={{ display: "flex", flexDirection: "column" }}
           >
             <Typography
               sx={{
                 marginLeft: 1,
                 marginTop: 2,
-                color: '#ED1C24',
+                color: "#ED1C24",
               }}
-              variant='body2'
+              variant="body2"
               gutterBottom
             >
               Filter
@@ -69,8 +77,8 @@ const InspectionFlow = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label='Standard Type'
-                  variant='outlined'
+                  label="Standard Type"
+                  variant="outlined"
                 />
               )}
             />
@@ -82,7 +90,7 @@ const InspectionFlow = () => {
               getOptionLabel={(option) => option}
               disableCloseOnSelect
               renderInput={(params) => (
-                <TextField {...params} label='Sub Type' variant='outlined' />
+                <TextField {...params} label="Sub Type" variant="outlined" />
               )}
             />
 
@@ -93,12 +101,12 @@ const InspectionFlow = () => {
               getOptionLabel={(option) => option}
               disableCloseOnSelect
               renderInput={(params) => (
-                <TextField {...params} label='Type' variant='outlined' />
+                <TextField {...params} label="Type" variant="outlined" />
               )}
             />
           </Grid>
-          <Grid item sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Button sx={{ margin: '4px' }} variant='contained' color='error'>
+          <Grid item sx={{ display: "flex", justifyContent: "center" }}>
+            <Button sx={{ margin: "4px" }} variant="contained" color="error">
               Report
             </Button>
           </Grid>
