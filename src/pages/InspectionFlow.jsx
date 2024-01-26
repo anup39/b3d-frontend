@@ -1,20 +1,47 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Appbar from '../components/Common/AppBar';
-import { Box, Button, Grid, IconButton, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  ImageList,
+  ImageListItem,
+  Typography,
+} from '@mui/material';
 import { Autocomplete, TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
 import DoneIcon from '@mui/icons-material/Done';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
 import { Tooltip } from '@mui/material';
+import img1 from '/Inspire2/DJI_0015_6_7.jpg';
+import img2 from '/Inspire2/DJI_0024_5_6.jpg';
+import img3 from '/Inspire2/DJI_0042_3_4.jpg';
+import img4 from '/Inspire2/DJI_0066_7_8.jpg';
+import Slider from 'react-slick';
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+const itemData = [
+  { img: img1, title: 'Image 1' },
+  { img: img2, title: 'Image 2' },
+  { img: img3, title: 'Image 3' },
+  { img: img4, title: 'Image 4' },
+];
 
 const InspectionFlow = () => {
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
   );
   const { client_id, project_id, inspection_id } = useParams();
-
+  const sliderSettings = {
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    infinite: false,
+  };
   return (
     <>
       <Appbar />
@@ -24,17 +51,23 @@ const InspectionFlow = () => {
           <Grid>
             <Tooltip title='Draw'>
               <IconButton>
-                <CropSquareIcon sx={{ '&:hover': { cursor: 'pointer' } }} />
+                <CropSquareIcon
+                  sx={{ '&:hover': { cursor: 'pointer' }, color: 'red' }}
+                />
               </IconButton>
             </Tooltip>
             <Tooltip title='Done'>
               <IconButton>
-                <DoneIcon sx={{ '&:hover': { cursor: 'pointer' } }} />
+                <DoneIcon
+                  sx={{ '&:hover': { cursor: 'pointer' }, color: 'red' }}
+                />
               </IconButton>
             </Tooltip>
             <Tooltip title='Delete'>
               <IconButton>
-                <DeleteOutlineIcon sx={{ '&:hover': { cursor: 'pointer' } }} />
+                <DeleteOutlineIcon
+                  sx={{ '&:hover': { cursor: 'pointer' }, color: 'red' }}
+                />
               </IconButton>
             </Tooltip>
           </Grid>
@@ -42,31 +75,56 @@ const InspectionFlow = () => {
         <Grid container spacing={2} sx={{ margin: '4px' }}>
           <Grid item xs={12} md={8}>
             {/* Large Image */}
-            <Box sx={{ height: '70%', backgroundColor: 'lightblue' }}>
+            <Box sx={{ height: '70%', backgroundColor: 'pink' }}>
               Large Image
-            </Box>{' '}
+            </Box>
             <Box
-              sx={{ backgroundColor: 'pink', height: '30%', marginTop: '8px' }}
+              sx={{
+                backgroundColor: '#F1F7FF',
+                height: '30%',
+                marginTop: '8px',
+                display: 'flex',
+                alignItems: 'center',
+              }}
             >
-              small Image
+              <Grid item>
+                <Box>
+                  <ImageList
+                    sx={{ width: '100%', height: '30%', display: 'flex' }}
+                    gap={4}
+                    cols={itemData.length}
+                    rowHeight={164}
+                  >
+                    {itemData.map((item) => (
+                      <Box key={item.img} sx={{ margin: '4px' }}>
+                        <ImageListItem key={item.img}>
+                          <img
+                            srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                            src={`${item.img}?w=248&fit=crop&auto=format`}
+                            alt={item.title}
+                            loading='lazy'
+                          />
+                        </ImageListItem>
+                      </Box>
+                    ))}
+                  </ImageList>
+                </Box>
+              </Grid>
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
             <Grid container direction='column' spacing={2}>
               <Grid item>
-                {/* image 3 */}
-                <Box sx={{ height: '150px', backgroundColor: 'lightgreen' }}>
+                <Box sx={{ height: '200px', backgroundColor: 'lightgreen' }}>
                   image 3
                 </Box>
               </Grid>
               <Grid item>
-                {/* image 4 */}
-                <Box sx={{ height: '150px', backgroundColor: 'lightcoral' }}>
+                <Box sx={{ height: '200px', backgroundColor: 'lightcoral' }}>
                   image 4
                 </Box>
               </Grid>
               <Grid item>
-                {/* Filter Section */}
                 <Box
                   sx={{
                     height: '100%',
@@ -77,7 +135,7 @@ const InspectionFlow = () => {
                   <Typography
                     sx={{
                       marginLeft: 1,
-                      marginTop: 2,
+                      marginTop: 1,
                       color: '#ED1C24',
                     }}
                     variant='body2'
