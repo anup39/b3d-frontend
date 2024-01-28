@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Appbar from '../components/Common/AppBar';
 import {
@@ -33,6 +33,11 @@ const itemData = [
 ];
 
 const InspectionFlow = () => {
+  const [selectedImage, setSelectedImage] = useState(itemData[0].img);
+
+  const handleSmallImageClick = (img) => {
+    setSelectedImage(img);
+  };
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
   );
@@ -74,9 +79,12 @@ const InspectionFlow = () => {
         </Grid>
         <Grid container spacing={2} sx={{ margin: '4px' }}>
           <Grid item xs={12} md={8}>
-            {/* Large Image */}
             <Box sx={{ height: '70%', backgroundColor: 'pink' }}>
-              Large Image
+              <img
+                src={selectedImage}
+                alt={selectedImage}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
             </Box>
             <Box
               sx={{
@@ -96,7 +104,11 @@ const InspectionFlow = () => {
                     rowHeight={164}
                   >
                     {itemData.map((item) => (
-                      <Box key={item.img} sx={{ margin: '4px' }}>
+                      <Box
+                        key={item.img}
+                        sx={{ margin: '4px', cursor: 'pointer' }}
+                        onClick={() => handleSmallImageClick(item.img)}
+                      >
                         <ImageListItem key={item.img}>
                           <img
                             srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
