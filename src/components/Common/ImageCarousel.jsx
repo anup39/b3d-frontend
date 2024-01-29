@@ -7,7 +7,7 @@ import './ImageCarousel.css';
 export default class ImageCarousel extends Component {
   state = {
     display: true,
-    width: 820,
+    width: 800,
   };
 
   render() {

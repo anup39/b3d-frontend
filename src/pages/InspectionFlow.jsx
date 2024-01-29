@@ -37,7 +37,7 @@ const InspectionFlow = () => {
       <Appbar />
       <div
         style={{
-          margin: '20px',
+          margin: '10px',
         }}
       >
         <Grid container spacing={2}>
@@ -85,7 +85,13 @@ const InspectionFlow = () => {
           </Grid>
           <Grid container spacing={2} sx={{ margin: '4px' }}>
             <Grid item xs={12} md={8}>
-              <Box sx={{ height: '70%', backgroundColor: 'pink' }}>
+              <Box
+                sx={{
+                  height: '70%',
+                  width: { xs: '95%', md: '100%', lg: '100%' },
+                  backgroundColor: 'pink',
+                }}
+              >
                 <img
                   src={selectedImage}
                   alt={selectedImage}
@@ -94,6 +100,7 @@ const InspectionFlow = () => {
               </Box>
               <Box
                 sx={{
+                  width: { xs: '95%', md: '100%', lg: '100%' },
                   backgroundColor: '#F1F7FF',
                   height: '25%',
                   marginTop: '8px',
@@ -146,7 +153,7 @@ const InspectionFlow = () => {
                     sx={{
                       height: '200px',
                       backgroundColor: 'lightcoral',
-                      width: '100%',
+                      width: { xs: '90%', md: '100%', lg: '100%' },
                     }}
                   >
                     <img
@@ -164,6 +171,7 @@ const InspectionFlow = () => {
                 <Grid item>
                   <Box
                     sx={{
+                      width: { xs: '95%', md: '100%', lg: '100%' },
                       height: '100%',
                       display: 'flex',
                       flexDirection: 'column',
@@ -180,7 +188,6 @@ const InspectionFlow = () => {
                     >
                       Filter
                     </Typography>
-
                     <Autocomplete
                       sx={{ m: 0.5, width: '100%' }}
                       multiple
