@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import Appbar from '../components/Common/AppBar';
 import { Box, Button, Grid, IconButton, Typography } from '@mui/material';
 import { Autocomplete, TextField } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DoneIcon from '@mui/icons-material/Done';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
@@ -13,6 +13,8 @@ import img2 from '/Inspire2/DJI_0024_5_6.jpg';
 import img3 from '/Inspire2/DJI_0042_3_4.jpg';
 import img4 from '/Inspire2/DJI_0066_7_8.jpg';
 import ImageCarousel from '../components/Common/ImageCarousel';
+import { setshowInspectionType } from '../reducers/DisplaySettings';
+import InspectionTypeForm from '../components/InspectionFlow/InspectionTypeForm';
 
 const itemData = [
   { img: img1, title: 'Image 1' },
@@ -22,6 +24,7 @@ const itemData = [
 ];
 
 const InspectionFlow = () => {
+  const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState(itemData[0].img);
 
   const handleSmallImageClick = (img) => {
@@ -30,14 +33,20 @@ const InspectionFlow = () => {
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
   );
-  const { client_id, project_id, inspection_id } = useParams();
-
+  const handleEvent = (event) => {
+    console.log(event);
+    console.log('Hello');
+    dispatch(setshowInspectionType(true));
+  };
+  const showInspectionType = useSelector(
+    (state) => state.displaySettings.showInspectionType
+  );
   return (
     <>
       <Appbar />
       <div
         style={{
-          margin: '10px',
+          margin: '20px',
         }}
       >
         <Grid container spacing={2}>
@@ -48,7 +57,13 @@ const InspectionFlow = () => {
               alignItems: 'center',
             }}
           >
-            <Grid item>
+            <Box
+              container
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
               <Typography
                 sx={{
                   whiteSpace: 'nowrap',
@@ -56,8 +71,6 @@ const InspectionFlow = () => {
               >
                 Lounkær Roof Inspection
               </Typography>
-            </Grid>
-            <Grid item>
               <Grid sx={{ whiteSpace: 'nowrap' }}>
                 <Tooltip title='Draw'>
                   <IconButton>
@@ -67,7 +80,7 @@ const InspectionFlow = () => {
                   </IconButton>
                 </Tooltip>
                 <Tooltip title='Done'>
-                  <IconButton>
+                  <IconButton onClick={(event) => handleEvent(event)}>
                     <DoneIcon
                       sx={{ '&:hover': { cursor: 'pointer' }, color: 'red' }}
                     />
@@ -81,8 +94,13 @@ const InspectionFlow = () => {
                   </IconButton>
                 </Tooltip>
               </Grid>
-            </Grid>
+            </Box>
           </Grid>
+          {showInspectionType ? (
+            <Box>
+              <InspectionTypeForm />
+            </Box>
+          ) : null}
           <Grid container spacing={2} sx={{ margin: '4px' }}>
             <Grid item xs={12} md={8}>
               <Box
@@ -101,18 +119,25 @@ const InspectionFlow = () => {
               <Box
                 sx={{
                   width: { xs: '95%', md: '100%', lg: '100%' },
-                  backgroundColor: '#F1F7FF',
-                  height: '25%',
-                  marginTop: '8px',
                   display: 'flex',
-                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#F1F7FF',
+                  height: { xs: '30%', md: '25%', lg: '25%' },
+                  marginTop: '8px',
+                  paddingTop: { sx: '0', md: '15px', large: '15px' },
                   overflow: 'hidden',
                 }}
               >
                 <Grid
                   item
                   sx={{
-                    transform: 'scale(0.9)',
+                    transform: {
+                      xs: `scale(0.4)`,
+                      sm: `scale(0.75)`,
+                      md: `scale(0.75)`,
+                      lg: `scale(0.9)`,
+                      xl: `scale(1.0)`,
+                    },
                   }}
                 >
                   <Box>
