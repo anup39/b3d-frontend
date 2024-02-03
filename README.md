@@ -13,7 +13,7 @@ for production.
 cp .env.example .env.local
 ```
 
-### Add your Mapbox access token  in ``.env.local``
+### Add your Mapbox access token  in ```.env.local```
 
 `NEXT_PUBLIC_MAPBOX_TOKEN=YOUR_MAPBOX_ACCESS_TOKEN`
 
