@@ -142,4 +142,9 @@ docker-compose up -d --build --force-recreate web
 docker-compose restart web
 ```
 
-Note: We are not exposing the database to the host machine, so you can't connect to the database using a database client like pgAdmin or DBeaver. If you want to connect to the database, you can use the terminal access to the db service.
+Note: We are not exposing the database to the host machine, so you can't connect to the database using a database client like pgAdmin or DBeaver. If you want to connect to the database, you can use the terminal access to the db service. If you want to expose the database to the host machine, you can add the following line to the db service in the docker-compose.yml file.
+
+```yaml
+ports:
+  - "5432:5432"
+```
