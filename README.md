@@ -6,6 +6,7 @@ is optimized for _development_ - we don't yet have a configuration
 for production.
 
 
+
 #### Prepare
 
 ```bash
@@ -141,4 +142,4 @@ docker-compose up -d --build --force-recreate web
 docker-compose restart web
 ```
 
-
+Note: We are not exposing the database to the host machine, so you can't connect to the database using a database client like pgAdmin or DBeaver. If you want to connect to the database, you can use the terminal access to the db service.
