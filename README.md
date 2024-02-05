@@ -1,150 +1,63 @@
-### Development with Docker
+# B3D - Drone Processing Platform
 
-Placemark was originally developed without using Docker, so the Docker
-configuration is a little new. Note that this docker configuration
-is optimized for _development_ - we don't yet have a configuration
-for production.
+B3d is a powerful and feature-rich drone processing platform designed to streamline and enhance the processing of drone data. With a focus on providing robust features and cost-effective pricing, B3d stands out as a complete solution for drone data management and visualization.
 
+## Getting Started
 
+To get started with B3d, follow the steps below:
 
-#### Prepare
+1. **Clone the Repository:**
+   ```bash
+   git clone git@github.com:anup39/b3d-frontend.git
+   ```
 
-```bash
-cp .env.example .env.local
-```
+`cd b3d`
 
-### Add your Mapbox access token  in 
-``` .env.local ```
+``npm install`
 
-`NEXT_PUBLIC_MAPBOX_TOKEN=YOUR_MAPBOX_ACCESS_TOKEN`
+Configure Backend APIs:
 
-#### Build
+Create a .env file in the root directory.
 
-```bash
-docker-compose build
-```
+Configure the backend APIs in the .env file.
 
-#### Run
+Run the Development Server:
 
-```bash
-docker-compose up
-```
-#### Run in detached(background) mode 
+`npm run dev`
 
-```bash
-docker-compose up -d
-```
+This command will start the development server, and you can access B3d at http://localhost:5173 in your web browser.
 
+## Features
 
-- Open [localhost:3000](http://localhost:3000/) for the server.
-- Open [localhost:5555](http://localhost:5555/) for the Prisma database browser.
+    Data Processing
+    Upload raw GCP images for ground control points.
+    Process GCP images into GeoTIFF, point clouds, and meshes.
+    Independent upload of GeoTIFF files with support for files larger than 15GB.
 
+## Visualization
 
-#### Checking the logs
+    Complete 2D and 3D visualization of drone data.
+    Segment and digitize vector layer points, lines, and polygons from drone images.
+    Support for third-party uploads, such as Shapefile and GeoJSON, with up to 10GB of data in a single upload.
 
-```bash
-docker-compose logs -f
-```
+## Deep Learning
 
-#### Checking logs for a web service
+    Automated segmentation of classes from GeoTIFF using deep learning methods.
 
-```bash
-docker-compose logs -f web 
-```
-or
-```bash
-docker logs placemark-web
-```
+## GPU Rendering
 
-#### Checking logs for a db service
+    GPU-based rendering for vectors and various file formats using WebGL2.
+    Reporting
+    High-quality report generation with a single click.
+    Layer Support
+    Support for WMTS and XYZ layers defined by OGC with super high speed.
+    User Management
+    Complete user management and role-based access control.
+    Collaboration
+    Real-time collaboration features similar to Google Docs.
 
-```bash
-docker-compose logs -f db 
-```
-or
-```bash
-docker logs placemark-db
-```
+## Notes
 
-#### Checking logs for a prisma studio service
-
-```bash
-docker-compose logs -f prisma 
-```
-or
-```bash
-docker logs placemark-studio
-```
-
-#### Stopping all the services
-
-```bash 
-docker-compose down
-```
-
-#### Stopping a specific service
-
-```bash 
-docker-compose stop prisma
-```
-
-#### checking the database
-
-```bash 
-docker-compose exec db psql -U postgres -d placemark
-``` 
-
-#### Running prisma studio
-
-```bash 
-docker-compose exec prisma npx prisma studio
-```
-
-#### Running prisma migrate
-
-```bash
-docker-compose exec prisma npx prisma migrate dev --name init
-```
-
-#### Running prisma generate
-
-```bash
-docker-compose exec prisma npx prisma generate
-```
-
-#### Running prisma introspect
-
-```bash
-docker-compose exec prisma npx prisma db pull
-```
-
-
-#### Terminal access to the web service
-
-```bash
-docker-compose exec web bash
-```
-
-#### Terminal access to the db service
-
-```bash 
-docker-compose exec db bash
-```
-
-#### Rebuilding and recreage the web service
-
-```bash
-docker-compose up -d --build --force-recreate web
-```
-#### Resarting the web service
-
-```bash
-docker-compose restart web
-```
-
-Note: We are not exposing the database to the host machine, so you can't connect to the database using a database client like pgAdmin or DBeaver. If you want to connect to the database, you can use the terminal access to the db service. If you want to expose the database to the host machine, you can add the following line to the db service in the docker-compose.yml file.
-
-```yaml
-ports:
-  - "5432:5432"
-```
+    Ensure that backend API configurations in the .env file are accurate.
+    For optimal performance, it is recommended to run B3d on a system with a capable GPU.
+    Feel free to explore the B3d platform and leverage its rich set of features for efficient drone data processing and visualization. If you encounter any issues or have questions, please refer to the documentation or reach out to our support team. Happy droning!
