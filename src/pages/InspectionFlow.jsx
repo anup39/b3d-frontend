@@ -60,8 +60,9 @@ const InspectionFlow = () => {
             <Box
               container
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
+                display: 'flex',
+                alignItems: 'center',
+                gap: { xs: '30px', sm: '80px', md: '100px', lg: '180px' },
               }}
             >
               <Typography
@@ -95,6 +96,18 @@ const InspectionFlow = () => {
                 </Tooltip>
               </Grid>
             </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Grid
+              item
+              sx={{
+                display: { xs: 'block', sm: 'block', md: 'none', lg: 'none' },
+              }}
+            >
+              <Button variant='contained' color='error'>
+                Report
+              </Button>
+            </Grid>
           </Grid>
           {showInspectionType ? (
             <Box>
@@ -261,8 +274,24 @@ const InspectionFlow = () => {
                     />
                   </Box>
                 </Grid>
+<<<<<<< HEAD
                 <Grid item sx={{ display: "flex", justifyContent: "center" }}>
                   <Button variant="contained" color="error">
+=======
+                <Grid
+                  item
+                  sx={{
+                    display: {
+                      xs: 'none',
+                      sm: 'none',
+                      md: 'flex',
+                      lg: 'flex',
+                    },
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Button variant='contained' color='error'>
+>>>>>>> 2601cea72b71e3c7346b00a788318d28f350ce95
                     Report
                   </Button>
                 </Grid>
