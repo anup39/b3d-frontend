@@ -1,26 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   showToast: false,
-  toastMessage: 'Error creating user',
-  toastType: 'error',
+  toastMessage: "Error creating user",
+  toastType: "error",
   showDeletePopup: false,
-  deletePopupMessage: 'Are you sure you want to delete?',
+  deletePopupMessage: "Are you sure you want to delete?",
   deleteId: null,
-  deleteTarget: '',
-  showGeomFormPopup: 'none',
+  deleteTarget: "",
+  showGeomFormPopup: "none",
   showErrorPopup: false,
-  errorMessage: 'There is an error',
+  errorMessage: "There is an error",
   showDeleteUserPopup: false,
-  deleteUserPopupMessage: 'Are you sure you want to delete this user?',
+  deleteUserPopupMessage: "Are you sure you want to delete this user?",
   deleteUserRoleId: null,
   showTifUpload: false,
   showUploadInspection: false,
-  showInspectionType: false,
+  showInspectionType: true,
 };
 
 export const DisplaySettings = createSlice({
-  name: 'DisplaySettings',
+  name: "DisplaySettings",
   initialState,
   reducers: {
     setshowToast: (state, action) => {
