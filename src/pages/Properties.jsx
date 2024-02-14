@@ -10,10 +10,12 @@ import {
   setClientIdProperty,
   setProjectIdProperty,
 } from "../reducers/Property";
+import MapView from "../components/MapView/MapView";
+import axios from "axios";
+import { setprojects } from "../reducers/Project";
 
 export default function Properties() {
-  const { client_id } = useParams();
-  const { project_id } = useParams();
+  const { client_id, project_id, view } = useParams();
   const dispatch = useDispatch();
   const showTifUpload = useSelector(
     (state) => state.displaySettings.showTifUpload
@@ -21,19 +23,40 @@ export default function Properties() {
   const showProgressFormOpen = useSelector(
     (state) => state.property.showProgressFormOpen
   );
+  const projects = useSelector((state) => state.project.projects);
 
   useEffect(() => {
     dispatch(setClientIdProperty(client_id));
     dispatch(setProjectIdProperty(project_id));
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/projects/?client=${client_id}&id=${project_id}`,
+        {
+          headers: {
+            Authorization: "Token " + localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        dispatch(setprojects(res.data));
+      });
   }, [client_id, project_id, dispatch]);
 
   return (
     <>
-      <AppBar></AppBar>
-      <AddPropertyButton />
-      {showTifUpload ? <UploadPropertyForm /> : null}
-      {showProgressFormOpen ? <UploadProgress /> : null}
-      <PropertyContainer project_id={project_id} />
+      {view === "List" ? (
+        <>
+          <AppBar></AppBar>
+          <AddPropertyButton />
+          {showTifUpload ? <UploadPropertyForm /> : null}
+          {showProgressFormOpen ? <UploadProgress /> : null}
+          <PropertyContainer project_id={project_id} />{" "}
+        </>
+      ) : (
+        <MapView client_id={client_id} projects={projects} />
+      )}
     </>
   );
 }

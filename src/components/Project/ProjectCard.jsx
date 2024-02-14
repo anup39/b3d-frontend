@@ -7,6 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import FolderIcon from "@mui/icons-material/Folder";
+import MapIcon from "@mui/icons-material/Map";
+import Tooltip from "@mui/material/Tooltip";
 // import {
 //   setdeleteId,
 //   setdeletePopupMessage,
@@ -65,6 +67,12 @@ export default function ProjectCard({
       });
   }, [id]);
 
+  const handleViewInMap = () => {
+    // dispatch(setshowMeasuringsPanel(false));
+    // navigate(`/projects/${id}/Map`);
+    window.location.replace(`/properties/${client_id}/${id}/Map`);
+  };
+
   return (
     <Paper
       sx={{
@@ -95,10 +103,19 @@ export default function ProjectCard({
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>
+                <Tooltip title="MapView">
+                  <MapIcon
+                    onClick={handleViewInMap}
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                  />
+                </Tooltip>
+              </Grid>
+              <Grid item>
                 <button className="btn-main" onClick={handleInspection}>
                   Inspection
                 </button>
               </Grid>
+
               {/* <Grid item>
                 <button
                   disabled
@@ -130,7 +147,7 @@ export default function ProjectCard({
               color="success"
               id="orthoButton"
               onClick={() => {
-                navigate(`/properties/${client_id}/${id}`);
+                navigate(`/properties/${client_id}/${id}/List`);
               }}
             >
               Manage Maps/Ortho
