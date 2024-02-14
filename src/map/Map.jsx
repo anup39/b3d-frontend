@@ -46,7 +46,7 @@ export default function Map({ id }) {
       style: `https://api.maptiler.com/maps/satellite/style.json?key=${
         import.meta.env.VITE_MAPTILER_TOKEN
       }`,
-      center: [103.8574, 2.2739],
+      center: [10.035153, 56.464267],
       zoom: 10,
       attributionControl: false,
     });
