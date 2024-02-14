@@ -63,12 +63,12 @@ export default function Projects() {
             }}
           >
             <ProjectForm client_id={client_id} />
-            <Tooltip title="MapView">
+            {/* <Tooltip title="MapView">
               <MapIcon
                 onClick={handleViewInMap}
                 sx={{ "&:hover": { cursor: "pointer" }, mr: 1 }}
               />
-            </Tooltip>
+            </Tooltip> */}
           </Box>
 
           <div>
