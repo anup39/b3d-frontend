@@ -9,6 +9,8 @@ import axios from "axios";
 import FolderIcon from "@mui/icons-material/Folder";
 import MapIcon from "@mui/icons-material/Map";
 import Tooltip from "@mui/material/Tooltip";
+import RoofingIcon from "@mui/icons-material/Roofing";
+
 // import {
 //   setdeleteId,
 //   setdeletePopupMessage,
@@ -111,9 +113,12 @@ export default function ProjectCard({
                 </Tooltip>
               </Grid>
               <Grid item>
-                <button className="btn-main" onClick={handleInspection}>
-                  Inspection
-                </button>
+                <Tooltip title="Inspection">
+                  <RoofingIcon
+                    onClick={handleInspection}
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                  />
+                </Tooltip>
               </Grid>
 
               {/* <Grid item>
