@@ -34,7 +34,7 @@ const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function ProjectView({ project }) {
   const dispatch = useDispatch();
-  const [openProperties, setOpenProperties] = useState(true);
+  const [openProperties, setOpenProperties] = useState(false);
   const [tifs, setTifs] = useState([]);
 
   const current_measuring_categories = useSelector(

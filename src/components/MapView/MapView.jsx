@@ -85,13 +85,18 @@ export default function MapView({ client_id, projects }) {
 
   const clientDetail = useSelector((state) => state.mapView.clientDetail);
 
+  console.log(clientDetail, "client Details");
+
   const showShapefileUpload = useSelector(
     (state) => state.mapView.showShapefileUpload
   );
+
+  console.log(showShapefileUpload, "showShapefileUpload");
   const showUploadingCategories = useSelector(
     (state) => state.mapView.showUploadingCategories
   );
 
+  console.log(showUploadingCategories, "showUploadingCategories");
   const showReport = useSelector((state) => state.mapView.showReport);
   const showMap = useSelector((state) => state.mapView.showMap);
   const showTifUpload = useSelector(

@@ -32,7 +32,7 @@ export default function Routers() {
         />
         <Route
           exact
-          path="/properties/:client_id/:project_id"
+          path="/properties/:client_id/:project_id/:view"
           element={<Properties />}
         />
         <Route exact path="/map/:level/:id" element={<MapSection />} />
