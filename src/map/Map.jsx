@@ -47,7 +47,7 @@ export default function Map({ id }) {
         import.meta.env.VITE_MAPTILER_TOKEN
       }`,
       center: [10.035153, 56.464267],
-      zoom: 10,
+      zoom: 15,
       attributionControl: false,
     });
 
