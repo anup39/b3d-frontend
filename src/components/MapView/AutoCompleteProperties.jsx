@@ -34,10 +34,11 @@ export default function AutoCompleteProperties({ open, client_id }) {
   return (
     <Autocomplete
       disablePortal
+      size="small"
       id="category-select"
       options={options}
       getOptionLabel={(option) => option.name}
-      sx={{ width: 200, m: 2, display: open ? "block" : "none" }}
+      sx={{ width: 200, my: 1, ml: 2, display: open ? "block" : "none" }}
       renderInput={(params) => (
         <TextField
           {...params}
