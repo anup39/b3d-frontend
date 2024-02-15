@@ -29,6 +29,15 @@ import {
   setCategoriesState,
   setcurrentTif,
 } from "../../reducers/MapView";
+import {
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+
+import Checkbox from "@mui/material/Checkbox";
+import AutoCompleteProperties from "./AutoCompleteProperties";
 
 const drawerWidth = 240;
 
@@ -85,18 +94,14 @@ export default function MapView({ client_id, projects }) {
 
   const clientDetail = useSelector((state) => state.mapView.clientDetail);
 
-  console.log(clientDetail, "client Details");
-
   const showShapefileUpload = useSelector(
     (state) => state.mapView.showShapefileUpload
   );
 
-  console.log(showShapefileUpload, "showShapefileUpload");
   const showUploadingCategories = useSelector(
     (state) => state.mapView.showUploadingCategories
   );
 
-  console.log(showUploadingCategories, "showUploadingCategories");
   const showReport = useSelector((state) => state.mapView.showReport);
   const showMap = useSelector((state) => state.mapView.showMap);
   const showTifUpload = useSelector(
@@ -134,6 +139,7 @@ export default function MapView({ client_id, projects }) {
       <CssBaseline />
       <Drawer variant="permanent" open={open}>
         {/* Top part */}
+
         <Box
           sx={{
             display: "flex",
@@ -194,8 +200,57 @@ export default function MapView({ client_id, projects }) {
           </DrawerHeader>
         </Box>
         <Divider />
+
         <List>
           {/* Properties */}
+          <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+                "&:hover": {
+                  backgroundColor: "#F1F7FF",
+                },
+              }}
+            >
+              {/* #Ui for all the measurements */}
+              <ListItemText
+                secondary={"All Measurements"}
+                sx={{ opacity: open ? 1 : 0, ml: 0.7 }}
+                secondaryTypographyProps={{ fontSize: 12 }}
+              />
+
+              <Tooltip title="Show All Measurings">
+                <Checkbox
+                  // onChange={(event) =>
+                  //   handleMeasuringsPanelChecked(event, project.id)
+                  // }
+                  size="small"
+                  // {...label}
+                  // defaultChecked={false}
+                  // checked={
+                  //   current_project_measuring_table === project.id
+                  //     ? true
+                  //     : false
+                  // }
+                  sx={{
+                    mr: 3,
+                    color: pink[600],
+                    "&.Mui-checked": {
+                      color: pink[600],
+                    },
+                  }}
+                />
+              </Tooltip>
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+
+          {/* Search functionality for the properties  */}
+
+          <AutoCompleteProperties client_id={client_id} />
+
           {projects
             ? projects.map((project) => (
                 <ProjectView key={project.id} project={project} />
