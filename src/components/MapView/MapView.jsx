@@ -35,8 +35,10 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import LocationCityIcon from "@mui/icons-material/LocationCity";
+
 import Checkbox from "@mui/material/Checkbox";
+import AutoCompleteProperties from "./AutoCompleteProperties";
+
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -201,7 +203,6 @@ export default function MapView({ client_id, projects }) {
 
         <List>
           {/* Properties */}
-
           <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
             <ListItemButton
               sx={{
@@ -213,6 +214,7 @@ export default function MapView({ client_id, projects }) {
                 },
               }}
             >
+              {/* #Ui for all the measurements */}
               <ListItemText
                 secondary={"All Measurements"}
                 sx={{ opacity: open ? 1 : 0, ml: 0.7 }}
@@ -244,6 +246,11 @@ export default function MapView({ client_id, projects }) {
             </ListItemButton>
           </ListItem>
           <Divider />
+
+          {/* Search functionality for the properties  */}
+
+          <AutoCompleteProperties client_id={client_id} />
+
           {projects
             ? projects.map((project) => (
                 <ProjectView key={project.id} project={project} />
