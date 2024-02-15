@@ -50,8 +50,23 @@ export default function AutoCompleteProperties({ open, client_id }) {
       )}
       onChange={(event, newValue) => {
         if (newValue) {
-          setInputValue(newValue.full_name);
+          setInputValue(newValue.name);
           // onItemSelected(newValue.id, newValue.standard_category);
+          console.log(newValue, "newvalue");
+          axios
+            .get(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/projects/?client=${client_id}&id=${newValue.id}`,
+              {
+                headers: {
+                  Authorization: "Token " + localStorage.getItem("token"),
+                },
+              }
+            )
+            .then((res) => {
+              dispatch(setprojects(res.data));
+            });
         }
       }}
     />
