@@ -29,7 +29,14 @@ import {
   setCategoriesState,
   setcurrentTif,
 } from "../../reducers/MapView";
-
+import {
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import LocationCityIcon from "@mui/icons-material/LocationCity";
+import Checkbox from "@mui/material/Checkbox";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -130,6 +137,7 @@ export default function MapView({ client_id, projects }) {
       <CssBaseline />
       <Drawer variant="permanent" open={open}>
         {/* Top part */}
+
         <Box
           sx={{
             display: "flex",
@@ -190,8 +198,52 @@ export default function MapView({ client_id, projects }) {
           </DrawerHeader>
         </Box>
         <Divider />
+
         <List>
           {/* Properties */}
+
+          <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+                "&:hover": {
+                  backgroundColor: "#F1F7FF",
+                },
+              }}
+            >
+              <ListItemText
+                secondary={"All Measurements"}
+                sx={{ opacity: open ? 1 : 0, ml: 0.7 }}
+                secondaryTypographyProps={{ fontSize: 12 }}
+              />
+
+              <Tooltip title="Show All Measurings">
+                <Checkbox
+                  // onChange={(event) =>
+                  //   handleMeasuringsPanelChecked(event, project.id)
+                  // }
+                  size="small"
+                  // {...label}
+                  // defaultChecked={false}
+                  // checked={
+                  //   current_project_measuring_table === project.id
+                  //     ? true
+                  //     : false
+                  // }
+                  sx={{
+                    mr: 3,
+                    color: pink[600],
+                    "&.Mui-checked": {
+                      color: pink[600],
+                    },
+                  }}
+                />
+              </Tooltip>
+            </ListItemButton>
+          </ListItem>
+          <Divider />
           {projects
             ? projects.map((project) => (
                 <ProjectView key={project.id} project={project} />
