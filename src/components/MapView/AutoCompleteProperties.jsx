@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { setprojects } from "../../reducers/Project";
 import { useDispatch } from "react-redux";
 
-export default function AutoCompleteProperties({ client_id }) {
+export default function AutoCompleteProperties({ open, client_id }) {
   const dispatch = useDispatch();
   const [options, setOptions] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -24,7 +24,7 @@ export default function AutoCompleteProperties({ client_id }) {
         }
       )
       .then((res) => {
-        dispatch(setprojects(res.data));
+        // dispatch(setprojects(res.data));
         setOptions(res.data);
       })
       .catch((error) => {
@@ -37,7 +37,7 @@ export default function AutoCompleteProperties({ client_id }) {
       id="category-select"
       options={options}
       getOptionLabel={(option) => option.name}
-      sx={{ width: 200, m: 2 }}
+      sx={{ width: 200, m: 2, display: open ? "block" : "none" }}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -59,4 +59,5 @@ export default function AutoCompleteProperties({ client_id }) {
 
 AutoCompleteProperties.propTypes = {
   client_id: PropTypes.string,
+  open: PropTypes.bool,
 };

@@ -199,7 +199,7 @@ export default function MapView({ client_id, projects }) {
             </IconButton>
           </DrawerHeader>
         </Box>
-        <Divider />
+        <Divider sx={{ mt: 0.5 }} />
 
         <List>
           {/* Properties */}
@@ -235,6 +235,7 @@ export default function MapView({ client_id, projects }) {
                   //     : false
                   // }
                   sx={{
+                    display: open ? "block" : "none",
                     mr: 3,
                     color: pink[600],
                     "&.Mui-checked": {
@@ -249,7 +250,7 @@ export default function MapView({ client_id, projects }) {
 
           {/* Search functionality for the properties  */}
 
-          <AutoCompleteProperties client_id={client_id} />
+          <AutoCompleteProperties client_id={client_id} open={open} />
 
           {projects
             ? projects.map((project) => (
