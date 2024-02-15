@@ -203,12 +203,12 @@ export default function MapView({ client_id, projects }) {
 
         <List>
           {/* Properties */}
-          <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
+          <ListItem disablePadding sx={{ display: "block", fontSize: 14 }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
-                px: 2.5,
+                py: 0,
                 "&:hover": {
                   backgroundColor: "#F1F7FF",
                 },
