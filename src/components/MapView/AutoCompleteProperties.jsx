@@ -45,7 +45,29 @@ export default function AutoCompleteProperties({ open, client_id }) {
           label={"Search Properties"}
           variant="outlined"
           value={inputValue}
-          onChange={(event) => setInputValue(event.target.value)}
+          onChange={(event) => {
+            console.log(event.target.value, "event.target.value");
+            setInputValue(event.target.value);
+            if (event.target.value === "") {
+              axios
+                .get(
+                  `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/projects/?client=${client_id}`,
+                  {
+                    headers: {
+                      Authorization: "Token " + localStorage.getItem("token"),
+                    },
+                  }
+                )
+                .then((res) => {
+                  setOptions(res.data);
+                })
+                .catch((error) => {
+                  console.error("Error fetching data:", error);
+                });
+            }
+          }}
         />
       )}
       onChange={(event, newValue) => {
@@ -53,6 +75,7 @@ export default function AutoCompleteProperties({ open, client_id }) {
           setInputValue(newValue.name);
           // onItemSelected(newValue.id, newValue.standard_category);
           console.log(newValue, "newvalue");
+
           axios
             .get(
               `${
