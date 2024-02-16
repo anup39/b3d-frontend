@@ -5,11 +5,29 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { setprojects } from "../../reducers/Project";
 import { useDispatch } from "react-redux";
+import { debounce } from "lodash";
 
-export default function AutoCompleteProperties({ client_id }) {
+export default function AutoCompleteProperties({ open, client_id }) {
   const dispatch = useDispatch();
   const [options, setOptions] = useState([]);
   const [inputValue, setInputValue] = useState("");
+
+  const fetchProjects = debounce((searchTerm) => {
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/projects/?client=${client_id}&search=${searchTerm}`,
+        {
+          headers: {
+            Authorization: "Token " + localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        dispatch(setprojects(res.data));
+      });
+  }, 100); // delay in milliseconds
 
   useEffect(() => {
     axios
@@ -24,7 +42,7 @@ export default function AutoCompleteProperties({ client_id }) {
         }
       )
       .then((res) => {
-        dispatch(setprojects(res.data));
+        // dispatch(setprojects(res.data));
         setOptions(res.data);
       })
       .catch((error) => {
@@ -32,31 +50,28 @@ export default function AutoCompleteProperties({ client_id }) {
       });
   }, [dispatch, client_id]);
   return (
-    <Autocomplete
-      disablePortal
-      id="category-select"
-      options={options}
-      getOptionLabel={(option) => option.name}
-      sx={{ width: 200, m: 2 }}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label={"Search Properties"}
-          variant="outlined"
-          value={inputValue}
-          onChange={(event) => setInputValue(event.target.value)}
-        />
-      )}
-      onChange={(event, newValue) => {
-        if (newValue) {
-          setInputValue(newValue.full_name);
-          // onItemSelected(newValue.id, newValue.standard_category);
-        }
+    <TextField
+      sx={{
+        width: 200,
+        fontFamily: "Roboto",
+        fontSize: "7px",
+        marginTop: "10px",
+        marginBottom: "10px",
+        marginLeft: "15px",
       }}
+      size="small"
+      onChange={(event) => {
+        setInputValue(event.target.value);
+        fetchProjects(event.target.value);
+      }}
+      id="search-properties"
+      label="Search Properties"
+      variant="outlined"
     />
   );
 }
 
 AutoCompleteProperties.propTypes = {
   client_id: PropTypes.string,
+  open: PropTypes.bool,
 };

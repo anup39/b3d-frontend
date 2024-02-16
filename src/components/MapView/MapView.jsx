@@ -199,16 +199,16 @@ export default function MapView({ client_id, projects }) {
             </IconButton>
           </DrawerHeader>
         </Box>
-        <Divider />
+        <Divider sx={{ mt: 0.5 }} />
 
         <List>
           {/* Properties */}
-          <ListItem disablePadding sx={{ display: "block", fontSize: 28 }}>
+          <ListItem disablePadding sx={{ display: "block", fontSize: 14 }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
-                px: 2.5,
+                py: 0,
                 "&:hover": {
                   backgroundColor: "#F1F7FF",
                 },
@@ -235,7 +235,8 @@ export default function MapView({ client_id, projects }) {
                   //     : false
                   // }
                   sx={{
-                    mr: 3,
+                    display: open ? "block" : "none",
+                    mr: 3.5,
                     color: pink[600],
                     "&.Mui-checked": {
                       color: pink[600],
@@ -249,7 +250,7 @@ export default function MapView({ client_id, projects }) {
 
           {/* Search functionality for the properties  */}
 
-          <AutoCompleteProperties client_id={client_id} />
+          <AutoCompleteProperties client_id={client_id} open={open} />
 
           {projects
             ? projects.map((project) => (

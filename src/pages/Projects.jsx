@@ -8,8 +8,6 @@ import ProjectCard from "../components/Project/ProjectCard";
 import ProjectForm from "../components/Project/ProjectForm";
 import MapView from "../components/MapView/MapView";
 import { Box } from "@mui/material";
-import Tooltip from "@mui/material/Tooltip";
-import MapIcon from "@mui/icons-material/Map";
 import { setClientDetail } from "../reducers/MapView";
 
 export default function Projects() {
