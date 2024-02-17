@@ -42,7 +42,6 @@ export default function AutoCompleteProperties({ open, client_id }) {
         }
       )
       .then((res) => {
-        // dispatch(setprojects(res.data));
         setOptions(res.data);
       })
       .catch(() => {});
