@@ -45,7 +45,7 @@ export default function AutoCompleteProperties({ open, client_id }) {
         // dispatch(setprojects(res.data));
         setOptions(res.data);
       })
-      .catch((error) => {});
+      .catch(() => {});
   }, [dispatch, client_id]);
   return (
     <TextField
