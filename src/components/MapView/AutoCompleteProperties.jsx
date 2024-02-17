@@ -42,12 +42,9 @@ export default function AutoCompleteProperties({ open, client_id }) {
         }
       )
       .then((res) => {
-        // dispatch(setprojects(res.data));
         setOptions(res.data);
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+      .catch(() => {});
   }, [dispatch, client_id]);
   return (
     <TextField
