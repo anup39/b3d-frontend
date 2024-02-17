@@ -45,9 +45,7 @@ export default function AutoCompleteProperties({ open, client_id }) {
         // dispatch(setprojects(res.data));
         setOptions(res.data);
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+      .catch((error) => {});
   }, [dispatch, client_id]);
   return (
     <TextField
