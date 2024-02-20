@@ -35,6 +35,15 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
+import {
+  setcurrentProjectName,
+  setshowMeasuringsPanel,
+  addcurrentProjectMeasuringTable,
+  setshowTableMeasurings,
+  setshowPiechart,
+  setshowReport,
+  setshowTifPanel,
+} from "../../reducers/MapView";
 
 import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteProperties from "./AutoCompleteProperties";
@@ -126,6 +135,29 @@ export default function MapView({ level, client_id, projects }) {
     dispatch(setCategoriesState(null));
     dispatch(setcurrentTif(null));
   }, [dispatch]);
+
+  const handleMeasuringsPanelChecked = (event, project_id) => {
+    const checked = event.target.checked;
+    if (checked) {
+      dispatch(setCategoriesState(null));
+      dispatch(setshowMeasuringsPanel(true));
+      // dispatch(addSelectedProjectId(id));
+      dispatch(setcurrentProjectName("All"));
+      dispatch(addcurrentProjectMeasuringTable(project_id));
+    } else {
+      dispatch(setCategoriesState(null));
+      dispatch(setshowMeasuringsPanel(false));
+      // dispatch(removeSelectedProjectId(id));
+      dispatch(setcurrentProjectName(null));
+      dispatch(addcurrentProjectMeasuringTable(null));
+      dispatch(setCategoriesState(null));
+      dispatch(setcurrentTif(null));
+      dispatch(setshowTableMeasurings(false));
+      dispatch(setshowPiechart(false));
+      dispatch(setshowReport(false));
+      dispatch(setshowTifPanel(false));
+    }
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -225,9 +257,9 @@ export default function MapView({ level, client_id, projects }) {
 
                 <Tooltip title="Show All Measurings">
                   <Checkbox
-                    // onChange={(event) =>
-                    //   handleMeasuringsPanelChecked(event, project.id)
-                    // }
+                    onChange={(event) =>
+                      handleMeasuringsPanelChecked(event, "All")
+                    }
                     size="small"
                     // {...label}
                     // defaultChecked={false}
