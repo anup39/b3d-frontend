@@ -67,7 +67,11 @@ export default function Properties() {
           <PropertyContainer project_id={project_id} />{" "}
         </>
       ) : (
-        <MapView client_id={client_id} projects={projects} />
+        <MapView
+          level={"Properties"}
+          client_id={client_id}
+          projects={projects}
+        />
       )}
     </>
   );

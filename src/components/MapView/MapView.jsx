@@ -87,7 +87,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MapView({ client_id, projects }) {
+export default function MapView({ level, client_id, projects }) {
   const dispatch = useDispatch();
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
@@ -203,54 +203,60 @@ export default function MapView({ client_id, projects }) {
 
         <List>
           {/* Properties */}
-          <ListItem disablePadding sx={{ display: "block", fontSize: 14 }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                py: 0,
-                "&:hover": {
-                  backgroundColor: "#F1F7FF",
-                },
-              }}
-            >
-              {/* #Ui for all the measurements */}
-              <ListItemText
-                secondary={"All Measurements"}
-                sx={{ opacity: open ? 1 : 0, ml: 0.7 }}
-                secondaryTypographyProps={{ fontSize: 12 }}
-              />
 
-              <Tooltip title="Show All Measurings">
-                <Checkbox
-                  // onChange={(event) =>
-                  //   handleMeasuringsPanelChecked(event, project.id)
-                  // }
-                  size="small"
-                  // {...label}
-                  // defaultChecked={false}
-                  // checked={
-                  //   current_project_measuring_table === project.id
-                  //     ? true
-                  //     : false
-                  // }
-                  sx={{
-                    display: open ? "block" : "none",
-                    mr: 3.5,
-                    color: pink[600],
-                    "&.Mui-checked": {
-                      color: pink[600],
-                    },
-                  }}
+          {level === "Projects" ? (
+            <ListItem disablePadding sx={{ display: "block", fontSize: 14 }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  py: 0,
+                  "&:hover": {
+                    backgroundColor: "#F1F7FF",
+                  },
+                }}
+              >
+                {/* #Ui for all the measurements */}
+                <ListItemText
+                  secondary={"All Measurements"}
+                  sx={{ opacity: open ? 1 : 0, ml: 0.7 }}
+                  secondaryTypographyProps={{ fontSize: 12 }}
                 />
-              </Tooltip>
-            </ListItemButton>
-          </ListItem>
-          <Divider />
+
+                <Tooltip title="Show All Measurings">
+                  <Checkbox
+                    // onChange={(event) =>
+                    //   handleMeasuringsPanelChecked(event, project.id)
+                    // }
+                    size="small"
+                    // {...label}
+                    // defaultChecked={false}
+                    // checked={
+                    //   current_project_measuring_table === project.id
+                    //     ? true
+                    //     : false
+                    // }
+                    sx={{
+                      display: open ? "block" : "none",
+                      mr: 3.5,
+                      color: pink[600],
+                      "&.Mui-checked": {
+                        color: pink[600],
+                      },
+                    }}
+                  />
+                </Tooltip>
+              </ListItemButton>
+            </ListItem>
+          ) : null}
+
+          {level === "Projects" ? <Divider /> : null}
 
           {/* Search functionality for the properties  */}
 
-          <AutoCompleteProperties client_id={client_id} open={open} />
+          {level === "Projects" ? (
+            <AutoCompleteProperties client_id={client_id} open={open} />
+          ) : null}
 
           {projects
             ? projects.map((project) => (
@@ -274,6 +280,7 @@ export default function MapView({ client_id, projects }) {
 }
 
 MapView.propTypes = {
+  level: PropTypes.string,
   client_id: PropTypes.string,
   projects: PropTypes.array,
 };
