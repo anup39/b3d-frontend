@@ -47,6 +47,7 @@ import {
 
 import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteProperties from "./AutoCompleteProperties";
+import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 
 const drawerWidth = 240;
 
@@ -102,7 +103,12 @@ export default function MapView({ level, client_id, projects }) {
   const [open, setOpen] = React.useState(true);
 
   const clientDetail = useSelector((state) => state.mapView.clientDetail);
-
+  const current_measuring_categories = useSelector(
+    (state) => state.mapView.currentMapDetail.current_measuring_categories
+  );
+  const currentClient = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
   const showShapefileUpload = useSelector(
     (state) => state.mapView.showShapefileUpload
   );
@@ -118,6 +124,10 @@ export default function MapView({ level, client_id, projects }) {
   );
   const showProgressFormOpen = useSelector(
     (state) => state.property.showProgressFormOpen
+  );
+
+  const current_tif = useSelector(
+    (state) => state.mapView.currentMapDetail.current_tif
   );
 
   const navigate = useNavigate();
@@ -156,6 +166,44 @@ export default function MapView({ level, client_id, projects }) {
       dispatch(setshowPiechart(false));
       dispatch(setshowReport(false));
       dispatch(setshowTifPanel(false));
+
+      const map = window.map_global;
+
+      const measuringcategories = current_measuring_categories;
+      if (measuringcategories) {
+        measuringcategories?.forEach((measuringcategory) => {
+          measuringcategory?.sub_category?.forEach((sub_category) => {
+            sub_category?.category?.forEach((cat) => {
+              if (cat.checked) {
+                if (cat.type_of_geometry) {
+                  const sourceId =
+                    String(currentClient) + cat.view_name + "source";
+                  const layerId =
+                    String(currentClient) + cat.view_name + "layer";
+                  if (map) {
+                    RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
+                  }
+                }
+              }
+            });
+          });
+        });
+      }
+      if (current_tif) {
+        const id = current_tif.id;
+        const style = map.getStyle();
+        const existingLayer = style?.layers?.find(
+          (layer) => layer.id === `${id}-layer`
+        );
+        const existingSource = style?.sources[`${id}-source`];
+        if (existingLayer) {
+          map.off("click", `${id}-layer`);
+          map.removeLayer(`${id}-layer`);
+        }
+        if (existingSource) {
+          map.removeSource(`${id}-source`);
+        }
+      }
     }
   };
 
