@@ -1,16 +1,13 @@
 import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { setprojects } from "../../reducers/Project";
 import { useDispatch } from "react-redux";
 import { debounce } from "lodash";
 
-export default function AutoCompleteProperties({ open, client_id }) {
+export default function AutoCompleteProperties({ client_id }) {
   const dispatch = useDispatch();
-  const [options, setOptions] = useState([]);
-  const [inputValue, setInputValue] = useState("");
 
   const fetchProjects = debounce((searchTerm) => {
     axios
@@ -41,9 +38,7 @@ export default function AutoCompleteProperties({ open, client_id }) {
           },
         }
       )
-      .then((res) => {
-        setOptions(res.data);
-      })
+      .then(() => {})
       .catch(() => {});
   }, [dispatch, client_id]);
   return (
@@ -58,7 +53,6 @@ export default function AutoCompleteProperties({ open, client_id }) {
       }}
       size="small"
       onChange={(event) => {
-        setInputValue(event.target.value);
         fetchProjects(event.target.value);
       }}
       id="search-properties"

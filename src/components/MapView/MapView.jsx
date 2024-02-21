@@ -35,9 +35,19 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
+import {
+  setcurrentProjectName,
+  setshowMeasuringsPanel,
+  addcurrentProjectMeasuringTable,
+  setshowTableMeasurings,
+  setshowPiechart,
+  setshowReport,
+  setshowTifPanel,
+} from "../../reducers/MapView";
 
 import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteProperties from "./AutoCompleteProperties";
+import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 
 const drawerWidth = 240;
 
@@ -87,13 +97,18 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MapView({ client_id, projects }) {
+export default function MapView({ level, client_id, projects }) {
   const dispatch = useDispatch();
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
 
   const clientDetail = useSelector((state) => state.mapView.clientDetail);
-
+  const current_measuring_categories = useSelector(
+    (state) => state.mapView.currentMapDetail.current_measuring_categories
+  );
+  const currentClient = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
   const showShapefileUpload = useSelector(
     (state) => state.mapView.showShapefileUpload
   );
@@ -111,6 +126,10 @@ export default function MapView({ client_id, projects }) {
     (state) => state.property.showProgressFormOpen
   );
 
+  const current_tif = useSelector(
+    (state) => state.mapView.currentMapDetail.current_tif
+  );
+
   const navigate = useNavigate();
 
   const handleDrawerClose = () => {
@@ -126,6 +145,67 @@ export default function MapView({ client_id, projects }) {
     dispatch(setCategoriesState(null));
     dispatch(setcurrentTif(null));
   }, [dispatch]);
+
+  const handleMeasuringsPanelChecked = (event, project_id) => {
+    const checked = event.target.checked;
+    if (checked) {
+      dispatch(setCategoriesState(null));
+      dispatch(setshowMeasuringsPanel(true));
+      // dispatch(addSelectedProjectId(id));
+      dispatch(setcurrentProjectName("All"));
+      dispatch(addcurrentProjectMeasuringTable(project_id));
+    } else {
+      dispatch(setCategoriesState(null));
+      dispatch(setshowMeasuringsPanel(false));
+      // dispatch(removeSelectedProjectId(id));
+      dispatch(setcurrentProjectName(null));
+      dispatch(addcurrentProjectMeasuringTable(null));
+      dispatch(setCategoriesState(null));
+      dispatch(setcurrentTif(null));
+      dispatch(setshowTableMeasurings(false));
+      dispatch(setshowPiechart(false));
+      dispatch(setshowReport(false));
+      dispatch(setshowTifPanel(false));
+
+      const map = window.map_global;
+
+      const measuringcategories = current_measuring_categories;
+      if (measuringcategories) {
+        measuringcategories?.forEach((measuringcategory) => {
+          measuringcategory?.sub_category?.forEach((sub_category) => {
+            sub_category?.category?.forEach((cat) => {
+              if (cat.checked) {
+                if (cat.type_of_geometry) {
+                  const sourceId =
+                    String(currentClient) + cat.view_name + "source";
+                  const layerId =
+                    String(currentClient) + cat.view_name + "layer";
+                  if (map) {
+                    RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
+                  }
+                }
+              }
+            });
+          });
+        });
+      }
+      if (current_tif) {
+        const id = current_tif.id;
+        const style = map.getStyle();
+        const existingLayer = style?.layers?.find(
+          (layer) => layer.id === `${id}-layer`
+        );
+        const existingSource = style?.sources[`${id}-source`];
+        if (existingLayer) {
+          map.off("click", `${id}-layer`);
+          map.removeLayer(`${id}-layer`);
+        }
+        if (existingSource) {
+          map.removeSource(`${id}-source`);
+        }
+      }
+    }
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -203,54 +283,60 @@ export default function MapView({ client_id, projects }) {
 
         <List>
           {/* Properties */}
-          <ListItem disablePadding sx={{ display: "block", fontSize: 14 }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                py: 0,
-                "&:hover": {
-                  backgroundColor: "#F1F7FF",
-                },
-              }}
-            >
-              {/* #Ui for all the measurements */}
-              <ListItemText
-                secondary={"All Measurements"}
-                sx={{ opacity: open ? 1 : 0, ml: 0.7 }}
-                secondaryTypographyProps={{ fontSize: 12 }}
-              />
 
-              <Tooltip title="Show All Measurings">
-                <Checkbox
-                  // onChange={(event) =>
-                  //   handleMeasuringsPanelChecked(event, project.id)
-                  // }
-                  size="small"
-                  // {...label}
-                  // defaultChecked={false}
-                  // checked={
-                  //   current_project_measuring_table === project.id
-                  //     ? true
-                  //     : false
-                  // }
-                  sx={{
-                    display: open ? "block" : "none",
-                    mr: 3.5,
-                    color: pink[600],
-                    "&.Mui-checked": {
-                      color: pink[600],
-                    },
-                  }}
+          {level === "Projects" ? (
+            <ListItem disablePadding sx={{ display: "block", fontSize: 14 }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  py: 0,
+                  "&:hover": {
+                    backgroundColor: "#F1F7FF",
+                  },
+                }}
+              >
+                {/* #Ui for all the measurements */}
+                <ListItemText
+                  secondary={"All Measurements"}
+                  sx={{ opacity: open ? 1 : 0, ml: 0.7 }}
+                  secondaryTypographyProps={{ fontSize: 12 }}
                 />
-              </Tooltip>
-            </ListItemButton>
-          </ListItem>
-          <Divider />
+
+                <Tooltip title="Show All Measurings">
+                  <Checkbox
+                    onChange={(event) =>
+                      handleMeasuringsPanelChecked(event, "All")
+                    }
+                    size="small"
+                    // {...label}
+                    // defaultChecked={false}
+                    // checked={
+                    //   current_project_measuring_table === project.id
+                    //     ? true
+                    //     : false
+                    // }
+                    sx={{
+                      display: open ? "block" : "none",
+                      mr: 3.5,
+                      color: pink[600],
+                      "&.Mui-checked": {
+                        color: pink[600],
+                      },
+                    }}
+                  />
+                </Tooltip>
+              </ListItemButton>
+            </ListItem>
+          ) : null}
+
+          {level === "Projects" ? <Divider /> : null}
 
           {/* Search functionality for the properties  */}
 
-          <AutoCompleteProperties client_id={client_id} open={open} />
+          {level === "Projects" ? (
+            <AutoCompleteProperties client_id={client_id} open={open} />
+          ) : null}
 
           {projects
             ? projects.map((project) => (
@@ -274,6 +360,7 @@ export default function MapView({ client_id, projects }) {
 }
 
 MapView.propTypes = {
+  level: PropTypes.string,
   client_id: PropTypes.string,
   projects: PropTypes.array,
 };
