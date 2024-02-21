@@ -242,6 +242,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
 
   // TODO: Here small issue , when the categories are empty for sub category , in this case when i selected any catgroy it will be automatically checked
   // Testing the code
+  // Here i need to use the updated api for the geojson since i have add
   const handleChangesub = (event, sdIndex, subIndex) => {
     const updatedCategories = [...categories];
     updatedCategories[sdIndex].sub_category[subIndex].checked =
