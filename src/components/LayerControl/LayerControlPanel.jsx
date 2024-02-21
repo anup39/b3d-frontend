@@ -241,6 +241,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
   };
 
   // TODO: Here small issue , when the categories are empty for sub category , in this case when i selected any catgroy it will be automatically checked
+  // Testing the code
   const handleChangesub = (event, sdIndex, subIndex) => {
     const updatedCategories = [...categories];
     updatedCategories[sdIndex].sub_category[subIndex].checked =
