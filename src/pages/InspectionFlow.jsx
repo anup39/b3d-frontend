@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Appbar from "../components/Common/AppBar";
 import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import { Autocomplete, TextField } from "@mui/material";
@@ -14,6 +14,7 @@ import img4 from "/Inspire2/DJI_0066_7_8.jpg";
 import ImageCarousel from "../components/Common/ImageCarousel";
 import { setshowInspectionType } from "../reducers/DisplaySettings";
 import InspectionTypeForm from "../components/InspectionFlow/InspectionTypeForm";
+import Konva from "konva";
 
 const itemData = [
   { img: img1, title: "Image 1" },
@@ -25,6 +26,7 @@ const itemData = [
 const InspectionFlow = () => {
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState(itemData[0].img);
+  const [lines, setLines] = useState([]);
 
   const handleSmallImageClick = (img) => {
     setSelectedImage(img);
@@ -40,6 +42,65 @@ const InspectionFlow = () => {
   const showInspectionType = useSelector(
     (state) => state.displaySettings.showInspectionType
   );
+
+  const handleMouseDown = () => {
+    setLines([...lines, []]);
+  };
+
+  const handleMouseMove = (e) => {
+    const stage = e.target.getStage();
+    const point = stage.getPointerPosition();
+    let lastLine = lines[lines.length - 1];
+    lastLine = lastLine.concat([point.x, point.y]);
+
+    lines.splice(lines.length - 1, 1, lastLine);
+    setLines(lines.concat());
+  };
+
+  useEffect(() => {
+    const imageObj = new window.Image();
+    imageObj.src = selectedImage;
+
+    imageObj.onload = () => {
+      const stage = new Konva.Stage({
+        container: "container",
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+
+      const layer = new Konva.Layer();
+      stage.add(layer);
+
+      const konvaImage = new Konva.Image({
+        x: 0,
+        y: 0,
+        image: imageObj,
+        width: stage.width(),
+        height: stage.height(),
+      });
+
+      layer.add(konvaImage);
+
+      lines.map((line) => {
+        const konvaLine = new Konva.Line({
+          points: line,
+          stroke: "red",
+          strokeWidth: 5,
+          lineCap: "round",
+          lineJoin: "round",
+          draggable: true,
+        });
+
+        layer.add(konvaLine);
+      });
+
+      layer.draw();
+
+      stage.on("mousedown", handleMouseDown);
+      stage.on("mousemove", handleMouseMove);
+    };
+  }, [selectedImage, lines]);
+
   return (
     <>
       <Appbar />
@@ -114,6 +175,7 @@ const InspectionFlow = () => {
             </Box>
           ) : null}
           <Grid container spacing={2} sx={{ margin: "4px" }}>
+            <div id="container"></div>
             <Grid item xs={12} md={8}>
               <Box
                 sx={{
