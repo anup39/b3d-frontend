@@ -82,7 +82,7 @@ const InspectionFlow = () => {
       layer.add(konvaImage);
 
       lines.map((line) => {
-        const konvaLine = new Konva.Line({
+        const konvaLine = new Konva.Rect({
           points: line,
           stroke: "red",
           strokeWidth: 5,
@@ -175,9 +175,8 @@ const InspectionFlow = () => {
             </Box>
           ) : null}
           <Grid container spacing={2} sx={{ margin: "4px" }}>
-            <div id="container"></div>
             <Grid item xs={12} md={8}>
-              <Box
+              {/* <Box
                 sx={{
                   height: "70%",
                   width: { xs: "95%", md: "100%", lg: "100%" },
@@ -189,7 +188,8 @@ const InspectionFlow = () => {
                   alt={selectedImage}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
-              </Box>
+              </Box> */}
+              <div id="container"></div>
               <Box
                 sx={{
                   width: { xs: "95%", md: "100%", lg: "100%" },
