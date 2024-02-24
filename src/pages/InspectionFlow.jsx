@@ -16,6 +16,8 @@ import { setshowInspectionType } from "../reducers/DisplaySettings";
 import InspectionTypeForm from "../components/InspectionFlow/InspectionTypeForm";
 import Konva from "konva";
 
+// testing
+
 const itemData = [
   { img: img1, title: "Image 1" },
   { img: img2, title: "Image 2" },
