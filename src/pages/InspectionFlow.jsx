@@ -16,6 +16,8 @@ import { setshowInspectionType } from "../reducers/DisplaySettings";
 import InspectionTypeForm from "../components/InspectionFlow/InspectionTypeForm";
 import Konva from "konva";
 
+// testing
+
 const itemData = [
   { img: img1, title: "Image 1" },
   { img: img2, title: "Image 2" },
@@ -26,7 +28,8 @@ const itemData = [
 const InspectionFlow = () => {
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState(itemData[0].img);
-  const [lines, setLines] = useState([]);
+  const [rectangles, setRectangles] = useState([]);
+  const [newRect, setNewRect] = useState(null);
 
   const handleSmallImageClick = (img) => {
     setSelectedImage(img);
@@ -43,20 +46,28 @@ const InspectionFlow = () => {
     (state) => state.displaySettings.showInspectionType
   );
 
-  const handleMouseDown = () => {
-    setLines([...lines, []]);
+  const handleMouseDown = (e) => {
+    const stage = e.target.getStage();
+    const point = stage.getPointerPosition();
+    setNewRect({ x: point.x, y: point.y, width: 0, height: 0 });
   };
 
   const handleMouseMove = (e) => {
+    if (!newRect) return;
+
     const stage = e.target.getStage();
     const point = stage.getPointerPosition();
-    let lastLine = lines[lines.length - 1];
-    lastLine = lastLine.concat([point.x, point.y]);
-
-    lines.splice(lines.length - 1, 1, lastLine);
-    setLines(lines.concat());
+    setNewRect({
+      ...newRect,
+      width: point.x - newRect.x,
+      height: point.y - newRect.y,
+    });
   };
 
+  const handleMouseUp = () => {
+    setRectangles([...rectangles, newRect]);
+    setNewRect(null);
+  };
   useEffect(() => {
     const imageObj = new window.Image();
     imageObj.src = selectedImage;
@@ -81,25 +92,40 @@ const InspectionFlow = () => {
 
       layer.add(konvaImage);
 
-      lines.map((line) => {
-        const konvaLine = new Konva.Rect({
-          points: line,
+      rectangles.map((rect) => {
+        const konvaRect = new Konva.Rect({
+          x: rect.x,
+          y: rect.y,
+          width: rect.width,
+          height: rect.height,
           stroke: "red",
-          strokeWidth: 5,
-          lineCap: "round",
-          lineJoin: "round",
+          strokeWidth: 2,
           draggable: true,
         });
 
-        layer.add(konvaLine);
+        layer.add(konvaRect);
       });
+
+      if (newRect) {
+        const konvaRect = new Konva.Rect({
+          x: newRect.x,
+          y: newRect.y,
+          width: newRect.width,
+          height: newRect.height,
+          stroke: "red",
+          strokeWidth: 2,
+        });
+
+        layer.add(konvaRect);
+      }
 
       layer.draw();
 
       stage.on("mousedown", handleMouseDown);
       stage.on("mousemove", handleMouseMove);
+      stage.on("mouseup", handleMouseUp);
     };
-  }, [selectedImage, lines]);
+  }, [selectedImage, rectangles, newRect]);
 
   return (
     <>
