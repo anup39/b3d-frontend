@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Appbar from "../components/Common/AppBar";
 import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import { Autocomplete, TextField } from "@mui/material";
@@ -30,6 +30,7 @@ const InspectionFlow = () => {
   const [selectedImage, setSelectedImage] = useState(itemData[0].img);
   const [rectangles, setRectangles] = useState([]);
   const [newRect, setNewRect] = useState(null);
+  const stageRef = useRef(null);
 
   const handleSmallImageClick = (img) => {
     setSelectedImage(img);
@@ -125,7 +126,29 @@ const InspectionFlow = () => {
       stage.on("mousemove", handleMouseMove);
       stage.on("mouseup", handleMouseUp);
     };
-  }, [selectedImage, rectangles, newRect]);
+  }, [
+    selectedImage,
+    rectangles,
+    newRect,
+    handleMouseDown,
+    handleMouseMove,
+    handleMouseUp,
+  ]);
+  const handleZoomIn = () => {
+    const oldScale = stageRef.current.scaleX();
+
+    stageRef.current.scale({ x: oldScale + 0.1, y: oldScale + 0.1 });
+    stageRef.current.batchDraw();
+  };
+
+  const handleZoomOut = () => {
+    const oldScale = stageRef.current.scaleX();
+
+    if (oldScale > 0.1) {
+      stageRef.current.scale({ x: oldScale - 0.1, y: oldScale - 0.1 });
+      stageRef.current.batchDraw();
+    }
+  };
 
   return (
     <>
@@ -216,6 +239,8 @@ const InspectionFlow = () => {
                 />
               </Box> */}
               <div id="container"></div>
+              <button onClick={handleZoomIn}>Zoom In</button>
+              <button onClick={handleZoomOut}>Zoom Out</button>
               <Box
                 sx={{
                   width: { xs: "95%", md: "100%", lg: "100%" },
