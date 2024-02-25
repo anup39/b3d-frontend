@@ -47,29 +47,29 @@ const InspectionFlow = () => {
     (state) => state.displaySettings.showInspectionType
   );
 
-  const handleMouseDown = (e) => {
-    const stage = e.target.getStage();
-    const point = stage.getPointerPosition();
-    setNewRect({ x: point.x, y: point.y, width: 0, height: 0 });
-  };
-
-  const handleMouseMove = (e) => {
-    if (!newRect) return;
-
-    const stage = e.target.getStage();
-    const point = stage.getPointerPosition();
-    setNewRect({
-      ...newRect,
-      width: point.x - newRect.x,
-      height: point.y - newRect.y,
-    });
-  };
-
-  const handleMouseUp = () => {
-    setRectangles([...rectangles, newRect]);
-    setNewRect(null);
-  };
   useEffect(() => {
+    const handleMouseDown = (e) => {
+      const stage = e.target.getStage();
+      const point = stage.getPointerPosition();
+      setNewRect({ x: point.x, y: point.y, width: 0, height: 0 });
+    };
+
+    const handleMouseMove = (e) => {
+      if (!newRect) return;
+
+      const stage = e.target.getStage();
+      const point = stage.getPointerPosition();
+      setNewRect({
+        ...newRect,
+        width: point.x - newRect.x,
+        height: point.y - newRect.y,
+      });
+    };
+
+    const handleMouseUp = () => {
+      setRectangles([...rectangles, newRect]);
+      setNewRect(null);
+    };
     const imageObj = new window.Image();
     imageObj.src = selectedImage;
 
@@ -87,13 +87,14 @@ const InspectionFlow = () => {
         x: 0,
         y: 0,
         image: imageObj,
-        width: stage.width(),
-        height: stage.height(),
+        width: stage.width() / 2,
+        height: stage.height() / 2,
       });
 
       layer.add(konvaImage);
 
       rectangles.map((rect) => {
+        console.log(rect, "rect");
         const konvaRect = new Konva.Rect({
           x: rect.x,
           y: rect.y,
@@ -102,6 +103,7 @@ const InspectionFlow = () => {
           stroke: "red",
           strokeWidth: 2,
           draggable: true,
+          editable: true,
         });
 
         layer.add(konvaRect);
@@ -126,14 +128,7 @@ const InspectionFlow = () => {
       stage.on("mousemove", handleMouseMove);
       stage.on("mouseup", handleMouseUp);
     };
-  }, [
-    selectedImage,
-    rectangles,
-    newRect,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp,
-  ]);
+  }, [selectedImage, rectangles, newRect]);
   const handleZoomIn = () => {
     const oldScale = stageRef.current.scaleX();
 
