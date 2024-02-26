@@ -182,7 +182,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
                 if (cat.type_of_geometry === "Point") {
                   url = `${
                     import.meta.env.VITE_API_DASHBOARD_URL
-                  }/category-point-geojson/?project=${project_id}&category=${
+                  }/category-point-geojson/?client=${client_id}&project=${project_id}&category=${
                     cat.id
                   }`;
                   fillType = "circle";
@@ -190,7 +190,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
                 if (cat.type_of_geometry === "LineString") {
                   url = `${
                     import.meta.env.VITE_API_DASHBOARD_URL
-                  }/category-linestring-geojson/?project=${project_id}&category=${
+                  }/category-linestring-geojson/?client=${client_id}&project=${project_id}&category=${
                     cat.id
                   }`;
                   fillType = "line";
@@ -198,7 +198,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
                 if (cat.type_of_geometry === "Polygon") {
                   url = `${
                     import.meta.env.VITE_API_DASHBOARD_URL
-                  }/category-polygon-geojson/?project=${project_id}&category=${
+                  }/category-polygon-geojson/?client=${client_id}&project=${project_id}&category=${
                     cat.id
                   }`;
                   fillType = "fill";
@@ -277,7 +277,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
                   if (cat.type_of_geometry === "Point") {
                     url = `${
                       import.meta.env.VITE_API_DASHBOARD_URL
-                    }/category-point-geojson/?project=${project_id}&category=${
+                    }/category-point-geojson/?client=${client_id}&project=${project_id}&category=${
                       cat.id
                     }`;
                     fillType = "circle";
@@ -285,7 +285,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
                   if (cat.type_of_geometry === "LineString") {
                     url = `${
                       import.meta.env.VITE_API_DASHBOARD_URL
-                    }/category-linestring-geojson/?project=${project_id}&category=${
+                    }/category-linestring-geojson/?client=${client_id}&project=${project_id}&category=${
                       cat.id
                     }`;
                     fillType = "line";
@@ -293,7 +293,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
                   if (cat.type_of_geometry === "Polygon") {
                     url = `${
                       import.meta.env.VITE_API_DASHBOARD_URL
-                    }/category-polygon-geojson/?project=${project_id}&category=${
+                    }/category-polygon-geojson/?client=${client_id}&project=${project_id}&category=${
                       cat.id
                     }`;
                     fillType = "fill";
@@ -389,7 +389,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
             if (cat.type_of_geometry === "Point") {
               url = `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/category-point-geojson/?project=${project_id}&category=${
+              }/category-point-geojson/?client=${client_id}&project=${project_id}&category=${
                 cat.id
               }`;
               fillType = "circle";
@@ -397,7 +397,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
             if (cat.type_of_geometry === "LineString") {
               url = `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/category-linestring-geojson/?project=${project_id}&category=${
+              }/category-linestring-geojson/?client=${client_id}&project=${project_id}&category=${
                 cat.id
               }`;
               fillType = "line";
@@ -405,7 +405,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
             if (cat.type_of_geometry === "Polygon") {
               url = `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/category-polygon-geojson/?project=${project_id}&category=${
+              }/category-polygon-geojson/?client=${client_id}&project=${project_id}&category=${
                 cat.id
               }`;
               fillType = "fill";
