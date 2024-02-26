@@ -182,25 +182,25 @@ export default function LayersControlPanel({ map, popUpRef }) {
                 if (cat.type_of_geometry === "Point") {
                   url = `${
                     import.meta.env.VITE_API_DASHBOARD_URL
-                  }/category-point-geojson/?client=${client_id}&project=${project_id}&category=${
-                    cat.id
-                  }`;
+                  }/category-point-geojson/?client=${client_id}&project=${
+                    project_id === "All" ? "" : project_id
+                  }&category=${cat.id}`;
                   fillType = "circle";
                 }
                 if (cat.type_of_geometry === "LineString") {
                   url = `${
                     import.meta.env.VITE_API_DASHBOARD_URL
-                  }/category-linestring-geojson/?client=${client_id}&project=${project_id}&category=${
-                    cat.id
-                  }`;
+                  }/category-linestring-geojson/?client=${client_id}&project=${
+                    project_id === "All" ? "" : project_id
+                  }&category=${cat.id}`;
                   fillType = "line";
                 }
                 if (cat.type_of_geometry === "Polygon") {
                   url = `${
                     import.meta.env.VITE_API_DASHBOARD_URL
-                  }/category-polygon-geojson/?client=${client_id}&project=${project_id}&category=${
-                    cat.id
-                  }`;
+                  }/category-polygon-geojson/?client=${client_id}&project=${
+                    project_id === "All" ? "" : project_id
+                  }&category=${cat.id}`;
                   fillType = "fill";
                 }
                 AddLayerAndSourceToMap({
@@ -277,25 +277,25 @@ export default function LayersControlPanel({ map, popUpRef }) {
                   if (cat.type_of_geometry === "Point") {
                     url = `${
                       import.meta.env.VITE_API_DASHBOARD_URL
-                    }/category-point-geojson/?client=${client_id}&project=${project_id}&category=${
-                      cat.id
-                    }`;
+                    }/category-point-geojson/?client=${client_id}&project=${
+                      project_id === "All" ? "" : project_id
+                    }&category=${cat.id}`;
                     fillType = "circle";
                   }
                   if (cat.type_of_geometry === "LineString") {
                     url = `${
                       import.meta.env.VITE_API_DASHBOARD_URL
-                    }/category-linestring-geojson/?client=${client_id}&project=${project_id}&category=${
-                      cat.id
-                    }`;
+                    }/category-linestring-geojson/?client=${client_id}&project=${
+                      project_id === "All" ? "" : project_id
+                    }&category=${cat.id}`;
                     fillType = "line";
                   }
                   if (cat.type_of_geometry === "Polygon") {
                     url = `${
                       import.meta.env.VITE_API_DASHBOARD_URL
-                    }/category-polygon-geojson/?client=${client_id}&project=${project_id}&category=${
-                      cat.id
-                    }`;
+                    }/category-polygon-geojson/?client=${client_id}&project=${
+                      project_id === "All" ? "" : project_id
+                    }&category=${cat.id}`;
                     fillType = "fill";
                   }
                   AddLayerAndSourceToMap({
@@ -389,25 +389,25 @@ export default function LayersControlPanel({ map, popUpRef }) {
             if (cat.type_of_geometry === "Point") {
               url = `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/category-point-geojson/?client=${client_id}&project=${project_id}&category=${
-                cat.id
-              }`;
+              }/category-point-geojson/?client=${client_id}&project=${
+                project_id === "All" ? "" : project_id
+              }&category=${cat.id}`;
               fillType = "circle";
             }
             if (cat.type_of_geometry === "LineString") {
               url = `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/category-linestring-geojson/?client=${client_id}&project=${project_id}&category=${
-                cat.id
-              }`;
+              }/category-linestring-geojson/?client=${client_id}&project=${
+                project_id === "All" ? "" : project_id
+              }&category=${cat.id}`;
               fillType = "line";
             }
             if (cat.type_of_geometry === "Polygon") {
               url = `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/category-polygon-geojson/?client=${client_id}&project=${project_id}&category=${
-                cat.id
-              }`;
+              }/category-polygon-geojson/?client=${client_id}&project=${
+                project_id === "All" ? "" : project_id
+              }&category=${cat.id}`;
               fillType = "fill";
             }
             AddLayerAndSourceToMap({
