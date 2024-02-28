@@ -15,7 +15,6 @@ import ImageCarousel from "../components/Common/ImageCarousel";
 import { setshowInspectionType } from "../reducers/DisplaySettings";
 import InspectionTypeForm from "../components/InspectionFlow/InspectionTypeForm";
 import Konva from "konva";
-import { set } from "lodash";
 
 // testing
 
@@ -32,7 +31,7 @@ const InspectionFlow = () => {
   const [rectangles, setRectangles] = useState([
     { x: 23, y: 23, width: 100, height: 100 },
   ]);
-  const [newRect, setNewRect] = useState(null);
+  // const [newRect, setNewRect] = useState(null);
   const [stage, setStage] = useState(null);
 
   const handleSmallImageClick = (img) => {
@@ -55,16 +54,25 @@ const InspectionFlow = () => {
     console.log(event, "here in the draw");
     console.log(stage, "stage");
     stage.draggable(false);
-    stage.on("mousemove", (e) => {
-      // if (!newRect) return;
-      console.log(e, " mouse move");
+    let newReact = null;
+    stage.on("mousedown", (e) => {
       const stage = e.target.getStage();
       const point = stage.getPointerPosition();
-      setNewRect({
-        ...newRect,
-        width: point.x - newRect.x,
-        height: point.y - newRect.y,
-      });
+      newReact = { x: point.x, y: point.y, width: 0, height: 0 };
+    });
+    stage.on("mousemove", (e) => {
+      console.log(e, " mouse move");
+      const stage = e.target.getStage();
+      console.log(stage, "stage here ");
+      const point = stage.getPointerPosition();
+      console.log(point, "point");
+      newReact.width = point.x - newReact.x;
+      newReact.height = point.y - newReact.y;
+    });
+    stage.on("mouseup", (e) => {
+      console.log(e, " mouse up");
+      setRectangles([...rectangles, newReact]);
+      newReact = null;
     });
   };
 
@@ -156,27 +164,13 @@ const InspectionFlow = () => {
         layer.add(konvaRect);
       });
 
-      if (newRect) {
-        const konvaRect = new Konva.Rect({
-          x: newRect.x,
-          y: newRect.y,
-          width: newRect.width,
-          height: newRect.height,
-          stroke: "red",
-          strokeWidth: 2,
-          draggable: true,
-        });
-
-        layer.add(konvaRect);
-      }
-
       layer.draw();
 
       // stage.on("mousedown", handleMouseDown);
       // stage.on("mousemove", handleMouseMove);
       // stage.on("mouseup", handleMouseUp);
     };
-  }, [selectedImage, rectangles, newRect]);
+  }, [selectedImage, rectangles]);
 
   return (
     <>
