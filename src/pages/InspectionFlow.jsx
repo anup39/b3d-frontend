@@ -28,7 +28,9 @@ const itemData = [
 const InspectionFlow = () => {
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState(itemData[0].img);
-  const [rectangles, setRectangles] = useState([]);
+  const [rectangles, setRectangles] = useState([
+    { x: 23, y: 23, width: 100, height: 100 },
+  ]);
   const [newRect, setNewRect] = useState(null);
   const stageRef = useRef(null);
 
@@ -48,47 +50,72 @@ const InspectionFlow = () => {
   );
 
   useEffect(() => {
-    const handleMouseDown = (e) => {
-      const stage = e.target.getStage();
-      const point = stage.getPointerPosition();
-      setNewRect({ x: point.x, y: point.y, width: 0, height: 0 });
-    };
+    // const handleMouseDown = (e) => {
+    //   const stage = e.target.getStage();
+    //   const point = stage.getPointerPosition();
+    //   setNewRect({ x: point.x, y: point.y, width: 0, height: 0 });
+    // };
 
-    const handleMouseMove = (e) => {
-      if (!newRect) return;
+    // const handleMouseMove = (e) => {
+    //   if (!newRect) return;
 
-      const stage = e.target.getStage();
-      const point = stage.getPointerPosition();
-      setNewRect({
-        ...newRect,
-        width: point.x - newRect.x,
-        height: point.y - newRect.y,
-      });
-    };
+    //   const stage = e.target.getStage();
+    //   const point = stage.getPointerPosition();
+    //   setNewRect({
+    //     ...newRect,
+    //     width: point.x - newRect.x,
+    //     height: point.y - newRect.y,
+    //   });
+    // };
 
-    const handleMouseUp = () => {
-      setRectangles([...rectangles, newRect]);
-      setNewRect(null);
-    };
+    // const handleMouseUp = () => {
+    //   setRectangles([...rectangles, newRect]);
+    //   setNewRect(null);
+    // };
     const imageObj = new window.Image();
     imageObj.src = selectedImage;
 
     imageObj.onload = () => {
       const stage = new Konva.Stage({
         container: "container",
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: window.innerWidth / 2,
+        height: window.innerHeight / 2,
+        draggable: true,
       });
 
       const layer = new Konva.Layer();
       stage.add(layer);
 
+      stage.on("wheel", (e) => {
+        e.evt.preventDefault();
+        const oldScale = stage.scaleX();
+
+        const mousePointTo = {
+          x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
+          y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
+        };
+
+        const newScale = e.evt.deltaY > 0 ? oldScale * 0.9 : oldScale * 1.1;
+
+        stage.scale({ x: newScale, y: newScale });
+
+        const newPos = {
+          x:
+            -(mousePointTo.x - stage.getPointerPosition().x / newScale) *
+            newScale,
+          y:
+            -(mousePointTo.y - stage.getPointerPosition().y / newScale) *
+            newScale,
+        };
+        stage.position(newPos);
+        stage.batchDraw();
+      });
       const konvaImage = new Konva.Image({
         x: 0,
         y: 0,
         image: imageObj,
-        width: stage.width() / 2,
-        height: stage.height() / 2,
+        width: stage.width(),
+        height: stage.height(),
       });
 
       layer.add(konvaImage);
@@ -102,8 +129,8 @@ const InspectionFlow = () => {
           height: rect.height,
           stroke: "red",
           strokeWidth: 2,
-          draggable: true,
-          editable: true,
+          // draggable: true,
+          // editable: true,
         });
 
         layer.add(konvaRect);
@@ -124,13 +151,14 @@ const InspectionFlow = () => {
 
       layer.draw();
 
-      stage.on("mousedown", handleMouseDown);
-      stage.on("mousemove", handleMouseMove);
-      stage.on("mouseup", handleMouseUp);
+      // stage.on("mousedown", handleMouseDown);
+      // stage.on("mousemove", handleMouseMove);
+      // stage.on("mouseup", handleMouseUp);
     };
   }, [selectedImage, rectangles, newRect]);
   const handleZoomIn = () => {
     const oldScale = stageRef.current.scaleX();
+    console.log(oldScale, "zoom in oldscale");
 
     stageRef.current.scale({ x: oldScale + 0.1, y: oldScale + 0.1 });
     stageRef.current.batchDraw();
@@ -138,6 +166,7 @@ const InspectionFlow = () => {
 
   const handleZoomOut = () => {
     const oldScale = stageRef.current.scaleX();
+    console.log(oldScale, "zoom out oldscale");
 
     if (oldScale > 0.1) {
       stageRef.current.scale({ x: oldScale - 0.1, y: oldScale - 0.1 });
@@ -213,11 +242,11 @@ const InspectionFlow = () => {
               </Button>
             </Grid>
           </Grid>
-          {showInspectionType ? (
+          {/* {showInspectionType ? (
             <Box>
               <InspectionTypeForm />
             </Box>
-          ) : null}
+          ) : null} */}
           <Grid container spacing={2} sx={{ margin: "4px" }}>
             <Grid item xs={12} md={8}>
               {/* <Box
