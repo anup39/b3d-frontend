@@ -15,6 +15,7 @@ import ImageCarousel from "../components/Common/ImageCarousel";
 import { setshowInspectionType } from "../reducers/DisplaySettings";
 import InspectionTypeForm from "../components/InspectionFlow/InspectionTypeForm";
 import Konva from "konva";
+import { set } from "lodash";
 
 // testing
 
@@ -32,6 +33,7 @@ const InspectionFlow = () => {
     { x: 23, y: 23, width: 100, height: 100 },
   ]);
   const [newRect, setNewRect] = useState(null);
+  const [stage, setStage] = useState(null);
 
   const handleSmallImageClick = (img) => {
     setSelectedImage(img);
@@ -39,6 +41,7 @@ const InspectionFlow = () => {
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
   );
+
   const handleEvent = (event) => {
     console.log(event);
     console.log("Hello");
@@ -47,6 +50,23 @@ const InspectionFlow = () => {
   const showInspectionType = useSelector(
     (state) => state.displaySettings.showInspectionType
   );
+
+  const handleDraw = (event) => {
+    console.log(event, "here in the draw");
+    console.log(stage, "stage");
+    stage.draggable(false);
+    stage.on("mousemove", (e) => {
+      // if (!newRect) return;
+      console.log(e, " mouse move");
+      const stage = e.target.getStage();
+      const point = stage.getPointerPosition();
+      setNewRect({
+        ...newRect,
+        width: point.x - newRect.x,
+        height: point.y - newRect.y,
+      });
+    });
+  };
 
   useEffect(() => {
     // const handleMouseDown = (e) => {
@@ -81,6 +101,8 @@ const InspectionFlow = () => {
         height: window.innerHeight / 2,
         draggable: true,
       });
+
+      setStage(stage);
 
       const layer = new Konva.Layer();
       stage.add(layer);
@@ -191,6 +213,7 @@ const InspectionFlow = () => {
                 <Tooltip title="Draw">
                   <IconButton>
                     <CropSquareIcon
+                      onClick={(event) => handleDraw(event)}
                       sx={{ "&:hover": { cursor: "pointer" }, color: "red" }}
                     />
                   </IconButton>
