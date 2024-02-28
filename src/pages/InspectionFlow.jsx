@@ -28,7 +28,9 @@ const itemData = [
 const InspectionFlow = () => {
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState(itemData[0].img);
-  const [rectangles, setRectangles] = useState([]);
+  const [rectangles, setRectangles] = useState([
+    { x: 23, y: 23, width: 100, height: 100 },
+  ]);
   const [newRect, setNewRect] = useState(null);
   const stageRef = useRef(null);
 
@@ -85,9 +87,29 @@ const InspectionFlow = () => {
       stage.add(layer);
 
       stage.on("wheel", (e) => {
-        console.log(e, "event");
-      });
+        e.evt.preventDefault();
+        const oldScale = stage.scaleX();
 
+        const mousePointTo = {
+          x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
+          y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
+        };
+
+        const newScale = e.evt.deltaY > 0 ? oldScale * 0.9 : oldScale * 1.1;
+
+        stage.scale({ x: newScale, y: newScale });
+
+        const newPos = {
+          x:
+            -(mousePointTo.x - stage.getPointerPosition().x / newScale) *
+            newScale,
+          y:
+            -(mousePointTo.y - stage.getPointerPosition().y / newScale) *
+            newScale,
+        };
+        stage.position(newPos);
+        stage.batchDraw();
+      });
       const konvaImage = new Konva.Image({
         x: 0,
         y: 0,
