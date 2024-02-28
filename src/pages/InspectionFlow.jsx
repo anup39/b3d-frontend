@@ -32,7 +32,6 @@ const InspectionFlow = () => {
     { x: 23, y: 23, width: 100, height: 100 },
   ]);
   const [newRect, setNewRect] = useState(null);
-  const stageRef = useRef(null);
 
   const handleSmallImageClick = (img) => {
     setSelectedImage(img);
@@ -129,8 +128,7 @@ const InspectionFlow = () => {
           height: rect.height,
           stroke: "red",
           strokeWidth: 2,
-          // draggable: true,
-          // editable: true,
+          draggable: true,
         });
 
         layer.add(konvaRect);
@@ -144,6 +142,7 @@ const InspectionFlow = () => {
           height: newRect.height,
           stroke: "red",
           strokeWidth: 2,
+          draggable: true,
         });
 
         layer.add(konvaRect);
@@ -156,23 +155,6 @@ const InspectionFlow = () => {
       // stage.on("mouseup", handleMouseUp);
     };
   }, [selectedImage, rectangles, newRect]);
-  const handleZoomIn = () => {
-    const oldScale = stageRef.current.scaleX();
-    console.log(oldScale, "zoom in oldscale");
-
-    stageRef.current.scale({ x: oldScale + 0.1, y: oldScale + 0.1 });
-    stageRef.current.batchDraw();
-  };
-
-  const handleZoomOut = () => {
-    const oldScale = stageRef.current.scaleX();
-    console.log(oldScale, "zoom out oldscale");
-
-    if (oldScale > 0.1) {
-      stageRef.current.scale({ x: oldScale - 0.1, y: oldScale - 0.1 });
-      stageRef.current.batchDraw();
-    }
-  };
 
   return (
     <>
@@ -263,8 +245,6 @@ const InspectionFlow = () => {
                 />
               </Box> */}
               <div id="container"></div>
-              <button onClick={handleZoomIn}>Zoom In</button>
-              <button onClick={handleZoomOut}>Zoom Out</button>
               <Box
                 sx={{
                   width: { xs: "95%", md: "100%", lg: "100%" },
