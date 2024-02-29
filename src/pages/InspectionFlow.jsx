@@ -42,8 +42,6 @@ const InspectionFlow = () => {
   );
 
   const handleEvent = (event) => {
-    console.log(event);
-    console.log("Hello");
     dispatch(setshowInspectionType(true));
   };
   const showInspectionType = useSelector(
@@ -51,11 +49,10 @@ const InspectionFlow = () => {
   );
 
   const handleDraw = (event) => {
-    console.log(event, "here in the draw");
-    console.log(stage, "stage");
     stage.draggable(false);
     let newReact = null;
     stage.on("mousedown", (e) => {
+      console.log(e, " mouse down");
       const stage = e.target.getStage();
       const point = stage.getPointerPosition();
       newReact = { x: point.x, y: point.y, width: 0, height: 0 };
@@ -63,9 +60,8 @@ const InspectionFlow = () => {
     stage.on("mousemove", (e) => {
       console.log(e, " mouse move");
       const stage = e.target.getStage();
-      console.log(stage, "stage here ");
       const point = stage.getPointerPosition();
-      console.log(point, "point");
+      if (!newReact) return;
       newReact.width = point.x - newReact.x;
       newReact.height = point.y - newReact.y;
     });
@@ -104,7 +100,7 @@ const InspectionFlow = () => {
 
     imageObj.onload = () => {
       const stage = new Konva.Stage({
-        container: "container",
+        container: "container-konva",
         width: window.innerWidth / 2,
         height: window.innerHeight / 2,
         draggable: true,
@@ -118,13 +114,17 @@ const InspectionFlow = () => {
       stage.on("wheel", (e) => {
         e.evt.preventDefault();
         const oldScale = stage.scaleX();
+        const initialScale = 1; // replace with your initial scale
 
         const mousePointTo = {
           x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
           y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
         };
 
-        const newScale = e.evt.deltaY > 0 ? oldScale * 0.9 : oldScale * 1.1;
+        let newScale = e.evt.deltaY > 0 ? oldScale * 0.9 : oldScale * 1.1;
+        if (newScale < initialScale) {
+          newScale = initialScale;
+        }
 
         stage.scale({ x: newScale, y: newScale });
 
@@ -150,7 +150,6 @@ const InspectionFlow = () => {
       layer.add(konvaImage);
 
       rectangles.map((rect) => {
-        console.log(rect, "rect");
         const konvaRect = new Konva.Rect({
           x: rect.x,
           y: rect.y,
@@ -205,9 +204,8 @@ const InspectionFlow = () => {
               </Typography>
               <Grid sx={{ whiteSpace: "nowrap" }}>
                 <Tooltip title="Draw">
-                  <IconButton>
+                  <IconButton onClick={(event) => handleDraw(event)}>
                     <CropSquareIcon
-                      onClick={(event) => handleDraw(event)}
                       sx={{ "&:hover": { cursor: "pointer" }, color: "red" }}
                     />
                   </IconButton>
@@ -261,7 +259,7 @@ const InspectionFlow = () => {
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               </Box> */}
-              <div id="container"></div>
+              <div id="container-konva"></div>
               <Box
                 sx={{
                   width: { xs: "95%", md: "100%", lg: "100%" },
