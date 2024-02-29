@@ -33,6 +33,7 @@ const InspectionFlow = () => {
   const [annotations, setAnnotations] = useState([]);
   const [newAnnotation, setNewAnnotation] = useState([]);
   const annotationsToDraw = [...annotations, ...newAnnotation];
+  const [imageScale, setImageScale] = useState(1);
   const [draggable, setDraggable] = useState(true);
   const showInspectionType = useSelector(
     (state) => state.displaySettings.showInspectionType
@@ -65,6 +66,9 @@ const InspectionFlow = () => {
       const point = stage.getPointerPosition();
       const x = (point.x - stage.x()) / scale;
       const y = (point.y - stage.y()) / scale;
+      // const stageTransform = stage.getAbsoluteTransform().copy();
+      // const position = stageTransform.invert().point(point);
+
       const annotationToAdd = {
         x: newAnnotation[0].x,
         y: newAnnotation[0].y,
@@ -85,6 +89,8 @@ const InspectionFlow = () => {
       const point = stage.getPointerPosition();
       const x = (point.x - stage.x()) / scale;
       const y = (point.y - stage.y()) / scale;
+      // const stageTransform = stage.getAbsoluteTransform().copy();
+      // const position = stageTransform.invert().point(point);
       setNewAnnotation([
         {
           ...newAnnotation[0],
@@ -108,6 +114,8 @@ const InspectionFlow = () => {
     if (newScale < initialScale) {
       newScale = initialScale;
     }
+    // Update the imageScale state variable
+    setImageScale(newScale);
     stage.scale({ x: newScale, y: newScale });
     const newPos = {
       x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
@@ -119,6 +127,10 @@ const InspectionFlow = () => {
 
   const handleDraw = (event) => {
     setDraggable(false);
+  };
+
+  const handleRectClick = (value) => {
+    console.log(value);
   };
 
   return (
@@ -218,7 +230,7 @@ const InspectionFlow = () => {
                 draggable={draggable}
                 onWheel={handleWheel}
               >
-                <Layer>
+                <Layer name="image-layer">
                   {selectedImage && (
                     <Image width={900} height={400} image={selectedImage} />
                   )}
@@ -226,17 +238,17 @@ const InspectionFlow = () => {
                     return (
                       <Rect
                         key={value.key}
-                        x={value.x}
-                        y={value.y}
-                        width={value.width}
-                        height={value.height}
+                        x={value.x * imageScale}
+                        y={value.y * imageScale}
+                        width={value.width * imageScale}
+                        height={value.height * imageScale}
                         fill="transparent"
                         stroke="black"
+                        onClick={(value) => handleRectClick(value)}
                       />
                     );
                   })}
                 </Layer>
-                <Layer></Layer>
               </Stage>
               <Box
                 sx={{
