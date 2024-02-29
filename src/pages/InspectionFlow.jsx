@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Appbar from "../components/Common/AppBar";
 import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import { Autocomplete, TextField } from "@mui/material";
@@ -14,7 +14,8 @@ import img4 from "/Inspire2/DJI_0066_7_8.jpg";
 import ImageCarousel from "../components/Common/ImageCarousel";
 import { setshowInspectionType } from "../reducers/DisplaySettings";
 import InspectionTypeForm from "../components/InspectionFlow/InspectionTypeForm";
-import Konva from "konva";
+import { Stage, Layer, Rect, Image } from "react-konva";
+import useImage from "use-image";
 
 // testing
 
@@ -27,124 +28,98 @@ const itemData = [
 
 const InspectionFlow = () => {
   const dispatch = useDispatch();
-  const [selectedImage, setSelectedImage] = useState(itemData[0].img);
-  const [rectangles, setRectangles] = useState([
-    { x: 23, y: 23, width: 100, height: 100 },
-  ]);
-  // const [newRect, setNewRect] = useState(null);
-  const [stage, setStage] = useState(null);
-  const stafeRef = useRef(null);
-
-  const handleSmallImageClick = (img) => {
-    setSelectedImage(img);
-  };
+  // const [selectedImage, setSelectedImage] = useState(itemData[0].img);
+  const [selectedImage] = useImage(itemData[1].img);
+  const [annotations, setAnnotations] = useState([]);
+  const [newAnnotation, setNewAnnotation] = useState([]);
+  const annotationsToDraw = [...annotations, ...newAnnotation];
+  const [draggable, setDraggable] = useState(true);
+  const showInspectionType = useSelector(
+    (state) => state.displaySettings.showInspectionType
+  );
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
   );
 
+  const handleSmallImageClick = (img) => {
+    // setSelectedImage(img);
+  };
+
   const handleEvent = (event) => {
     dispatch(setshowInspectionType(true));
   };
-  const showInspectionType = useSelector(
-    (state) => state.displaySettings.showInspectionType
-  );
 
-  const handleDraw = (event) => {
-    stage.draggable(false);
-    let newReact = null;
-    stage.on("mousedown", (e) => {
-      console.log(e, " mouse down");
-      const stage = e.target.getStage();
-      const point = stage.getPointerPosition();
-      newReact = { x: point.x, y: point.y, width: 0, height: 0 };
-    });
-    stage.on("mousemove", (e) => {
-      console.log(e, " mouse move");
-      const stage = e.target.getStage();
-      const point = stage.getPointerPosition();
-      if (!newReact) return;
-      newReact.width = point.x - newReact.x;
-      newReact.height = point.y - newReact.y;
-    });
-    stage.on("mouseup", (e) => {
-      console.log(e, " mouse up");
-      setRectangles([...rectangles, newReact]);
-      newReact = null;
-    });
+  const handleMouseDown = (event) => {
+    if (draggable) return;
+    if (newAnnotation.length === 0) {
+      const { x, y } = event.target.getStage().getPointerPosition();
+      setNewAnnotation([{ x, y, width: 0, height: 0, key: "0" }]);
+    }
   };
 
-  useEffect(() => {
-    const imageObj = new window.Image();
-    imageObj.src = selectedImage;
+  const handleMouseUp = (event) => {
+    if (draggable) return;
+    if (newAnnotation.length === 1) {
+      const stage = event.target.getStage();
+      const scale = stage.scaleX(); // assuming the x and y scales are the same
+      const point = stage.getPointerPosition();
+      const x = (point.x - stage.x()) / scale;
+      const y = (point.y - stage.y()) / scale;
+      const annotationToAdd = {
+        x: newAnnotation[0].x,
+        y: newAnnotation[0].y,
+        width: x - newAnnotation[0].x,
+        height: y - newAnnotation[0].y,
+        key: annotations.length + 1,
+      };
+      setNewAnnotation([]);
+      setAnnotations([...annotations, annotationToAdd]);
+    }
+  };
 
-    imageObj.onload = () => {
-      const stage = new Konva.Stage({
-        container: stafeRef.current,
-        width: window.innerWidth / 2,
-        height: window.innerHeight / 2,
-        // draggable: true,
-      });
+  const handleMouseMove = (event) => {
+    if (draggable) return;
+    if (newAnnotation.length === 1) {
+      const stage = event.target.getStage();
+      const scale = stage.scaleX(); // assuming the x and y scales are the same
+      const point = stage.getPointerPosition();
+      const x = (point.x - stage.x()) / scale;
+      const y = (point.y - stage.y()) / scale;
+      setNewAnnotation([
+        {
+          ...newAnnotation[0],
+          width: x - newAnnotation[0].x,
+          height: y - newAnnotation[0].y,
+        },
+      ]);
+    }
+  };
 
-      setStage(stage);
-
-      const layer = new Konva.Layer();
-      stage.add(layer);
-
-      stage.on("wheel", (e) => {
-        e.evt.preventDefault();
-        const oldScale = stage.scaleX();
-        const initialScale = 1; // replace with your initial scale
-
-        const mousePointTo = {
-          x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
-          y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
-        };
-
-        let newScale = e.evt.deltaY > 0 ? oldScale * 0.9 : oldScale * 1.1;
-        if (newScale < initialScale) {
-          newScale = initialScale;
-        }
-
-        stage.scale({ x: newScale, y: newScale });
-
-        const newPos = {
-          x:
-            -(mousePointTo.x - stage.getPointerPosition().x / newScale) *
-            newScale,
-          y:
-            -(mousePointTo.y - stage.getPointerPosition().y / newScale) *
-            newScale,
-        };
-        stage.position(newPos);
-        stage.batchDraw();
-      });
-      const konvaImage = new Konva.Image({
-        x: 0,
-        y: 0,
-        image: imageObj,
-        width: stage.width(),
-        height: stage.height(),
-      });
-
-      layer.add(konvaImage);
-
-      rectangles.map((rect) => {
-        const konvaRect = new Konva.Rect({
-          x: rect.x,
-          y: rect.y,
-          width: rect.width,
-          height: rect.height,
-          stroke: "red",
-          strokeWidth: 2,
-          draggable: true,
-        });
-
-        layer.add(konvaRect);
-      });
-
-      layer.draw();
+  const handleWheel = (e) => {
+    e.evt.preventDefault();
+    const stage = e.target.getStage();
+    const oldScale = stage.scaleX();
+    const initialScale = 1; // replace with your initial scale
+    const mousePointTo = {
+      x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
+      y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
     };
-  }, [selectedImage, rectangles]);
+    let newScale = e.evt.deltaY > 0 ? oldScale * 0.9 : oldScale * 1.1;
+    if (newScale < initialScale) {
+      newScale = initialScale;
+    }
+    stage.scale({ x: newScale, y: newScale });
+    const newPos = {
+      x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
+      y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale,
+    };
+    stage.position(newPos);
+    stage.batchDraw();
+  };
+
+  const handleDraw = (event) => {
+    setDraggable(false);
+  };
 
   return (
     <>
@@ -234,7 +209,35 @@ const InspectionFlow = () => {
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               </Box> */}
-              <div ref={stafeRef}></div>
+              <Stage
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onMouseMove={handleMouseMove}
+                width={900}
+                height={400}
+                draggable={draggable}
+                onWheel={handleWheel}
+              >
+                <Layer>
+                  {selectedImage && (
+                    <Image width={900} height={400} image={selectedImage} />
+                  )}
+                  {annotationsToDraw.map((value) => {
+                    return (
+                      <Rect
+                        key={value.key}
+                        x={value.x}
+                        y={value.y}
+                        width={value.width}
+                        height={value.height}
+                        fill="transparent"
+                        stroke="black"
+                      />
+                    );
+                  })}
+                </Layer>
+                <Layer></Layer>
+              </Stage>
               <Box
                 sx={{
                   width: { xs: "95%", md: "100%", lg: "100%" },
