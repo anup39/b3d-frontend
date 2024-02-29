@@ -33,6 +33,7 @@ const InspectionFlow = () => {
   ]);
   // const [newRect, setNewRect] = useState(null);
   const [stage, setStage] = useState(null);
+  const stafeRef = useRef(null);
 
   const handleSmallImageClick = (img) => {
     setSelectedImage(img);
@@ -73,37 +74,15 @@ const InspectionFlow = () => {
   };
 
   useEffect(() => {
-    // const handleMouseDown = (e) => {
-    //   const stage = e.target.getStage();
-    //   const point = stage.getPointerPosition();
-    //   setNewRect({ x: point.x, y: point.y, width: 0, height: 0 });
-    // };
-
-    // const handleMouseMove = (e) => {
-    //   if (!newRect) return;
-
-    //   const stage = e.target.getStage();
-    //   const point = stage.getPointerPosition();
-    //   setNewRect({
-    //     ...newRect,
-    //     width: point.x - newRect.x,
-    //     height: point.y - newRect.y,
-    //   });
-    // };
-
-    // const handleMouseUp = () => {
-    //   setRectangles([...rectangles, newRect]);
-    //   setNewRect(null);
-    // };
     const imageObj = new window.Image();
     imageObj.src = selectedImage;
 
     imageObj.onload = () => {
       const stage = new Konva.Stage({
-        container: "container-konva",
+        container: stafeRef.current,
         width: window.innerWidth / 2,
         height: window.innerHeight / 2,
-        draggable: true,
+        // draggable: true,
       });
 
       setStage(stage);
@@ -164,10 +143,6 @@ const InspectionFlow = () => {
       });
 
       layer.draw();
-
-      // stage.on("mousedown", handleMouseDown);
-      // stage.on("mousemove", handleMouseMove);
-      // stage.on("mouseup", handleMouseUp);
     };
   }, [selectedImage, rectangles]);
 
@@ -259,7 +234,7 @@ const InspectionFlow = () => {
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               </Box> */}
-              <div id="container-konva"></div>
+              <div ref={stafeRef}></div>
               <Box
                 sx={{
                   width: { xs: "95%", md: "100%", lg: "100%" },
