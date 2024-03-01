@@ -1,37 +1,45 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { setFile, setFiles } from "../../reducers/InspectionUpload";
 import { useDispatch, useSelector } from "react-redux";
 import * as ExifReader from "exifreader";
+import PropTypes from "prop-types";
 
-const Dropzone = () => {
-  const dispatch = useDispatch();
-  const files = useSelector((state) => state.inspectionUpload.files);
+const Dropzone = ({ handleFileData }) => {
+  // const dispatch = useDispatch();
+
+  // const files = useSelector((state) => state.inspectionUpload.files);
   // console.log(files, "files");
-  const onDrop = useCallback((acceptedFiles) => {
-    // console.log(acceptedFiles, "acceptedFiles");
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      acceptedFiles?.forEach((file) => {
+        const reader = new FileReader();
 
-    acceptedFiles?.forEach((file) => {
-      // console.log("🚀 ~ acceptedFiles?.forEach ~ file:", file);
-      console.log(file, "file");
+        reader.onabort = () => console.log("file reading was aborted");
+        reader.onerror = () => console.log("file reading has failed");
 
-      const reader = new FileReader();
+        reader.onload = async () => {
+          const arrayBuffer = reader.result;
+          const tags = await ExifReader.load(arrayBuffer);
+          console.log(tags, "tags");
+          console.log(arrayBuffer, "reader.result");
 
-      reader.onabort = () => console.log("file reading was aborted");
-      reader.onerror = () => console.log("file reading has failed");
+          // Create a new object with only the data you need
+          const fileData = {
+            name: file.name,
+            size: file.size,
+            file: file,
+          };
 
-      reader.onload = async () => {
-        const arrayBuffer = reader.result;
-        const tags = await ExifReader.load(arrayBuffer);
-        console.log(tags, "tags");
-        console.log(arrayBuffer, "reader.result");
-        dispatch(setFile({ name: file.name, file: file }));
-      };
-      reader.readAsArrayBuffer(file);
-    });
+          // Append newFileData to the fileData array
+          handleFileData(fileData);
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    },
+    [handleFileData]
+  );
 
-    // Todo : Things left to do
-  }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
@@ -62,3 +70,7 @@ const Dropzone = () => {
 };
 
 export default Dropzone;
+
+Dropzone.propTypes = {
+  handleFileData: PropTypes.func,
+};
