@@ -1,7 +1,8 @@
-import { useCallback, useEffect } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { setFile, setFiles } from '../../reducers/InspectionUpload';
-import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useEffect } from "react";
+import { useDropzone } from "react-dropzone";
+import { setFile, setFiles } from "../../reducers/InspectionUpload";
+import { useDispatch, useSelector } from "react-redux";
+import * as ExifReader from "exifreader";
 
 const Dropzone = () => {
   const dispatch = useDispatch();
@@ -12,15 +13,18 @@ const Dropzone = () => {
 
     acceptedFiles?.forEach((file) => {
       // console.log("🚀 ~ acceptedFiles?.forEach ~ file:", file);
+      console.log(file, "file");
 
       const reader = new FileReader();
 
-      reader.onabort = () => console.log('file reading was aborted');
-      reader.onerror = () => console.log('file reading has failed');
+      reader.onabort = () => console.log("file reading was aborted");
+      reader.onerror = () => console.log("file reading has failed");
 
-      reader.onload = () => {
+      reader.onload = async () => {
         const arrayBuffer = reader.result;
-        console.log(arrayBuffer, 'reader.result');
+        const tags = await ExifReader.load(arrayBuffer);
+        console.log(tags, "tags");
+        console.log(arrayBuffer, "reader.result");
         dispatch(setFile({ name: file.name, file: file }));
       };
       reader.readAsArrayBuffer(file);
@@ -33,13 +37,13 @@ const Dropzone = () => {
   return (
     <div
       style={{
-        height: '40px',
-        backgroundColor: '#027FFE',
-        cursor: 'pointer',
-        borderRadius: '5px',
-        color: '#FFFFFF',
-        padding: '4px',
-        paddingLeft: '40px',
+        height: "40px",
+        backgroundColor: "#027FFE",
+        cursor: "pointer",
+        borderRadius: "5px",
+        color: "#FFFFFF",
+        padding: "4px",
+        paddingLeft: "40px",
       }}
       {...getRootProps()}
     >
