@@ -39,7 +39,7 @@ const Inspection = () => {
   const inspection_data = useSelector(
     (state) => state.inspection.inspectionData
   );
-  console.log("🚀 ~ Inspection ~ inspection_data:", inspection_data);
+
   const showUploadInspection = useSelector(
     (state) => state.displaySettings.showUploadInspection
   );

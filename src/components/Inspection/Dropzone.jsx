@@ -1,45 +1,45 @@
-import { useCallback, useEffect } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { setFile, setFiles } from '../../reducers/InspectionUpload';
-import { useDispatch, useSelector } from 'react-redux';
+import { useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+import * as ExifReader from "exifreader";
+import PropTypes from "prop-types";
 
-const Dropzone = () => {
-  const dispatch = useDispatch();
-  const files = useSelector((state) => state.inspectionUpload.files);
-  // console.log(files, "files");
-  const onDrop = useCallback((acceptedFiles) => {
-    // console.log(acceptedFiles, "acceptedFiles");
+const Dropzone = ({ handleFileData }) => {
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      acceptedFiles?.forEach((file) => {
+        const reader = new FileReader();
+        reader.onabort = () => console.log("file reading was aborted");
+        reader.onerror = () => console.log("file reading has failed");
+        reader.onload = async () => {
+          const arrayBuffer = reader.result;
+          const tags = await ExifReader.load(arrayBuffer);
+          const fileData = {
+            name: file.name,
+            size: file.size,
+            file: file,
+            latitude: tags.GPSLatitude.description,
+            longitude: tags.GPSLongitude.description,
+          };
+          handleFileData(fileData);
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    },
+    [handleFileData]
+  );
 
-    acceptedFiles?.forEach((file) => {
-      // console.log("🚀 ~ acceptedFiles?.forEach ~ file:", file);
-
-      const reader = new FileReader();
-
-      reader.onabort = () => console.log('file reading was aborted');
-      reader.onerror = () => console.log('file reading has failed');
-
-      reader.onload = () => {
-        const arrayBuffer = reader.result;
-        console.log(arrayBuffer, 'reader.result');
-        dispatch(setFile({ name: file.name, file: file }));
-      };
-      reader.readAsArrayBuffer(file);
-    });
-
-    // Todo : Things left to do
-  }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
     <div
       style={{
-        height: '40px',
-        backgroundColor: '#027FFE',
-        cursor: 'pointer',
-        borderRadius: '5px',
-        color: '#FFFFFF',
-        padding: '4px',
-        paddingLeft: '40px',
+        height: "40px",
+        backgroundColor: "#027FFE",
+        cursor: "pointer",
+        borderRadius: "5px",
+        color: "#FFFFFF",
+        padding: "4px",
+        paddingLeft: "40px",
       }}
       {...getRootProps()}
     >
@@ -58,3 +58,7 @@ const Dropzone = () => {
 };
 
 export default Dropzone;
+
+Dropzone.propTypes = {
+  handleFileData: PropTypes.func,
+};
