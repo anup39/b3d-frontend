@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { setFile, setFiles } from "../../reducers/InspectionUpload";
-import { useDispatch, useSelector } from "react-redux";
 import * as ExifReader from "exifreader";
 import PropTypes from "prop-types";
 
@@ -21,14 +19,13 @@ const Dropzone = ({ handleFileData }) => {
         reader.onload = async () => {
           const arrayBuffer = reader.result;
           const tags = await ExifReader.load(arrayBuffer);
-          console.log(tags, "tags");
-          console.log(arrayBuffer, "reader.result");
-
           // Create a new object with only the data you need
           const fileData = {
             name: file.name,
             size: file.size,
             file: file,
+            latitude: tags.GPSLatitude.description,
+            longitude: tags.GPSLongitude.description,
           };
 
           // Append newFileData to the fileData array

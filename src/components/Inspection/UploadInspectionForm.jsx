@@ -36,6 +36,8 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
   );
   // const files = useSelector((state) => state.inspectionUpload.files);
 
+  console.log(files, "files");
+
   const handleFileData = (fileData) => {
     setFileData((prevFileData) => [...prevFileData, fileData]);
   };
@@ -67,7 +69,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
     return () => {
       dispatch(resetFile([]));
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -82,10 +84,21 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
     map.addControl(new FullscreenControl());
     // window.mapshapefile = map;
 
+    map.on("load", () => {
+      files.forEach((file) => {
+        if (file.latitude && file.longitude) {
+          new maplibregl.Marker()
+            .setLngLat([file.longitude, file.latitude])
+            .addTo(map);
+        }
+        map.flyTo({ center: [file.longitude, file.latitude], zoom: 15 });
+      });
+    });
+
     return () => {
       map.remove();
     };
-  }, []);
+  }, [files]);
   return (
     <>
       <div
