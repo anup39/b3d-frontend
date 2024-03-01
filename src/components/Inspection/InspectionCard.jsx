@@ -18,7 +18,6 @@ export default function InspectionCard({ inspection, client_id, project_id }) {
 
   const { id, name, totalPhoto, inspectedPhoto, date } = inspection;
 
-  // Here you will need to pass the id of the inpsection
   const handleUploadImage = (event, id) => {
     dispatch(setshowUploadInspection(true));
     dispatch(setInspectionID(id));
@@ -105,4 +104,6 @@ export default function InspectionCard({ inspection, client_id, project_id }) {
 
 InspectionCard.propTypes = {
   inspection: PropTypes.object,
+  client_id: PropTypes.string,
+  project_id: PropTypes.string,
 };

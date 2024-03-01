@@ -8,12 +8,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import {
-  resetFile,
-  setFiles,
-  setFilesChecked,
-  setTypeofInspectionChecked,
-} from "../../reducers/InspectionUpload";
+import { setTypeofInspectionChecked } from "../../reducers/InspectionUpload";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { setshowUploadInspection } from "../../reducers/DisplaySettings";
@@ -34,10 +29,6 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
   );
-  // const files = useSelector((state) => state.inspectionUpload.files);
-
-  console.log(files, "files");
-
   const handleFileData = (fileData) => {
     setFileData((prevFileData) => [...prevFileData, fileData]);
   };
@@ -51,7 +42,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
   const handleChangePhoto = (event, file, index) => {
     const id = index;
     console.log(id, file.name);
-    dispatch(setFilesChecked({ id: id, checked: event.target.checked }));
+    // dispatch(setFilesChecked({ id: id, checked: event.target.checked }));
     if (event.target.checked) {
       // plot in the map logic
     } else {
@@ -61,13 +52,11 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
 
   const handleUploadPhotos = (event) => {
     event.preventDefault();
-    console.log(selectedDate);
-    console.log(client_id, project_id);
   };
 
   useEffect(() => {
     return () => {
-      dispatch(resetFile([]));
+      setFileData([]);
     };
   }, [dispatch]);
 
@@ -82,8 +71,6 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
       attributionControl: false,
     });
     map.addControl(new FullscreenControl());
-    // window.mapshapefile = map;
-
     map.on("load", () => {
       files.forEach((file) => {
         if (file.latitude && file.longitude) {
