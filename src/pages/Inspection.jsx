@@ -8,30 +8,7 @@ import UploadInspectionForm from "../components/Inspection/UploadInspectionForm"
 import { useEffect } from "react";
 import { setInspectionData } from "../reducers/Inspection";
 import { setshowUploadInspection } from "../reducers/DisplaySettings";
-
-const inspection_data_api = [
-  {
-    id: 1,
-    name: "Inspection 1",
-    totalPhoto: "112",
-    inspectedPhoto: "21/112",
-    date: "2022-05-19",
-  },
-  {
-    id: 2,
-    name: "Inspection 2",
-    totalPhoto: "116",
-    inspectedPhoto: "42/116",
-    date: "2023-04-20",
-  },
-  {
-    id: 3,
-    name: "Inspection 3",
-    TotalPhoto: "189",
-    inspectedPhoto: "3/189",
-    date: "2022-09-19",
-  },
-];
+import axios from "axios";
 
 const Inspection = () => {
   const dispatch = useDispatch();
@@ -47,8 +24,11 @@ const Inspection = () => {
   // When the component is mounted the data is set the store
   useEffect(() => {
     // later from api now it is hardcoded
-    dispatch(setInspectionData(inspection_data_api));
-
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection-report/`)
+      .then((res) => {
+        dispatch(setInspectionData(res.data));
+      });
     // When the component unmount the data is removed from the store
     return () => {
       dispatch(setInspectionData([]));
