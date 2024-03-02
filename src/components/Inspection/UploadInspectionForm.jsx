@@ -137,17 +137,6 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
     });
     setMap(map);
     map.addControl(new FullscreenControl());
-    // map.on("load", () => {
-    //   files.forEach((file) => {
-    //     if (file.latitude && file.longitude) {
-    //       new maplibregl.Marker()
-    //         .setLngLat([file.longitude, file.latitude])
-    //         .addTo(map);
-    //     }
-    //     map.flyTo({ center: [file.longitude, file.latitude], zoom: 15 });
-    //   });
-    // });
-
     return () => {
       map.remove();
     };
@@ -316,7 +305,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                     slotProps={{
                       typography: {
                         fontSize: 12,
-                        color: "#6A6D70",
+                        color: "red",
                         fontWeight: 600,
                       },
                     }}
@@ -359,7 +348,9 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                       ))}
                   </Grid>
                   {files.length == 0 && files ? (
-                    <p style={{ marginLeft: "15px" }}>No photos yet</p>
+                    <p style={{ marginLeft: "20px", fontSize: 12 }}>
+                      No photos yet.Please Upload
+                    </p>
                   ) : null}
                 </Grid>
               </Box>

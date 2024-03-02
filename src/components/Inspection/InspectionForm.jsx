@@ -54,7 +54,11 @@ export default function InspectionForm({ client_id, project_id }) {
         closeForm();
 
         axios
-          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection-report/`)
+          .get(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/inspection-report/?project=${project_id}`
+          )
           .then((res) => {
             dispatch(setInspectionData(res.data));
           });

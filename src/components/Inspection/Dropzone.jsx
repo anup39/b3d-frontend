@@ -83,9 +83,9 @@ const Dropzone = ({ handleFileData, map, files }) => {
         <p>Drop the files here ...</p>
       ) : (
         <p>
-          <span>Choose Photos</span>
+          <span>Choose Photos OR</span>
           <br />
-          <span>/Drag and Drop</span>
+          <span>Drag and Drop</span>
         </p>
       )}
     </div>

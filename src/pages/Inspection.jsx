@@ -25,7 +25,11 @@ const Inspection = () => {
   useEffect(() => {
     // later from api now it is hardcoded
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection-report/`)
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/inspection-report/?project=${project_id}`
+      )
       .then((res) => {
         dispatch(setInspectionData(res.data));
       });
@@ -34,7 +38,7 @@ const Inspection = () => {
       dispatch(setInspectionData([]));
       dispatch(setshowUploadInspection(false));
     };
-  }, [dispatch]);
+  }, [dispatch, project_id]);
 
   return (
     <div>
