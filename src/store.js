@@ -15,6 +15,9 @@ import UploadMeasuring from "./reducers/UploadMeasuring";
 import InspectionUpload from "./reducers/InspectionUpload";
 import Inspection from "./reducers/Inspection";
 import InspectionFlow from "./reducers/InspectionFlow";
+import StandardInspection from "./reducers/StandardInspection";
+import SubInspection from "./reducers/SubInspection";
+import Inspections from "./reducers/Inspections";
 
 export const store = configureStore({
   reducer: {
@@ -34,5 +37,8 @@ export const store = configureStore({
     inspection: Inspection,
     inspectionUpload: InspectionUpload,
     inspectionFlow: InspectionFlow,
+    standardInspection: StandardInspection,
+    subInspection: SubInspection,
+    inspections: Inspections,
   },
 });

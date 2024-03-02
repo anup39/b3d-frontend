@@ -1,19 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  inspectionData: [],
+  inspections: [],
 };
 
-// #NOTE: Change the name to InspectionReport
 export const Inspection = createSlice({
   name: "Inspection",
   initialState,
   reducers: {
-    setInspectionData: (state, action) => {
-      state.inspectionData = action.payload;
+    setInspections: (state, action) => {
+      state.inspections = action.payload;
     },
   },
 });
+
 // eslint-disable-next-line react-refresh/only-export-components
-export const { setInspectionData } = Inspection.actions;
+export const { setInspections } = Inspection.actions;
+
 export default Inspection.reducer;

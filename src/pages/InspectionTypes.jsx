@@ -53,11 +53,11 @@ function a11yProps(index) {
 export default function InspectionTypes() {
   const dispatch = useDispatch();
   const [value, setValue] = useState(0);
-  const standardCategorys = useSelector(
+  const standardInspections = useSelector(
     (state) => state.standardCategory.standardCategorys
   );
-  const subCategorys = useSelector((state) => state.subCategory.subCategorys);
-  const categorys = useSelector((state) => state.category.categorys);
+  const subInspections = useSelector((state) => state.subCategory.subCategorys);
+  const inspections = useSelector((state) => state.category.categorys);
 
   useEffect(() => {
     axios
