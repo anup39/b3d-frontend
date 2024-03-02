@@ -25,6 +25,10 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
   const inspection = useSelector(
     (state) => state.inspection.inspectionData
   ).filter((inspection) => inspection.id === inspection_id)[0];
+  const [map, setMap] = useState(null);
+
+  // console.log(inspection);
+  console.log(files, "files");
 
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
@@ -40,11 +44,26 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
     );
   };
   const handleChangePhoto = (event, file, index) => {
-    const id = index;
-    console.log(id, file.name);
-    // dispatch(setFilesChecked({ id: id, checked: event.target.checked }));
+    setFileData((prevFileData) => {
+      // Copy the previous file data
+      const newFileData = [...prevFileData];
+
+      // Update the checked property of the file at the given index
+      newFileData[index] = {
+        ...newFileData[index],
+        checked: event.target.checked,
+      };
+
+      return newFileData;
+    });
+
     if (event.target.checked) {
       // plot in the map logic
+
+      map.flyTo({
+        center: [file.longitude, file.latitude],
+        zoom: 15,
+      });
     } else {
       // remove from the map
     }
@@ -66,26 +85,27 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
       style: `https://api.maptiler.com/maps/satellite/style.json?key=${
         import.meta.env.VITE_MAPTILER_TOKEN
       }`,
-      center: [103.8574, 2.2739],
+      center: [10.035153, 56.464267],
       zoom: 10,
       attributionControl: false,
     });
+    setMap(map);
     map.addControl(new FullscreenControl());
-    map.on("load", () => {
-      files.forEach((file) => {
-        if (file.latitude && file.longitude) {
-          new maplibregl.Marker()
-            .setLngLat([file.longitude, file.latitude])
-            .addTo(map);
-        }
-        map.flyTo({ center: [file.longitude, file.latitude], zoom: 15 });
-      });
-    });
+    // map.on("load", () => {
+    //   files.forEach((file) => {
+    //     if (file.latitude && file.longitude) {
+    //       new maplibregl.Marker()
+    //         .setLngLat([file.longitude, file.latitude])
+    //         .addTo(map);
+    //     }
+    //     map.flyTo({ center: [file.longitude, file.latitude], zoom: 15 });
+    //   });
+    // });
 
     return () => {
       map.remove();
     };
-  }, [files]);
+  }, []);
   return (
     <>
       <div
@@ -127,21 +147,23 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                         variant="subtitle1"
                         component="div"
                       >
-                        Name: {inspection?.name}
+                        {inspection?.name}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={["DatePicker"]}>
                           <DatePicker
-                            defaultValue={dayjs(inspection?.date)}
+                            defaultValue={dayjs(
+                              JSON.parse(inspection?.date_of_inspection)
+                            )}
                             onChange={(newValue) => setSelectedDate(newValue)}
                             label="Pick a date "
                           />
                         </DemoContainer>
                       </LocalizationProvider>
                     </Grid>
-                    <Grid item xs={12}>
+                    {/* <Grid item xs={12}>
                       <Paper
                         sx={{
                           flexGrow: 1,
@@ -196,7 +218,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                           </Grid>
                         </Box>
                       </Paper>
-                    </Grid>
+                    </Grid> */}
                   </Grid>
                 </Grid>
                 <Grid item xs={12} md={7}>
@@ -239,7 +261,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                   variant="body2"
                   gutterBottom
                 >
-                  Total Photos: {files.length}
+                  Total Photos Uploaded: {files.length}
                 </Typography>
                 <Grid container>
                   <Grid item sx={{ display: "flex", flexDirection: "column" }}>

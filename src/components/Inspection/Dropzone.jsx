@@ -19,6 +19,7 @@ const Dropzone = ({ handleFileData }) => {
             file: file,
             latitude: tags.GPSLatitude.description,
             longitude: tags.GPSLongitude.description,
+            checked: false,
           };
           handleFileData(fileData);
         };
