@@ -83,7 +83,7 @@ InspectionCard.propTypes = {
   full_name: PropTypes.string,
   description: PropTypes.string,
   fill_color: PropTypes.string,
-  fill_opacity: PropTypes.number,
+  fill_opacity: PropTypes.string,
   stroke_color: PropTypes.string,
   stroke_width: PropTypes.number,
   created_at: PropTypes.string,
