@@ -12,8 +12,9 @@ import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { setshowUploadInspection } from "../../reducers/DisplaySettings";
 import maplibregl, { FullscreenControl } from "maplibre-gl";
+import axios from "axios";
 
-const UploadInspectionForm = ({ client_id, project_id }) => {
+const UploadInspectionForm = () => {
   const mapContainerPhotos = useRef();
   const dispatch = useDispatch();
   // const [selectedDate, setSelectedDate] = useState(null);
@@ -22,6 +23,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
   const inspection_id = useSelector(
     (state) => state.inspectionUpload.inspection_id
   );
+  const user_id = useSelector((state) => state.auth.user_id);
   const inspection = useSelector(
     (state) => state.inspection.inspectionData
   ).filter((inspection) => inspection.id === inspection_id)[0];
@@ -87,6 +89,30 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
 
   const handleUploadPhotos = (event) => {
     event.preventDefault();
+    console.log("upload photos");
+    files.map((file) => {
+      if (file.checked) {
+        const data = new FormData(event.currentTarget);
+        data.append("inspection_report", inspection_id);
+        data.append("photo", file.file);
+        data.append("latitude", file.latitude);
+        data.append("longitude", file.longitude);
+        data.append("created_by", user_id);
+        data.append("is_display", true);
+        data.append("is_inspected", false);
+        axios
+          .post(
+            `${import.meta.env.VITE_API_DASHBOARD_URL}/inspection-photo/`,
+            data
+          )
+          .then(() => {
+            dispatch(setshowUploadInspection(false));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    });
   };
 
   useEffect(() => {
@@ -283,7 +309,12 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
               marginTop: { xs: "10px", md: "10px" },
             }}
           >
-            <Button sx={{ margin: "5px" }} variant="contained" color="primary">
+            <Button
+              type="submit"
+              sx={{ margin: "5px" }}
+              variant="contained"
+              color="primary"
+            >
               Upload Photos
             </Button>
             <Button
@@ -304,8 +335,3 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
 };
 
 export default UploadInspectionForm;
-
-UploadInspectionForm.propTypes = {
-  client_id: PropTypes.string,
-  project_id: PropTypes.string,
-};
