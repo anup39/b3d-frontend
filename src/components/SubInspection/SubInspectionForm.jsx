@@ -68,7 +68,7 @@ export default function SubInspectionForm() {
 
   return (
     <>
-      <Tooltip title="Create SubCategory">
+      <Tooltip title="Create SubInspection">
         <Button
           onClick={openForm}
           sx={{ marginBottom: "25px" }}

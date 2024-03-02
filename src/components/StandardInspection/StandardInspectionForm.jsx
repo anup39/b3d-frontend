@@ -66,7 +66,7 @@ export default function StandardInspectionForm() {
 
   return (
     <>
-      <Tooltip title="Create StandardCategory">
+      <Tooltip title="Create StandardInspection">
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}

@@ -39,9 +39,9 @@ export default function InspectionForm() {
         description: descriptionInput.value,
         sub_inspection: selectedSubInspectionId,
         standard_inspection: selectedStandardInspectionId,
-        fill: selectedFillColor,
+        fill_color: selectedFillColor,
         fill_opacity: fillOpacityInput.value,
-        stroke: selectedStrokeColor,
+        stroke_color: selectedStrokeColor,
         stroke_width: strokeWidthInput.value,
         created_by: user_id,
       };
