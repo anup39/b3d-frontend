@@ -67,27 +67,26 @@ export default function InspectionTypes() {
 
   useEffect(() => {
     axios
-      .get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/global-standard-category/`
-      )
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/standard-inspection/`)
       .then((res) => {
-        dispatch(setStandardCategorys(res.data));
+        console.log(res.data, "res.data");
+        dispatch(setStandardInspections(res.data));
       });
   }, [dispatch]);
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/sub-inspection/`)
       .then((res) => {
-        dispatch(setSubCategorys(res.data));
+        dispatch(setSubInspections(res.data));
       });
   }, [dispatch]);
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection/`)
       .then((res) => {
-        dispatch(setCategorys(res.data));
+        dispatch(setInspections(res.data));
       });
   }, [dispatch]);
 
@@ -124,8 +123,8 @@ export default function InspectionTypes() {
         </Tabs>
         <TabPanel value={value} index={0}>
           <StandardCategoryForm />
-          {standardCategorys
-            ? standardCategorys.map((sc) => (
+          {standardInspections
+            ? standardInspections.map((sc) => (
                 <StandardCategoryCard
                   key={sc.id}
                   id={sc.id}
@@ -138,8 +137,8 @@ export default function InspectionTypes() {
         </TabPanel>
         <TabPanel value={value} index={1}>
           <SubCategoryForm />
-          {subCategorys
-            ? subCategorys.map((subc) => (
+          {subInspections
+            ? subInspections.map((subc) => (
                 <SubCategoryCard
                   key={subc.id}
                   id={subc.id}
@@ -153,8 +152,8 @@ export default function InspectionTypes() {
         </TabPanel>
         <TabPanel value={value} index={2}>
           <CategoryForm />
-          {categorys
-            ? categorys.map((c) => (
+          {inspections
+            ? inspections.map((c) => (
                 <CategoryCard
                   key={c.id}
                   id={c.id}
