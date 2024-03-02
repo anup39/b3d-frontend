@@ -5,9 +5,8 @@ import { Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { setCategorys } from "../../reducers/Category";
-import AutoCompleteCustom from "../StandardCategory/AutoCompleteCustom";
-import Autocomplete from "@mui/material/Autocomplete";
+import { setInspections } from "../../reducers/Inspections";
+import AutoCompleteInspection from "../StandardInspection/AutoCompleteInspection";
 import {
   setshowToast,
   settoastMessage,
@@ -18,10 +17,9 @@ export default function InspectionForm() {
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-  const [selectedStandradCategoryId, setSelectedStandradCategoryId] =
+  const [selectedSubInspectionId, setSelectedSubInspectionId] = useState(null);
+  const [selectedStandardInspectionId, setSelectedStandardInspectionId] =
     useState(null);
-  const [inputValue, setInputValue] = useState("");
   const [selectedFillColor, setSelectedFillColor] = useState("#32788f");
   const [selectedStrokeColor, setSelectedStrokeColor] = useState("#d71414");
   const [loading, setLoading] = useState(false);
@@ -35,57 +33,38 @@ export default function InspectionForm() {
     const fillOpacityInput = document.getElementById("fill_opacity");
     const strokeWidthInput = document.getElementById("stroke_width");
 
-    if (selectedCategoryId !== null) {
+    if (selectedSubInspectionId !== null) {
       const data = {
         name: nameInput.value,
         description: descriptionInput.value,
-        sub_category: selectedCategoryId,
-        standard_category: selectedStandradCategoryId,
-        type_of_geometry: inputValue,
+        sub_inspection: selectedSubInspectionId,
+        standard_inspection: selectedStandardInspectionId,
+        fill: selectedFillColor,
+        fill_opacity: fillOpacityInput.value,
+        stroke: selectedStrokeColor,
+        stroke_width: strokeWidthInput.value,
         created_by: user_id,
       };
 
       axios
-        .post(
-          `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`,
-          data
-        )
-        .then((res) => {
-          const style_data = {
-            fill: selectedFillColor,
-            fill_opacity: fillOpacityInput.value,
-            stroke: selectedStrokeColor,
-            stroke_width: strokeWidthInput.value,
-            category: res.data.id,
-            created_by: user_id,
-          };
+        .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection/`, data)
+        .then(() => {
+          setLoading(false);
+          dispatch(setshowToast(true));
+          dispatch(settoastMessage("Successfully Created Standard category"));
+          dispatch(settoastType("success"));
+          closeForm();
+
           axios
-            .post(
-              `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/global-category-style/`,
-              style_data
-            )
-            .then(() => {
-              setLoading(false);
-              dispatch(setshowToast(true));
-              dispatch(settoastMessage("Successfully Created category"));
-              dispatch(settoastType("success"));
-              closeForm();
-              axios
-                .get(
-                  `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
-                )
-                .then((res) => {
-                  dispatch(setCategorys(res.data));
-                })
-                .catch(() => {});
+            .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection/`)
+            .then((res) => {
+              dispatch(setInspections(res.data));
             });
         })
         .catch(() => {
           setLoading(false);
           dispatch(setshowToast(true));
-          dispatch(settoastMessage("Failed to create category"));
+          dispatch(settoastMessage("Failed to load Inspection"));
           dispatch(settoastType("error"));
           closeForm();
         });
@@ -112,7 +91,7 @@ export default function InspectionForm() {
 
   return (
     <>
-      <Tooltip title="Create Category">
+      <Tooltip title="Create Inspection">
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
@@ -173,34 +152,12 @@ export default function InspectionForm() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <AutoCompleteCustom
+                <AutoCompleteInspection
                   onItemSelected={(id, ids) => {
-                    setSelectedCategoryId(id);
-                    setSelectedStandradCategoryId(ids);
+                    setSelectedSubInspectionId(id);
+                    setSelectedStandardInspectionId(ids);
                   }}
-                  category={"sub-category"}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Autocomplete
-                  disablePortal
-                  id="type-of-geometry"
-                  options={["Polygon", "LineString", "Point"]}
-                  getOptionLabel={(option) => option}
-                  style={{ width: 300 }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Type of Geometry"
-                      variant="outlined"
-                      required
-                    />
-                  )}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setInputValue(newValue);
-                    }
-                  }}
+                  category={"sub-inspection"}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -276,7 +233,7 @@ export default function InspectionForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Category"}
+                  {loading ? null : "Create Inspection"}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>

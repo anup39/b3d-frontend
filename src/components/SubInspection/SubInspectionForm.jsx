@@ -5,19 +5,20 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { setSubCategorys } from "../../reducers/SubCategory";
+import { setSubInspections } from "../../reducers/SubInspection";
 import {
   setshowToast,
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
-import AutoCompleteCustom from "../StandardCategory/AutoCompleteCustom";
+import AutoCompleteInspection from "../StandardInspection/AutoCompleteInspection";
 
 export default function SubInspectionForm() {
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedStandardInspectionId, setSelectedStandardInspectionId] =
+    useState(null);
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
 
@@ -26,18 +27,15 @@ export default function SubInspectionForm() {
     setLoading(true);
     const nameInput = document.getElementById("name");
     const descriptionInput = document.getElementById("description");
-    if (selectedCategoryId !== null) {
+    if (selectedStandardInspectionId !== null) {
       const data = {
         name: nameInput.value,
         description: descriptionInput.value,
-        standard_category: selectedCategoryId,
+        standard_inspection: selectedStandardInspectionId,
         created_by: user_id,
       };
       axios
-        .post(
-          `${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`,
-          data
-        )
+        .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/sub-inspection/`, data)
         .then(() => {
           setLoading(false);
           dispatch(setshowToast(true));
@@ -45,17 +43,15 @@ export default function SubInspectionForm() {
           dispatch(settoastType("success"));
           closeForm();
           axios
-            .get(
-              `${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`
-            )
+            .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/sub-inspection/`)
             .then((res) => {
-              dispatch(setSubCategorys(res.data));
+              dispatch(setSubInspections(res.data));
             });
         })
         .catch(() => {
           setLoading(false);
           dispatch(setshowToast(true));
-          dispatch(settoastMessage("Failed to  Create Standard category"));
+          dispatch(settoastMessage("Failed to  Create Sub Inspection"));
           dispatch(settoastType("error"));
           closeForm();
         });
@@ -134,9 +130,9 @@ export default function SubInspectionForm() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <AutoCompleteCustom
-                  onItemSelected={(id) => setSelectedCategoryId(id)}
-                  category={"standard-category"}
+                <AutoCompleteInspection
+                  onItemSelected={(id) => setSelectedStandardInspectionId(id)}
+                  category={"standard-inspection"}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -146,7 +142,7 @@ export default function SubInspectionForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Sub Category"}
+                  {loading ? null : "Create Sub Inspection"}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>

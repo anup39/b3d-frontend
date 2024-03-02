@@ -5,7 +5,7 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { setStandardCategorys } from "../../reducers/StandardCategory";
+import { setStandardInspections } from "../../reducers/StandardInspection";
 import {
   setshowToast,
   settoastMessage,
@@ -31,7 +31,7 @@ export default function StandardInspectionForm() {
     };
     axios
       .post(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/global-standard-category/`,
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/standard-inspection/`,
         data
       )
       .then(() => {
@@ -42,19 +42,15 @@ export default function StandardInspectionForm() {
         closeForm();
 
         axios
-          .get(
-            `${
-              import.meta.env.VITE_API_DASHBOARD_URL
-            }/global-standard-category/`
-          )
+          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/standard-inspection/`)
           .then((res) => {
-            dispatch(setStandardCategorys(res.data));
+            dispatch(setStandardInspections(res.data));
           });
       })
       .catch(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Failed to load Standard Category"));
+        dispatch(settoastMessage("Failed to load Standard Inspection"));
         dispatch(settoastType("error"));
         closeForm();
       });
@@ -137,7 +133,7 @@ export default function StandardInspectionForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Standard Category"}
+                  {loading ? null : "Create Standard Inspection"}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
