@@ -14,6 +14,8 @@ import {
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
+import { setInspectionData } from "../../reducers/Inspection";
+import axios from "axios";
 
 export default function InspectionForm({ client_id, project_id }) {
   const dispatch = useDispatch();
@@ -33,23 +35,37 @@ export default function InspectionForm({ client_id, project_id }) {
     event.preventDefault();
     setLoading(true);
     const data = new FormData(event.currentTarget);
-    data.append("date", selectedDate);
+    data.append("date_of_inspection", JSON.stringify(selectedDate));
     data.append("client", client_id);
     data.append("project", project_id);
     data.append("created_by", user_id);
     data.append("is_display", true);
-    console.log(data, "final paylaod");
 
-    // #Todo
-    setTimeout(() => {
-      setLoading(false);
-      // API call post request to send the data remaining
-      // Loader and Toast Remaining
-      dispatch(setshowToast(true));
-      dispatch(settoastMessage("Successfully Created Inspection"));
-      dispatch(settoastType("success"));
-      closeForm();
-    }, 5000);
+    axios
+      .post(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/inspection-report/`,
+        data
+      )
+      .then(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Successfully Created Inspection"));
+        dispatch(settoastType("success"));
+        closeForm();
+
+        axios
+          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection-report/`)
+          .then((res) => {
+            dispatch(setInspectionData(res.data));
+          });
+      })
+      .catch(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Failed to Create Inspection"));
+        dispatch(settoastType("error"));
+        closeForm();
+      });
   };
   return (
     <>

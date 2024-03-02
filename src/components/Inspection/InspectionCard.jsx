@@ -16,7 +16,8 @@ export default function InspectionCard({ inspection, client_id, project_id }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { id, name, totalPhoto, inspectedPhoto, date } = inspection;
+  const { id, name, total_photos, inspected_photos, date_of_inspection } =
+    inspection;
 
   const handleUploadImage = (event, id) => {
     dispatch(setshowUploadInspection(true));
@@ -70,13 +71,13 @@ export default function InspectionCard({ inspection, client_id, project_id }) {
               </Grid>
               <Grid item xs>
                 <Typography variant="body2" color="text.secondary">
-                  Total Photos: {totalPhoto}
+                  Total Photos: {total_photos}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Inspected Photos: {inspectedPhoto}
+                  Inspected Photos: {inspected_photos}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Date: {date}
+                  Date: {date_of_inspection}
                 </Typography>
               </Grid>
               <Grid item>
