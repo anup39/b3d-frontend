@@ -21,9 +21,7 @@ const Inspection = () => {
     (state) => state.displaySettings.showUploadInspection
   );
 
-  // When the component is mounted the data is set the store
   useEffect(() => {
-    // later from api now it is hardcoded
     axios
       .get(
         `${
@@ -33,7 +31,7 @@ const Inspection = () => {
       .then((res) => {
         dispatch(setInspectionData(res.data));
       });
-    // When the component unmount the data is removed from the store
+
     return () => {
       dispatch(setInspectionData([]));
       dispatch(setshowUploadInspection(false));
