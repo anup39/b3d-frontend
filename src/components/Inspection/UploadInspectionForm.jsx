@@ -1,5 +1,12 @@
 import { useEffect, useState, useRef } from "react";
-import { Box, Button, Checkbox, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Paper,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useDispatch, useSelector } from "react-redux";
 import Dropzone from "./Dropzone";
@@ -8,7 +15,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { setshowUploadInspection } from "../../reducers/DisplaySettings";
 import maplibregl, { FullscreenControl } from "maplibre-gl";
@@ -20,6 +27,7 @@ const UploadInspectionForm = () => {
   // const [selectedDate, setSelectedDate] = useState(null);
   const [files, setFileData] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [loading, setLoading] = useState(false);
   const inspection_id = useSelector(
     (state) => state.inspectionUpload.inspection_id
   );
@@ -87,12 +95,13 @@ const UploadInspectionForm = () => {
     }
   };
 
-  const handleUploadPhotos = (event) => {
-    event.preventDefault();
+  const handleUploadPhotos = () => {
+    // event.preventDefault();
     console.log("upload photos");
-    files.map((file) => {
+    setLoading(true);
+    files.map((file, index) => {
       if (file.checked) {
-        const data = new FormData(event.currentTarget);
+        const data = new FormData();
         data.append("inspection_report", inspection_id);
         data.append("photo", file.file);
         data.append("latitude", file.latitude);
@@ -107,12 +116,18 @@ const UploadInspectionForm = () => {
           )
           .then(() => {
             dispatch(setshowUploadInspection(false));
+            if (files.length - 1 === index) {
+              setLoading(false);
+              axios.get(``);
+            }
           })
           .catch((error) => {
             console.log(error);
+            setLoading(false);
           });
       }
     });
+    // setLoading(false);
   };
 
   useEffect(() => {
@@ -155,7 +170,7 @@ const UploadInspectionForm = () => {
         }}
       >
         <form
-          onSubmit={handleUploadPhotos}
+          // onSubmit={handleUploadPhotos}
           style={{
             width: "80%",
             maxWidth: "800px",
@@ -306,16 +321,14 @@ const UploadInspectionForm = () => {
               display: "flex",
               justifyContent: { xs: "flex-start", md: "center" },
               alignItems: "center",
-              marginTop: { xs: "10px", md: "10px" },
             }}
           >
             <Button
-              type="submit"
-              sx={{ margin: "5px" }}
-              variant="contained"
-              color="primary"
+              onClick={handleUploadPhotos}
+              variant={loading ? "outlined" : "contained"}
             >
-              Upload Photos
+              {loading ? null : "Upload Photos"}
+              {loading ? <CircularProgress /> : null}
             </Button>
             <Button
               onClick={() => {
