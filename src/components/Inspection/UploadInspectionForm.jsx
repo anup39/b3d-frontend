@@ -8,7 +8,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { setTypeofInspectionChecked } from "../../reducers/InspectionUpload";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { setshowUploadInspection } from "../../reducers/DisplaySettings";
@@ -17,7 +16,7 @@ import maplibregl, { FullscreenControl } from "maplibre-gl";
 const UploadInspectionForm = ({ client_id, project_id }) => {
   const mapContainerPhotos = useRef();
   const dispatch = useDispatch();
-  const [selectedDate, setSelectedDate] = useState(null);
+  // const [selectedDate, setSelectedDate] = useState(null);
   const [files, setFileData] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const inspection_id = useSelector(
@@ -27,35 +26,16 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
     (state) => state.inspection.inspectionData
   ).filter((inspection) => inspection.id === inspection_id)[0];
   const [map, setMap] = useState(null);
-
-  // console.log(inspection);
-  console.log(files, "files");
-
-  const type_of_inspection = useSelector(
-    (state) => state.inspectionUpload.type_of_inspection
-  );
   const handleFileData = (fileData) => {
     setFileData((prevFileData) => [...prevFileData, fileData]);
-  };
-
-  const handleChangeType = (event, type) => {
-    const id = type.id;
-    dispatch(
-      setTypeofInspectionChecked({ id: id, checked: event.target.checked })
-    );
   };
 
   const handleSelectAll = (event) => {
     if (event.target.checked) {
       setFileData((prevFileData) => {
-        // Copy the previous file data
         const newFileData = [...prevFileData];
-
-        // Update the checked property of all files
         newFileData.forEach((file, index) => {
           file.checked = event.target.checked;
-
-          // Change the fill color of the circle
           map.setPaintProperty(
             "point-" + index,
             "circle-color",
@@ -67,14 +47,9 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
       });
     } else {
       setFileData((prevFileData) => {
-        // Copy the previous file data
         const newFileData = [...prevFileData];
-
-        // Update the checked property of all files
         newFileData.forEach((file, index) => {
           file.checked = event.target.checked;
-
-          // Change the fill color of the circle
           map.setPaintProperty(
             "point-" + index,
             "circle-color",
@@ -90,10 +65,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
 
   const handleChangePhoto = (event, file, index) => {
     setFileData((prevFileData) => {
-      // Copy the previous file data
       const newFileData = [...prevFileData];
-
-      // Update the checked property of the file at the given index
       newFileData[index] = {
         ...newFileData[index],
         checked: event.target.checked,
@@ -103,14 +75,12 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
     });
 
     if (event.target.checked) {
-      // Change the fill color of the layer to a new color
       map.setPaintProperty("point-" + index, "circle-color", "#ff0000");
       map.flyTo({
         center: [file.longitude, file.latitude],
         zoom: 21,
       });
     } else {
-      // Change the fill color of the layer back to the previous color
       map.setPaintProperty("point-" + index, "circle-color", "#007cbf");
     }
   };
@@ -192,78 +162,20 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                             defaultValue={dayjs(
                               JSON.parse(inspection?.date_of_inspection)
                             )}
-                            onChange={(newValue) => setSelectedDate(newValue)}
-                            label="Pick a date "
+                            // disabled={true}
+                            // onChange={(newValue) => setSelectedDate(newValue)}
+                            // label="Pick a date "
                           />
                         </DemoContainer>
                       </LocalizationProvider>
                     </Grid>
-                    {/* <Grid item xs={12}>
-                      <Paper
-                        sx={{
-                          flexGrow: 1,
-                          backgroundColor: (theme) =>
-                            theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-                          height: "220px",
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            width: "200px",
-                            overflow: "scroll",
-                            flex: "1",
-                          }}
-                        >
-                          <Typography
-                            sx={{
-                              marginLeft: 2,
-                              marginTop: 2,
-                            }}
-                            variant="body2"
-                            gutterBottom
-                          >
-                            Type of Inspection
-                          </Typography>
-                          <Grid container>
-                            <Grid item xs={12}>
-                              {type_of_inspection.map((type) => (
-                                <FormControlLabel
-                                  sx={{ marginLeft: 1 }}
-                                  key={type.id}
-                                  slotProps={{
-                                    typography: {
-                                      fontSize: 12,
-                                      color: "#6A6D70",
-                                      fontWeight: 600,
-                                    },
-                                  }}
-                                  label={type?.full_type}
-                                  control={
-                                    <Checkbox
-                                      size="small"
-                                      checked={type?.checked}
-                                      onChange={(event) =>
-                                        handleChangeType(event, type)
-                                      }
-                                    />
-                                  }
-                                />
-                              ))}
-                            </Grid>
-                          </Grid>
-                        </Box>
-                      </Paper>
-                    </Grid> */}
                   </Grid>
                 </Grid>
                 <Grid item xs={12} md={7}>
                   <Box>
-                    {/* <Box sx={{ height: "300px" }}>Map placement </Box> */}
                     <div
                       style={{ width: "100%", height: "350px" }}
                       ref={mapContainerPhotos}
-                      // id="mapproperty"
-                      // className="mapproperty"
                     ></div>
                   </Box>
                 </Grid>
