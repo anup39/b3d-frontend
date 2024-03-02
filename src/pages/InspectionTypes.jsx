@@ -5,9 +5,9 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useSelector, useDispatch } from "react-redux";
-import { setStandardCategorys } from "../reducers/StandardCategory";
-import { setSubCategorys } from "../reducers/SubCategory";
-import { setCategorys } from "../reducers/Category";
+import { setStandardInspections } from "../reducers/StandardInspection";
+import { setSubInspections } from "../reducers/SubInspection";
+import { setInspections } from "../reducers/Inspections";
 import AppBar from "../components/Common/AppBar";
 import StandardCategoryForm from "../components/StandardCategory/StandardCategoryForm";
 import StandardCategoryCard from "../components/StandardCategory/StandardCategoryCard";
@@ -54,10 +54,16 @@ export default function InspectionTypes() {
   const dispatch = useDispatch();
   const [value, setValue] = useState(0);
   const standardInspections = useSelector(
-    (state) => state.standardCategory.standardCategorys
+    (state) => state.standardInspection.standardInspections
   );
-  const subInspections = useSelector((state) => state.subCategory.subCategorys);
-  const inspections = useSelector((state) => state.category.categorys);
+  const subInspections = useSelector(
+    (state) => state.subInspection.subInspections
+  );
+  const inspections = useSelector((state) => state.inspections.inspections);
+
+  console.log(standardInspections, "standardInspections");
+  console.log(subInspections, "subInspections");
+  console.log(inspections, "inspections");
 
   useEffect(() => {
     axios
