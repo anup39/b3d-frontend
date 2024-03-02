@@ -19,6 +19,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
   const dispatch = useDispatch();
   const [selectedDate, setSelectedDate] = useState(null);
   const [files, setFileData] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
   const inspection_id = useSelector(
     (state) => state.inspectionUpload.inspection_id
   );
@@ -43,6 +44,50 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
       setTypeofInspectionChecked({ id: id, checked: event.target.checked })
     );
   };
+
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      setFileData((prevFileData) => {
+        // Copy the previous file data
+        const newFileData = [...prevFileData];
+
+        // Update the checked property of all files
+        newFileData.forEach((file, index) => {
+          file.checked = event.target.checked;
+
+          // Change the fill color of the circle
+          map.setPaintProperty(
+            "point-" + index,
+            "circle-color",
+            event.target.checked ? "#ff0000" : "#007cbf"
+          );
+        });
+
+        return newFileData;
+      });
+    } else {
+      setFileData((prevFileData) => {
+        // Copy the previous file data
+        const newFileData = [...prevFileData];
+
+        // Update the checked property of all files
+        newFileData.forEach((file, index) => {
+          file.checked = event.target.checked;
+
+          // Change the fill color of the circle
+          map.setPaintProperty(
+            "point-" + index,
+            "circle-color",
+            event.target.checked ? "#ff0000" : "#007cbf"
+          );
+        });
+
+        return newFileData;
+      });
+    }
+    setSelectAll(event.target.checked);
+  };
+
   const handleChangePhoto = (event, file, index) => {
     setFileData((prevFileData) => {
       // Copy the previous file data
@@ -264,6 +309,28 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                 >
                   Total Photos Uploaded: {files.length}
                 </Typography>
+
+                {files.length > 0 && (
+                  <FormControlLabel
+                    sx={{ marginLeft: 1 }}
+                    slotProps={{
+                      typography: {
+                        fontSize: 12,
+                        color: "#6A6D70",
+                        fontWeight: 600,
+                      },
+                    }}
+                    label={"Select All"}
+                    control={
+                      <Checkbox
+                        size="small"
+                        checked={selectAll}
+                        onChange={(event) => handleSelectAll(event)}
+                      />
+                    }
+                  />
+                )}
+
                 <Grid container>
                   <Grid item sx={{ display: "flex", flexDirection: "column" }}>
                     {files.length > 0 &&
