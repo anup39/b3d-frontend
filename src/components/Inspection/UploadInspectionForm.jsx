@@ -58,14 +58,15 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
     });
 
     if (event.target.checked) {
-      // plot in the map logic
-
+      // Change the fill color of the layer to a new color
+      map.setPaintProperty("point-" + index, "circle-color", "#ff0000");
       map.flyTo({
         center: [file.longitude, file.latitude],
-        zoom: 15,
+        zoom: 21,
       });
     } else {
-      // remove from the map
+      // Change the fill color of the layer back to the previous color
+      map.setPaintProperty("point-" + index, "circle-color", "#007cbf");
     }
   };
 
@@ -296,7 +297,11 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                 </Grid>
               </Box>
               <Box sx={{ flexShrink: 0 }}>
-                <Dropzone handleFileData={handleFileData} map={map} />
+                <Dropzone
+                  handleFileData={handleFileData}
+                  map={map}
+                  files={files}
+                />
               </Box>
             </Paper>
           </Grid>

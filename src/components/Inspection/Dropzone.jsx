@@ -4,7 +4,7 @@ import * as ExifReader from "exifreader";
 import maplibregl from "maplibre-gl";
 import PropTypes from "prop-types";
 
-const Dropzone = ({ handleFileData, map }) => {
+const Dropzone = ({ handleFileData, map, files }) => {
   const onDrop = useCallback(
     (acceptedFiles) => {
       let lastFileTags;
@@ -24,7 +24,7 @@ const Dropzone = ({ handleFileData, map }) => {
             checked: false,
           };
           map.addLayer({
-            id: `point-${index}`,
+            id: `point-${files.length + index}`,
             type: "circle",
             source: {
               type: "geojson",
@@ -53,14 +53,14 @@ const Dropzone = ({ handleFileData, map }) => {
                 tags.GPSLongitude.description,
                 tags.GPSLatitude.description,
               ],
-              zoom: 15,
+              zoom: 20,
             });
           }
         };
         reader.readAsArrayBuffer(file);
       });
     },
-    [handleFileData, map]
+    [handleFileData, map, files]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -97,4 +97,5 @@ export default Dropzone;
 Dropzone.propTypes = {
   handleFileData: PropTypes.func,
   map: PropTypes.object,
+  files: PropTypes.array,
 };
