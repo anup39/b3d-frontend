@@ -1,12 +1,14 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import * as ExifReader from "exifreader";
+import maplibregl from "maplibre-gl";
 import PropTypes from "prop-types";
 
-const Dropzone = ({ handleFileData }) => {
+const Dropzone = ({ handleFileData, map }) => {
   const onDrop = useCallback(
     (acceptedFiles) => {
-      acceptedFiles?.forEach((file) => {
+      let lastFileTags;
+      acceptedFiles?.forEach((file, index) => {
         const reader = new FileReader();
         reader.onabort = () => console.log("file reading was aborted");
         reader.onerror = () => console.log("file reading has failed");
@@ -21,12 +23,44 @@ const Dropzone = ({ handleFileData }) => {
             longitude: tags.GPSLongitude.description,
             checked: false,
           };
+          map.addLayer({
+            id: `point-${index}`,
+            type: "circle",
+            source: {
+              type: "geojson",
+              data: {
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: [
+                    tags.GPSLongitude.description,
+                    tags.GPSLatitude.description,
+                  ],
+                },
+              },
+            },
+            paint: {
+              "circle-radius": 10,
+              "circle-color": "#007cbf",
+            },
+          });
           handleFileData(fileData);
+
+          // Save the tags of the last file
+          if (index === acceptedFiles.length - 1) {
+            map.flyTo({
+              center: [
+                tags.GPSLongitude.description,
+                tags.GPSLatitude.description,
+              ],
+              zoom: 15,
+            });
+          }
         };
         reader.readAsArrayBuffer(file);
       });
     },
-    [handleFileData]
+    [handleFileData, map]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -62,4 +96,5 @@ export default Dropzone;
 
 Dropzone.propTypes = {
   handleFileData: PropTypes.func,
+  map: PropTypes.object,
 };

@@ -296,7 +296,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                 </Grid>
               </Box>
               <Box sx={{ flexShrink: 0 }}>
-                <Dropzone handleFileData={handleFileData} />
+                <Dropzone handleFileData={handleFileData} map={map} />
               </Box>
             </Paper>
           </Grid>
