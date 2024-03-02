@@ -9,12 +9,12 @@ import { setStandardInspections } from "../reducers/StandardInspection";
 import { setSubInspections } from "../reducers/SubInspection";
 import { setInspections } from "../reducers/Inspections";
 import AppBar from "../components/Common/AppBar";
-import StandardCategoryForm from "../components/StandardCategory/StandardCategoryForm";
+import StandardInspectionForm from "../components/StandardInspection/StandardInspectionForm";
 import StandardCategoryCard from "../components/StandardCategory/StandardCategoryCard";
-import SubCategoryForm from "../components/SubCategory/SubCategoryForm";
+import SubInspectionForm from "../components/SubInspection/SubInspectionForm";
 import SubCategoryCard from "../components/SubCategory/SubCategoryCard";
-import CategoryForm from "../components/Category/CategoryForm";
-import CategoryCard from "../components/Category/CategoryCard";
+import InspectionForm from "../components/Inspections/InspectionForm";
+import InspectionCard from "../components/Inspections/InspectionCard";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -61,10 +61,6 @@ export default function InspectionTypes() {
   );
   const inspections = useSelector((state) => state.inspections.inspections);
 
-  console.log(standardInspections, "standardInspections");
-  console.log(subInspections, "subInspections");
-  console.log(inspections, "inspections");
-
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/standard-inspection/`)
@@ -86,6 +82,7 @@ export default function InspectionTypes() {
     axios
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection/`)
       .then((res) => {
+        console.log(res.data, "res.data");
         dispatch(setInspections(res.data));
       });
   }, [dispatch]);
@@ -117,12 +114,12 @@ export default function InspectionTypes() {
             borderColor: "divider",
           }}
         >
-          <Tab label="Standard Category" {...a11yProps(0)} />
-          <Tab label="Sub Category" {...a11yProps(1)} />
-          <Tab label="Category" {...a11yProps(2)} />
+          <Tab label="Standard Inspection" {...a11yProps(0)} />
+          <Tab label="Sub Inspection" {...a11yProps(1)} />
+          <Tab label="Inspection" {...a11yProps(2)} />
         </Tabs>
         <TabPanel value={value} index={0}>
-          <StandardCategoryForm />
+          <StandardInspectionForm />
           {standardInspections
             ? standardInspections.map((sc) => (
                 <StandardCategoryCard
@@ -136,7 +133,7 @@ export default function InspectionTypes() {
             : null}
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <SubCategoryForm />
+          <SubInspectionForm />
           {subInspections
             ? subInspections.map((subc) => (
                 <SubCategoryCard
@@ -151,16 +148,19 @@ export default function InspectionTypes() {
             : null}
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <CategoryForm />
+          <InspectionForm />
           {inspections
             ? inspections.map((c) => (
-                <CategoryCard
+                <InspectionCard
                   key={c.id}
                   id={c.id}
                   name={c.name}
                   full_name={c.full_name}
                   description={c.description}
-                  type_of_geometry={c.type_of_geometry}
+                  fill_color={c.fill_color}
+                  fill_opacity={c.fill_opacity}
+                  stroke_color={c.stroke_color}
+                  stroke_width={c.stroke_width}
                   created_at={c.created_at}
                 />
               ))
