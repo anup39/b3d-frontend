@@ -16,7 +16,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, setUserId, setUserName } from "../../reducers/Auth";
 
-const pages = ["Clients", "Classification", "About", "Contact"];
+const pages = [
+  "Clients",
+  "Classification",
+  "InspectionType",
+  "About",
+  "Contact",
+];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Appbar() {
@@ -42,6 +48,9 @@ function Appbar() {
     if (page.toUpperCase() === "CLIENTS") {
       navigate("/dashboard");
     }
+    if (page.toUpperCase() === "INSPECTIONTYPE") {
+      navigate("/inspection-type");
+    }
     setAnchorElNav(null);
   };
 
@@ -53,7 +62,9 @@ function Appbar() {
     if (page.toUpperCase() === "CLIENTS") {
       navigate("/dashboard");
     }
-
+    if (page.toUpperCase() === "INSPECTIONTYPE") {
+      navigate("/inspection-type");
+    }
     setAnchorElNav(null);
   };
 
