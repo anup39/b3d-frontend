@@ -15,13 +15,14 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import FormControlLabel from "@mui/material/FormControlLabel";
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { setshowUploadInspection } from "../../reducers/DisplaySettings";
 import maplibregl, { FullscreenControl } from "maplibre-gl";
 import axios from "axios";
+import { setInspectionData } from "../../reducers/Inspection";
 
-const UploadInspectionForm = () => {
+const UploadInspectionForm = ({ project_id }) => {
   const mapContainerPhotos = useRef();
   const dispatch = useDispatch();
   // const [selectedDate, setSelectedDate] = useState(null);
@@ -115,10 +116,19 @@ const UploadInspectionForm = () => {
             data
           )
           .then(() => {
-            dispatch(setshowUploadInspection(false));
+            setLoading(false);
             if (files.length - 1 === index) {
-              setLoading(false);
-              axios.get(``);
+              axios
+                .get(
+                  `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/inspection-report/?project=${project_id}`
+                )
+                .then((res) => {
+                  console.log(res.data);
+                  dispatch(setshowUploadInspection(false));
+                  dispatch(setInspectionData(res.data));
+                });
             }
           })
           .catch((error) => {
@@ -127,7 +137,6 @@ const UploadInspectionForm = () => {
           });
       }
     });
-    // setLoading(false);
   };
 
   useEffect(() => {
@@ -321,6 +330,7 @@ const UploadInspectionForm = () => {
               display: "flex",
               justifyContent: { xs: "flex-start", md: "center" },
               alignItems: "center",
+              marginTop: "10px",
             }}
           >
             <Button
@@ -348,3 +358,7 @@ const UploadInspectionForm = () => {
 };
 
 export default UploadInspectionForm;
+
+UploadInspectionForm.propTypes = {
+  project_id: PropTypes.string,
+};
