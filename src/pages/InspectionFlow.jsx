@@ -24,6 +24,8 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { set } from "lodash";
 import Rectangle from "../components/InspectionFlow/Rectangle";
+import RectTransformer from "../components/InspectionFlow/RectangleTransformer";
+import "./InspectionFlow.css";
 
 const InspectionFlow = () => {
   const { inspection_id } = useParams();
@@ -55,6 +57,7 @@ const InspectionFlow = () => {
   const [newRectX, setNewRectX] = useState(0);
   const [newRectY, setNewRectY] = useState(0);
 
+  console.log(rectangles, "rectangles");
   const showInspectionType = useSelector(
     (state) => state.displaySettings.showInspectionType
   );
@@ -138,7 +141,7 @@ const InspectionFlow = () => {
         height: mousePos.y - newRectY,
         name: `rect${rectCount + 1}`,
         stroke: "#00A3AA",
-        key: "test",
+        key: String(Math.random()),
       };
       setMouseDraw(true);
       setRectangles([...rectangles, newRect]);
@@ -199,12 +202,14 @@ const InspectionFlow = () => {
   };
 
   const handleMouse = () => {
+    document.getElementById("stageContainer").style.cursor = "pointer";
     setMouseState(true);
     setDrawState(false);
     setDraggable(true);
   };
 
   const handleDraw = () => {
+    document.getElementById("stageContainer").style.cursor = "crosshair";
     setDrawState(true);
     setMouseState(false);
     setDraggable(false);
@@ -425,24 +430,12 @@ const InspectionFlow = () => {
                 onMouseDown={handleMouseDown}
                 onMouseUp={mouseDown && handleMouseUp}
                 onMouseMove={mouseDown && handleMouseMove}
-                // onTouchStart={_onStageMouseDown}
-                // onTouchMove={mouseDown && _onNewRectChange}
-                // onTouchEnd={mouseDown && _onStageMouseUp}
+                onTouchStart={handleMouseDown}
+                onTouchEnd={mouseDown && handleMouseUp}
+                onTouchMove={mouseDown && handleMouseMove}
                 onWheel={handleWheel}
               >
                 <Layer>
-                  {rectangles.map((rect, i) => (
-                    <Rectangle
-                      key={i}
-                      {...rect}
-                      onTransform={(newProps) => {
-                        _onRectChange(i, newProps);
-                      }}
-                    />
-                  ))}
-                  {/* <RectTransformer selectedShapeName={selectedShapeName} /> */}
-                </Layer>
-                <Layer ref={imgLayerRef}>
                   {images.length > 0 ? (
                     <URLImage
                       src={
@@ -453,6 +446,16 @@ const InspectionFlow = () => {
                       height={window.innerHeight * 0.6}
                     />
                   ) : null}
+                  {rectangles.map((rect, i) => (
+                    <Rectangle
+                      key={i}
+                      {...rect}
+                      onTransform={(newProps) => {
+                        _onRectChange(i, newProps);
+                      }}
+                    />
+                  ))}
+                  <RectTransformer selectedShapeName={selectedShapeName} />
                 </Layer>
               </Stage>
             </div>
