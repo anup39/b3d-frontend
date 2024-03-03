@@ -17,7 +17,7 @@ export default class ImageCarousel extends Component {
       infinite: true,
       speed: 500,
       slidesToShow: 3,
-      slidesToScroll: 1,
+      // slidesToScroll: 1,
     };
 
     return (
@@ -33,7 +33,7 @@ export default class ImageCarousel extends Component {
               <div
                 style={{ padding: "10px" }}
                 key={index}
-                onClick={() => this.props.onImageClick(item.img)}
+                onClick={() => this.props.onImageClick(item)}
               >
                 <img
                   style={{
@@ -42,8 +42,8 @@ export default class ImageCarousel extends Component {
                     objectFit: "contain",
                   }}
                   // srcSet={`${item.img}?w=200&fit=crop&auto=format&dpr=2 2x`}
-                  src={`${item.img}`}
-                  alt={item.title}
+                  src={`${item.photo}`}
+                  alt={item.id}
                   loading="lazy"
                 />
               </div>

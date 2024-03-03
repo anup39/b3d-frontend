@@ -18,19 +18,18 @@ import { Stage, Layer, Rect } from "react-konva";
 import URLImage from "../components/Common/URLImage";
 import { FullscreenControl } from "maplibre-gl";
 import maplibregl from "maplibre-gl";
-
-// testing
-const itemData = [
-  { img: img1, title: "Image 1" },
-  { img: img2, title: "Image 2" },
-  { img: img3, title: "Image 3" },
-  { img: img4, title: "Image 4" },
-];
+import { setImages, setSelected } from "../reducers/InspectionFlow";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const InspectionFlow = () => {
+  const { inspection_id } = useParams();
   const dispatch = useDispatch();
-  const [selectedImage, setSelectedImage] = useState(itemData[0].img);
-  // const [selectedImage] = useImage(itemData[1].img);
+  const images = useSelector((state) => state.inspectionFlow.images);
+  // const [selectedImage, setSelectedImage] = useState(
+  //   images ? images[0].img : null
+  // );
+  console.log(images);
   const [annotations, setAnnotations] = useState([]);
   const [newAnnotation, setNewAnnotation] = useState([]);
   const annotationsToDraw = [...annotations, ...newAnnotation];
@@ -44,10 +43,6 @@ const InspectionFlow = () => {
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
   );
-
-  const handleSmallImageClick = (img) => {
-    setSelectedImage(img);
-  };
 
   const handleEvent = (event) => {
     dispatch(setshowInspectionType(true));
@@ -136,6 +131,9 @@ const InspectionFlow = () => {
     console.log(value);
   };
 
+  const handleSmallImageClick = (value) => {
+    dispatch(setSelected({ selected: true, id: value.id }));
+  };
   useEffect(() => {
     const map = new maplibregl.Map({
       container: mapContainerPhotos.current,
@@ -154,6 +152,17 @@ const InspectionFlow = () => {
     };
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/inspection-photo/?inspection_report=${inspection_id}`
+      )
+      .then((res) => {
+        dispatch(setImages(res.data));
+      });
+  }, [dispatch, inspection_id]);
   return (
     <>
       <Appbar />
@@ -245,13 +254,16 @@ const InspectionFlow = () => {
               onWheel={handleWheel}
             >
               <Layer name="image-layer">
-                {selectedImage && (
+                {images.length > 0 ? (
                   <URLImage
-                    src={selectedImage}
+                    src={
+                      images.find((image) => image.selected === true)?.photo ||
+                      images[0].photo
+                    }
                     width={window.innerWidth * 0.65}
                     height={window.innerHeight * 0.6}
                   />
-                )}
+                ) : null}
                 {annotationsToDraw.map((value) => {
                   return (
                     <Rect
@@ -294,7 +306,7 @@ const InspectionFlow = () => {
               >
                 <Box>
                   <ImageCarousel
-                    itemData={itemData}
+                    itemData={images}
                     onImageClick={handleSmallImageClick}
                   />
                 </Box>
