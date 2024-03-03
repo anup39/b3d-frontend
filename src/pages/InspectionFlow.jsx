@@ -3,6 +3,7 @@ import Appbar from "../components/Common/AppBar";
 import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import { Autocomplete, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import MouseIcon from "@mui/icons-material/Mouse";
 import DoneIcon from "@mui/icons-material/Done";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
@@ -21,6 +22,7 @@ import maplibregl from "maplibre-gl";
 import { setImages, setSelected } from "../reducers/InspectionFlow";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { set } from "lodash";
 
 const InspectionFlow = () => {
   const { inspection_id } = useParams();
@@ -37,6 +39,9 @@ const InspectionFlow = () => {
   const [draggable, setDraggable] = useState(true);
   const mapContainerPhotos = useRef(null);
   const [map, setMap] = useState(null);
+  const [mouseState, setMouseState] = useState(true);
+  const [drawState, setDrawState] = useState(false);
+
   const showInspectionType = useSelector(
     (state) => state.displaySettings.showInspectionType
   );
@@ -123,7 +128,15 @@ const InspectionFlow = () => {
     stage.batchDraw();
   };
 
+  const handleMouse = (event) => {
+    setMouseState(true);
+    setDrawState(false);
+    setDraggable(true);
+  };
+
   const handleDraw = (event) => {
+    setDrawState(true);
+    setMouseState(false);
     setDraggable(false);
   };
 
@@ -250,24 +263,23 @@ const InspectionFlow = () => {
                 Lounkær Roof Inspection
               </Typography>
               <Grid sx={{ whiteSpace: "nowrap", boxShadow: 1 }}>
+                <Tooltip title="Mouse">
+                  <IconButton onClick={(event) => handleMouse(event)}>
+                    <MouseIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        color: mouseState ? "blue" : "red",
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
                 <Tooltip title="Draw">
                   <IconButton onClick={(event) => handleDraw(event)}>
                     <CropSquareIcon
-                      sx={{ "&:hover": { cursor: "pointer" }, color: "red" }}
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Done">
-                  <IconButton onClick={(event) => handleEvent(event)}>
-                    <DoneIcon
-                      sx={{ "&:hover": { cursor: "pointer" }, color: "red" }}
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Delete">
-                  <IconButton>
-                    <DeleteOutlineIcon
-                      sx={{ "&:hover": { cursor: "pointer" }, color: "red" }}
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        color: drawState ? "blue" : "red",
+                      }}
                     />
                   </IconButton>
                 </Tooltip>
