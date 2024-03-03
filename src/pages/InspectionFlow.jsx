@@ -67,54 +67,111 @@ const InspectionFlow = () => {
   };
 
   const handleMouseDown = (event) => {
+    console.log(event.target.name(), "name");
     if (draggable) return;
-    if (newAnnotation.length === 0) {
-      const { x, y } = event.target.getStage().getPointerPosition();
-      setNewAnnotation([{ x, y, width: 0, height: 0, key: "0" }]);
+    if (event.target.className === "Image") {
+      const stage = event.target.getStage();
+      const mousePos = stage.getPointerPosition();
+      setMouseDown(true);
+      setNewRectX(mousePos.x);
+      setNewRectY(mousePos.y);
+      setSelectedShapeName("");
+      return;
     }
+    const clickedOnTransformer =
+      event.target.getParent().className === "Transformer";
+    if (clickedOnTransformer) {
+      return;
+    }
+    const name = event.target.name();
+    const rect = rectangles.find((r) => r.name === name);
+    if (rect) {
+      setSelectedShapeName(name);
+    } else {
+      setSelectedShapeName("");
+    }
+    // if (newAnnotation.length === 0) {
+    //   const { x, y } = event.target.getStage().getPointerPosition();
+    //   setNewAnnotation([{ x, y, width: 0, height: 0, key: "0" }]);
+    // }
   };
 
   const handleMouseUp = (event) => {
     if (draggable) return;
-    if (newAnnotation.length === 1) {
-      const stage = event.target.getStage();
-      const scale = stage.scaleX(); // assuming the x and y scales are the same
-      const point = stage.getPointerPosition();
-      const x = (point.x - stage.x()) / scale;
-      const y = (point.y - stage.y()) / scale;
-      // const stageTransform = stage.getAbsoluteTransform().copy();
-      // const position = stageTransform.invert().point(point);
+    // if (newAnnotation.length === 1) {
+    //   const stage = event.target.getStage();
+    //   const scale = stage.scaleX(); // assuming the x and y scales are the same
+    //   const point = stage.getPointerPosition();
+    //   const x = (point.x - stage.x()) / scale;
+    //   const y = (point.y - stage.y()) / scale;
+    //   // const stageTransform = stage.getAbsoluteTransform().copy();
+    //   // const position = stageTransform.invert().point(point);
 
-      const annotationToAdd = {
-        x: newAnnotation[0].x,
-        y: newAnnotation[0].y,
-        width: x - newAnnotation[0].x,
-        height: y - newAnnotation[0].y,
-        key: annotations.length + 1,
-      };
-      setNewAnnotation([]);
-      setAnnotations([...annotations, annotationToAdd]);
+    //   const annotationToAdd = {
+    //     x: newAnnotation[0].x,
+    //     y: newAnnotation[0].y,
+    //     width: x - newAnnotation[0].x,
+    //     height: y - newAnnotation[0].y,
+    //     key: annotations.length + 1,
+    //   };
+    //   setNewAnnotation([]);
+    //   setAnnotations([...annotations, annotationToAdd]);
+    // }
+    if (mouseDraw) {
+      console.log("here in mouse up");
+      setRectCount(rectCount + 1);
+      setMouseDraw(false);
     }
+    setMouseDown(false);
   };
 
   const handleMouseMove = (event) => {
     if (draggable) return;
-    if (newAnnotation.length === 1) {
-      const stage = event.target.getStage();
-      const scale = stage.scaleX(); // assuming the x and y scales are the same
-      const point = stage.getPointerPosition();
-      const x = (point.x - stage.x()) / scale;
-      const y = (point.y - stage.y()) / scale;
-      // const stageTransform = stage.getAbsoluteTransform().copy();
-      // const position = stageTransform.invert().point(point);
-      setNewAnnotation([
-        {
-          ...newAnnotation[0],
-          width: x - newAnnotation[0].x,
-          height: y - newAnnotation[0].y,
-        },
-      ]);
+    const stage = event.target.getStage();
+    const mousePos = stage.getPointerPosition();
+
+    if (!rectangles[rectCount]) {
+      let newRect = {
+        x: newRectX,
+        y: newRectY,
+        width: mousePos.x - newRectX,
+        height: mousePos.y - newRectY,
+        name: `rect${rectCount + 1}`,
+        stroke: "#00A3AA",
+        key: "test",
+      };
+      setMouseDraw(true);
+      setRectangles([...rectangles, newRect]);
+      return;
     }
+
+    let updatedRect = {
+      ...rectangles[rectCount],
+      width: mousePos.x - newRectX,
+      height: mousePos.y - newRectY,
+    };
+
+    let newRects = [
+      ...rectangles.slice(0, rectCount),
+      (rectangles[rectCount] = updatedRect),
+      ...rectangles.slice(rectCount + 1),
+    ];
+
+    return setRectangles(newRects);
+  };
+
+  const _onRectChange = (index, newProps) => {
+    let updatedRect = {
+      ...rectangles[index],
+      ...newProps,
+    };
+    let newRects = [
+      ...rectangles.slice(0, index),
+      (rectangles[index] = updatedRect),
+      ...rectangles.slice(index + 1),
+    ];
+
+    setRectangles(newRects);
   };
 
   const handleWheel = (e) => {
@@ -364,11 +421,12 @@ const InspectionFlow = () => {
                 container={"stageContainer"}
                 width={window.innerWidth * 0.65}
                 height={window.innerHeight * 0.6}
-                // onMouseDown={_onStageMouseDown}
+                draggable={draggable}
+                onMouseDown={handleMouseDown}
+                onMouseUp={mouseDown && handleMouseUp}
+                onMouseMove={mouseDown && handleMouseMove}
                 // onTouchStart={_onStageMouseDown}
-                // onMouseMove={mouseDown && _onNewRectChange}
                 // onTouchMove={mouseDown && _onNewRectChange}
-                // onMouseUp={mouseDown && _onStageMouseUp}
                 // onTouchEnd={mouseDown && _onStageMouseUp}
                 onWheel={handleWheel}
               >
@@ -377,9 +435,9 @@ const InspectionFlow = () => {
                     <Rectangle
                       key={i}
                       {...rect}
-                      // onTransform={(newProps) => {
-                      // _onRectChange(i, newProps);
-                      // }}
+                      onTransform={(newProps) => {
+                        _onRectChange(i, newProps);
+                      }}
                     />
                   ))}
                   {/* <RectTransformer selectedShapeName={selectedShapeName} /> */}
