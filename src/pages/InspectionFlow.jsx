@@ -16,6 +16,7 @@ import { setshowInspectionType } from "../reducers/DisplaySettings";
 import InspectionTypeForm from "../components/InspectionFlow/InspectionTypeForm";
 import { Stage, Layer, Rect, Image } from "react-konva";
 import useImage from "use-image";
+import URLImage from "../components/Common/URLImage";
 
 // testing
 
@@ -28,8 +29,8 @@ const itemData = [
 
 const InspectionFlow = () => {
   const dispatch = useDispatch();
-  // const [selectedImage, setSelectedImage] = useState(itemData[0].img);
-  const [selectedImage] = useImage(itemData[1].img);
+  const [selectedImage, setSelectedImage] = useState(itemData[0].img);
+  // const [selectedImage] = useImage(itemData[1].img);
   const [annotations, setAnnotations] = useState([]);
   const [newAnnotation, setNewAnnotation] = useState([]);
   const annotationsToDraw = [...annotations, ...newAnnotation];
@@ -43,7 +44,7 @@ const InspectionFlow = () => {
   );
 
   const handleSmallImageClick = (img) => {
-    // setSelectedImage(img);
+    setSelectedImage(img);
   };
 
   const handleEvent = (event) => {
@@ -214,19 +215,6 @@ const InspectionFlow = () => {
           ) : null} */}
 
           <Grid item xs={12} md={8}>
-            {/* <Box
-                sx={{
-                  height: "70%",
-                  width: { xs: "95%", md: "100%", lg: "100%" },
-                  backgroundColor: "pink",
-                }}
-              >
-                <img
-                  src={selectedImage}
-                  alt={selectedImage}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </Box> */}
             <Stage
               onMouseDown={handleMouseDown}
               onMouseUp={handleMouseUp}
@@ -238,10 +226,10 @@ const InspectionFlow = () => {
             >
               <Layer name="image-layer">
                 {selectedImage && (
-                  <Image
-                    width={window.innerWidth}
-                    height={window.innerHeight}
-                    image={selectedImage}
+                  <URLImage
+                    src={selectedImage}
+                    width={window.innerWidth * 0.65}
+                    height={window.innerHeight * 0.6}
                   />
                 )}
                 {annotationsToDraw.map((value) => {
@@ -284,7 +272,7 @@ const InspectionFlow = () => {
                   },
                 }}
               >
-                <Box sx={{}}>
+                <Box>
                   <ImageCarousel
                     itemData={itemData}
                     onImageClick={handleSmallImageClick}
