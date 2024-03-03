@@ -23,6 +23,7 @@ import { setImages, setSelected } from "../reducers/InspectionFlow";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { set } from "lodash";
+import Rectangle from "../components/InspectionFlow/Rectangle";
 
 const InspectionFlow = () => {
   const { inspection_id } = useParams();
@@ -41,6 +42,18 @@ const InspectionFlow = () => {
   const [map, setMap] = useState(null);
   const [mouseState, setMouseState] = useState(true);
   const [drawState, setDrawState] = useState(false);
+
+  // for the konva states
+  const stageRef = useRef();
+  const imgLayerRef = useRef();
+  const [rectangles, setRectangles] = useState([]);
+  const [rectCount, setRectCount] = useState(0);
+
+  const [selectedShapeName, setSelectedShapeName] = useState("");
+  const [mouseDown, setMouseDown] = useState(false);
+  const [mouseDraw, setMouseDraw] = useState(false);
+  const [newRectX, setNewRectX] = useState(0);
+  const [newRectY, setNewRectY] = useState(0);
 
   const showInspectionType = useSelector(
     (state) => state.displaySettings.showInspectionType
@@ -106,7 +119,7 @@ const InspectionFlow = () => {
 
   const handleWheel = (e) => {
     e.evt.preventDefault();
-    const stage = e.target.getStage();
+    const stage = stageRef.current;
     const oldScale = stage.scaleX();
     const initialScale = 1; // replace with your initial scale
     const mousePointTo = {
@@ -128,13 +141,13 @@ const InspectionFlow = () => {
     stage.batchDraw();
   };
 
-  const handleMouse = (event) => {
+  const handleMouse = () => {
     setMouseState(true);
     setDrawState(false);
     setDraggable(true);
   };
 
-  const handleDraw = (event) => {
+  const handleDraw = () => {
     setDrawState(true);
     setMouseState(false);
     setDraggable(false);
@@ -308,7 +321,7 @@ const InspectionFlow = () => {
           ) : null} */}
 
           <Grid item xs={12} md={8}>
-            <Stage
+            {/* <Stage
               onMouseDown={handleMouseDown}
               onMouseUp={handleMouseUp}
               onMouseMove={handleMouseMove}
@@ -343,7 +356,48 @@ const InspectionFlow = () => {
                   );
                 })}
               </Layer>
-            </Stage>
+            </Stage> */}
+
+            <div id="stageContainer">
+              <Stage
+                ref={stageRef}
+                container={"stageContainer"}
+                width={window.innerWidth * 0.65}
+                height={window.innerHeight * 0.6}
+                // onMouseDown={_onStageMouseDown}
+                // onTouchStart={_onStageMouseDown}
+                // onMouseMove={mouseDown && _onNewRectChange}
+                // onTouchMove={mouseDown && _onNewRectChange}
+                // onMouseUp={mouseDown && _onStageMouseUp}
+                // onTouchEnd={mouseDown && _onStageMouseUp}
+                onWheel={handleWheel}
+              >
+                <Layer>
+                  {rectangles.map((rect, i) => (
+                    <Rectangle
+                      key={i}
+                      {...rect}
+                      // onTransform={(newProps) => {
+                      // _onRectChange(i, newProps);
+                      // }}
+                    />
+                  ))}
+                  {/* <RectTransformer selectedShapeName={selectedShapeName} /> */}
+                </Layer>
+                <Layer ref={imgLayerRef}>
+                  {images.length > 0 ? (
+                    <URLImage
+                      src={
+                        images.find((image) => image.selected === true)
+                          ?.photo || images[0].photo
+                      }
+                      width={window.innerWidth * 0.65}
+                      height={window.innerHeight * 0.6}
+                    />
+                  ) : null}
+                </Layer>
+              </Stage>
+            </div>
             <Box
               sx={{
                 width: { xs: "95%", md: "99%", lg: "99%" },
