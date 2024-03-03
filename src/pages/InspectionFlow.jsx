@@ -51,7 +51,6 @@ const InspectionFlow = () => {
   );
 
   const handleMouseDown = (event) => {
-    console.log(event.target.name(), "name");
     if (draggable) return;
     if (event.target.className === "Image") {
       const stage = event.target.getStage();
@@ -79,7 +78,6 @@ const InspectionFlow = () => {
   const handleMouseUp = () => {
     if (draggable) return;
     if (mouseDraw) {
-      console.log("here in mouse up");
       setRectCount(rectCount + 1);
       setMouseDraw(false);
     }
@@ -225,8 +223,6 @@ const InspectionFlow = () => {
         dispatch(setImages(res.data));
         res.data.forEach((image) => {
           const layerId = `point-${image.id}`;
-
-          console.log(image.selected);
 
           if (map && map.getLayer(layerId) === undefined) {
             map.addLayer({
