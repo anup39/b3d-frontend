@@ -136,25 +136,28 @@ const InspectionFlow = () => {
   return (
     <>
       <Appbar />
-      <div
-        style={{
-          margin: "20px",
-        }}
-      >
-        <Grid container spacing={2}>
+      <div>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            paddingLeft: 1,
+            paddingRight: 1,
+            paddingTop: 2,
+            paddingBottom: 1,
+          }}
+        >
           <Grid
             item
             sx={{
-              display: "flex",
-              alignItems: "center",
+              padding: "0px",
             }}
           >
             <Box
-              container
               sx={{
                 display: "flex",
                 alignItems: "center",
-                gap: { xs: "30px", sm: "80px", md: "100px", lg: "180px" },
+                gap: "200px",
               }}
             >
               <Typography
@@ -164,7 +167,7 @@ const InspectionFlow = () => {
               >
                 Lounkær Roof Inspection
               </Typography>
-              <Grid sx={{ whiteSpace: "nowrap" }}>
+              <Grid sx={{ whiteSpace: "nowrap", boxShadow: 1 }}>
                 <Tooltip title="Draw">
                   <IconButton onClick={(event) => handleDraw(event)}>
                     <CropSquareIcon
@@ -187,6 +190,9 @@ const InspectionFlow = () => {
                   </IconButton>
                 </Tooltip>
               </Grid>
+              <Button variant="contained" color="error">
+                Report
+              </Button>
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
@@ -206,9 +212,9 @@ const InspectionFlow = () => {
               <InspectionTypeForm />
             </Box>
           ) : null} */}
-          <Grid container spacing={2} sx={{ margin: "4px" }}>
-            <Grid item xs={12} md={8}>
-              {/* <Box
+
+          <Grid item xs={12} md={8}>
+            {/* <Box
                 sx={{
                   height: "70%",
                   width: { xs: "95%", md: "100%", lg: "100%" },
@@ -221,196 +227,148 @@ const InspectionFlow = () => {
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               </Box> */}
-              <Stage
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
-                onMouseMove={handleMouseMove}
-                width={900}
-                height={400}
-                draggable={draggable}
-                onWheel={handleWheel}
-              >
-                <Layer name="image-layer">
-                  {selectedImage && (
-                    <Image width={900} height={400} image={selectedImage} />
-                  )}
-                  {annotationsToDraw.map((value) => {
-                    return (
-                      <Rect
-                        key={value.key}
-                        x={value.x * imageScale}
-                        y={value.y * imageScale}
-                        width={value.width * imageScale}
-                        height={value.height * imageScale}
-                        fill="transparent"
-                        stroke="black"
-                        onClick={(value) => handleRectClick(value)}
-                      />
-                    );
-                  })}
-                </Layer>
-              </Stage>
-              <Box
+            <Stage
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
+              onMouseMove={handleMouseMove}
+              width={window.innerWidth * 0.65}
+              height={window.innerHeight * 0.6}
+              draggable={draggable}
+              onWheel={handleWheel}
+            >
+              <Layer name="image-layer">
+                {selectedImage && (
+                  <Image
+                    width={window.innerWidth}
+                    height={window.innerHeight}
+                    image={selectedImage}
+                  />
+                )}
+                {annotationsToDraw.map((value) => {
+                  return (
+                    <Rect
+                      key={value.key}
+                      x={value.x * imageScale}
+                      y={value.y * imageScale}
+                      width={value.width * imageScale}
+                      height={value.height * imageScale}
+                      fill="transparent"
+                      stroke="black"
+                      onClick={(value) => handleRectClick(value)}
+                    />
+                  );
+                })}
+              </Layer>
+            </Stage>
+            <Box
+              sx={{
+                width: { xs: "95%", md: "99%", lg: "99%" },
+                display: "flex",
+                justifyContent: "center",
+                backgroundColor: "#F1F7FF",
+                // height: { xs: "30%", md: "25%", lg: "25%" },
+                marginTop: "8px",
+                // paddingTop: { sx: "0", md: "15px", large: "15px" },
+                overflow: "hidden",
+              }}
+            >
+              <Grid
+                item
                 sx={{
-                  width: { xs: "95%", md: "100%", lg: "100%" },
-                  display: "flex",
-                  justifyContent: "center",
-                  backgroundColor: "#F1F7FF",
-                  height: { xs: "30%", md: "25%", lg: "25%" },
-                  marginTop: "8px",
-                  paddingTop: { sx: "0", md: "15px", large: "15px" },
-                  overflow: "hidden",
+                  transform: {
+                    xs: `scale(0.4)`,
+                    sm: `scale(0.75)`,
+                    md: `scale(0.75)`,
+                    lg: `scale(0.9)`,
+                    xl: `scale(1.0)`,
+                  },
                 }}
               >
-                <Grid
-                  item
-                  sx={{
-                    transform: {
-                      xs: `scale(0.4)`,
-                      sm: `scale(0.75)`,
-                      md: `scale(0.75)`,
-                      lg: `scale(0.9)`,
-                      xl: `scale(1.0)`,
-                    },
-                  }}
-                >
-                  <Box>
-                    <ImageCarousel
-                      itemData={itemData}
-                      onImageClick={handleSmallImageClick}
+                <Box sx={{}}>
+                  <ImageCarousel
+                    itemData={itemData}
+                    onImageClick={handleSmallImageClick}
+                  />
+                </Box>
+              </Grid>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Grid item>
+              <Box
+                sx={{
+                  width: { xs: "95%", md: "98%", lg: "98%" },
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Autocomplete
+                  sx={{ mb: 0.5, width: "100%" }}
+                  multiple
+                  options={type_of_inspection.map((type) => type.standard_type)}
+                  getOptionLabel={(option) => option}
+                  // disableCloseOnSelect
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Standard Type"
+                      variant="outlined"
                     />
-                  </Box>
-                </Grid>
+                  )}
+                />
+
+                <Autocomplete
+                  sx={{ mb: 0.5, width: "100%" }}
+                  multiple
+                  options={type_of_inspection.map((type) => type.sub_type)}
+                  getOptionLabel={(option) => option}
+                  // disableCloseOnSelect
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Sub Type"
+                      variant="outlined"
+                    />
+                  )}
+                />
+
+                <Autocomplete
+                  multiple
+                  sx={{ mb: 0.5, width: "100%" }}
+                  options={type_of_inspection.map((type) => type.type)}
+                  getOptionLabel={(option) => option}
+                  // disableCloseOnSelect
+                  renderInput={(params) => (
+                    <TextField {...params} label="Type" variant="outlined" />
+                  )}
+                />
               </Box>
             </Grid>
-            <Grid item xs={12} md={4}>
-              <Grid
-                container
-                direction={{ xs: "row", md: "column" }}
-                spacing={2}
-              >
-                <Grid item xs={6} md={12}>
-                  <Box
-                    sx={{
-                      height: "200px",
-                      backgroundColor: "lightgreen",
-                      width: "100%",
+            <Grid container direction={{ xs: "row", md: "column" }} spacing={2}>
+              <Grid item xs={6} md={12}>
+                <Box>
+                  <img
+                    src={img3}
+                    style={{
+                      width: "32vw",
+                      height: "30vh",
+                      objectFit: "cover",
                     }}
-                  >
-                    <img
-                      src={img3}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item xs={6} md={12}>
-                  <Box
-                    sx={{
-                      height: "200px",
-                      backgroundColor: "lightcoral",
-                      width: { xs: "90%", md: "100%", lg: "100%" },
-                    }}
-                  >
-                    <img
-                      src={img2}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  </Box>
-                </Grid>
+                  />
+                </Box>
               </Grid>
-              <Grid container direction="column" spacing={2}>
-                <Grid item>
-                  <Box
-                    sx={{
-                      width: { xs: "95%", md: "100%", lg: "100%" },
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
+              <Grid item xs={6} md={12}>
+                <Box>
+                  <img
+                    src={img2}
+                    style={{
+                      width: "32vw",
+                      height: "30vh",
+                      objectFit: "cover",
                     }}
-                  >
-                    <Typography
-                      sx={{
-                        marginLeft: 1,
-                        marginTop: 1,
-                        color: "#ED1C24",
-                      }}
-                      variant="body2"
-                      gutterBottom
-                    >
-                      Filter
-                    </Typography>
-                    <Autocomplete
-                      sx={{ m: 0.5, width: "100%" }}
-                      multiple
-                      options={type_of_inspection.map(
-                        (type) => type.standard_type
-                      )}
-                      getOptionLabel={(option) => option}
-                      disableCloseOnSelect
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Standard Type"
-                          variant="outlined"
-                        />
-                      )}
-                    />
-
-                    <Autocomplete
-                      sx={{ m: 0.5, width: "100%" }}
-                      multiple
-                      options={type_of_inspection.map((type) => type.sub_type)}
-                      getOptionLabel={(option) => option}
-                      disableCloseOnSelect
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Sub Type"
-                          variant="outlined"
-                        />
-                      )}
-                    />
-
-                    <Autocomplete
-                      multiple
-                      sx={{ m: 0.5, width: "100%" }}
-                      options={type_of_inspection.map((type) => type.type)}
-                      getOptionLabel={(option) => option}
-                      disableCloseOnSelect
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Type"
-                          variant="outlined"
-                        />
-                      )}
-                    />
-                  </Box>
-                </Grid>
-                <Grid
-                  item
-                  sx={{
-                    display: {
-                      xs: "none",
-                      sm: "none",
-                      md: "flex",
-                      lg: "flex",
-                    },
-                    justifyContent: "center",
-                  }}
-                >
-                  <Button variant="contained" color="error">
-                    Report
-                  </Button>
-                </Grid>
+                  />
+                </Box>
               </Grid>
             </Grid>
           </Grid>

@@ -1,9 +1,9 @@
 .slick-next {
-  background-color: #f26b92 !important;
+  background-color: #F1F7FF !important;
 }
 
 .slick-prev {
-  background-color: #f26b92 !important;
+  background-color: #F1F7FF !important;
   font-size: 0;
   line-height: 0;
   position: absolute;
@@ -14,6 +14,18 @@
   padding: 0;
   transform: translate(-50%, -50%) !important;
 }
+
+.slick-prev:before{
+  content: '←';
+  font-size: 20px;
+  color: #D51B60;
+}
+.slick-next:before{
+  content: '→';
+  font-size: 20px;
+  color: #D51B60;
+}
+
 .slick-track {
   position: relative;
   top: 0;
