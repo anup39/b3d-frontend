@@ -133,6 +133,22 @@ const InspectionFlow = () => {
 
   const handleSmallImageClick = (value) => {
     dispatch(setSelected({ selected: true, id: value.id }));
+
+    images.forEach((image) => {
+      const layerId = `point-${image.id}`;
+
+      if (map.getLayer(layerId)) {
+        map.setPaintProperty(
+          layerId,
+          "circle-color",
+          image.id === value.id ? "red" : "blue"
+        );
+
+        if (image.id === value.id) {
+          map.flyTo({ center: [image.longitude, image.latitude], zoom: 22 });
+        }
+      }
+    });
   };
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -160,9 +176,45 @@ const InspectionFlow = () => {
         }/inspection-photo/?inspection_report=${inspection_id}`
       )
       .then((res) => {
+        if (res.data.length > 0) {
+          res.data[0].selected = true;
+        }
         dispatch(setImages(res.data));
+        res.data.forEach((image) => {
+          const layerId = `point-${image.id}`;
+
+          console.log(image.selected);
+
+          if (map && map.getLayer(layerId) === undefined) {
+            map.addLayer({
+              id: layerId,
+              type: "circle",
+              source: {
+                type: "geojson",
+                data: {
+                  type: "Feature",
+                  geometry: {
+                    type: "Point",
+                    coordinates: [image.longitude, image.latitude],
+                  },
+                },
+              },
+              paint: {
+                "circle-radius": 10,
+                "circle-color": image.selected ? "red" : "blue",
+              },
+            });
+          }
+          if (map && image.selected) {
+            map.flyTo({
+              center: [image.longitude, image.latitude],
+              zoom: 22,
+            });
+          }
+        });
       });
-  }, [dispatch, inspection_id]);
+  }, [dispatch, inspection_id, map]);
+
   return (
     <>
       <Appbar />
