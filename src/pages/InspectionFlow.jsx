@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Appbar from "../components/Common/AppBar";
 import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import { Autocomplete, TextField } from "@mui/material";
@@ -14,12 +14,12 @@ import img4 from "/Inspire2/DJI_0066_7_8.jpg";
 import ImageCarousel from "../components/Common/ImageCarousel";
 import { setshowInspectionType } from "../reducers/DisplaySettings";
 import InspectionTypeForm from "../components/InspectionFlow/InspectionTypeForm";
-import { Stage, Layer, Rect, Image } from "react-konva";
-import useImage from "use-image";
+import { Stage, Layer, Rect } from "react-konva";
 import URLImage from "../components/Common/URLImage";
+import { FullscreenControl } from "maplibre-gl";
+import maplibregl from "maplibre-gl";
 
 // testing
-
 const itemData = [
   { img: img1, title: "Image 1" },
   { img: img2, title: "Image 2" },
@@ -36,6 +36,8 @@ const InspectionFlow = () => {
   const annotationsToDraw = [...annotations, ...newAnnotation];
   const [imageScale, setImageScale] = useState(1);
   const [draggable, setDraggable] = useState(true);
+  const mapContainerPhotos = useRef(null);
+  const [map, setMap] = useState(null);
   const showInspectionType = useSelector(
     (state) => state.displaySettings.showInspectionType
   );
@@ -133,6 +135,24 @@ const InspectionFlow = () => {
   const handleRectClick = (value) => {
     console.log(value);
   };
+
+  useEffect(() => {
+    const map = new maplibregl.Map({
+      container: mapContainerPhotos.current,
+      style: `https://api.maptiler.com/maps/satellite/style.json?key=${
+        import.meta.env.VITE_MAPTILER_TOKEN
+      }`,
+      center: [10.035153, 56.464267],
+      zoom: 10,
+      attributionControl: false,
+    });
+    setMap(map);
+    map.addControl(new FullscreenControl());
+    map.addControl(new maplibregl.NavigationControl());
+    return () => {
+      map.remove();
+    };
+  }, []);
 
   return (
     <>
@@ -300,7 +320,7 @@ const InspectionFlow = () => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Standard Type"
+                      label="Standard Inspection"
                       variant="outlined"
                     />
                   )}
@@ -315,7 +335,7 @@ const InspectionFlow = () => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Sub Type"
+                      label="Sub Inspection"
                       variant="outlined"
                     />
                   )}
@@ -328,7 +348,11 @@ const InspectionFlow = () => {
                   getOptionLabel={(option) => option}
                   // disableCloseOnSelect
                   renderInput={(params) => (
-                    <TextField {...params} label="Type" variant="outlined" />
+                    <TextField
+                      {...params}
+                      label="Inspection"
+                      variant="outlined"
+                    />
                   )}
                 />
               </Box>
@@ -348,14 +372,13 @@ const InspectionFlow = () => {
               </Grid>
               <Grid item xs={6} md={12}>
                 <Box>
-                  <img
-                    src={img2}
+                  <div
+                    ref={mapContainerPhotos}
                     style={{
                       width: "32vw",
                       height: "30vh",
-                      objectFit: "cover",
                     }}
-                  />
+                  ></div>
                 </Box>
               </Grid>
             </Grid>
