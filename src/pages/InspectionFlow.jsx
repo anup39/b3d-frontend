@@ -7,9 +7,7 @@ import MouseIcon from "@mui/icons-material/Mouse";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
 import { Tooltip } from "@mui/material";
 import ImageCarousel from "../components/Common/ImageCarousel";
-import { setshowInspectionType } from "../reducers/DisplaySettings";
-import InspectionTypeForm from "../components/InspectionFlow/InspectionTypeForm";
-import { Stage, Layer, Rect } from "react-konva";
+import { Stage, Layer } from "react-konva";
 import URLImage from "../components/Common/URLImage";
 import { FullscreenControl } from "maplibre-gl";
 import maplibregl from "maplibre-gl";
@@ -31,10 +29,6 @@ const InspectionFlow = () => {
   const { inspection_id } = useParams();
   const dispatch = useDispatch();
   const images = useSelector((state) => state.inspectionFlow.images);
-  // const [selectedImage, setSelectedImage] = useState(
-  //   images ? images[0].img : null
-  // );
-  // console.log(images);
   const [draggable, setDraggable] = useState(true);
   const mapContainerPhotos = useRef(null);
   const [map, setMap] = useState(null);
@@ -52,28 +46,19 @@ const InspectionFlow = () => {
   const [newRectX, setNewRectX] = useState(0);
   const [newRectY, setNewRectY] = useState(0);
 
-  console.log(rectangles, "rectangles");
-  const showInspectionType = useSelector(
-    (state) => state.displaySettings.showInspectionType
-  );
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
   );
-
-  const handleEvent = (event) => {
-    dispatch(setshowInspectionType(true));
-  };
 
   const handleMouseDown = (event) => {
     console.log(event.target.name(), "name");
     if (draggable) return;
     if (event.target.className === "Image") {
       const stage = event.target.getStage();
-      // const mousePos = stage.getPointerPosition();
-      const pos = getRelativePointerPosition(stage);
+      const mousePos = getRelativePointerPosition(stage);
       setMouseDown(true);
-      setNewRectX(pos.x);
-      setNewRectY(pos.y);
+      setNewRectX(mousePos.x);
+      setNewRectY(mousePos.y);
       setSelectedShapeName("");
       return;
     }
@@ -91,7 +76,7 @@ const InspectionFlow = () => {
     }
   };
 
-  const handleMouseUp = (event) => {
+  const handleMouseUp = () => {
     if (draggable) return;
     if (mouseDraw) {
       console.log("here in mouse up");
@@ -185,9 +170,9 @@ const InspectionFlow = () => {
     setDraggable(false);
   };
 
-  const handleRectClick = (value) => {
-    console.log(value);
-  };
+  // const handleRectClick = (value) => {
+  //   console.log(value);
+  // };
 
   const handleSmallImageClick = (value) => {
     dispatch(setSelected({ selected: true, id: value.id }));
@@ -346,50 +331,8 @@ const InspectionFlow = () => {
               </Button>
             </Grid>
           </Grid>
-          {/* {showInspectionType ? (
-            <Box>
-              <InspectionTypeForm />
-            </Box>
-          ) : null} */}
 
           <Grid item xs={12} md={8}>
-            {/* <Stage
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
-              onMouseMove={handleMouseMove}
-              width={window.innerWidth * 0.65}
-              height={window.innerHeight * 0.6}
-              draggable={draggable}
-              onWheel={handleWheel}
-            >
-              <Layer name="image-layer">
-                {images.length > 0 ? (
-                  <URLImage
-                    src={
-                      images.find((image) => image.selected === true)?.photo ||
-                      images[0].photo
-                    }
-                    width={window.innerWidth * 0.65}
-                    height={window.innerHeight * 0.6}
-                  />
-                ) : null}
-                {annotationsToDraw.map((value) => {
-                  return (
-                    <Rect
-                      key={value.key}
-                      x={value.x * imageScale}
-                      y={value.y * imageScale}
-                      width={value.width * imageScale}
-                      height={value.height * imageScale}
-                      fill="transparent"
-                      stroke="black"
-                      onClick={(value) => handleRectClick(value)}
-                    />
-                  );
-                })}
-              </Layer>
-            </Stage> */}
-
             <div id="stageContainer">
               <Stage
                 ref={stageRef}
