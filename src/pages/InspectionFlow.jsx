@@ -371,16 +371,23 @@ const InspectionFlow = () => {
             </Grid>
             <Grid container direction={{ xs: "row", md: "column" }} spacing={2}>
               <Grid item xs={6} md={12}>
-                <Box>
-                  <img
-                    src={img3}
-                    style={{
-                      width: "32vw",
-                      height: "30vh",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Box>
+                {images.length > 0 ? (
+                  <Box>
+                    <img
+                      src={
+                        (images.length > 0 &&
+                          images.find((image) => image.selected === true)
+                            ?.photo) ||
+                        images[0].photo
+                      }
+                      style={{
+                        width: "32vw",
+                        height: "30vh",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Box>
+                ) : null}
               </Grid>
               <Grid item xs={6} md={12}>
                 <Box>
