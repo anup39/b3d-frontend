@@ -27,6 +27,19 @@ import Rectangle from "../components/InspectionFlow/Rectangle";
 import RectTransformer from "../components/InspectionFlow/RectangleTransformer";
 import "./InspectionFlow.css";
 
+function getRelativePointerPosition(node) {
+  // the function will return pointer position relative to the passed node
+  var transform = node.getAbsoluteTransform().copy();
+  // to detect relative position we need to invert transform
+  transform.invert();
+
+  // get pointer (say mouse or touch) position
+  var pos = node.getStage().getPointerPosition();
+
+  // now we find relative point
+  return transform.point(pos);
+}
+
 const InspectionFlow = () => {
   const { inspection_id } = useParams();
   const dispatch = useDispatch();
@@ -74,10 +87,11 @@ const InspectionFlow = () => {
     if (draggable) return;
     if (event.target.className === "Image") {
       const stage = event.target.getStage();
-      const mousePos = stage.getPointerPosition();
+      // const mousePos = stage.getPointerPosition();
+      const pos = getRelativePointerPosition(stage);
       setMouseDown(true);
-      setNewRectX(mousePos.x);
-      setNewRectY(mousePos.y);
+      setNewRectX(pos.x);
+      setNewRectY(pos.y);
       setSelectedShapeName("");
       return;
     }
@@ -131,7 +145,8 @@ const InspectionFlow = () => {
   const handleMouseMove = (event) => {
     if (draggable) return;
     const stage = event.target.getStage();
-    const mousePos = stage.getPointerPosition();
+    const mousePos = getRelativePointerPosition(stage);
+    // const mousePos = stage.getPointerPosition();
 
     if (!rectangles[rectCount]) {
       let newRect = {
