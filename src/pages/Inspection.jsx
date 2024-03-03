@@ -21,20 +21,22 @@ const Inspection = () => {
     (state) => state.displaySettings.showUploadInspection
   );
 
-  // When the component is mounted the data is set the store
   useEffect(() => {
-    // later from api now it is hardcoded
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection-report/`)
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/inspection-report/?project=${project_id}`
+      )
       .then((res) => {
         dispatch(setInspectionData(res.data));
       });
-    // When the component unmount the data is removed from the store
+
     return () => {
       dispatch(setInspectionData([]));
       dispatch(setshowUploadInspection(false));
     };
-  }, [dispatch]);
+  }, [dispatch, project_id]);
 
   return (
     <div>

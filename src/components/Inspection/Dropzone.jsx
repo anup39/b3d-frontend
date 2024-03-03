@@ -1,13 +1,11 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import * as ExifReader from "exifreader";
-import maplibregl from "maplibre-gl";
 import PropTypes from "prop-types";
 
 const Dropzone = ({ handleFileData, map, files }) => {
   const onDrop = useCallback(
     (acceptedFiles) => {
-      let lastFileTags;
       acceptedFiles?.forEach((file, index) => {
         const reader = new FileReader();
         reader.onabort = () => console.log("file reading was aborted");
@@ -46,7 +44,6 @@ const Dropzone = ({ handleFileData, map, files }) => {
           });
           handleFileData(fileData);
 
-          // Save the tags of the last file
           if (index === acceptedFiles.length - 1) {
             map.flyTo({
               center: [
@@ -63,7 +60,10 @@ const Dropzone = ({ handleFileData, map, files }) => {
     [handleFileData, map, files]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: "image/png",
+  });
 
   return (
     <div
@@ -83,9 +83,9 @@ const Dropzone = ({ handleFileData, map, files }) => {
         <p>Drop the files here ...</p>
       ) : (
         <p>
-          <span>Choose Photos</span>
+          <span>Choose Photos OR</span>
           <br />
-          <span>/Drag and Drop</span>
+          <span>Drag and Drop</span>
         </p>
       )}
     </div>

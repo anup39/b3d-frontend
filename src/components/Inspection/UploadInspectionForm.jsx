@@ -1,5 +1,12 @@
 import { useEffect, useState, useRef } from "react";
-import { Box, Button, Checkbox, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Paper,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useDispatch, useSelector } from "react-redux";
 import Dropzone from "./Dropzone";
@@ -8,54 +15,38 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { setTypeofInspectionChecked } from "../../reducers/InspectionUpload";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { setshowUploadInspection } from "../../reducers/DisplaySettings";
 import maplibregl, { FullscreenControl } from "maplibre-gl";
+import axios from "axios";
+import { setInspectionData } from "../../reducers/Inspection";
 
-const UploadInspectionForm = ({ client_id, project_id }) => {
+const UploadInspectionForm = ({ project_id }) => {
   const mapContainerPhotos = useRef();
   const dispatch = useDispatch();
-  const [selectedDate, setSelectedDate] = useState(null);
+  // const [selectedDate, setSelectedDate] = useState(null);
   const [files, setFileData] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [loading, setLoading] = useState(false);
   const inspection_id = useSelector(
     (state) => state.inspectionUpload.inspection_id
   );
+  const user_id = useSelector((state) => state.auth.user_id);
   const inspection = useSelector(
     (state) => state.inspection.inspectionData
   ).filter((inspection) => inspection.id === inspection_id)[0];
   const [map, setMap] = useState(null);
-
-  // console.log(inspection);
-  console.log(files, "files");
-
-  const type_of_inspection = useSelector(
-    (state) => state.inspectionUpload.type_of_inspection
-  );
   const handleFileData = (fileData) => {
     setFileData((prevFileData) => [...prevFileData, fileData]);
-  };
-
-  const handleChangeType = (event, type) => {
-    const id = type.id;
-    dispatch(
-      setTypeofInspectionChecked({ id: id, checked: event.target.checked })
-    );
   };
 
   const handleSelectAll = (event) => {
     if (event.target.checked) {
       setFileData((prevFileData) => {
-        // Copy the previous file data
         const newFileData = [...prevFileData];
-
-        // Update the checked property of all files
         newFileData.forEach((file, index) => {
           file.checked = event.target.checked;
-
-          // Change the fill color of the circle
           map.setPaintProperty(
             "point-" + index,
             "circle-color",
@@ -67,14 +58,9 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
       });
     } else {
       setFileData((prevFileData) => {
-        // Copy the previous file data
         const newFileData = [...prevFileData];
-
-        // Update the checked property of all files
         newFileData.forEach((file, index) => {
           file.checked = event.target.checked;
-
-          // Change the fill color of the circle
           map.setPaintProperty(
             "point-" + index,
             "circle-color",
@@ -90,10 +76,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
 
   const handleChangePhoto = (event, file, index) => {
     setFileData((prevFileData) => {
-      // Copy the previous file data
       const newFileData = [...prevFileData];
-
-      // Update the checked property of the file at the given index
       newFileData[index] = {
         ...newFileData[index],
         checked: event.target.checked,
@@ -103,20 +86,57 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
     });
 
     if (event.target.checked) {
-      // Change the fill color of the layer to a new color
       map.setPaintProperty("point-" + index, "circle-color", "#ff0000");
       map.flyTo({
         center: [file.longitude, file.latitude],
         zoom: 21,
       });
     } else {
-      // Change the fill color of the layer back to the previous color
       map.setPaintProperty("point-" + index, "circle-color", "#007cbf");
     }
   };
 
-  const handleUploadPhotos = (event) => {
-    event.preventDefault();
+  const handleUploadPhotos = () => {
+    // event.preventDefault();
+    console.log("upload photos");
+    setLoading(true);
+    files.map((file, index) => {
+      if (file.checked) {
+        const data = new FormData();
+        data.append("inspection_report", inspection_id);
+        data.append("photo", file.file);
+        data.append("latitude", file.latitude);
+        data.append("longitude", file.longitude);
+        data.append("created_by", user_id);
+        data.append("is_display", true);
+        data.append("is_inspected", false);
+        axios
+          .post(
+            `${import.meta.env.VITE_API_DASHBOARD_URL}/inspection-photo/`,
+            data
+          )
+          .then(() => {
+            setLoading(false);
+            if (files.length - 1 === index) {
+              axios
+                .get(
+                  `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/inspection-report/?project=${project_id}`
+                )
+                .then((res) => {
+                  console.log(res.data);
+                  dispatch(setshowUploadInspection(false));
+                  dispatch(setInspectionData(res.data));
+                });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+          });
+      }
+    });
   };
 
   useEffect(() => {
@@ -137,17 +157,6 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
     });
     setMap(map);
     map.addControl(new FullscreenControl());
-    // map.on("load", () => {
-    //   files.forEach((file) => {
-    //     if (file.latitude && file.longitude) {
-    //       new maplibregl.Marker()
-    //         .setLngLat([file.longitude, file.latitude])
-    //         .addTo(map);
-    //     }
-    //     map.flyTo({ center: [file.longitude, file.latitude], zoom: 15 });
-    //   });
-    // });
-
     return () => {
       map.remove();
     };
@@ -170,7 +179,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
         }}
       >
         <form
-          onSubmit={handleUploadPhotos}
+          // onSubmit={handleUploadPhotos}
           style={{
             width: "80%",
             maxWidth: "800px",
@@ -203,78 +212,20 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                             defaultValue={dayjs(
                               JSON.parse(inspection?.date_of_inspection)
                             )}
-                            onChange={(newValue) => setSelectedDate(newValue)}
-                            label="Pick a date "
+                            // disabled={true}
+                            // onChange={(newValue) => setSelectedDate(newValue)}
+                            // label="Pick a date "
                           />
                         </DemoContainer>
                       </LocalizationProvider>
                     </Grid>
-                    {/* <Grid item xs={12}>
-                      <Paper
-                        sx={{
-                          flexGrow: 1,
-                          backgroundColor: (theme) =>
-                            theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-                          height: "220px",
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            width: "200px",
-                            overflow: "scroll",
-                            flex: "1",
-                          }}
-                        >
-                          <Typography
-                            sx={{
-                              marginLeft: 2,
-                              marginTop: 2,
-                            }}
-                            variant="body2"
-                            gutterBottom
-                          >
-                            Type of Inspection
-                          </Typography>
-                          <Grid container>
-                            <Grid item xs={12}>
-                              {type_of_inspection.map((type) => (
-                                <FormControlLabel
-                                  sx={{ marginLeft: 1 }}
-                                  key={type.id}
-                                  slotProps={{
-                                    typography: {
-                                      fontSize: 12,
-                                      color: "#6A6D70",
-                                      fontWeight: 600,
-                                    },
-                                  }}
-                                  label={type?.full_type}
-                                  control={
-                                    <Checkbox
-                                      size="small"
-                                      checked={type?.checked}
-                                      onChange={(event) =>
-                                        handleChangeType(event, type)
-                                      }
-                                    />
-                                  }
-                                />
-                              ))}
-                            </Grid>
-                          </Grid>
-                        </Box>
-                      </Paper>
-                    </Grid> */}
                   </Grid>
                 </Grid>
                 <Grid item xs={12} md={7}>
                   <Box>
-                    {/* <Box sx={{ height: "300px" }}>Map placement </Box> */}
                     <div
                       style={{ width: "100%", height: "350px" }}
                       ref={mapContainerPhotos}
-                      // id="mapproperty"
-                      // className="mapproperty"
                     ></div>
                   </Box>
                 </Grid>
@@ -316,7 +267,7 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                     slotProps={{
                       typography: {
                         fontSize: 12,
-                        color: "#6A6D70",
+                        color: "red",
                         fontWeight: 600,
                       },
                     }}
@@ -359,7 +310,9 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
                       ))}
                   </Grid>
                   {files.length == 0 && files ? (
-                    <p style={{ marginLeft: "15px" }}>No photos yet</p>
+                    <p style={{ marginLeft: "20px", fontSize: 12 }}>
+                      No photos yet.Please Upload
+                    </p>
                   ) : null}
                 </Grid>
               </Box>
@@ -377,11 +330,15 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
               display: "flex",
               justifyContent: { xs: "flex-start", md: "center" },
               alignItems: "center",
-              marginTop: { xs: "10px", md: "10px" },
+              marginTop: "10px",
             }}
           >
-            <Button sx={{ margin: "5px" }} variant="contained" color="primary">
-              Upload Photos
+            <Button
+              onClick={handleUploadPhotos}
+              variant={loading ? "outlined" : "contained"}
+            >
+              {loading ? null : "Upload Photos"}
+              {loading ? <CircularProgress /> : null}
             </Button>
             <Button
               onClick={() => {
@@ -403,6 +360,5 @@ const UploadInspectionForm = ({ client_id, project_id }) => {
 export default UploadInspectionForm;
 
 UploadInspectionForm.propTypes = {
-  client_id: PropTypes.string,
   project_id: PropTypes.string,
 };
