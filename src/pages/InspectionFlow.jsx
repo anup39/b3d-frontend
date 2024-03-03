@@ -97,6 +97,7 @@ const InspectionFlow = () => {
         name: `rect${rectCount + 1}`,
         stroke: "#00A3AA",
         key: String(Math.random()),
+        draggable: false,
       };
       setMouseDraw(true);
       setRectangles([...rectangles, newRect]);
@@ -355,16 +356,22 @@ const InspectionFlow = () => {
                       height={window.innerHeight * 0.6}
                     />
                   ) : null}
-                  {rectangles.map((rect, i) => (
-                    <Rectangle
-                      key={i}
-                      {...rect}
-                      onTransform={(newProps) => {
-                        _onRectChange(i, newProps);
-                      }}
-                    />
-                  ))}
-                  <RectTransformer selectedShapeName={selectedShapeName} />
+                  {rectangles.map(
+                    (rect, i) => (
+                      console.log(rect, "rect"),
+                      (
+                        <Rectangle
+                          key={i}
+                          {...rect}
+                          mouseState={mouseState}
+                          onTransform={(newProps) => {
+                            _onRectChange(i, newProps);
+                          }}
+                        />
+                      )
+                    )
+                  )}
+                  {/* <RectTransformer selectedShapeName={selectedShapeName} /> */}
                 </Layer>
               </Stage>
             </div>

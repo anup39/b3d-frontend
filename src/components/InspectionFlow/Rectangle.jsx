@@ -30,7 +30,12 @@ const Rectangle = (props) => {
   const _onMouseLeave = (event) => {
     const shape = event.target;
     shape.stroke("#00A3AA");
-    shape.getStage().container().style.cursor = "crosshair";
+    if (props.mouseState) {
+      shape.getStage().container().style.cursor = "pointer";
+    } else {
+      shape.getStage().container().style.cursor = "crosshair";
+    }
+
     rectRef.current.getLayer().draw();
   };
 
@@ -47,6 +52,7 @@ const Rectangle = (props) => {
       stroke={props.stroke}
       strokeWidth={1}
       name={props.name}
+      onContextMenu={props.onContextMenu}
       onDragEnd={_onChange}
       onTransformEnd={_onChange}
       onMouseEnter={_onMouseEnter}
@@ -64,7 +70,7 @@ const Rectangle = (props) => {
           )
         );
       }}
-      draggable
+      draggable={props.draggable}
       ref={rectRef}
     />
   );
