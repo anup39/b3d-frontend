@@ -29,7 +29,7 @@ const InspectionFlow = () => {
   // const [selectedImage, setSelectedImage] = useState(
   //   images ? images[0].img : null
   // );
-  console.log(images);
+  // console.log(images);
   const [annotations, setAnnotations] = useState([]);
   const [newAnnotation, setNewAnnotation] = useState([]);
   const annotationsToDraw = [...annotations, ...newAnnotation];
