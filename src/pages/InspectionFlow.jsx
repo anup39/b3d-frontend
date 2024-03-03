@@ -4,14 +4,8 @@ import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import { Autocomplete, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import MouseIcon from "@mui/icons-material/Mouse";
-import DoneIcon from "@mui/icons-material/Done";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
 import { Tooltip } from "@mui/material";
-import img1 from "/Inspire2/DJI_0015_6_7.jpg";
-import img2 from "/Inspire2/DJI_0024_5_6.jpg";
-import img3 from "/Inspire2/DJI_0042_3_4.jpg";
-import img4 from "/Inspire2/DJI_0066_7_8.jpg";
 import ImageCarousel from "../components/Common/ImageCarousel";
 import { setshowInspectionType } from "../reducers/DisplaySettings";
 import InspectionTypeForm from "../components/InspectionFlow/InspectionTypeForm";
@@ -22,21 +16,14 @@ import maplibregl from "maplibre-gl";
 import { setImages, setSelected } from "../reducers/InspectionFlow";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { set } from "lodash";
 import Rectangle from "../components/InspectionFlow/Rectangle";
 import RectTransformer from "../components/InspectionFlow/RectangleTransformer";
 import "./InspectionFlow.css";
 
 function getRelativePointerPosition(node) {
-  // the function will return pointer position relative to the passed node
-  var transform = node.getAbsoluteTransform().copy();
-  // to detect relative position we need to invert transform
+  const transform = node.getAbsoluteTransform().copy();
   transform.invert();
-
-  // get pointer (say mouse or touch) position
-  var pos = node.getStage().getPointerPosition();
-
-  // now we find relative point
+  const pos = node.getStage().getPointerPosition();
   return transform.point(pos);
 }
 
@@ -48,10 +35,6 @@ const InspectionFlow = () => {
   //   images ? images[0].img : null
   // );
   // console.log(images);
-  const [annotations, setAnnotations] = useState([]);
-  const [newAnnotation, setNewAnnotation] = useState([]);
-  const annotationsToDraw = [...annotations, ...newAnnotation];
-  const [imageScale, setImageScale] = useState(1);
   const [draggable, setDraggable] = useState(true);
   const mapContainerPhotos = useRef(null);
   const [map, setMap] = useState(null);
@@ -60,7 +43,6 @@ const InspectionFlow = () => {
 
   // for the konva states
   const stageRef = useRef();
-  const imgLayerRef = useRef();
   const [rectangles, setRectangles] = useState([]);
   const [rectCount, setRectCount] = useState(0);
 
@@ -107,33 +89,10 @@ const InspectionFlow = () => {
     } else {
       setSelectedShapeName("");
     }
-    // if (newAnnotation.length === 0) {
-    //   const { x, y } = event.target.getStage().getPointerPosition();
-    //   setNewAnnotation([{ x, y, width: 0, height: 0, key: "0" }]);
-    // }
   };
 
   const handleMouseUp = (event) => {
     if (draggable) return;
-    // if (newAnnotation.length === 1) {
-    //   const stage = event.target.getStage();
-    //   const scale = stage.scaleX(); // assuming the x and y scales are the same
-    //   const point = stage.getPointerPosition();
-    //   const x = (point.x - stage.x()) / scale;
-    //   const y = (point.y - stage.y()) / scale;
-    //   // const stageTransform = stage.getAbsoluteTransform().copy();
-    //   // const position = stageTransform.invert().point(point);
-
-    //   const annotationToAdd = {
-    //     x: newAnnotation[0].x,
-    //     y: newAnnotation[0].y,
-    //     width: x - newAnnotation[0].x,
-    //     height: y - newAnnotation[0].y,
-    //     key: annotations.length + 1,
-    //   };
-    //   setNewAnnotation([]);
-    //   setAnnotations([...annotations, annotationToAdd]);
-    // }
     if (mouseDraw) {
       console.log("here in mouse up");
       setRectCount(rectCount + 1);
@@ -146,8 +105,6 @@ const InspectionFlow = () => {
     if (draggable) return;
     const stage = event.target.getStage();
     const mousePos = getRelativePointerPosition(stage);
-    // const mousePos = stage.getPointerPosition();
-
     if (!rectangles[rectCount]) {
       let newRect = {
         x: newRectX,
@@ -205,8 +162,6 @@ const InspectionFlow = () => {
     if (newScale < initialScale) {
       newScale = initialScale;
     }
-    // Update the imageScale state variable
-    setImageScale(newScale);
     stage.scale({ x: newScale, y: newScale });
     const newPos = {
       x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
