@@ -337,27 +337,33 @@ const InspectionFlow = () => {
               >
                 Lounkær Roof Inspection
               </Typography>
-              <Grid sx={{ whiteSpace: "nowrap", boxShadow: 1 }}>
-                <Tooltip title="Mouse">
-                  <IconButton onClick={(event) => handleMouse(event)}>
-                    <MouseIcon
-                      sx={{
-                        "&:hover": { cursor: "pointer" },
-                        color: mouseState ? "blue" : "red",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Draw">
-                  <IconButton onClick={(event) => handleDraw(event)}>
-                    <CropSquareIcon
-                      sx={{
-                        "&:hover": { cursor: "pointer" },
-                        color: drawState ? "blue" : "red",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
+              <Grid sx={{ whiteSpace: "nowrap", boxShadow: 1, padding: 0.5 }}>
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <Tooltip title="Mouse">
+                    <IconButton onClick={(event) => handleMouse(event)}>
+                      <MouseIcon
+                        sx={{
+                          "&:hover": { cursor: "pointer" },
+                          color: mouseState ? "blue" : "red",
+                        }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Draw">
+                    <IconButton onClick={(event) => handleDraw(event)}>
+                      <CropSquareIcon
+                        sx={{
+                          "&:hover": { cursor: "pointer" },
+                          color: drawState ? "blue" : "red",
+                        }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+
+                <Typography sx={{ color: "red", fontSize: 12 }}>
+                  Click right on your mouse to edit and save.
+                </Typography>
               </Grid>
               <Button variant="contained" color="error">
                 Report
@@ -386,6 +392,7 @@ const InspectionFlow = () => {
                 <button id="delete-button">Delete</button>
               </div>
             </div>
+
             <div id="stageContainer">
               <Stage
                 ref={stageRef}
