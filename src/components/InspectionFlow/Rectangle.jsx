@@ -62,7 +62,12 @@ const Rectangle = (props) => {
           sub_inspection,
           inspection,
           cost,
-          id
+          id,
+          props.created,
+          props.x,
+          props.y,
+          props.height,
+          props.width
         );
       }}
       //   onClick={(e) => props.onClick(e)}

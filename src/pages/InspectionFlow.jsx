@@ -55,6 +55,8 @@ const InspectionFlow = () => {
   const [mouseDraw, setMouseDraw] = useState(false);
   const [newRectX, setNewRectX] = useState(0);
   const [newRectY, setNewRectY] = useState(0);
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
 
   const [selectedStandardInspection, setSelectedStandardInspection] =
     useState(null);
@@ -62,6 +64,7 @@ const InspectionFlow = () => {
   const [selectedInspection, setSelectedInspection] = useState(null);
   const [selectedCost, setSelectedCost] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
+  const [created, setCreated] = useState(true);
 
   const [contextMenu, setContextMenu] = useState({
     visible: false,
@@ -133,6 +136,7 @@ const InspectionFlow = () => {
         fil_opacity: 0,
         stroke_color: "#FF0000",
         stroke_width: 1,
+        created: true,
         rotation: 0.0,
         standard_inspection: null,
         sub_inspection: null,
@@ -222,19 +226,38 @@ const InspectionFlow = () => {
 
   const handleRightClick = (
     e,
-
     standard_inspection,
     sub_inspection,
     inspection,
     cost,
-    id
+    id,
+    created,
+    x,
+    y,
+    height,
+    width
   ) => {
-    console.log(standard_inspection, sub_inspection, inspection, id);
+    console.log(
+      standard_inspection,
+      sub_inspection,
+      inspection,
+      id,
+      created,
+      x,
+      y,
+      height,
+      width
+    );
     setSelectedStandardInspection(standard_inspection);
     setSelectedSubInspection(sub_inspection);
     setSelectedInspection(inspection);
     setSelectedCost(cost);
     setSelectedId(id);
+    setCreated(created);
+    setNewRectX(x);
+    setNewRectY(y);
+    setWidth(width);
+    setHeight(height);
     e.evt.preventDefault();
     const menuNode = document.getElementById("menu");
     menuNode.style.display = "block";
@@ -248,80 +271,141 @@ const InspectionFlow = () => {
 
   const handleCreateGeometry = (event) => {
     event.preventDefault();
+    console.log(created, "created");
     console.log("here in saving");
     console.log(rectangles);
     console.log(rectCount);
     console.log(images.find((image) => image.selected).id);
     let stroke_color = "#FF0000";
     let stroke_width = 1;
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/inspection/${selectedInspection}/`
-      )
-      .then((res) => {
-        console.log(res);
-        stroke_color = res.data.stroke_color;
-        stroke_width = res.data.stroke_width;
-        const data = new FormData();
-        data.append(
-          "inspection_photo",
-          images.find((image) => image.selected).id
-        );
-        data.append("description", "");
-        data.append("caption", "");
-        data.append("x", newRectX);
-        data.append("y", newRectY);
-        data.append("height", rectangles[rectCount - 1].height);
-        data.append("width", rectangles[rectCount - 1].width);
-        data.append("name", rectangles[rectCount - 1].name);
-        // data.append("fill_color", "transparent");
-        data.append("fill_opacity", 0);
-        data.append("stroke_color", stroke_color);
-        data.append("stroke_width", stroke_width);
-        data.append("rotation", 0.0);
-        data.append("standard_inspection", selectedStandardInspection);
-        data.append("sub_inspection", selectedSubInspection);
-        data.append("inspection", selectedInspection);
-        data.append("severity", 0);
-        data.append("cost", selectedCost);
-        data.append("created_by", user_id);
-        data.append("is_display", true);
+    if (created) {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/inspection/${selectedInspection}/`
+        )
+        .then((res) => {
+          console.log(res);
+          stroke_color = res.data.stroke_color;
+          stroke_width = res.data.stroke_width;
+          const data = new FormData();
+          data.append(
+            "inspection_photo",
+            images.find((image) => image.selected).id
+          );
+          data.append("description", "");
+          data.append("caption", "");
+          data.append("x", newRectX);
+          data.append("y", newRectY);
+          data.append("height", rectangles[rectCount - 1].height);
+          data.append("width", rectangles[rectCount - 1].width);
+          data.append("name", rectangles[rectCount - 1].name);
+          // data.append("fill_color", "transparent");
+          data.append("fill_opacity", 0);
+          data.append("stroke_color", stroke_color);
+          data.append("stroke_width", stroke_width);
+          data.append("rotation", 0.0);
+          data.append("standard_inspection", selectedStandardInspection);
+          data.append("sub_inspection", selectedSubInspection);
+          data.append("inspection", selectedInspection);
+          data.append("severity", 0);
+          data.append("cost", selectedCost);
+          data.append("created_by", user_id);
+          data.append("is_display", true);
 
-        axios
-          .post(
-            `${
-              import.meta.env.VITE_API_DASHBOARD_URL
-            }/inspection-photo-geometry/`,
-            data
-          )
-          .then((res) => {
-            console.log(res);
-            axios
-              .get(
-                `${
-                  import.meta.env.VITE_API_DASHBOARD_URL
-                }/inspection-photo-geometry/?inspection_photo=${
-                  images.find((image) => image.selected)?.id
-                }`
-              )
-              .then((res) => {
-                setRectangles(res.data);
-                setRectCount(res.data.length);
-                document.getElementById("menu").style.display = "none";
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+          axios
+            .post(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/inspection-photo-geometry/`,
+              data
+            )
+            .then((res) => {
+              console.log(res);
+              axios
+                .get(
+                  `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/inspection-photo-geometry/?inspection_photo=${
+                    images.find((image) => image.selected)?.id
+                  }`
+                )
+                .then((res) => {
+                  setRectangles(res.data);
+                  setRectCount(res.data.length);
+                  document.getElementById("menu").style.display = "none";
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/inspection/${selectedInspection}/`
+        )
+        .then((res) => {
+          console.log(res);
+          stroke_color = res.data.stroke_color;
+          stroke_width = res.data.stroke_width;
+          const data = new FormData();
+          data.append("x", newRectX);
+          data.append("y", newRectY);
+          data.append("height", height);
+          data.append("width", width);
+          // data.append("fill_color", "transparent");
+          data.append("stroke_color", stroke_color);
+          data.append("stroke_width", stroke_width);
+          data.append("standard_inspection", selectedStandardInspection);
+          data.append("sub_inspection", selectedSubInspection);
+          data.append("inspection", selectedInspection);
+          data.append("cost", selectedCost);
+          data.append("created_by", user_id);
+
+          axios
+            .patch(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/inspection-photo-geometry/${selectedId}/`,
+              data
+            )
+            .then((res) => {
+              console.log(res);
+              axios
+                .get(
+                  `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/inspection-photo-geometry/?inspection_photo=${
+                    images.find((image) => image.selected)?.id
+                  }`
+                )
+                .then((res) => {
+                  setRectangles(res.data);
+                  setRectCount(res.data.length);
+                  document.getElementById("menu").style.display = "none";
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const handlePulseButton = () => {
