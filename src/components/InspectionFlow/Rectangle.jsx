@@ -53,7 +53,16 @@ const Rectangle = (props) => {
       strokeWidth={1}
       name={props.name}
       onContextMenu={(e) => {
-        props.onContextMenu(e);
+        const { standard_inspection, sub_inspection, inspection, cost, id } =
+          props;
+        props.onContextMenu(
+          e,
+          standard_inspection,
+          sub_inspection,
+          inspection,
+          cost,
+          id
+        );
       }}
       //   onClick={(e) => props.onClick(e)}
       onDblTap={props.onDoubleClick}

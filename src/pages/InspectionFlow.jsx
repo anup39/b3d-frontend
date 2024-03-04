@@ -55,6 +55,13 @@ const InspectionFlow = () => {
   const [newRectX, setNewRectX] = useState(0);
   const [newRectY, setNewRectY] = useState(0);
 
+  const [selectedStandardInspection, setSelectedStandardInspection] =
+    useState(null);
+  const [selectedSubInspection, setSelectedSubInspection] = useState(null);
+  const [selectedInspection, setSelectedInspection] = useState(null);
+  const [selectedCost, setSelectedCost] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+
   const [contextMenu, setContextMenu] = useState({
     visible: false,
     x: 0,
@@ -117,6 +124,11 @@ const InspectionFlow = () => {
         stroke: "red",
         key: String(Math.random()),
         draggable: false,
+        standard_inspection: 1,
+        sub_inspection: 1,
+        inspection: 1,
+        cost: 0,
+        id: rectCount + 1,
       };
       setMouseDraw(true);
       setRectangles([...rectangles, newRect]);
@@ -193,7 +205,20 @@ const InspectionFlow = () => {
     console.log("double click");
   };
 
-  const handleRightClick = (e) => {
+  const handleRightClick = (
+    e,
+    standard_inspection,
+    sub_inspection,
+    inspection,
+    cost,
+    id
+  ) => {
+    console.log(standard_inspection, sub_inspection, inspection);
+    setSelectedStandardInspection(standard_inspection);
+    setSelectedSubInspection(sub_inspection);
+    setSelectedInspection(inspection);
+    setSelectedCost(cost);
+    setSelectedId(id);
     e.evt.preventDefault();
     const menuNode = document.getElementById("menu");
     menuNode.style.display = "block";
@@ -426,7 +451,16 @@ const InspectionFlow = () => {
 
           <Grid item xs={12} md={8}>
             <div style={{ display: "none" }} id="menu">
-              <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  alignItems: "center",
+                }}
+              >
+                <Typography sx={{ color: "blue" }}>
+                  ID:{selectedId || null}{" "}
+                </Typography>
                 <Tooltip title="Save">
                   <IconButton onClick={(event) => handleMouse(event)}>
                     <DoneIcon
@@ -462,10 +496,14 @@ const InspectionFlow = () => {
                 {standard_inspection && standard_inspection.length > 0 ? (
                   <Autocomplete
                     size="small"
-                    sx={{ m: 0.5, width: "90%" }}
-                    options={standard_inspection.map((type) => type.name)}
-                    getOptionLabel={(option) => option}
-                    // disableCloseOnSelect
+                    sx={{ m: 0.5, mb: 1, width: "90%" }}
+                    options={standard_inspection}
+                    getOptionLabel={(option) => option.name}
+                    value={
+                      standard_inspection.find(
+                        (type) => type.id === selectedStandardInspection
+                      ) || null
+                    }
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -475,14 +513,17 @@ const InspectionFlow = () => {
                     )}
                   />
                 ) : null}
-
                 {sub_inspection && sub_inspection.length > 0 ? (
                   <Autocomplete
                     size="small"
-                    sx={{ m: 0.5, width: "90%" }}
-                    options={sub_inspection.map((type) => type.name)}
-                    getOptionLabel={(option) => option}
-                    // disableCloseOnSelect
+                    sx={{ m: 0.5, mb: 1, width: "90%" }}
+                    options={sub_inspection}
+                    getOptionLabel={(option) => option.name}
+                    value={
+                      sub_inspection.find(
+                        (type) => type.id === selectedSubInspection
+                      ) || null
+                    }
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -496,10 +537,14 @@ const InspectionFlow = () => {
                 {inspection && inspection.length > 0 ? (
                   <Autocomplete
                     size="small"
-                    sx={{ m: 0.5, width: "90%" }}
-                    options={inspection.map((type) => type.name)}
-                    getOptionLabel={(option) => option}
-                    // disableCloseOnSelect
+                    sx={{ m: 0.5, mb: 1, width: "90%" }}
+                    options={inspection}
+                    getOptionLabel={(option) => option.name}
+                    value={
+                      inspection.find(
+                        (type) => type.id === selectedInspection
+                      ) || null
+                    }
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -512,6 +557,7 @@ const InspectionFlow = () => {
               </Box>
               <Box>
                 <TextField
+                  value={selectedCost || 0}
                   placeholder="Cost"
                   sx={{ m: 0.5, width: "90%" }}
                   size="small"
@@ -546,23 +592,18 @@ const InspectionFlow = () => {
                       height={window.innerHeight * 0.6}
                     />
                   ) : null}
-                  {rectangles.map(
-                    (rect, i) => (
-                      console.log(rect, "rect"),
-                      (
-                        <Rectangle
-                          key={i}
-                          {...rect}
-                          mouseState={mouseState}
-                          onTransform={(newProps) => {
-                            _onRectChange(i, newProps);
-                          }}
-                          // onClick={handleRightClick}
-                          onContextMenu={handleRightClick}
-                        />
-                      )
-                    )
-                  )}
+                  {rectangles.map((rect, i) => (
+                    <Rectangle
+                      key={i}
+                      {...rect}
+                      mouseState={mouseState}
+                      onTransform={(newProps) => {
+                        _onRectChange(i, newProps);
+                      }}
+                      // onClick={handleRightClick}
+                      onContextMenu={handleRightClick}
+                    />
+                  ))}
                   {/* <RectTransformer selectedShapeName={selectedShapeName} /> */}
                 </Layer>
               </Stage>
