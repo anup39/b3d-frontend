@@ -214,6 +214,30 @@ const InspectionFlow = () => {
     id
   ) => {
     console.log(standard_inspection, sub_inspection, inspection);
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/sub-inspection/?standard_inspection=${standard_inspection}`
+      )
+      .then(
+        (res) => {
+          dispatch(setSubInspection(res.data));
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/inspection/?sub_inspection=${sub_inspection}`
+      )
+      .then((res) => {
+        dispatch(setInspection(res.data));
+      });
+
     setSelectedStandardInspection(standard_inspection);
     setSelectedSubInspection(sub_inspection);
     setSelectedInspection(inspection);
