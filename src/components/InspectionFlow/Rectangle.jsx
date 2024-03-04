@@ -49,7 +49,7 @@ const Rectangle = (props) => {
       scaleX={1}
       scaleY={1}
       strokeScaleEnabled={false}
-      fill={props.fill_color}
+      fill={"transparent"}
       stroke={props.stroke_color}
       strokeWidth={props.stroke_width}
       name={props.name}

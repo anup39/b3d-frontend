@@ -95,6 +95,7 @@ const InspectionFlow = () => {
       return;
     }
     const name = event.target.name();
+    console.log(name, "name");
     const rect = rectangles.find((r) => r.name === name);
     if (rect) {
       setSelectedShapeName(name);
@@ -129,7 +130,7 @@ const InspectionFlow = () => {
         width: mousePos.x - newRectX,
         fill_color: "transparent",
         fil_opacity: 0,
-        stroke_color: "red",
+        stroke_color: "#FF0000",
         stroke_width: 1,
         rotation: 0.0,
         standard_inspection: null,
@@ -247,6 +248,42 @@ const InspectionFlow = () => {
   const handleCreateGeometry = (event) => {
     event.preventDefault();
     console.log("here in saving");
+    console.log(rectangles);
+    console.log(rectCount);
+    console.log(images.find((image) => image.selected).id);
+    const data = new FormData(event.currentTarget);
+    data.append("inspection_photo", images.find((image) => image.selected).id);
+    data.append("description", "");
+    data.append("caption", "");
+    data.append("x", newRectX);
+    data.append("y", newRectY);
+    data.append("height", rectangles[rectCount - 1].height);
+    data.append("width", rectangles[rectCount - 1].width);
+    data.append("name", rectangles[rectCount - 1].name);
+    // data.append("fill_color", "transparent");
+    data.append("fill_opacity", 0);
+    data.append("stroke_color", "#FF0000");
+    data.append("stroke_width", 1);
+    data.append("rotation", 0.0);
+    data.append("standard_inspection", selectedStandardInspection);
+    data.append("sub_inspection", selectedSubInspection);
+    data.append("inspection", selectedInspection);
+    data.append("severity", 0);
+    data.append("cost", selectedCost);
+    data.append("created_by", user_id);
+    data.append("is_display", true);
+
+    axios
+      .post(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/inspection-photo-geometry/`,
+        data
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handlePulseButton = () => {
@@ -392,6 +429,24 @@ const InspectionFlow = () => {
       }
     );
   }, [dispatch]);
+
+  useEffect(() => {
+    if (images.length === 0) return;
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/inspection-photo-geometry/?inspection_photo=${
+          images.find((image) => image.selected)?.id
+        }`
+      )
+      .then((res) => {
+        setRectangles(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [images]);
 
   return (
     <>
