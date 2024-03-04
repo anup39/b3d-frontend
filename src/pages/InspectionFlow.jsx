@@ -26,6 +26,7 @@ import "./InspectionFlow.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
 import EditIcon from "@mui/icons-material/Edit";
+import CloseIcon from "@mui/icons-material/Close";
 
 function getRelativePointerPosition(node) {
   const transform = node.getAbsoluteTransform().copy();
@@ -124,9 +125,9 @@ const InspectionFlow = () => {
         stroke: "red",
         key: String(Math.random()),
         draggable: false,
-        standard_inspection: 1,
-        sub_inspection: 1,
-        inspection: 1,
+        standard_inspection: null,
+        sub_inspection: null,
+        inspection: null,
         cost: 0,
         id: rectCount + 1,
       };
@@ -214,30 +215,6 @@ const InspectionFlow = () => {
     id
   ) => {
     console.log(standard_inspection, sub_inspection, inspection);
-    // axios
-    //   .get(
-    //     `${
-    //       import.meta.env.VITE_API_DASHBOARD_URL
-    //     }/sub-inspection/?standard_inspection=${standard_inspection}`
-    //   )
-    //   .then(
-    //     (res) => {
-    //       dispatch(setSubInspection(res.data));
-    //     },
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   );
-    // axios
-    //   .get(
-    //     `${
-    //       import.meta.env.VITE_API_DASHBOARD_URL
-    //     }/inspection/?sub_inspection=${sub_inspection}`
-    //   )
-    //   .then((res) => {
-    //     dispatch(setInspection(res.data));
-    //   });
-
     setSelectedStandardInspection(standard_inspection);
     setSelectedSubInspection(sub_inspection);
     setSelectedInspection(inspection);
@@ -276,6 +253,11 @@ const InspectionFlow = () => {
         }
       }
     });
+  };
+
+  const handleCloseMenu = () => {
+    const menuNode = document.getElementById("menu");
+    menuNode.style.display = "none";
   };
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -339,23 +321,30 @@ const InspectionFlow = () => {
         });
       });
   }, [dispatch, inspection_id, map]);
-  useEffect(() => {
-    const menuNode = document.getElementById("menu");
-    const autocompleteNode = document.getElementById("autocomplete"); // replace "autocomplete" with the id of your Autocomplete component
-    const handleClick = (event) => {
-      if (
-        !menuNode.contains(event.target) &&
-        !autocompleteNode.contains(event.target)
-      ) {
-        // hide menu
-        menuNode.style.display = "none";
-      }
-    };
-    window.addEventListener("click", handleClick);
-    return () => {
-      window.removeEventListener("click", handleClick);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const menuNode = document.getElementById("menu");
+  //   const dropdownNode = document.getElementsByClassName(
+  //     "MuiAutocomplete-option Mui-focused"
+  //   );
+  //   const handleClick = (event) => {
+  //     let targetElement = event.target; // clicked element
+  //     do {
+  //       if (targetElement === menuNode || dropdownNode) {
+  //         // This is a click inside the menu or on an element with the "MuiAutocomplete-option Mui-focused" class.
+  //         // So let's exit and not hide the menu.
+  //         return;
+  //       }
+  //       // Go up the DOM
+  //       targetElement = targetElement.parentNode;
+  //     } while (targetElement);
+  //     // This is a click outside. Hide the menu.
+  //     menuNode.style.display = "none";
+  //   };
+  //   window.addEventListener("click", handleClick);
+  //   return () => {
+  //     window.removeEventListener("click", handleClick);
+  //   };
+  // }, []);
 
   useEffect(() => {
     axios
@@ -525,11 +514,20 @@ const InspectionFlow = () => {
                     />
                   </IconButton>
                 </Tooltip>
+                <Tooltip title="Close">
+                  <IconButton onClick={(event) => handleCloseMenu(event)}>
+                    <CloseIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        color: "red",
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
               </Box>
               <Box>
                 {standard_inspection && standard_inspection.length > 0 ? (
                   <Autocomplete
-                    disableCloseOnSelect
                     size="small"
                     sx={{ m: 0.5, mb: 1, width: "90%" }}
                     options={standard_inspection}
@@ -546,6 +544,10 @@ const InspectionFlow = () => {
                         variant="outlined"
                       />
                     )}
+                    filterOptions={(options) => options}
+                    onChange={(event, value) => {
+                      setSelectedStandardInspection(value ? value.id : null);
+                    }}
                   />
                 ) : null}
                 {sub_inspection && sub_inspection.length > 0 ? (
@@ -566,6 +568,10 @@ const InspectionFlow = () => {
                         variant="outlined"
                       />
                     )}
+                    filterOptions={(options) => options}
+                    onChange={(event, value) => {
+                      setSelectedSubInspection(value ? value.id : null);
+                    }}
                   />
                 ) : null}
 
@@ -587,6 +593,10 @@ const InspectionFlow = () => {
                         variant="outlined"
                       />
                     )}
+                    filterOptions={(options) => options}
+                    onChange={(event, value) => {
+                      setSelectedInspection(value ? value.id : null);
+                    }}
                   />
                 ) : null}
               </Box>
