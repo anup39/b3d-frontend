@@ -17,7 +17,9 @@ import { useParams } from "react-router-dom";
 import Rectangle from "../components/InspectionFlow/Rectangle";
 import RectTransformer from "../components/InspectionFlow/RectangleTransformer";
 import "./InspectionFlow.css";
-import { Html } from "react-konva-utils";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DoneIcon from "@mui/icons-material/Done";
+import EditIcon from "@mui/icons-material/Edit";
 
 function getRelativePointerPosition(node) {
   const transform = node.getAbsoluteTransform().copy();
@@ -277,18 +279,17 @@ const InspectionFlow = () => {
         });
       });
   }, [dispatch, inspection_id, map]);
-
   useEffect(() => {
     const menuNode = document.getElementById("menu");
-    window.addEventListener("click", () => {
-      // hide menu
-      menuNode.style.display = "none";
-    });
-    return () => {
-      window.removeEventListener("click", () => {
+    const handleClick = (event) => {
+      if (!menuNode.contains(event.target)) {
         // hide menu
         menuNode.style.display = "none";
-      });
+      }
+    };
+    window.addEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("click", handleClick);
     };
   }, []);
 
@@ -385,12 +386,89 @@ const InspectionFlow = () => {
 
           <Grid item xs={12} md={8}>
             <div style={{ display: "none" }} id="menu">
-              <div>
-                <button onClick={handlePulseButton} id="pulse-button">
-                  Pulse
-                </button>
-                <button id="delete-button">Delete</button>
-              </div>
+              <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+                <Tooltip title="Save">
+                  <IconButton onClick={(event) => handleMouse(event)}>
+                    <DoneIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        color: mouseState ? "blue" : "red",
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete">
+                  <IconButton onClick={(event) => handleMouse(event)}>
+                    <DeleteIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        color: mouseState ? "blue" : "red",
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Edit">
+                  <IconButton onClick={(event) => handleMouse(event)}>
+                    <EditIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        color: mouseState ? "blue" : "red",
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+              <Box>
+                <Autocomplete
+                  size="small"
+                  sx={{ m: 0.5, width: "90%" }}
+                  options={type_of_inspection.map((type) => type.standard_type)}
+                  getOptionLabel={(option) => option}
+                  disableCloseOnSelect
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Standard Inspection"
+                      variant="outlined"
+                    />
+                  )}
+                />
+                <Autocomplete
+                  size="small"
+                  sx={{ m: 0.5, width: "90%" }}
+                  options={type_of_inspection.map((type) => type.sub_type)}
+                  getOptionLabel={(option) => option}
+                  disableCloseOnSelect
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Sub Inspection"
+                      variant="outlined"
+                    />
+                  )}
+                />
+                <Autocomplete
+                  size="small"
+                  sx={{ m: 0.5, width: "90%" }}
+                  options={type_of_inspection.map((type) => type.type)}
+                  getOptionLabel={(option) => option}
+                  disableCloseOnSelect
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Inspection"
+                      variant="outlined"
+                    />
+                  )}
+                />
+              </Box>
+              <Box>
+                <TextField
+                  placeholder="Cost"
+                  sx={{ m: 0.5, width: "90%" }}
+                  size="small"
+                ></TextField>
+              </Box>
             </div>
 
             <div id="stageContainer">
