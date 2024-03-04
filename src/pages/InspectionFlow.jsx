@@ -11,7 +11,13 @@ import { Stage, Layer } from "react-konva";
 import URLImage from "../components/Common/URLImage";
 import { FullscreenControl } from "maplibre-gl";
 import maplibregl from "maplibre-gl";
-import { setImages, setSelected } from "../reducers/InspectionFlow";
+import {
+  setImages,
+  setSelected,
+  setStandardInspection,
+  setSubInspection,
+  setInspection,
+} from "../reducers/InspectionFlow";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Rectangle from "../components/InspectionFlow/Rectangle";
@@ -55,9 +61,13 @@ const InspectionFlow = () => {
     y: 0,
   });
 
-  const type_of_inspection = useSelector(
-    (state) => state.inspectionUpload.type_of_inspection
+  const standard_inspection = useSelector(
+    (state) => state.inspectionFlow.standard_inspection
   );
+  const sub_inspection = useSelector(
+    (state) => state.inspectionFlow.sub_inspection
+  );
+  const inspection = useSelector((state) => state.inspectionFlow.inspection);
 
   const handleMouseDown = (event) => {
     if (draggable) return;
@@ -144,6 +154,7 @@ const InspectionFlow = () => {
 
   const handleWheel = (e) => {
     e.evt.preventDefault();
+    document.getElementById("menu").style.display = "none";
     const stage = stageRef.current;
     const oldScale = stage.scaleX();
     const initialScale = 1; // replace with your initial scale
@@ -293,6 +304,35 @@ const InspectionFlow = () => {
     };
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/standard-inspection/`)
+      .then(
+        (res) => {
+          dispatch(setStandardInspection(res.data));
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    axios.get(`${import.meta.env.VITE_API_DASHBOARD_URL}/sub-inspection/`).then(
+      (res) => {
+        dispatch(setSubInspection(res.data));
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    axios.get(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection/`).then(
+      (res) => {
+        dispatch(setInspection(res.data));
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }, [dispatch]);
+
   return (
     <>
       <Appbar />
@@ -392,7 +432,7 @@ const InspectionFlow = () => {
                     <DoneIcon
                       sx={{
                         "&:hover": { cursor: "pointer" },
-                        color: mouseState ? "blue" : "red",
+                        color: "red",
                       }}
                     />
                   </IconButton>
@@ -402,7 +442,7 @@ const InspectionFlow = () => {
                     <DeleteIcon
                       sx={{
                         "&:hover": { cursor: "pointer" },
-                        color: mouseState ? "blue" : "red",
+                        color: "red",
                       }}
                     />
                   </IconButton>
@@ -412,55 +452,63 @@ const InspectionFlow = () => {
                     <EditIcon
                       sx={{
                         "&:hover": { cursor: "pointer" },
-                        color: mouseState ? "blue" : "red",
+                        color: "red",
                       }}
                     />
                   </IconButton>
                 </Tooltip>
               </Box>
               <Box>
-                <Autocomplete
-                  size="small"
-                  sx={{ m: 0.5, width: "90%" }}
-                  options={type_of_inspection.map((type) => type.standard_type)}
-                  getOptionLabel={(option) => option}
-                  disableCloseOnSelect
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Standard Inspection"
-                      variant="outlined"
-                    />
-                  )}
-                />
-                <Autocomplete
-                  size="small"
-                  sx={{ m: 0.5, width: "90%" }}
-                  options={type_of_inspection.map((type) => type.sub_type)}
-                  getOptionLabel={(option) => option}
-                  disableCloseOnSelect
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Sub Inspection"
-                      variant="outlined"
-                    />
-                  )}
-                />
-                <Autocomplete
-                  size="small"
-                  sx={{ m: 0.5, width: "90%" }}
-                  options={type_of_inspection.map((type) => type.type)}
-                  getOptionLabel={(option) => option}
-                  disableCloseOnSelect
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Inspection"
-                      variant="outlined"
-                    />
-                  )}
-                />
+                {standard_inspection && standard_inspection.length > 0 ? (
+                  <Autocomplete
+                    size="small"
+                    sx={{ m: 0.5, width: "90%" }}
+                    options={standard_inspection.map((type) => type.name)}
+                    getOptionLabel={(option) => option}
+                    // disableCloseOnSelect
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Standard Inspection"
+                        variant="outlined"
+                      />
+                    )}
+                  />
+                ) : null}
+
+                {sub_inspection && sub_inspection.length > 0 ? (
+                  <Autocomplete
+                    size="small"
+                    sx={{ m: 0.5, width: "90%" }}
+                    options={sub_inspection.map((type) => type.name)}
+                    getOptionLabel={(option) => option}
+                    // disableCloseOnSelect
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Sub Inspection"
+                        variant="outlined"
+                      />
+                    )}
+                  />
+                ) : null}
+
+                {inspection && inspection.length > 0 ? (
+                  <Autocomplete
+                    size="small"
+                    sx={{ m: 0.5, width: "90%" }}
+                    options={inspection.map((type) => type.name)}
+                    getOptionLabel={(option) => option}
+                    // disableCloseOnSelect
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Inspection"
+                        variant="outlined"
+                      />
+                    )}
+                  />
+                ) : null}
               </Box>
               <Box>
                 <TextField
@@ -565,7 +613,7 @@ const InspectionFlow = () => {
                 <Autocomplete
                   sx={{ mb: 0.5, width: "100%" }}
                   multiple
-                  options={type_of_inspection.map((type) => type.standard_type)}
+                  options={standard_inspection.map((type) => type.name)}
                   getOptionLabel={(option) => option}
                   // disableCloseOnSelect
                   renderInput={(params) => (
@@ -580,7 +628,7 @@ const InspectionFlow = () => {
                 <Autocomplete
                   sx={{ mb: 0.5, width: "100%" }}
                   multiple
-                  options={type_of_inspection.map((type) => type.sub_type)}
+                  options={sub_inspection.map((type) => type.name)}
                   getOptionLabel={(option) => option}
                   // disableCloseOnSelect
                   renderInput={(params) => (
@@ -595,7 +643,7 @@ const InspectionFlow = () => {
                 <Autocomplete
                   multiple
                   sx={{ mb: 0.5, width: "100%" }}
-                  options={type_of_inspection.map((type) => type.type)}
+                  options={inspection.map((type) => type.name)}
                   getOptionLabel={(option) => option}
                   // disableCloseOnSelect
                   renderInput={(params) => (

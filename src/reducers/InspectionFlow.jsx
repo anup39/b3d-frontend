@@ -3,6 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   client_id: null,
   images: [],
+  standard_inspection: [],
+  sub_inspection: [],
+  inspection: [],
 };
 
 export const InspectionFlow = createSlice({
@@ -25,6 +28,15 @@ export const InspectionFlow = createSlice({
           image.id === action.payload.id ? action.payload.selected : false,
       }));
     },
+    setStandardInspection: (state, action) => {
+      state.standard_inspection = action.payload;
+    },
+    setSubInspection: (state, action) => {
+      state.sub_inspection = action.payload;
+    },
+    setInspection: (state, action) => {
+      state.inspection = action.payload;
+    },
   },
 });
 
@@ -34,6 +46,9 @@ export const {
   //  setShowInspectionTypeFormOpen
   setImages,
   setSelected,
+  setStandardInspection,
+  setSubInspection,
+  setInspection,
 } = InspectionFlow.actions;
 
 export default InspectionFlow.reducer;
