@@ -27,35 +27,35 @@ export default function SubInspectionForm() {
     setLoading(true);
     const nameInput = document.getElementById("name");
     const descriptionInput = document.getElementById("description");
-    if (selectedStandardInspectionId !== null) {
-      const data = {
-        name: nameInput.value,
-        description: descriptionInput.value,
-        standard_inspection: selectedStandardInspectionId,
-        created_by: user_id,
-      };
-      axios
-        .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/sub-inspection/`, data)
-        .then(() => {
-          setLoading(false);
-          dispatch(setshowToast(true));
-          dispatch(settoastMessage("Successfully Created Sub category"));
-          dispatch(settoastType("success"));
-          closeForm();
-          axios
-            .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/sub-inspection/`)
-            .then((res) => {
-              dispatch(setSubInspections(res.data));
-            });
-        })
-        .catch(() => {
-          setLoading(false);
-          dispatch(setshowToast(true));
-          dispatch(settoastMessage("Failed to  Create Sub Inspection"));
-          dispatch(settoastType("error"));
-          closeForm();
-        });
-    }
+    // if (selectedStandardInspectionId !== null) {
+    const data = {
+      name: nameInput.value,
+      description: descriptionInput.value,
+      // standard_inspection: null,
+      created_by: user_id,
+    };
+    axios
+      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/sub-inspection/`, data)
+      .then(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Successfully Created Sub category"));
+        dispatch(settoastType("success"));
+        closeForm();
+        axios
+          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/sub-inspection/`)
+          .then((res) => {
+            dispatch(setSubInspections(res.data));
+          });
+      })
+      .catch(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Failed to  Create Sub Inspection"));
+        dispatch(settoastType("error"));
+        closeForm();
+      });
+    // }
   };
 
   const openForm = () => {
@@ -129,12 +129,12 @@ export default function SubInspectionForm() {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <AutoCompleteInspection
                   onItemSelected={(id) => setSelectedStandardInspectionId(id)}
                   category={"standard-inspection"}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <Button
                   type="submit"

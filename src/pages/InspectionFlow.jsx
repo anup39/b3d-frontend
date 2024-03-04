@@ -3,105 +3,172 @@ import Appbar from "../components/Common/AppBar";
 import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import { Autocomplete, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import DoneIcon from "@mui/icons-material/Done";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import MouseIcon from "@mui/icons-material/Mouse";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
 import { Tooltip } from "@mui/material";
-import img1 from "/Inspire2/DJI_0015_6_7.jpg";
-import img2 from "/Inspire2/DJI_0024_5_6.jpg";
-import img3 from "/Inspire2/DJI_0042_3_4.jpg";
-import img4 from "/Inspire2/DJI_0066_7_8.jpg";
 import ImageCarousel from "../components/Common/ImageCarousel";
-import { setshowInspectionType } from "../reducers/DisplaySettings";
-import InspectionTypeForm from "../components/InspectionFlow/InspectionTypeForm";
-import { Stage, Layer, Rect } from "react-konva";
+import { Stage, Layer } from "react-konva";
 import URLImage from "../components/Common/URLImage";
 import { FullscreenControl } from "maplibre-gl";
 import maplibregl from "maplibre-gl";
-import { setImages, setSelected } from "../reducers/InspectionFlow";
+import {
+  setImages,
+  setSelected,
+  setStandardInspection,
+  setSubInspection,
+  setInspection,
+} from "../reducers/InspectionFlow";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Rectangle from "../components/InspectionFlow/Rectangle";
+import RectTransformer from "../components/InspectionFlow/RectangleTransformer";
+import "./InspectionFlow.css";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DoneIcon from "@mui/icons-material/Done";
+import EditIcon from "@mui/icons-material/Edit";
+import CloseIcon from "@mui/icons-material/Close";
+
+function getRelativePointerPosition(node) {
+  const transform = node.getAbsoluteTransform().copy();
+  transform.invert();
+  const pos = node.getStage().getPointerPosition();
+  return transform.point(pos);
+}
 
 const InspectionFlow = () => {
   const { inspection_id } = useParams();
   const dispatch = useDispatch();
   const images = useSelector((state) => state.inspectionFlow.images);
-  // const [selectedImage, setSelectedImage] = useState(
-  //   images ? images[0].img : null
-  // );
-  // console.log(images);
-  const [annotations, setAnnotations] = useState([]);
-  const [newAnnotation, setNewAnnotation] = useState([]);
-  const annotationsToDraw = [...annotations, ...newAnnotation];
-  const [imageScale, setImageScale] = useState(1);
   const [draggable, setDraggable] = useState(true);
   const mapContainerPhotos = useRef(null);
   const [map, setMap] = useState(null);
-  const showInspectionType = useSelector(
-    (state) => state.displaySettings.showInspectionType
-  );
-  const type_of_inspection = useSelector(
-    (state) => state.inspectionUpload.type_of_inspection
-  );
+  const [mouseState, setMouseState] = useState(true);
+  const [drawState, setDrawState] = useState(false);
 
-  const handleEvent = (event) => {
-    dispatch(setshowInspectionType(true));
-  };
+  // for the konva states
+  const stageRef = useRef();
+  const [rectangles, setRectangles] = useState([]);
+  const [rectCount, setRectCount] = useState(0);
+
+  const [selectedShapeName, setSelectedShapeName] = useState("");
+  const [mouseDown, setMouseDown] = useState(false);
+  const [mouseDraw, setMouseDraw] = useState(false);
+  const [newRectX, setNewRectX] = useState(0);
+  const [newRectY, setNewRectY] = useState(0);
+
+  const [selectedStandardInspection, setSelectedStandardInspection] =
+    useState(null);
+  const [selectedSubInspection, setSelectedSubInspection] = useState(null);
+  const [selectedInspection, setSelectedInspection] = useState(null);
+  const [selectedCost, setSelectedCost] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+
+  const [contextMenu, setContextMenu] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+  });
+
+  const standard_inspection = useSelector(
+    (state) => state.inspectionFlow.standard_inspection
+  );
+  const sub_inspection = useSelector(
+    (state) => state.inspectionFlow.sub_inspection
+  );
+  const inspection = useSelector((state) => state.inspectionFlow.inspection);
 
   const handleMouseDown = (event) => {
     if (draggable) return;
-    if (newAnnotation.length === 0) {
-      const { x, y } = event.target.getStage().getPointerPosition();
-      setNewAnnotation([{ x, y, width: 0, height: 0, key: "0" }]);
+    if (event.target.className === "Image") {
+      const stage = event.target.getStage();
+      const mousePos = getRelativePointerPosition(stage);
+      setMouseDown(true);
+      setNewRectX(mousePos.x);
+      setNewRectY(mousePos.y);
+      setSelectedShapeName("");
+      return;
+    }
+    const clickedOnTransformer =
+      event.target.getParent().className === "Transformer";
+    if (clickedOnTransformer) {
+      return;
+    }
+    const name = event.target.name();
+    const rect = rectangles.find((r) => r.name === name);
+    if (rect) {
+      setSelectedShapeName(name);
+    } else {
+      setSelectedShapeName("");
     }
   };
 
-  const handleMouseUp = (event) => {
+  const handleMouseUp = () => {
     if (draggable) return;
-    if (newAnnotation.length === 1) {
-      const stage = event.target.getStage();
-      const scale = stage.scaleX(); // assuming the x and y scales are the same
-      const point = stage.getPointerPosition();
-      const x = (point.x - stage.x()) / scale;
-      const y = (point.y - stage.y()) / scale;
-      // const stageTransform = stage.getAbsoluteTransform().copy();
-      // const position = stageTransform.invert().point(point);
-
-      const annotationToAdd = {
-        x: newAnnotation[0].x,
-        y: newAnnotation[0].y,
-        width: x - newAnnotation[0].x,
-        height: y - newAnnotation[0].y,
-        key: annotations.length + 1,
-      };
-      setNewAnnotation([]);
-      setAnnotations([...annotations, annotationToAdd]);
+    if (mouseDraw) {
+      setRectCount(rectCount + 1);
+      setMouseDraw(false);
     }
+    setMouseDown(false);
   };
 
   const handleMouseMove = (event) => {
     if (draggable) return;
-    if (newAnnotation.length === 1) {
-      const stage = event.target.getStage();
-      const scale = stage.scaleX(); // assuming the x and y scales are the same
-      const point = stage.getPointerPosition();
-      const x = (point.x - stage.x()) / scale;
-      const y = (point.y - stage.y()) / scale;
-      // const stageTransform = stage.getAbsoluteTransform().copy();
-      // const position = stageTransform.invert().point(point);
-      setNewAnnotation([
-        {
-          ...newAnnotation[0],
-          width: x - newAnnotation[0].x,
-          height: y - newAnnotation[0].y,
-        },
-      ]);
+    const stage = event.target.getStage();
+    const mousePos = getRelativePointerPosition(stage);
+    if (!rectangles[rectCount]) {
+      let newRect = {
+        x: newRectX,
+        y: newRectY,
+        width: mousePos.x - newRectX,
+        height: mousePos.y - newRectY,
+        name: `rect${rectCount + 1}`,
+        stroke: "red",
+        key: String(Math.random()),
+        draggable: false,
+        standard_inspection: null,
+        sub_inspection: null,
+        inspection: null,
+        cost: 0,
+        id: rectCount + 1,
+      };
+      setMouseDraw(true);
+      setRectangles([...rectangles, newRect]);
+      return;
     }
+
+    let updatedRect = {
+      ...rectangles[rectCount],
+      width: mousePos.x - newRectX,
+      height: mousePos.y - newRectY,
+    };
+
+    let newRects = [
+      ...rectangles.slice(0, rectCount),
+      (rectangles[rectCount] = updatedRect),
+      ...rectangles.slice(rectCount + 1),
+    ];
+
+    return setRectangles(newRects);
+  };
+
+  const _onRectChange = (index, newProps) => {
+    let updatedRect = {
+      ...rectangles[index],
+      ...newProps,
+    };
+    let newRects = [
+      ...rectangles.slice(0, index),
+      (rectangles[index] = updatedRect),
+      ...rectangles.slice(index + 1),
+    ];
+
+    setRectangles(newRects);
   };
 
   const handleWheel = (e) => {
     e.evt.preventDefault();
-    const stage = e.target.getStage();
+    document.getElementById("menu").style.display = "none";
+    const stage = stageRef.current;
     const oldScale = stage.scaleX();
     const initialScale = 1; // replace with your initial scale
     const mousePointTo = {
@@ -112,8 +179,6 @@ const InspectionFlow = () => {
     if (newScale < initialScale) {
       newScale = initialScale;
     }
-    // Update the imageScale state variable
-    setImageScale(newScale);
     stage.scale({ x: newScale, y: newScale });
     const newPos = {
       x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
@@ -123,16 +188,76 @@ const InspectionFlow = () => {
     stage.batchDraw();
   };
 
-  const handleDraw = (event) => {
+  const handleMouse = () => {
+    document.getElementById("stageContainer").style.cursor = "pointer";
+    setMouseState(true);
+    setDrawState(false);
+    setDraggable(true);
+  };
+
+  const handleDraw = () => {
+    document.getElementById("stageContainer").style.cursor = "crosshair";
+    setDrawState(true);
+    setMouseState(false);
     setDraggable(false);
   };
 
-  const handleRectClick = (value) => {
-    console.log(value);
+  const OnDoubleClick = (event) => {
+    console.log("double click");
+  };
+
+  const handleRightClick = (
+    e,
+    standard_inspection,
+    sub_inspection,
+    inspection,
+    cost,
+    id
+  ) => {
+    console.log(standard_inspection, sub_inspection, inspection);
+    setSelectedStandardInspection(standard_inspection);
+    setSelectedSubInspection(sub_inspection);
+    setSelectedInspection(inspection);
+    setSelectedCost(cost);
+    setSelectedId(id);
+    e.evt.preventDefault();
+    const menuNode = document.getElementById("menu");
+    menuNode.style.display = "block";
+    const stage = e.target.getStage();
+    const containerRect = stage.container().getBoundingClientRect();
+    menuNode.style.top =
+      containerRect.top + stage.getPointerPosition().y + 4 + "px";
+    menuNode.style.left =
+      containerRect.left + stage.getPointerPosition().x + 4 + "px";
+  };
+
+  const handlePulseButton = () => {
+    console.log("pulse button");
   };
 
   const handleSmallImageClick = (value) => {
     dispatch(setSelected({ selected: true, id: value.id }));
+
+    images.forEach((image) => {
+      const layerId = `point-${image.id}`;
+
+      if (map.getLayer(layerId)) {
+        map.setPaintProperty(
+          layerId,
+          "circle-color",
+          image.id === value.id ? "red" : "blue"
+        );
+
+        if (image.id === value.id) {
+          map.flyTo({ center: [image.longitude, image.latitude], zoom: 22 });
+        }
+      }
+    });
+  };
+
+  const handleCloseMenu = () => {
+    const menuNode = document.getElementById("menu");
+    menuNode.style.display = "none";
   };
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -160,13 +285,111 @@ const InspectionFlow = () => {
         }/inspection-photo/?inspection_report=${inspection_id}`
       )
       .then((res) => {
+        if (res.data.length > 0) {
+          res.data[0].selected = true;
+        }
         dispatch(setImages(res.data));
+        res.data.forEach((image) => {
+          const layerId = `point-${image.id}`;
+
+          if (map && map.getLayer(layerId) === undefined) {
+            map.addLayer({
+              id: layerId,
+              type: "circle",
+              source: {
+                type: "geojson",
+                data: {
+                  type: "Feature",
+                  geometry: {
+                    type: "Point",
+                    coordinates: [image.longitude, image.latitude],
+                  },
+                },
+              },
+              paint: {
+                "circle-radius": 10,
+                "circle-color": image.selected ? "red" : "blue",
+              },
+            });
+          }
+          if (map && image.selected) {
+            map.flyTo({
+              center: [image.longitude, image.latitude],
+              zoom: 22,
+            });
+          }
+        });
       });
-  }, [dispatch, inspection_id]);
+  }, [dispatch, inspection_id, map]);
+  // useEffect(() => {
+  //   const menuNode = document.getElementById("menu");
+  //   const dropdownNode = document.getElementsByClassName(
+  //     "MuiAutocomplete-option Mui-focused"
+  //   );
+  //   const handleClick = (event) => {
+  //     let targetElement = event.target; // clicked element
+  //     do {
+  //       if (targetElement === menuNode || dropdownNode) {
+  //         // This is a click inside the menu or on an element with the "MuiAutocomplete-option Mui-focused" class.
+  //         // So let's exit and not hide the menu.
+  //         return;
+  //       }
+  //       // Go up the DOM
+  //       targetElement = targetElement.parentNode;
+  //     } while (targetElement);
+  //     // This is a click outside. Hide the menu.
+  //     menuNode.style.display = "none";
+  //   };
+  //   window.addEventListener("click", handleClick);
+  //   return () => {
+  //     window.removeEventListener("click", handleClick);
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/standard-inspection/`)
+      .then(
+        (res) => {
+          dispatch(setStandardInspection(res.data));
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    axios.get(`${import.meta.env.VITE_API_DASHBOARD_URL}/sub-inspection/`).then(
+      (res) => {
+        dispatch(setSubInspection(res.data));
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    axios.get(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection/`).then(
+      (res) => {
+        dispatch(setInspection(res.data));
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }, [dispatch]);
+
   return (
     <>
       <Appbar />
       <div>
+        {contextMenu.visible && (
+          <div
+            style={{
+              position: "fixed",
+              top: contextMenu.y,
+              left: contextMenu.x,
+            }}
+          >
+            {/* Your context menu items go here */}
+          </div>
+        )}
         <Grid
           container
           spacing={2}
@@ -197,28 +420,33 @@ const InspectionFlow = () => {
               >
                 Lounkær Roof Inspection
               </Typography>
-              <Grid sx={{ whiteSpace: "nowrap", boxShadow: 1 }}>
-                <Tooltip title="Draw">
-                  <IconButton onClick={(event) => handleDraw(event)}>
-                    <CropSquareIcon
-                      sx={{ "&:hover": { cursor: "pointer" }, color: "red" }}
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Done">
-                  <IconButton onClick={(event) => handleEvent(event)}>
-                    <DoneIcon
-                      sx={{ "&:hover": { cursor: "pointer" }, color: "red" }}
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Delete">
-                  <IconButton>
-                    <DeleteOutlineIcon
-                      sx={{ "&:hover": { cursor: "pointer" }, color: "red" }}
-                    />
-                  </IconButton>
-                </Tooltip>
+              <Grid sx={{ whiteSpace: "nowrap", boxShadow: 1, padding: 0.5 }}>
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <Tooltip title="Mouse">
+                    <IconButton onClick={(event) => handleMouse(event)}>
+                      <MouseIcon
+                        sx={{
+                          "&:hover": { cursor: "pointer" },
+                          color: mouseState ? "blue" : "red",
+                        }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Draw">
+                    <IconButton onClick={(event) => handleDraw(event)}>
+                      <CropSquareIcon
+                        sx={{
+                          "&:hover": { cursor: "pointer" },
+                          color: drawState ? "blue" : "red",
+                        }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+
+                <Typography sx={{ color: "red", fontSize: 12 }}>
+                  Click right on your mouse to edit and save.
+                </Typography>
               </Grid>
               <Button variant="contained" color="error">
                 Report
@@ -237,49 +465,194 @@ const InspectionFlow = () => {
               </Button>
             </Grid>
           </Grid>
-          {/* {showInspectionType ? (
-            <Box>
-              <InspectionTypeForm />
-            </Box>
-          ) : null} */}
 
           <Grid item xs={12} md={8}>
-            <Stage
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
-              onMouseMove={handleMouseMove}
-              width={window.innerWidth * 0.65}
-              height={window.innerHeight * 0.6}
-              draggable={draggable}
-              onWheel={handleWheel}
-            >
-              <Layer name="image-layer">
-                {images.length > 0 ? (
-                  <URLImage
-                    src={
-                      images.find((image) => image.selected === true)?.photo ||
-                      images[0].photo
+            <div style={{ display: "none" }} id="menu">
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  alignItems: "center",
+                }}
+              >
+                <Typography sx={{ color: "blue" }}>
+                  ID:{selectedId || null}{" "}
+                </Typography>
+                <Tooltip title="Save">
+                  <IconButton
+                  // onClick={(event) => handleMouse(event)}
+                  >
+                    <DoneIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        color: "red",
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete">
+                  <IconButton
+                  // onClick={(event) => handleMouse(event)}
+                  >
+                    <DeleteIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        color: "red",
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Edit">
+                  <IconButton
+                  // onClick={(event) => handleMouse(event)}
+                  >
+                    <EditIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        color: "red",
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Close">
+                  <IconButton onClick={(event) => handleCloseMenu(event)}>
+                    <CloseIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        color: "red",
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+              <Box>
+                {standard_inspection && standard_inspection.length > 0 ? (
+                  <Autocomplete
+                    size="small"
+                    sx={{ m: 0.5, mb: 1, width: "90%" }}
+                    options={standard_inspection}
+                    getOptionLabel={(option) => option.name}
+                    value={
+                      standard_inspection.find(
+                        (type) => type.id === selectedStandardInspection
+                      ) || null
                     }
-                    width={window.innerWidth * 0.65}
-                    height={window.innerHeight * 0.6}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Standard Inspection"
+                        variant="outlined"
+                      />
+                    )}
+                    filterOptions={(options) => options}
+                    onChange={(event, value) => {
+                      setSelectedStandardInspection(value ? value.id : null);
+                    }}
                   />
                 ) : null}
-                {annotationsToDraw.map((value) => {
-                  return (
-                    <Rect
-                      key={value.key}
-                      x={value.x * imageScale}
-                      y={value.y * imageScale}
-                      width={value.width * imageScale}
-                      height={value.height * imageScale}
-                      fill="transparent"
-                      stroke="black"
-                      onClick={(value) => handleRectClick(value)}
+                {sub_inspection && sub_inspection.length > 0 ? (
+                  <Autocomplete
+                    size="small"
+                    sx={{ m: 0.5, mb: 1, width: "90%" }}
+                    options={sub_inspection}
+                    getOptionLabel={(option) => option.name}
+                    value={
+                      sub_inspection.find(
+                        (type) => type.id === selectedSubInspection
+                      ) || null
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Sub Inspection"
+                        variant="outlined"
+                      />
+                    )}
+                    filterOptions={(options) => options}
+                    onChange={(event, value) => {
+                      setSelectedSubInspection(value ? value.id : null);
+                    }}
+                  />
+                ) : null}
+
+                {inspection && inspection.length > 0 ? (
+                  <Autocomplete
+                    size="small"
+                    sx={{ m: 0.5, mb: 1, width: "90%" }}
+                    options={inspection}
+                    getOptionLabel={(option) => option.name}
+                    value={
+                      inspection.find(
+                        (type) => type.id === selectedInspection
+                      ) || null
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Inspection"
+                        variant="outlined"
+                      />
+                    )}
+                    filterOptions={(options) => options}
+                    onChange={(event, value) => {
+                      setSelectedInspection(value ? value.id : null);
+                    }}
+                  />
+                ) : null}
+              </Box>
+              <Box>
+                <TextField
+                  value={selectedCost || 0}
+                  placeholder="Cost"
+                  sx={{ m: 0.5, width: "90%" }}
+                  size="small"
+                ></TextField>
+              </Box>
+            </div>
+
+            <div id="stageContainer">
+              <Stage
+                ref={stageRef}
+                container={"stageContainer"}
+                width={window.innerWidth * 0.65}
+                height={window.innerHeight * 0.6}
+                draggable={draggable}
+                onMouseDown={handleMouseDown}
+                onMouseUp={mouseDown && handleMouseUp}
+                onMouseMove={mouseDown && handleMouseMove}
+                onTouchStart={handleMouseDown}
+                onTouchEnd={mouseDown && handleMouseUp}
+                onTouchMove={mouseDown && handleMouseMove}
+                onDblClick={OnDoubleClick}
+                onWheel={handleWheel}
+              >
+                <Layer>
+                  {images.length > 0 ? (
+                    <URLImage
+                      src={
+                        images.find((image) => image.selected === true)
+                          ?.photo || images[0].photo
+                      }
+                      width={window.innerWidth * 0.65}
+                      height={window.innerHeight * 0.6}
                     />
-                  );
-                })}
-              </Layer>
-            </Stage>
+                  ) : null}
+                  {rectangles.map((rect, i) => (
+                    <Rectangle
+                      key={i}
+                      {...rect}
+                      mouseState={mouseState}
+                      onTransform={(newProps) => {
+                        _onRectChange(i, newProps);
+                      }}
+                      // onClick={handleRightClick}
+                      onContextMenu={handleRightClick}
+                    />
+                  ))}
+                  {/* <RectTransformer selectedShapeName={selectedShapeName} /> */}
+                </Layer>
+              </Stage>
+            </div>
             <Box
               sx={{
                 width: { xs: "95%", md: "99%", lg: "99%" },
@@ -326,7 +699,7 @@ const InspectionFlow = () => {
                 <Autocomplete
                   sx={{ mb: 0.5, width: "100%" }}
                   multiple
-                  options={type_of_inspection.map((type) => type.standard_type)}
+                  options={standard_inspection.map((type) => type.name)}
                   getOptionLabel={(option) => option}
                   // disableCloseOnSelect
                   renderInput={(params) => (
@@ -341,7 +714,7 @@ const InspectionFlow = () => {
                 <Autocomplete
                   sx={{ mb: 0.5, width: "100%" }}
                   multiple
-                  options={type_of_inspection.map((type) => type.sub_type)}
+                  options={sub_inspection.map((type) => type.name)}
                   getOptionLabel={(option) => option}
                   // disableCloseOnSelect
                   renderInput={(params) => (
@@ -356,7 +729,7 @@ const InspectionFlow = () => {
                 <Autocomplete
                   multiple
                   sx={{ mb: 0.5, width: "100%" }}
-                  options={type_of_inspection.map((type) => type.type)}
+                  options={inspection.map((type) => type.name)}
                   getOptionLabel={(option) => option}
                   // disableCloseOnSelect
                   renderInput={(params) => (

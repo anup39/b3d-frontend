@@ -1,0 +1,20 @@
+#stageContainer {
+    /* position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
+    /* background-color: green; */
+    /* overflow: hidden; */
+    cursor: pointer;
+  }
+  
+  #menu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border-radius: 3px;
+    z-index: 1;
+    width: 210px;
+  }
+
+  

@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import TabIcon from "@mui/icons-material/Tab";
 
-export default function SubCategoryCard({ full_name, description }) {
+export default function SubCategoryCard({ name, full_name, description }) {
   return (
     <Paper
       sx={{
