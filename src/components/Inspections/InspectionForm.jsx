@@ -33,42 +33,42 @@ export default function InspectionForm() {
     const fillOpacityInput = document.getElementById("fill_opacity");
     const strokeWidthInput = document.getElementById("stroke_width");
 
-    if (selectedSubInspectionId !== null) {
-      const data = {
-        name: nameInput.value,
-        description: descriptionInput.value,
-        sub_inspection: selectedSubInspectionId,
-        standard_inspection: selectedStandardInspectionId,
-        fill_color: selectedFillColor,
-        fill_opacity: fillOpacityInput.value,
-        stroke_color: selectedStrokeColor,
-        stroke_width: strokeWidthInput.value,
-        created_by: user_id,
-      };
+    // if (selectedSubInspectionId !== null) {
+    const data = {
+      name: nameInput.value,
+      description: descriptionInput.value,
+      // sub_inspection: null,
+      // standard_inspection: null,
+      fill_color: selectedFillColor,
+      fill_opacity: fillOpacityInput.value,
+      stroke_color: selectedStrokeColor,
+      stroke_width: strokeWidthInput.value,
+      created_by: user_id,
+    };
 
-      axios
-        .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection/`, data)
-        .then(() => {
-          setLoading(false);
-          dispatch(setshowToast(true));
-          dispatch(settoastMessage("Successfully Created Standard category"));
-          dispatch(settoastType("success"));
-          closeForm();
+    axios
+      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection/`, data)
+      .then(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Successfully Created Standard category"));
+        dispatch(settoastType("success"));
+        closeForm();
 
-          axios
-            .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection/`)
-            .then((res) => {
-              dispatch(setInspections(res.data));
-            });
-        })
-        .catch(() => {
-          setLoading(false);
-          dispatch(setshowToast(true));
-          dispatch(settoastMessage("Failed to load Inspection"));
-          dispatch(settoastType("error"));
-          closeForm();
-        });
-    }
+        axios
+          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/inspection/`)
+          .then((res) => {
+            dispatch(setInspections(res.data));
+          });
+      })
+      .catch(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Failed to load Inspection"));
+        dispatch(settoastType("error"));
+        closeForm();
+      });
+    // }
   };
 
   const openForm = () => {
@@ -151,7 +151,7 @@ export default function InspectionForm() {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <AutoCompleteInspection
                   onItemSelected={(id, ids) => {
                     setSelectedSubInspectionId(id);
@@ -159,7 +159,7 @@ export default function InspectionForm() {
                   }}
                   category={"sub-inspection"}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <TextField
                   id="fill_color"

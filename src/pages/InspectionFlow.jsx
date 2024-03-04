@@ -214,29 +214,29 @@ const InspectionFlow = () => {
     id
   ) => {
     console.log(standard_inspection, sub_inspection, inspection);
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/sub-inspection/?standard_inspection=${standard_inspection}`
-      )
-      .then(
-        (res) => {
-          dispatch(setSubInspection(res.data));
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/inspection/?sub_inspection=${sub_inspection}`
-      )
-      .then((res) => {
-        dispatch(setInspection(res.data));
-      });
+    // axios
+    //   .get(
+    //     `${
+    //       import.meta.env.VITE_API_DASHBOARD_URL
+    //     }/sub-inspection/?standard_inspection=${standard_inspection}`
+    //   )
+    //   .then(
+    //     (res) => {
+    //       dispatch(setSubInspection(res.data));
+    //     },
+    //     (error) => {
+    //       console.log(error);
+    //     }
+    //   );
+    // axios
+    //   .get(
+    //     `${
+    //       import.meta.env.VITE_API_DASHBOARD_URL
+    //     }/inspection/?sub_inspection=${sub_inspection}`
+    //   )
+    //   .then((res) => {
+    //     dispatch(setInspection(res.data));
+    //   });
 
     setSelectedStandardInspection(standard_inspection);
     setSelectedSubInspection(sub_inspection);
@@ -341,8 +341,12 @@ const InspectionFlow = () => {
   }, [dispatch, inspection_id, map]);
   useEffect(() => {
     const menuNode = document.getElementById("menu");
+    const autocompleteNode = document.getElementById("autocomplete"); // replace "autocomplete" with the id of your Autocomplete component
     const handleClick = (event) => {
-      if (!menuNode.contains(event.target)) {
+      if (
+        !menuNode.contains(event.target) &&
+        !autocompleteNode.contains(event.target)
+      ) {
         // hide menu
         menuNode.style.display = "none";
       }
@@ -486,7 +490,9 @@ const InspectionFlow = () => {
                   ID:{selectedId || null}{" "}
                 </Typography>
                 <Tooltip title="Save">
-                  <IconButton onClick={(event) => handleMouse(event)}>
+                  <IconButton
+                  // onClick={(event) => handleMouse(event)}
+                  >
                     <DoneIcon
                       sx={{
                         "&:hover": { cursor: "pointer" },
@@ -496,7 +502,9 @@ const InspectionFlow = () => {
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete">
-                  <IconButton onClick={(event) => handleMouse(event)}>
+                  <IconButton
+                  // onClick={(event) => handleMouse(event)}
+                  >
                     <DeleteIcon
                       sx={{
                         "&:hover": { cursor: "pointer" },
@@ -506,7 +514,9 @@ const InspectionFlow = () => {
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Edit">
-                  <IconButton onClick={(event) => handleMouse(event)}>
+                  <IconButton
+                  // onClick={(event) => handleMouse(event)}
+                  >
                     <EditIcon
                       sx={{
                         "&:hover": { cursor: "pointer" },
@@ -519,6 +529,7 @@ const InspectionFlow = () => {
               <Box>
                 {standard_inspection && standard_inspection.length > 0 ? (
                   <Autocomplete
+                    disableCloseOnSelect
                     size="small"
                     sx={{ m: 0.5, mb: 1, width: "90%" }}
                     options={standard_inspection}
