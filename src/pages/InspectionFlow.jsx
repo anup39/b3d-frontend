@@ -55,6 +55,8 @@ const InspectionFlow = () => {
   const [mouseDraw, setMouseDraw] = useState(false);
   const [newRectX, setNewRectX] = useState(0);
   const [newRectY, setNewRectY] = useState(0);
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
 
   const [selectedStandardInspection, setSelectedStandardInspection] =
     useState(null);
@@ -62,6 +64,7 @@ const InspectionFlow = () => {
   const [selectedInspection, setSelectedInspection] = useState(null);
   const [selectedCost, setSelectedCost] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
+  const [created, setCreated] = useState(true);
 
   const [contextMenu, setContextMenu] = useState({
     visible: false,
@@ -76,10 +79,12 @@ const InspectionFlow = () => {
     (state) => state.inspectionFlow.sub_inspection
   );
   const inspection = useSelector((state) => state.inspectionFlow.inspection);
+  const user_id = useSelector((state) => state.auth.user_id);
 
   const handleMouseDown = (event) => {
     if (draggable) return;
     if (event.target.className === "Image") {
+      console.log("here");
       const stage = event.target.getStage();
       const mousePos = getRelativePointerPosition(stage);
       setMouseDown(true);
@@ -94,6 +99,7 @@ const InspectionFlow = () => {
       return;
     }
     const name = event.target.name();
+    console.log(name, "name");
     const rect = rectangles.find((r) => r.name === name);
     if (rect) {
       setSelectedShapeName(name);
@@ -116,20 +122,32 @@ const InspectionFlow = () => {
     const stage = event.target.getStage();
     const mousePos = getRelativePointerPosition(stage);
     if (!rectangles[rectCount]) {
+      console.log(rectangles[rectangles?.length - 1]?.id + 1, "rectangles");
       let newRect = {
+        id: rectangles[rectangles?.length - 1]?.id + 1 || 1,
+        inspected_photo: inspection_id,
+        description: "",
+        caption: "",
         x: newRectX,
         y: newRectY,
-        width: mousePos.x - newRectX,
         height: mousePos.y - newRectY,
-        name: `rect${rectCount + 1}`,
-        stroke: "red",
-        key: String(Math.random()),
-        draggable: false,
+        width: mousePos.x - newRectX,
+        fill_color: "transparent",
+        fil_opacity: 0,
+        stroke_color: "#FF0000",
+        stroke_width: 1,
+        created: true,
+        rotation: 0.0,
         standard_inspection: null,
         sub_inspection: null,
         inspection: null,
+        severity: 0,
         cost: 0,
-        id: rectCount + 1,
+        created_by: user_id,
+        is_display: true,
+        key: rectCount + 1,
+        draggable: false,
+        name: `rect${rectangles[rectangles?.length - 1]?.id + 1 || 1}`,
       };
       setMouseDraw(true);
       setRectangles([...rectangles, newRect]);
@@ -212,14 +230,34 @@ const InspectionFlow = () => {
     sub_inspection,
     inspection,
     cost,
-    id
+    id,
+    created,
+    x,
+    y,
+    height,
+    width
   ) => {
-    console.log(standard_inspection, sub_inspection, inspection);
+    console.log(
+      standard_inspection,
+      sub_inspection,
+      inspection,
+      id,
+      created,
+      x,
+      y,
+      height,
+      width
+    );
     setSelectedStandardInspection(standard_inspection);
     setSelectedSubInspection(sub_inspection);
     setSelectedInspection(inspection);
     setSelectedCost(cost);
     setSelectedId(id);
+    setCreated(created);
+    setNewRectX(x);
+    setNewRectY(y);
+    setWidth(width);
+    setHeight(height);
     e.evt.preventDefault();
     const menuNode = document.getElementById("menu");
     menuNode.style.display = "block";
@@ -231,11 +269,151 @@ const InspectionFlow = () => {
       containerRect.left + stage.getPointerPosition().x + 4 + "px";
   };
 
+  const handleCreateGeometry = (event) => {
+    event.preventDefault();
+    console.log(created, "created");
+    console.log("here in saving");
+    console.log(rectangles);
+    console.log(rectCount);
+    console.log(images.find((image) => image.selected).id);
+    let stroke_color = "#FF0000";
+    let stroke_width = 1;
+    if (created) {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/inspection/${selectedInspection}/`
+        )
+        .then((res) => {
+          console.log(res);
+          stroke_color = res.data.stroke_color;
+          stroke_width = res.data.stroke_width;
+          const data = new FormData();
+          data.append(
+            "inspection_photo",
+            images.find((image) => image.selected).id
+          );
+          data.append("description", "");
+          data.append("caption", "");
+          data.append("x", newRectX);
+          data.append("y", newRectY);
+          data.append("height", rectangles[rectCount - 1].height);
+          data.append("width", rectangles[rectCount - 1].width);
+          data.append("name", rectangles[rectCount - 1].name);
+          // data.append("fill_color", "transparent");
+          data.append("fill_opacity", 0);
+          data.append("stroke_color", stroke_color);
+          data.append("stroke_width", stroke_width);
+          data.append("rotation", 0.0);
+          data.append("standard_inspection", selectedStandardInspection);
+          data.append("sub_inspection", selectedSubInspection);
+          data.append("inspection", selectedInspection);
+          data.append("severity", 0);
+          data.append("cost", selectedCost);
+          data.append("created_by", user_id);
+          data.append("is_display", true);
+
+          axios
+            .post(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/inspection-photo-geometry/`,
+              data
+            )
+            .then((res) => {
+              console.log(res);
+              axios
+                .get(
+                  `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/inspection-photo-geometry/?inspection_photo=${
+                    images.find((image) => image.selected)?.id
+                  }`
+                )
+                .then((res) => {
+                  setRectangles(res.data);
+                  setRectCount(res.data.length);
+                  document.getElementById("menu").style.display = "none";
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/inspection/${selectedInspection}/`
+        )
+        .then((res) => {
+          console.log(res);
+          stroke_color = res.data.stroke_color;
+          stroke_width = res.data.stroke_width;
+          const data = new FormData();
+          data.append("x", newRectX);
+          data.append("y", newRectY);
+          data.append("height", height);
+          data.append("width", width);
+          // data.append("fill_color", "transparent");
+          data.append("stroke_color", stroke_color);
+          data.append("stroke_width", stroke_width);
+          data.append("standard_inspection", selectedStandardInspection);
+          data.append("sub_inspection", selectedSubInspection);
+          data.append("inspection", selectedInspection);
+          data.append("cost", selectedCost);
+          data.append("created_by", user_id);
+
+          axios
+            .patch(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/inspection-photo-geometry/${selectedId}/`,
+              data
+            )
+            .then((res) => {
+              console.log(res);
+              axios
+                .get(
+                  `${
+                    import.meta.env.VITE_API_DASHBOARD_URL
+                  }/inspection-photo-geometry/?inspection_photo=${
+                    images.find((image) => image.selected)?.id
+                  }`
+                )
+                .then((res) => {
+                  setRectangles(res.data);
+                  setRectCount(res.data.length);
+                  document.getElementById("menu").style.display = "none";
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   const handlePulseButton = () => {
     console.log("pulse button");
   };
 
   const handleSmallImageClick = (value) => {
+    document.getElementById("menu").style.display = "none";
     dispatch(setSelected({ selected: true, id: value.id }));
 
     images.forEach((image) => {
@@ -375,6 +553,25 @@ const InspectionFlow = () => {
     );
   }, [dispatch]);
 
+  useEffect(() => {
+    if (images.length === 0) return;
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/inspection-photo-geometry/?inspection_photo=${
+          images.find((image) => image.selected)?.id
+        }`
+      )
+      .then((res) => {
+        setRectangles(res.data);
+        setRectCount(res.data.length);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [images]);
+
   return (
     <>
       <Appbar />
@@ -467,7 +664,11 @@ const InspectionFlow = () => {
           </Grid>
 
           <Grid item xs={12} md={8}>
-            <div style={{ display: "none" }} id="menu">
+            <form
+              onSubmit={handleCreateGeometry}
+              style={{ display: "none" }}
+              id="menu"
+            >
               <Box
                 sx={{
                   display: "flex",
@@ -480,7 +681,8 @@ const InspectionFlow = () => {
                 </Typography>
                 <Tooltip title="Save">
                   <IconButton
-                  // onClick={(event) => handleMouse(event)}
+                    type="submit"
+                    // onClick={(event) => handleMouse(event)}
                   >
                     <DoneIcon
                       sx={{
@@ -539,6 +741,7 @@ const InspectionFlow = () => {
                     }
                     renderInput={(params) => (
                       <TextField
+                        required
                         {...params}
                         label="Standard Inspection"
                         variant="outlined"
@@ -563,6 +766,7 @@ const InspectionFlow = () => {
                     }
                     renderInput={(params) => (
                       <TextField
+                        required
                         {...params}
                         label="Sub Inspection"
                         variant="outlined"
@@ -578,7 +782,14 @@ const InspectionFlow = () => {
                 {inspection && inspection.length > 0 ? (
                   <Autocomplete
                     size="small"
-                    sx={{ m: 0.5, mb: 1, width: "90%" }}
+                    sx={{
+                      m: 0.5,
+                      mb: 1,
+                      width: "90%",
+                      backgroundColor: inspection.find(
+                        (type) => type.id === selectedInspection
+                      )?.stroke_color,
+                    }}
                     options={inspection}
                     getOptionLabel={(option) => option.name}
                     value={
@@ -588,6 +799,7 @@ const InspectionFlow = () => {
                     }
                     renderInput={(params) => (
                       <TextField
+                        required
                         {...params}
                         label="Inspection"
                         variant="outlined"
@@ -597,6 +809,13 @@ const InspectionFlow = () => {
                     onChange={(event, value) => {
                       setSelectedInspection(value ? value.id : null);
                     }}
+                    renderOption={(props, option) => (
+                      <Box component="li" {...props}>
+                        <span style={{ color: option.stroke_color }}>
+                          {option.name}
+                        </span>
+                      </Box>
+                    )}
                   />
                 ) : null}
               </Box>
@@ -608,7 +827,7 @@ const InspectionFlow = () => {
                   size="small"
                 ></TextField>
               </Box>
-            </div>
+            </form>
 
             <div id="stageContainer">
               <Stage
