@@ -17,6 +17,7 @@ import { useParams } from "react-router-dom";
 import Rectangle from "../components/InspectionFlow/Rectangle";
 import RectTransformer from "../components/InspectionFlow/RectangleTransformer";
 import "./InspectionFlow.css";
+import { Html } from "react-konva-utils";
 
 function getRelativePointerPosition(node) {
   const transform = node.getAbsoluteTransform().copy();
@@ -45,6 +46,12 @@ const InspectionFlow = () => {
   const [mouseDraw, setMouseDraw] = useState(false);
   const [newRectX, setNewRectX] = useState(0);
   const [newRectY, setNewRectY] = useState(0);
+
+  const [contextMenu, setContextMenu] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+  });
 
   const type_of_inspection = useSelector(
     (state) => state.inspectionUpload.type_of_inspection
@@ -95,7 +102,7 @@ const InspectionFlow = () => {
         width: mousePos.x - newRectX,
         height: mousePos.y - newRectY,
         name: `rect${rectCount + 1}`,
-        stroke: "#00A3AA",
+        stroke: "red",
         key: String(Math.random()),
         draggable: false,
       };
@@ -259,6 +266,17 @@ const InspectionFlow = () => {
     <>
       <Appbar />
       <div>
+        {contextMenu.visible && (
+          <div
+            style={{
+              position: "fixed",
+              top: contextMenu.y,
+              left: contextMenu.x,
+            }}
+          >
+            {/* Your context menu items go here */}
+          </div>
+        )}
         <Grid
           container
           spacing={2}
@@ -346,6 +364,17 @@ const InspectionFlow = () => {
                 onWheel={handleWheel}
               >
                 <Layer>
+                  <Html
+                    divProps={{
+                      style: {
+                        position: "absolute",
+                        top: 10,
+                        left: 10,
+                      },
+                    }}
+                  >
+                    <input placeholder="DOM input from Konva nodes" />
+                  </Html>
                   {images.length > 0 ? (
                     <URLImage
                       src={
@@ -366,6 +395,14 @@ const InspectionFlow = () => {
                           mouseState={mouseState}
                           onTransform={(newProps) => {
                             _onRectChange(i, newProps);
+                          }}
+                          onContextMenu={(e) => {
+                            e.preventDefault();
+                            setContextMenu({
+                              visible: true,
+                              x: e.clientX,
+                              y: e.clientY,
+                            });
                           }}
                         />
                       )

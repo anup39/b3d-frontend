@@ -48,6 +48,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-konva": "^18.2.10",
+    "react-konva-utils": "^1.0.6",
     "react-map-gl": "^7.1.6",
     "react-redux": "^8.1.1",
     "react-router-dom": "^6.14.1",

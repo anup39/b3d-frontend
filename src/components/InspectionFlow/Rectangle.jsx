@@ -29,7 +29,7 @@ const Rectangle = (props) => {
 
   const _onMouseLeave = (event) => {
     const shape = event.target;
-    shape.stroke("#00A3AA");
+    shape.stroke("red");
     if (props.mouseState) {
       shape.getStage().container().style.cursor = "pointer";
     } else {
