@@ -176,9 +176,25 @@ const InspectionFlow = () => {
     setDraggable(false);
   };
 
-  // const handleRectClick = (value) => {
-  //   console.log(value);
-  // };
+  const OnDoubleClick = (event) => {
+    console.log("double click");
+  };
+
+  const handleRightClick = (e) => {
+    e.evt.preventDefault();
+    const menuNode = document.getElementById("menu");
+    menuNode.style.display = "block";
+    const stage = e.target.getStage();
+    const containerRect = stage.container().getBoundingClientRect();
+    menuNode.style.top =
+      containerRect.top + stage.getPointerPosition().y + 4 + "px";
+    menuNode.style.left =
+      containerRect.left + stage.getPointerPosition().x + 4 + "px";
+  };
+
+  const handlePulseButton = () => {
+    console.log("pulse button");
+  };
 
   const handleSmallImageClick = (value) => {
     dispatch(setSelected({ selected: true, id: value.id }));
@@ -261,6 +277,20 @@ const InspectionFlow = () => {
         });
       });
   }, [dispatch, inspection_id, map]);
+
+  useEffect(() => {
+    const menuNode = document.getElementById("menu");
+    window.addEventListener("click", () => {
+      // hide menu
+      menuNode.style.display = "none";
+    });
+    return () => {
+      window.removeEventListener("click", () => {
+        // hide menu
+        menuNode.style.display = "none";
+      });
+    };
+  }, []);
 
   return (
     <>
@@ -348,6 +378,14 @@ const InspectionFlow = () => {
           </Grid>
 
           <Grid item xs={12} md={8}>
+            <div style={{ display: "none" }} id="menu">
+              <div>
+                <button onClick={handlePulseButton} id="pulse-button">
+                  Pulse
+                </button>
+                <button id="delete-button">Delete</button>
+              </div>
+            </div>
             <div id="stageContainer">
               <Stage
                 ref={stageRef}
@@ -361,20 +399,10 @@ const InspectionFlow = () => {
                 onTouchStart={handleMouseDown}
                 onTouchEnd={mouseDown && handleMouseUp}
                 onTouchMove={mouseDown && handleMouseMove}
+                onDblClick={OnDoubleClick}
                 onWheel={handleWheel}
               >
                 <Layer>
-                  <Html
-                    divProps={{
-                      style: {
-                        position: "absolute",
-                        top: 10,
-                        left: 10,
-                      },
-                    }}
-                  >
-                    <input placeholder="DOM input from Konva nodes" />
-                  </Html>
                   {images.length > 0 ? (
                     <URLImage
                       src={
@@ -396,14 +424,8 @@ const InspectionFlow = () => {
                           onTransform={(newProps) => {
                             _onRectChange(i, newProps);
                           }}
-                          onContextMenu={(e) => {
-                            e.preventDefault();
-                            setContextMenu({
-                              visible: true,
-                              x: e.clientX,
-                              y: e.clientY,
-                            });
-                          }}
+                          // onClick={handleRightClick}
+                          onContextMenu={handleRightClick}
                         />
                       )
                     )

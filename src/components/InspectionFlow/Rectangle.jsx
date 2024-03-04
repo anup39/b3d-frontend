@@ -52,7 +52,11 @@ const Rectangle = (props) => {
       stroke={props.stroke}
       strokeWidth={1}
       name={props.name}
-      onContextMenu={props.onContextMenu}
+      onContextMenu={(e) => {
+        props.onContextMenu(e);
+      }}
+      //   onClick={(e) => props.onClick(e)}
+      onDblTap={props.onDoubleClick}
       onDragEnd={_onChange}
       onTransformEnd={_onChange}
       onMouseEnter={_onMouseEnter}
