@@ -76,6 +76,7 @@ const InspectionFlow = () => {
     (state) => state.inspectionFlow.sub_inspection
   );
   const inspection = useSelector((state) => state.inspectionFlow.inspection);
+  const user_id = useSelector((state) => state.auth.user_id);
 
   const handleMouseDown = (event) => {
     if (draggable) return;
@@ -116,20 +117,31 @@ const InspectionFlow = () => {
     const stage = event.target.getStage();
     const mousePos = getRelativePointerPosition(stage);
     if (!rectangles[rectCount]) {
+      console.log(rectangles[rectangles?.length - 1]?.id + 1, "rectangles");
       let newRect = {
+        id: rectangles[rectangles?.length - 1]?.id + 1 || 1,
+        inspected_photo: inspection_id,
+        description: "",
+        caption: "",
         x: newRectX,
         y: newRectY,
-        width: mousePos.x - newRectX,
         height: mousePos.y - newRectY,
-        name: `rect${rectCount + 1}`,
-        stroke: "red",
-        key: String(Math.random()),
-        draggable: false,
+        width: mousePos.x - newRectX,
+        fill_color: "transparent",
+        fil_opacity: 0,
+        stroke_color: "red",
+        stroke_width: 1,
+        rotation: 0.0,
         standard_inspection: null,
         sub_inspection: null,
         inspection: null,
+        severity: 0,
         cost: 0,
-        id: rectCount + 1,
+        created_by: user_id,
+        is_display: true,
+        key: rectCount + 1,
+        draggable: false,
+        name: `rect${rectangles[rectangles?.length - 1]?.id + 1 || 1}`,
       };
       setMouseDraw(true);
       setRectangles([...rectangles, newRect]);
@@ -208,13 +220,14 @@ const InspectionFlow = () => {
 
   const handleRightClick = (
     e,
+
     standard_inspection,
     sub_inspection,
     inspection,
     cost,
     id
   ) => {
-    console.log(standard_inspection, sub_inspection, inspection);
+    console.log(standard_inspection, sub_inspection, inspection, id);
     setSelectedStandardInspection(standard_inspection);
     setSelectedSubInspection(sub_inspection);
     setSelectedInspection(inspection);
@@ -229,6 +242,11 @@ const InspectionFlow = () => {
       containerRect.top + stage.getPointerPosition().y + 4 + "px";
     menuNode.style.left =
       containerRect.left + stage.getPointerPosition().x + 4 + "px";
+  };
+
+  const handleCreateGeometry = (event) => {
+    event.preventDefault();
+    console.log("here in saving");
   };
 
   const handlePulseButton = () => {
@@ -467,7 +485,11 @@ const InspectionFlow = () => {
           </Grid>
 
           <Grid item xs={12} md={8}>
-            <div style={{ display: "none" }} id="menu">
+            <form
+              onSubmit={handleCreateGeometry}
+              style={{ display: "none" }}
+              id="menu"
+            >
               <Box
                 sx={{
                   display: "flex",
@@ -480,7 +502,8 @@ const InspectionFlow = () => {
                 </Typography>
                 <Tooltip title="Save">
                   <IconButton
-                  // onClick={(event) => handleMouse(event)}
+                    type="submit"
+                    // onClick={(event) => handleMouse(event)}
                   >
                     <DoneIcon
                       sx={{
@@ -539,6 +562,7 @@ const InspectionFlow = () => {
                     }
                     renderInput={(params) => (
                       <TextField
+                        required
                         {...params}
                         label="Standard Inspection"
                         variant="outlined"
@@ -563,6 +587,7 @@ const InspectionFlow = () => {
                     }
                     renderInput={(params) => (
                       <TextField
+                        required
                         {...params}
                         label="Sub Inspection"
                         variant="outlined"
@@ -588,6 +613,7 @@ const InspectionFlow = () => {
                     }
                     renderInput={(params) => (
                       <TextField
+                        required
                         {...params}
                         label="Inspection"
                         variant="outlined"
@@ -608,7 +634,7 @@ const InspectionFlow = () => {
                   size="small"
                 ></TextField>
               </Box>
-            </div>
+            </form>
 
             <div id="stageContainer">
               <Stage

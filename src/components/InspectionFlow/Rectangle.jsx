@@ -29,7 +29,7 @@ const Rectangle = (props) => {
 
   const _onMouseLeave = (event) => {
     const shape = event.target;
-    shape.stroke("red");
+    shape.stroke(props.stroke_color);
     if (props.mouseState) {
       shape.getStage().container().style.cursor = "pointer";
     } else {
@@ -49,8 +49,9 @@ const Rectangle = (props) => {
       scaleX={1}
       scaleY={1}
       strokeScaleEnabled={false}
-      stroke={props.stroke}
-      strokeWidth={1}
+      fill={props.fill_color}
+      stroke={props.stroke_color}
+      strokeWidth={props.stroke_width}
       name={props.name}
       onContextMenu={(e) => {
         const { standard_inspection, sub_inspection, inspection, cost, id } =
