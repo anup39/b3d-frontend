@@ -12,6 +12,7 @@ import Clients from "../pages/Clients";
 import ReportPrint from "../components/MapView/ReportPrint";
 import Inspection from "../pages/Inspection";
 import InspectionFlow from "../pages/InspectionFlow";
+import InspectionReport from "../pages/InspectionReport";
 
 export default function Routers() {
   return (
@@ -32,6 +33,12 @@ export default function Routers() {
           path="/projects/:client_id/inspections/:project_id/inspection/:inspection_id"
           element={<InspectionFlow />}
         />
+        <Route
+          exact
+          path="/projects/:client_id/inspections/:project_id/inspection/:inspection_id/report"
+          element={<InspectionReport />}
+        />
+
         <Route
           exact
           path="/properties/:client_id/:project_id/:view"

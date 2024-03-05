@@ -23,10 +23,9 @@ import { useParams } from "react-router-dom";
 import Rectangle from "../components/InspectionFlow/Rectangle";
 import RectTransformer from "../components/InspectionFlow/RectangleTransformer";
 import "./InspectionFlow.css";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DoneIcon from "@mui/icons-material/Done";
-import EditIcon from "@mui/icons-material/Edit";
-import CloseIcon from "@mui/icons-material/Close";
+import InspectionGeometryForm from "../components/InspectionFlow/InspectionGeometryForm";
+import { Rect } from "react-konva";
+import { useNavigate } from "react-router-dom";
 
 function getRelativePointerPosition(node) {
   const transform = node.getAbsoluteTransform().copy();
@@ -36,8 +35,10 @@ function getRelativePointerPosition(node) {
 }
 
 const InspectionFlow = () => {
-  const { inspection_id } = useParams();
+  const { client_id, project_id, inspection_id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [inspectionName, setInspectionName] = useState("");
   const images = useSelector((state) => state.inspectionFlow.images);
   const [draggable, setDraggable] = useState(true);
   const mapContainerPhotos = useRef(null);
@@ -51,6 +52,7 @@ const InspectionFlow = () => {
   const [rectCount, setRectCount] = useState(0);
 
   const [selectedShapeName, setSelectedShapeName] = useState("");
+  const [editModeGeom, setEditModeGeom] = useState(false);
   const [mouseDown, setMouseDown] = useState(false);
   const [mouseDraw, setMouseDraw] = useState(false);
   const [newRectX, setNewRectX] = useState(0);
@@ -62,9 +64,28 @@ const InspectionFlow = () => {
     useState(null);
   const [selectedSubInspection, setSelectedSubInspection] = useState(null);
   const [selectedInspection, setSelectedInspection] = useState(null);
-  const [selectedCost, setSelectedCost] = useState(null);
+  const [selectedCost, setSelectedCost] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [created, setCreated] = useState(true);
+  const [loaderSave, setLoaderSave] = useState(false);
+  const [loaderDelete, setLoaderDelete] = useState(false);
+  const [extent, setExtent] = useState({
+    x: 0,
+    y: 0,
+    width: window.innerWidth * 0.32,
+    height: window.innerHeight * 0.32,
+    scaleX: 1,
+    scaleY: 1,
+  });
+
+  const [
+    selectedStandardInspectionFilter,
+    setSelectedStandardInspectionFilter,
+  ] = useState(null);
+  const [selectedSubInspectionFilter, setSelectedSubInspectionFilter] =
+    useState(null);
+  const [selectedInspectionFilter, setSelectedInspectionFilter] =
+    useState(null);
 
   const [contextMenu, setContextMenu] = useState({
     visible: false,
@@ -84,13 +105,12 @@ const InspectionFlow = () => {
   const handleMouseDown = (event) => {
     if (draggable) return;
     if (event.target.className === "Image") {
-      console.log("here");
       const stage = event.target.getStage();
       const mousePos = getRelativePointerPosition(stage);
       setMouseDown(true);
       setNewRectX(mousePos.x);
       setNewRectY(mousePos.y);
-      setSelectedShapeName("");
+      // setSelectedShapeName("");
       return;
     }
     const clickedOnTransformer =
@@ -99,13 +119,12 @@ const InspectionFlow = () => {
       return;
     }
     const name = event.target.name();
-    console.log(name, "name");
     const rect = rectangles.find((r) => r.name === name);
-    if (rect) {
-      setSelectedShapeName(name);
-    } else {
-      setSelectedShapeName("");
-    }
+    // if (rect) {
+    //   setSelectedShapeName(name);
+    // } else {
+    //   setSelectedShapeName("");
+    // }
   };
 
   const handleMouseUp = () => {
@@ -122,7 +141,6 @@ const InspectionFlow = () => {
     const stage = event.target.getStage();
     const mousePos = getRelativePointerPosition(stage);
     if (!rectangles[rectCount]) {
-      console.log(rectangles[rectangles?.length - 1]?.id + 1, "rectangles");
       let newRect = {
         id: rectangles[rectangles?.length - 1]?.id + 1 || 1,
         inspected_photo: inspection_id,
@@ -198,12 +216,21 @@ const InspectionFlow = () => {
       newScale = initialScale;
     }
     stage.scale({ x: newScale, y: newScale });
+
     const newPos = {
       x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
       y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale,
     };
     stage.position(newPos);
     stage.batchDraw();
+    setExtent({
+      x: stage.getPointerPosition().x,
+      y: stage.getPointerPosition().y,
+      width: 200,
+      height: 150,
+      scaleX: newScale,
+      scaleY: newScale,
+    });
   };
 
   const handleMouse = () => {
@@ -220,10 +247,6 @@ const InspectionFlow = () => {
     setDraggable(false);
   };
 
-  const OnDoubleClick = (event) => {
-    console.log("double click");
-  };
-
   const handleRightClick = (
     e,
     standard_inspection,
@@ -235,19 +258,9 @@ const InspectionFlow = () => {
     x,
     y,
     height,
-    width
+    width,
+    name
   ) => {
-    console.log(
-      standard_inspection,
-      sub_inspection,
-      inspection,
-      id,
-      created,
-      x,
-      y,
-      height,
-      width
-    );
     setSelectedStandardInspection(standard_inspection);
     setSelectedSubInspection(sub_inspection);
     setSelectedInspection(inspection);
@@ -258,6 +271,7 @@ const InspectionFlow = () => {
     setNewRectY(y);
     setWidth(width);
     setHeight(height);
+    setSelectedShapeName(name);
     e.evt.preventDefault();
     const menuNode = document.getElementById("menu");
     menuNode.style.display = "block";
@@ -271,13 +285,10 @@ const InspectionFlow = () => {
 
   const handleCreateGeometry = (event) => {
     event.preventDefault();
-    console.log(created, "created");
-    console.log("here in saving");
-    console.log(rectangles);
-    console.log(rectCount);
-    console.log(images.find((image) => image.selected).id);
+
     let stroke_color = "#FF0000";
     let stroke_width = 1;
+    setLoaderSave(true);
     if (created) {
       axios
         .get(
@@ -335,6 +346,26 @@ const InspectionFlow = () => {
                   setRectangles(res.data);
                   setRectCount(res.data.length);
                   document.getElementById("menu").style.display = "none";
+                  setLoaderSave(false);
+                  setEditModeGeom(false);
+                  setSelectedShapeName("");
+                  axios
+                    .patch(
+                      `${
+                        import.meta.env.VITE_API_DASHBOARD_URL
+                      }/inspection-photo/${
+                        images.find((image) => image.selected)?.id
+                      }/`,
+                      { is_inspected: true }
+                    )
+                    .then(
+                      (res) => {
+                        console.log(res);
+                      },
+                      (error) => {
+                        console.log(error);
+                      }
+                    );
                 })
                 .catch((error) => {
                   console.log(error);
@@ -355,7 +386,6 @@ const InspectionFlow = () => {
           }/inspection/${selectedInspection}/`
         )
         .then((res) => {
-          console.log(res);
           stroke_color = res.data.stroke_color;
           stroke_width = res.data.stroke_width;
           const data = new FormData();
@@ -379,8 +409,7 @@ const InspectionFlow = () => {
               }/inspection-photo-geometry/${selectedId}/`,
               data
             )
-            .then((res) => {
-              console.log(res);
+            .then(() => {
               axios
                 .get(
                   `${
@@ -393,6 +422,9 @@ const InspectionFlow = () => {
                   setRectangles(res.data);
                   setRectCount(res.data.length);
                   document.getElementById("menu").style.display = "none";
+                  setLoaderSave(false);
+                  setEditModeGeom(false);
+                  setSelectedShapeName("");
                 })
                 .catch((error) => {
                   console.log(error);
@@ -408,13 +440,77 @@ const InspectionFlow = () => {
     }
   };
 
-  const handlePulseButton = () => {
-    console.log("pulse button");
+  const deleteGeometry = () => {
+    setLoaderDelete(true);
+    if (!created) {
+      axios
+        .delete(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/inspection-photo-geometry/${selectedId}/`
+        )
+        .then(() => {
+          axios
+            .get(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/inspection-photo-geometry/?inspection_photo=${
+                images.find((image) => image.selected)?.id
+              }`
+            )
+            .then((res) => {
+              setRectangles(res.data);
+              setRectCount(res.data.length);
+              document.getElementById("menu").style.display = "none";
+              setLoaderDelete(false);
+              setEditModeGeom(false);
+              setSelectedShapeName("");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      const updatedRectangles = rectangles.filter(
+        (rectangle) => rectangle.id !== selectedId
+      );
+      setRectangles(updatedRectangles);
+      setRectCount(updatedRectangles.length);
+      document.getElementById("menu").style.display = "none";
+      setLoaderDelete(false);
+      setEditModeGeom(false);
+      setSelectedShapeName("");
+    }
+  };
+
+  const handleEditGeometry = () => {
+    console.log("Edit");
+    setEditModeGeom(true);
+    document.getElementById("menu").style.display = "none";
+    const updatedRectangles = rectangles.map((rect) => {
+      if (rect.name === selectedShapeName) {
+        return { ...rect, draggable: true };
+      }
+      return rect;
+    });
+
+    setRectangles(updatedRectangles);
   };
 
   const handleSmallImageClick = (value) => {
     document.getElementById("menu").style.display = "none";
     dispatch(setSelected({ selected: true, id: value.id }));
+    setExtent({
+      x: 0,
+      y: 0,
+      width: window.innerWidth * 0.32,
+      height: window.innerHeight * 0.32,
+      scaleX: 1,
+      scaleY: 1,
+    });
 
     images.forEach((image) => {
       const layerId = `point-${image.id}`;
@@ -427,15 +523,28 @@ const InspectionFlow = () => {
         );
 
         if (image.id === value.id) {
-          map.flyTo({ center: [image.longitude, image.latitude], zoom: 22 });
+          map.flyTo({ center: [image.longitude, image.latitude], zoom: 17 });
         }
       }
     });
+    stageRef.current.scale({ x: 1, y: 1 });
+    stageRef.current.position({ x: 0, y: 0 });
+    stageRef.current.draw();
   };
 
   const handleCloseMenu = () => {
     const menuNode = document.getElementById("menu");
     menuNode.style.display = "none";
+    setEditModeGeom(false);
+    setSelectedShapeName("");
+    const updatedRectangles = rectangles.map((rect) => {
+      if (rect.name === selectedShapeName) {
+        return { ...rect, draggable: false };
+      }
+      return rect;
+    });
+
+    setRectangles(updatedRectangles);
   };
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -499,30 +608,6 @@ const InspectionFlow = () => {
         });
       });
   }, [dispatch, inspection_id, map]);
-  // useEffect(() => {
-  //   const menuNode = document.getElementById("menu");
-  //   const dropdownNode = document.getElementsByClassName(
-  //     "MuiAutocomplete-option Mui-focused"
-  //   );
-  //   const handleClick = (event) => {
-  //     let targetElement = event.target; // clicked element
-  //     do {
-  //       if (targetElement === menuNode || dropdownNode) {
-  //         // This is a click inside the menu or on an element with the "MuiAutocomplete-option Mui-focused" class.
-  //         // So let's exit and not hide the menu.
-  //         return;
-  //       }
-  //       // Go up the DOM
-  //       targetElement = targetElement.parentNode;
-  //     } while (targetElement);
-  //     // This is a click outside. Hide the menu.
-  //     menuNode.style.display = "none";
-  //   };
-  //   window.addEventListener("click", handleClick);
-  //   return () => {
-  //     window.removeEventListener("click", handleClick);
-  //   };
-  // }, []);
 
   useEffect(() => {
     axios
@@ -572,6 +657,20 @@ const InspectionFlow = () => {
       });
   }, [images]);
 
+  useEffect(() => {
+    {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/inspection-report/${inspection_id}/`
+        )
+        .then((res) => {
+          setInspectionName(res.data.name);
+        });
+    }
+  }, [inspection_id]);
+
   return (
     <>
       <Appbar />
@@ -615,7 +714,7 @@ const InspectionFlow = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                Lounkær Roof Inspection
+                {inspectionName}
               </Typography>
               <Grid sx={{ whiteSpace: "nowrap", boxShadow: 1, padding: 0.5 }}>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -645,7 +744,16 @@ const InspectionFlow = () => {
                   Click right on your mouse to edit and save.
                 </Typography>
               </Grid>
-              <Button variant="contained" color="error">
+
+              <Button
+                onClick={() => {
+                  navigate(
+                    `/projects/${client_id}/inspections/${project_id}/inspection/${inspection_id}/report`
+                  );
+                }}
+                variant="contained"
+                color="error"
+              >
                 Report
               </Button>
             </Box>
@@ -657,177 +765,41 @@ const InspectionFlow = () => {
                 display: { xs: "block", sm: "block", md: "none", lg: "none" },
               }}
             >
-              <Button variant="contained" color="error">
+              <Button
+                onClick={() => {
+                  navigate(
+                    `/projects/${client_id}/inspections/${project_id}/inspection/${inspection_id}/report`
+                  );
+                }}
+                variant="contained"
+                color="error"
+              >
                 Report
               </Button>
             </Grid>
           </Grid>
 
           <Grid item xs={12} md={8}>
-            <form
-              onSubmit={handleCreateGeometry}
-              style={{ display: "none" }}
-              id="menu"
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                }}
-              >
-                <Typography sx={{ color: "blue" }}>
-                  ID:{selectedId || null}{" "}
-                </Typography>
-                <Tooltip title="Save">
-                  <IconButton
-                    type="submit"
-                    // onClick={(event) => handleMouse(event)}
-                  >
-                    <DoneIcon
-                      sx={{
-                        "&:hover": { cursor: "pointer" },
-                        color: "red",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Delete">
-                  <IconButton
-                  // onClick={(event) => handleMouse(event)}
-                  >
-                    <DeleteIcon
-                      sx={{
-                        "&:hover": { cursor: "pointer" },
-                        color: "red",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Edit">
-                  <IconButton
-                  // onClick={(event) => handleMouse(event)}
-                  >
-                    <EditIcon
-                      sx={{
-                        "&:hover": { cursor: "pointer" },
-                        color: "red",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Close">
-                  <IconButton onClick={(event) => handleCloseMenu(event)}>
-                    <CloseIcon
-                      sx={{
-                        "&:hover": { cursor: "pointer" },
-                        color: "red",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-              <Box>
-                {standard_inspection && standard_inspection.length > 0 ? (
-                  <Autocomplete
-                    size="small"
-                    sx={{ m: 0.5, mb: 1, width: "90%" }}
-                    options={standard_inspection}
-                    getOptionLabel={(option) => option.name}
-                    value={
-                      standard_inspection.find(
-                        (type) => type.id === selectedStandardInspection
-                      ) || null
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        required
-                        {...params}
-                        label="Standard Inspection"
-                        variant="outlined"
-                      />
-                    )}
-                    filterOptions={(options) => options}
-                    onChange={(event, value) => {
-                      setSelectedStandardInspection(value ? value.id : null);
-                    }}
-                  />
-                ) : null}
-                {sub_inspection && sub_inspection.length > 0 ? (
-                  <Autocomplete
-                    size="small"
-                    sx={{ m: 0.5, mb: 1, width: "90%" }}
-                    options={sub_inspection}
-                    getOptionLabel={(option) => option.name}
-                    value={
-                      sub_inspection.find(
-                        (type) => type.id === selectedSubInspection
-                      ) || null
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        required
-                        {...params}
-                        label="Sub Inspection"
-                        variant="outlined"
-                      />
-                    )}
-                    filterOptions={(options) => options}
-                    onChange={(event, value) => {
-                      setSelectedSubInspection(value ? value.id : null);
-                    }}
-                  />
-                ) : null}
-
-                {inspection && inspection.length > 0 ? (
-                  <Autocomplete
-                    size="small"
-                    sx={{
-                      m: 0.5,
-                      mb: 1,
-                      width: "90%",
-                      backgroundColor: inspection.find(
-                        (type) => type.id === selectedInspection
-                      )?.stroke_color,
-                    }}
-                    options={inspection}
-                    getOptionLabel={(option) => option.name}
-                    value={
-                      inspection.find(
-                        (type) => type.id === selectedInspection
-                      ) || null
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        required
-                        {...params}
-                        label="Inspection"
-                        variant="outlined"
-                      />
-                    )}
-                    filterOptions={(options) => options}
-                    onChange={(event, value) => {
-                      setSelectedInspection(value ? value.id : null);
-                    }}
-                    renderOption={(props, option) => (
-                      <Box component="li" {...props}>
-                        <span style={{ color: option.stroke_color }}>
-                          {option.name}
-                        </span>
-                      </Box>
-                    )}
-                  />
-                ) : null}
-              </Box>
-              <Box>
-                <TextField
-                  value={selectedCost || 0}
-                  placeholder="Cost"
-                  sx={{ m: 0.5, width: "90%" }}
-                  size="small"
-                ></TextField>
-              </Box>
-            </form>
+            <InspectionGeometryForm
+              handleCreateGeometry={handleCreateGeometry}
+              deleteGeometry={deleteGeometry}
+              handleEditGeometry={handleEditGeometry}
+              handleCloseMenu={handleCloseMenu}
+              selectedStandardInspection={selectedStandardInspection}
+              selectedSubInspection={selectedSubInspection}
+              selectedInspection={selectedInspection}
+              selectedCost={selectedCost}
+              setSelectedCost={setSelectedCost}
+              inspection={inspection}
+              sub_inspection={sub_inspection}
+              standard_inspection={standard_inspection}
+              selectedId={selectedId}
+              setSelectedStandardInspection={setSelectedStandardInspection}
+              setSelectedSubInspection={setSelectedSubInspection}
+              setSelectedInspection={setSelectedInspection}
+              loaderSave={loaderSave}
+              loaderDelete={loaderDelete}
+            />
 
             <div id="stageContainer">
               <Stage
@@ -842,7 +814,6 @@ const InspectionFlow = () => {
                 onTouchStart={handleMouseDown}
                 onTouchEnd={mouseDown && handleMouseUp}
                 onTouchMove={mouseDown && handleMouseMove}
-                onDblClick={OnDoubleClick}
                 onWheel={handleWheel}
               >
                 <Layer>
@@ -856,6 +827,7 @@ const InspectionFlow = () => {
                       height={window.innerHeight * 0.6}
                     />
                   ) : null}
+
                   {rectangles.map((rect, i) => (
                     <Rectangle
                       key={i}
@@ -868,7 +840,10 @@ const InspectionFlow = () => {
                       onContextMenu={handleRightClick}
                     />
                   ))}
-                  {/* <RectTransformer selectedShapeName={selectedShapeName} /> */}
+                  <RectTransformer
+                    editModeGeom={editModeGeom}
+                    selectedShapeName={selectedShapeName}
+                  />
                 </Layer>
               </Stage>
             </div>
@@ -906,6 +881,32 @@ const InspectionFlow = () => {
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
+            <Button
+              sx={{ mb: 1 }}
+              onClick={() => {
+                setSelectedStandardInspectionFilter(null);
+                setSelectedSubInspectionFilter(null);
+                setSelectedInspectionFilter(null);
+                axios
+                  .get(
+                    `${
+                      import.meta.env.VITE_API_DASHBOARD_URL
+                    }/inspection-photo-geometry/?inspection_photo=${
+                      images.find((image) => image.selected)?.id
+                    }`
+                  )
+                  .then((res) => {
+                    setRectangles(res.data);
+                    setRectCount(res.data.length);
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              }}
+              variant="contained"
+            >
+              Reset Filter
+            </Button>
             <Grid item>
               <Box
                 sx={{
@@ -917,10 +918,14 @@ const InspectionFlow = () => {
               >
                 <Autocomplete
                   sx={{ mb: 0.5, width: "100%" }}
-                  multiple
-                  options={standard_inspection.map((type) => type.name)}
-                  getOptionLabel={(option) => option}
-                  // disableCloseOnSelect
+                  // multiple
+                  options={standard_inspection}
+                  getOptionLabel={(option) => option.name}
+                  value={
+                    standard_inspection.find(
+                      (type) => type.id === selectedStandardInspectionFilter
+                    ) || null
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -928,14 +933,46 @@ const InspectionFlow = () => {
                       variant="outlined"
                     />
                   )}
+                  onChange={(event, value) => {
+                    setSelectedStandardInspectionFilter(
+                      value ? value.id : null
+                    );
+                    axios
+                      .get(
+                        `${
+                          import.meta.env.VITE_API_DASHBOARD_URL
+                        }/inspection-photo-geometry/?inspection_photo=${
+                          images.find((image) => image.selected)?.id
+                        }&standard_inspection=${value.id}&sub_inspection=${
+                          selectedSubInspectionFilter
+                            ? selectedSubInspectionFilter
+                            : ""
+                        }&inspection=${
+                          selectedInspectionFilter
+                            ? selectedInspectionFilter
+                            : ""
+                        }`
+                      )
+                      .then((res) => {
+                        setRectangles(res.data);
+                        setRectCount(res.data.length);
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }}
                 />
 
                 <Autocomplete
                   sx={{ mb: 0.5, width: "100%" }}
-                  multiple
-                  options={sub_inspection.map((type) => type.name)}
-                  getOptionLabel={(option) => option}
-                  // disableCloseOnSelect
+                  // multiple
+                  options={sub_inspection}
+                  getOptionLabel={(option) => option.name}
+                  value={
+                    sub_inspection.find(
+                      (type) => type.id === selectedSubInspectionFilter
+                    ) || null
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -943,14 +980,44 @@ const InspectionFlow = () => {
                       variant="outlined"
                     />
                   )}
+                  onChange={(event, value) => {
+                    setSelectedSubInspectionFilter(value ? value.id : null);
+                    axios
+                      .get(
+                        `${
+                          import.meta.env.VITE_API_DASHBOARD_URL
+                        }/inspection-photo-geometry/?inspection_photo=${
+                          images.find((image) => image.selected)?.id
+                        }&standard_inspection=${
+                          selectedStandardInspectionFilter
+                            ? selectedStandardInspectionFilter
+                            : ""
+                        }&sub_inspection=${value.id}&inspection=${
+                          selectedInspectionFilter
+                            ? selectedInspectionFilter
+                            : ""
+                        }`
+                      )
+                      .then((res) => {
+                        setRectangles(res.data);
+                        setRectCount(res.data.length);
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }}
                 />
 
                 <Autocomplete
-                  multiple
+                  // multiple
                   sx={{ mb: 0.5, width: "100%" }}
-                  options={inspection.map((type) => type.name)}
-                  getOptionLabel={(option) => option}
-                  // disableCloseOnSelect
+                  options={inspection}
+                  getOptionLabel={(option) => option.name}
+                  value={
+                    inspection.find(
+                      (type) => type.id === selectedInspectionFilter
+                    ) || null
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -958,6 +1025,32 @@ const InspectionFlow = () => {
                       variant="outlined"
                     />
                   )}
+                  onChange={(event, value) => {
+                    setSelectedInspectionFilter(value ? value.id : null);
+                    axios
+                      .get(
+                        `${
+                          import.meta.env.VITE_API_DASHBOARD_URL
+                        }/inspection-photo-geometry/?inspection_photo=${
+                          images.find((image) => image.selected)?.id
+                        }&standard_inspection=${
+                          selectedStandardInspectionFilter
+                            ? selectedStandardInspectionFilter
+                            : ""
+                        }&sub_inspection=${
+                          selectedSubInspectionFilter
+                            ? selectedSubInspectionFilter
+                            : ""
+                        }&inspection=${value.id}`
+                      )
+                      .then((res) => {
+                        setRectangles(res.data);
+                        setRectCount(res.data.length);
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }}
                 />
               </Box>
             </Grid>
@@ -965,7 +1058,7 @@ const InspectionFlow = () => {
               <Grid item xs={6} md={12}>
                 {images.length > 0 ? (
                   <Box>
-                    <img
+                    {/* <img
                       src={
                         (images.length > 0 &&
                           images.find((image) => image.selected === true)
@@ -977,7 +1070,55 @@ const InspectionFlow = () => {
                         height: "30vh",
                         objectFit: "cover",
                       }}
-                    />
+                    /> */}
+                    <Stage
+                      width={window.innerWidth * 0.32}
+                      height={window.innerHeight * 0.32}
+                    >
+                      <Layer>
+                        {images.length > 0 ? (
+                          <URLImage
+                            src={
+                              images.find((image) => image.selected === true)
+                                ?.photo || images[0].photo
+                            }
+                            width={window.innerWidth * 0.32}
+                            height={window.innerHeight * 0.32}
+                          />
+                        ) : null}
+
+                        {rectangles.map((rect, i) => (
+                          <Rect
+                            x={(rect.x / 0.65) * 0.32}
+                            y={(rect.y / 0.6) * 0.32}
+                            width={(rect.width / 0.65) * 0.32}
+                            height={(rect.height / 0.6) * 0.32}
+                            scaleX={1}
+                            scaleY={1}
+                            fill={"transparent"}
+                            stroke={rect.stroke_color}
+                            strokeWidth={rect.stroke_width}
+                            name={rect.name}
+                            key={i}
+                          />
+                        ))}
+                      </Layer>
+                      {/* <Layer>
+                        <Rect
+                          // x={((extent.x / 0.65) * 0.32) / extent.scaleX}
+                          // y={((extent.y / 0.6) * 0.32) / extent.scaleY}
+                          x={((extent.x / 0.65) * 0.32) / extent.scaleX}
+                          y={((extent.y / 0.6) * 0.32) / extent.scaleY}
+                          width={extent.width}
+                          height={extent.height}
+                          scaleX={1}
+                          scaleY={1}
+                          fill={"transparent"}
+                          stroke={"blue"}
+                          stroke_width={1}
+                        />
+                      </Layer> */}
+                    </Stage>
                   </Box>
                 ) : null}
               </Grid>

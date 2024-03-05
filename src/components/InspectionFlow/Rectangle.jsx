@@ -67,11 +67,11 @@ const Rectangle = (props) => {
           props.x,
           props.y,
           props.height,
-          props.width
+          props.width,
+          props.name
         );
       }}
       //   onClick={(e) => props.onClick(e)}
-      onDblTap={props.onDoubleClick}
       onDragEnd={_onChange}
       onTransformEnd={_onChange}
       onMouseEnter={_onMouseEnter}
