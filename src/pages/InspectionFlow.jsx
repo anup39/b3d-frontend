@@ -36,6 +36,7 @@ function getRelativePointerPosition(node) {
 const InspectionFlow = () => {
   const { inspection_id } = useParams();
   const dispatch = useDispatch();
+  const [inspectionName, setInspectionName] = useState("");
   const images = useSelector((state) => state.inspectionFlow.images);
   const [draggable, setDraggable] = useState(true);
   const mapContainerPhotos = useRef(null);
@@ -61,7 +62,7 @@ const InspectionFlow = () => {
     useState(null);
   const [selectedSubInspection, setSelectedSubInspection] = useState(null);
   const [selectedInspection, setSelectedInspection] = useState(null);
-  const [selectedCost, setSelectedCost] = useState(null);
+  const [selectedCost, setSelectedCost] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [created, setCreated] = useState(true);
   const [loaderSave, setLoaderSave] = useState(false);
@@ -637,6 +638,20 @@ const InspectionFlow = () => {
       });
   }, [images]);
 
+  useEffect(() => {
+    {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/inspection-report/${inspection_id}/`
+        )
+        .then((res) => {
+          setInspectionName(res.data.name);
+        });
+    }
+  }, [inspection_id]);
+
   return (
     <>
       <Appbar />
@@ -680,7 +695,7 @@ const InspectionFlow = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                Lounkær Roof Inspection
+                {inspectionName}
               </Typography>
               <Grid sx={{ whiteSpace: "nowrap", boxShadow: 1, padding: 0.5 }}>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>

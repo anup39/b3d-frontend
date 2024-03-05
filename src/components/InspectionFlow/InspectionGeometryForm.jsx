@@ -188,10 +188,12 @@ export default function InspectionGeometryForm(props) {
       </Box>
       <Box>
         <TextField
-          value={selectedCost || 0}
+          type="number"
+          value={selectedCost || ""}
           placeholder="Cost"
           sx={{ m: 0.5, width: "90%" }}
           size="small"
+          onChange={(event) => setSelectedCost(event.target.value)}
         ></TextField>
       </Box>
     </form>
@@ -210,11 +212,11 @@ InspectionGeometryForm.propTypes = {
   setSelectedStandardInspection: PropTypes.func,
   setSelectedSubInspection: PropTypes.func,
   setSelectedInspection: PropTypes.func,
+  setSelectedCost: PropTypes.func,
   selectedStandardInspection: PropTypes.number,
   selectedSubInspection: PropTypes.number,
   selectedInspection: PropTypes.number,
   selectedCost: PropTypes.number,
-  setSelectedCost: PropTypes.func,
   loaderSave: PropTypes.bool,
   loaderDelete: PropTypes.bool,
 };
