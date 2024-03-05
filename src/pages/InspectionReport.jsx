@@ -2,13 +2,13 @@ import React from "react";
 import { Box } from "@mui/material";
 import { Typography, Grid, Button } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import maplibregl from "maplibre-gl";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Appbar from "../components/Common/AppBar";
-import { useParams } from "react-router-dom";
+import { json, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export default function InspectionReport() {
@@ -17,6 +17,8 @@ export default function InspectionReport() {
   const navigate = useNavigate();
   const mapContainerReport = useRef(null);
   const [map, setMap] = React.useState(null);
+  const [inspectionName, setInspectionName] = useState("");
+  const [inspectionDate, setInspectionDate] = useState("");
 
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -49,6 +51,21 @@ export default function InspectionReport() {
       `/projects/${client_id}/inspections/${project_id}/inspection/${inspection_id}`
     );
   };
+
+  useEffect(() => {
+    {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/inspection-report/${inspection_id}/`
+        )
+        .then((res) => {
+          setInspectionName(res.data.name);
+          setInspectionDate(res.data.date_of_inspection);
+        });
+    }
+  }, [inspection_id]);
   return (
     <>
       <Appbar />
@@ -86,10 +103,11 @@ export default function InspectionReport() {
               >
                 <Box sx={{ mb: 2 }}>
                   <Typography sx={{ color: "#666666" }}>
-                    Measurings for Map nov
+                    {inspectionName ? inspectionName : "Inspection Name"}
                   </Typography>
                   <Typography sx={{ color: "#666666" }}>
-                    Date : 2023-01-45
+                    Date :{" "}
+                    {inspectionDate ? JSON.parse(inspectionDate) : "Date"}
                   </Typography>
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
