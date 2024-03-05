@@ -23,10 +23,7 @@ import { useParams } from "react-router-dom";
 import Rectangle from "../components/InspectionFlow/Rectangle";
 import RectTransformer from "../components/InspectionFlow/RectangleTransformer";
 import "./InspectionFlow.css";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DoneIcon from "@mui/icons-material/Done";
-import EditIcon from "@mui/icons-material/Edit";
-import CloseIcon from "@mui/icons-material/Close";
+import InspectionGeometryForm from "../components/InspectionFlow/InspectionGeometryForm";
 
 function getRelativePointerPosition(node) {
   const transform = node.getAbsoluteTransform().copy();
@@ -84,7 +81,6 @@ const InspectionFlow = () => {
   const handleMouseDown = (event) => {
     if (draggable) return;
     if (event.target.className === "Image") {
-      console.log("here");
       const stage = event.target.getStage();
       const mousePos = getRelativePointerPosition(stage);
       setMouseDown(true);
@@ -99,7 +95,6 @@ const InspectionFlow = () => {
       return;
     }
     const name = event.target.name();
-    console.log(name, "name");
     const rect = rectangles.find((r) => r.name === name);
     if (rect) {
       setSelectedShapeName(name);
@@ -122,7 +117,6 @@ const InspectionFlow = () => {
     const stage = event.target.getStage();
     const mousePos = getRelativePointerPosition(stage);
     if (!rectangles[rectCount]) {
-      console.log(rectangles[rectangles?.length - 1]?.id + 1, "rectangles");
       let newRect = {
         id: rectangles[rectangles?.length - 1]?.id + 1 || 1,
         inspected_photo: inspection_id,
@@ -220,9 +214,7 @@ const InspectionFlow = () => {
     setDraggable(false);
   };
 
-  const OnDoubleClick = (event) => {
-    console.log("double click");
-  };
+  const OnDoubleClick = () => {};
 
   const handleRightClick = (
     e,
@@ -237,17 +229,6 @@ const InspectionFlow = () => {
     height,
     width
   ) => {
-    console.log(
-      standard_inspection,
-      sub_inspection,
-      inspection,
-      id,
-      created,
-      x,
-      y,
-      height,
-      width
-    );
     setSelectedStandardInspection(standard_inspection);
     setSelectedSubInspection(sub_inspection);
     setSelectedInspection(inspection);
@@ -271,11 +252,7 @@ const InspectionFlow = () => {
 
   const handleCreateGeometry = (event) => {
     event.preventDefault();
-    console.log(created, "created");
-    console.log("here in saving");
-    console.log(rectangles);
-    console.log(rectCount);
-    console.log(images.find((image) => image.selected).id);
+
     let stroke_color = "#FF0000";
     let stroke_width = 1;
     if (created) {
@@ -355,7 +332,6 @@ const InspectionFlow = () => {
           }/inspection/${selectedInspection}/`
         )
         .then((res) => {
-          console.log(res);
           stroke_color = res.data.stroke_color;
           stroke_width = res.data.stroke_width;
           const data = new FormData();
@@ -379,8 +355,7 @@ const InspectionFlow = () => {
               }/inspection-photo-geometry/${selectedId}/`,
               data
             )
-            .then((res) => {
-              console.log(res);
+            .then(() => {
               axios
                 .get(
                   `${
@@ -406,10 +381,6 @@ const InspectionFlow = () => {
           console.log(error);
         });
     }
-  };
-
-  const handlePulseButton = () => {
-    console.log("pulse button");
   };
 
   const handleSmallImageClick = (value) => {
@@ -499,30 +470,6 @@ const InspectionFlow = () => {
         });
       });
   }, [dispatch, inspection_id, map]);
-  // useEffect(() => {
-  //   const menuNode = document.getElementById("menu");
-  //   const dropdownNode = document.getElementsByClassName(
-  //     "MuiAutocomplete-option Mui-focused"
-  //   );
-  //   const handleClick = (event) => {
-  //     let targetElement = event.target; // clicked element
-  //     do {
-  //       if (targetElement === menuNode || dropdownNode) {
-  //         // This is a click inside the menu or on an element with the "MuiAutocomplete-option Mui-focused" class.
-  //         // So let's exit and not hide the menu.
-  //         return;
-  //       }
-  //       // Go up the DOM
-  //       targetElement = targetElement.parentNode;
-  //     } while (targetElement);
-  //     // This is a click outside. Hide the menu.
-  //     menuNode.style.display = "none";
-  //   };
-  //   window.addEventListener("click", handleClick);
-  //   return () => {
-  //     window.removeEventListener("click", handleClick);
-  //   };
-  // }, []);
 
   useEffect(() => {
     axios
@@ -664,170 +611,22 @@ const InspectionFlow = () => {
           </Grid>
 
           <Grid item xs={12} md={8}>
-            <form
-              onSubmit={handleCreateGeometry}
-              style={{ display: "none" }}
-              id="menu"
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                }}
-              >
-                <Typography sx={{ color: "blue" }}>
-                  ID:{selectedId || null}{" "}
-                </Typography>
-                <Tooltip title="Save">
-                  <IconButton
-                    type="submit"
-                    // onClick={(event) => handleMouse(event)}
-                  >
-                    <DoneIcon
-                      sx={{
-                        "&:hover": { cursor: "pointer" },
-                        color: "red",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Delete">
-                  <IconButton
-                  // onClick={(event) => handleMouse(event)}
-                  >
-                    <DeleteIcon
-                      sx={{
-                        "&:hover": { cursor: "pointer" },
-                        color: "red",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Edit">
-                  <IconButton
-                  // onClick={(event) => handleMouse(event)}
-                  >
-                    <EditIcon
-                      sx={{
-                        "&:hover": { cursor: "pointer" },
-                        color: "red",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Close">
-                  <IconButton onClick={(event) => handleCloseMenu(event)}>
-                    <CloseIcon
-                      sx={{
-                        "&:hover": { cursor: "pointer" },
-                        color: "red",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-              <Box>
-                {standard_inspection && standard_inspection.length > 0 ? (
-                  <Autocomplete
-                    size="small"
-                    sx={{ m: 0.5, mb: 1, width: "90%" }}
-                    options={standard_inspection}
-                    getOptionLabel={(option) => option.name}
-                    value={
-                      standard_inspection.find(
-                        (type) => type.id === selectedStandardInspection
-                      ) || null
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        required
-                        {...params}
-                        label="Standard Inspection"
-                        variant="outlined"
-                      />
-                    )}
-                    filterOptions={(options) => options}
-                    onChange={(event, value) => {
-                      setSelectedStandardInspection(value ? value.id : null);
-                    }}
-                  />
-                ) : null}
-                {sub_inspection && sub_inspection.length > 0 ? (
-                  <Autocomplete
-                    size="small"
-                    sx={{ m: 0.5, mb: 1, width: "90%" }}
-                    options={sub_inspection}
-                    getOptionLabel={(option) => option.name}
-                    value={
-                      sub_inspection.find(
-                        (type) => type.id === selectedSubInspection
-                      ) || null
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        required
-                        {...params}
-                        label="Sub Inspection"
-                        variant="outlined"
-                      />
-                    )}
-                    filterOptions={(options) => options}
-                    onChange={(event, value) => {
-                      setSelectedSubInspection(value ? value.id : null);
-                    }}
-                  />
-                ) : null}
-
-                {inspection && inspection.length > 0 ? (
-                  <Autocomplete
-                    size="small"
-                    sx={{
-                      m: 0.5,
-                      mb: 1,
-                      width: "90%",
-                      backgroundColor: inspection.find(
-                        (type) => type.id === selectedInspection
-                      )?.stroke_color,
-                    }}
-                    options={inspection}
-                    getOptionLabel={(option) => option.name}
-                    value={
-                      inspection.find(
-                        (type) => type.id === selectedInspection
-                      ) || null
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        required
-                        {...params}
-                        label="Inspection"
-                        variant="outlined"
-                      />
-                    )}
-                    filterOptions={(options) => options}
-                    onChange={(event, value) => {
-                      setSelectedInspection(value ? value.id : null);
-                    }}
-                    renderOption={(props, option) => (
-                      <Box component="li" {...props}>
-                        <span style={{ color: option.stroke_color }}>
-                          {option.name}
-                        </span>
-                      </Box>
-                    )}
-                  />
-                ) : null}
-              </Box>
-              <Box>
-                <TextField
-                  value={selectedCost || 0}
-                  placeholder="Cost"
-                  sx={{ m: 0.5, width: "90%" }}
-                  size="small"
-                ></TextField>
-              </Box>
-            </form>
+            <InspectionGeometryForm
+              handleCreateGeometry={handleCreateGeometry}
+              handleCloseMenu={handleCloseMenu}
+              selectedStandardInspection={selectedStandardInspection}
+              selectedSubInspection={selectedSubInspection}
+              selectedInspection={selectedInspection}
+              selectedCost={selectedCost}
+              setSelectedCost={setSelectedCost}
+              inspection={inspection}
+              sub_inspection={sub_inspection}
+              standard_inspection={standard_inspection}
+              selectedId={selectedId}
+              setSelectedStandardInspection={setSelectedStandardInspection}
+              setSelectedSubInspection={setSelectedSubInspection}
+              setSelectedInspection={setSelectedInspection}
+            />
 
             <div id="stageContainer">
               <Stage
