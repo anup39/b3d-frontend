@@ -347,6 +347,23 @@ const InspectionFlow = () => {
                   setLoaderSave(false);
                   setEditModeGeom(false);
                   setSelectedShapeName("");
+                  axios
+                    .patch(
+                      `${
+                        import.meta.env.VITE_API_DASHBOARD_URL
+                      }/inspection-photo/${
+                        images.find((image) => image.selected)?.id
+                      }/`,
+                      { is_inspected: true }
+                    )
+                    .then(
+                      (res) => {
+                        console.log(res);
+                      },
+                      (error) => {
+                        console.log(error);
+                      }
+                    );
                 })
                 .catch((error) => {
                   console.log(error);
