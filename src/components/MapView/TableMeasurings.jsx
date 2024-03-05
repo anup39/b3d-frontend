@@ -68,6 +68,7 @@ export default function TableGeometry({ imageId }) {
             <StyledTableCell align="right">standard_inspection</StyledTableCell>
             <StyledTableCell align="right">sub_inspection</StyledTableCell>
             <StyledTableCell align="right">inspection</StyledTableCell>
+            <StyledTableCell align="right">symbol</StyledTableCell>
             <StyledTableCell align="right">cost</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -78,12 +79,19 @@ export default function TableGeometry({ imageId }) {
                 {row.id}
               </StyledTableCell>
               <StyledTableCell align="right">
-                {row.standard_inspection}
+                {row.standard_inspection_name}
               </StyledTableCell>
               <StyledTableCell align="right">
-                {row.sub_inspection}
+                {row.sub_inspection_name}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.inspection}</StyledTableCell>
+              <StyledTableCell align="right">
+                {row.inspection_name}
+                {/* <span style={{ backgroundColor: row.stroke_color }}></span> */}
+              </StyledTableCell>
+              <StyledTableCell
+                sx={{ backgroundColor: row.stroke_color }}
+                align="right"
+              ></StyledTableCell>
               <StyledTableCell align="right">{row.cost}</StyledTableCell>
             </StyledTableRow>
           ))}

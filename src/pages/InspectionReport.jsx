@@ -226,6 +226,7 @@ export default function InspectionReport() {
                     width={window.innerWidth * 0.43}
                     height={window.innerHeight * 0.43}
                     onWheel={handleWheel}
+                    draggable={true}
                   >
                     <Layer>
                       <URLImage
@@ -237,7 +238,11 @@ export default function InspectionReport() {
                     </Layer>
                   </Stage>
                   <Box sx={{ mt: 2 }}>
-                    <TextField fullWidth placeholder="Write caption">
+                    <TextField
+                      color="secondary"
+                      fullWidth
+                      placeholder="Write caption"
+                    >
                       {" "}
                     </TextField>
                     <TableGeometry imageId={image.id} />
