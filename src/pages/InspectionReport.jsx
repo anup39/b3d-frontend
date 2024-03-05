@@ -66,6 +66,50 @@ export default function InspectionReport() {
         });
     }
   }, [inspection_id]);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/inspection-photo/?inspection_report=${inspection_id}`
+      )
+      .then((res) => {
+        if (res.data.length > 0) {
+          res.data[0].selected = true;
+        }
+        res.data.forEach((image) => {
+          const layerId = `point-${image.id}`;
+
+          if (map && map.getLayer(layerId) === undefined) {
+            map.addLayer({
+              id: layerId,
+              type: "circle",
+              source: {
+                type: "geojson",
+                data: {
+                  type: "Feature",
+                  geometry: {
+                    type: "Point",
+                    coordinates: [image.longitude, image.latitude],
+                  },
+                },
+              },
+              paint: {
+                "circle-radius": 10,
+                "circle-color": image.selected ? "red" : "blue",
+              },
+            });
+          }
+          if (map && image.selected) {
+            map.flyTo({
+              center: [image.longitude, image.latitude],
+              zoom: 22,
+            });
+          }
+        });
+      });
+  }, [dispatch, inspection_id, map]);
   return (
     <>
       <Appbar />
