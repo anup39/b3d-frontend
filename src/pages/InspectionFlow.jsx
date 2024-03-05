@@ -242,7 +242,6 @@ const InspectionFlow = () => {
     setWidth(width);
     setHeight(height);
     setSelectedShapeName(name);
-    setEditModeGeom(false);
     e.evt.preventDefault();
     const menuNode = document.getElementById("menu");
     menuNode.style.display = "block";
@@ -318,6 +317,8 @@ const InspectionFlow = () => {
                   setRectCount(res.data.length);
                   document.getElementById("menu").style.display = "none";
                   setLoaderSave(false);
+                  setEditModeGeom(false);
+                  setSelectedShapeName("");
                 })
                 .catch((error) => {
                   console.log(error);
@@ -375,6 +376,8 @@ const InspectionFlow = () => {
                   setRectCount(res.data.length);
                   document.getElementById("menu").style.display = "none";
                   setLoaderSave(false);
+                  setEditModeGeom(false);
+                  setSelectedShapeName("");
                 })
                 .catch((error) => {
                   console.log(error);
@@ -413,6 +416,8 @@ const InspectionFlow = () => {
               setRectCount(res.data.length);
               document.getElementById("menu").style.display = "none";
               setLoaderDelete(false);
+              setEditModeGeom(false);
+              setSelectedShapeName("");
             })
             .catch((error) => {
               console.log(error);
@@ -429,12 +434,23 @@ const InspectionFlow = () => {
       setRectCount(updatedRectangles.length);
       document.getElementById("menu").style.display = "none";
       setLoaderDelete(false);
+      setEditModeGeom(false);
+      setSelectedShapeName("");
     }
   };
 
   const handleEditGeometry = () => {
     console.log("Edit");
     setEditModeGeom(true);
+    document.getElementById("menu").style.display = "none";
+    const updatedRectangles = rectangles.map((rect) => {
+      if (rect.name === selectedShapeName) {
+        return { ...rect, draggable: true };
+      }
+      return rect;
+    });
+
+    setRectangles(updatedRectangles);
   };
 
   const handleSmallImageClick = (value) => {
@@ -456,11 +472,24 @@ const InspectionFlow = () => {
         }
       }
     });
+    stageRef.current.scale({ x: 1, y: 1 });
+    stageRef.current.position({ x: 0, y: 0 });
+    stageRef.current.draw();
   };
 
   const handleCloseMenu = () => {
     const menuNode = document.getElementById("menu");
     menuNode.style.display = "none";
+    setEditModeGeom(false);
+    setSelectedShapeName("");
+    const updatedRectangles = rectangles.map((rect) => {
+      if (rect.name === selectedShapeName) {
+        return { ...rect, draggable: false };
+      }
+      return rect;
+    });
+
+    setRectangles(updatedRectangles);
   };
   useEffect(() => {
     const map = new maplibregl.Map({

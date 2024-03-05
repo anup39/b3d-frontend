@@ -21,6 +21,9 @@ const RectTransformer = ({ editModeGeom, selectedShapeName = "" }) => {
     if (editModeGeom) {
       checkNode();
     }
+    if (!editModeGeom) {
+      transRef.current.detach();
+    }
   }, [editModeGeom, selectedShapeName]);
 
   return <Transformer ref={transRef} rotateEnabled={false} ignoreStroke />;
