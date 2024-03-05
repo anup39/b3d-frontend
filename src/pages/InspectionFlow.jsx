@@ -474,6 +474,14 @@ const InspectionFlow = () => {
   const handleSmallImageClick = (value) => {
     document.getElementById("menu").style.display = "none";
     dispatch(setSelected({ selected: true, id: value.id }));
+    setExtent({
+      x: 0,
+      y: 0,
+      width: window.innerWidth * 0.32,
+      height: window.innerHeight * 0.32,
+      scaleX: 1,
+      scaleY: 1,
+    });
 
     images.forEach((image) => {
       const layerId = `point-${image.id}`;
@@ -486,7 +494,7 @@ const InspectionFlow = () => {
         );
 
         if (image.id === value.id) {
-          map.flyTo({ center: [image.longitude, image.latitude], zoom: 22 });
+          map.flyTo({ center: [image.longitude, image.latitude], zoom: 17 });
         }
       }
     });
@@ -917,7 +925,7 @@ const InspectionFlow = () => {
                           />
                         ))}
                       </Layer>
-                      <Layer>
+                      {/* <Layer>
                         <Rect
                           // x={((extent.x / 0.65) * 0.32) / extent.scaleX}
                           // y={((extent.y / 0.6) * 0.32) / extent.scaleY}
@@ -931,7 +939,7 @@ const InspectionFlow = () => {
                           stroke={"blue"}
                           stroke_width={1}
                         />
-                      </Layer>
+                      </Layer> */}
                     </Stage>
                   </Box>
                 ) : null}
