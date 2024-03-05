@@ -66,6 +66,14 @@ const InspectionFlow = () => {
   const [created, setCreated] = useState(true);
   const [loaderSave, setLoaderSave] = useState(false);
   const [loaderDelete, setLoaderDelete] = useState(false);
+  const [extent, setExtent] = useState({
+    x: 0,
+    y: 0,
+    width: window.innerWidth * 0.32,
+    height: window.innerHeight * 0.32,
+    scaleX: 1,
+    scaleY: 1,
+  });
 
   const [contextMenu, setContextMenu] = useState({
     visible: false,
@@ -196,12 +204,21 @@ const InspectionFlow = () => {
       newScale = initialScale;
     }
     stage.scale({ x: newScale, y: newScale });
+
     const newPos = {
       x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
       y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale,
     };
     stage.position(newPos);
     stage.batchDraw();
+    setExtent({
+      x: stage.getPointerPosition().x,
+      y: stage.getPointerPosition().y,
+      width: 200,
+      height: 150,
+      scaleX: newScale,
+      scaleY: newScale,
+    });
   };
 
   const handleMouse = () => {
@@ -742,6 +759,7 @@ const InspectionFlow = () => {
                       height={window.innerHeight * 0.6}
                     />
                   ) : null}
+
                   {rectangles.map((rect, i) => (
                     <Rectangle
                       key={i}
@@ -882,6 +900,7 @@ const InspectionFlow = () => {
                             height={window.innerHeight * 0.32}
                           />
                         ) : null}
+
                         {rectangles.map((rect, i) => (
                           <Rect
                             x={(rect.x / 0.65) * 0.32}
@@ -897,6 +916,21 @@ const InspectionFlow = () => {
                             key={i}
                           />
                         ))}
+                      </Layer>
+                      <Layer>
+                        <Rect
+                          // x={((extent.x / 0.65) * 0.32) / extent.scaleX}
+                          // y={((extent.y / 0.6) * 0.32) / extent.scaleY}
+                          x={((extent.x / 0.65) * 0.32) / extent.scaleX}
+                          y={((extent.y / 0.6) * 0.32) / extent.scaleY}
+                          width={extent.width}
+                          height={extent.height}
+                          scaleX={1}
+                          scaleY={1}
+                          fill={"transparent"}
+                          stroke={"blue"}
+                          stroke_width={1}
+                        />
                       </Layer>
                     </Stage>
                   </Box>
