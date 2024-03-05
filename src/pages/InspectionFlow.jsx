@@ -75,6 +75,15 @@ const InspectionFlow = () => {
     scaleY: 1,
   });
 
+  const [
+    selectedStandardInspectionFilter,
+    setSelectedStandardInspectionFilter,
+  ] = useState(null);
+  const [selectedSubInspectionFilter, setSelectedSubInspectionFilter] =
+    useState(null);
+  const [selectedInspectionFilter, setSelectedInspectionFilter] =
+    useState(null);
+
   const [contextMenu, setContextMenu] = useState({
     visible: false,
     x: 0,
@@ -701,6 +710,7 @@ const InspectionFlow = () => {
                   Click right on your mouse to edit and save.
                 </Typography>
               </Grid>
+
               <Button variant="contained" color="error">
                 Report
               </Button>
@@ -821,6 +831,32 @@ const InspectionFlow = () => {
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
+            <Button
+              sx={{ mb: 1 }}
+              onClick={() => {
+                setSelectedStandardInspectionFilter(null);
+                setSelectedSubInspectionFilter(null);
+                setSelectedInspectionFilter(null);
+                axios
+                  .get(
+                    `${
+                      import.meta.env.VITE_API_DASHBOARD_URL
+                    }/inspection-photo-geometry/?inspection_photo=${
+                      images.find((image) => image.selected)?.id
+                    }`
+                  )
+                  .then((res) => {
+                    setRectangles(res.data);
+                    setRectCount(res.data.length);
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              }}
+              variant="contained"
+            >
+              Reset Filter
+            </Button>
             <Grid item>
               <Box
                 sx={{
@@ -832,10 +868,14 @@ const InspectionFlow = () => {
               >
                 <Autocomplete
                   sx={{ mb: 0.5, width: "100%" }}
-                  multiple
-                  options={standard_inspection.map((type) => type.name)}
-                  getOptionLabel={(option) => option}
-                  // disableCloseOnSelect
+                  // multiple
+                  options={standard_inspection}
+                  getOptionLabel={(option) => option.name}
+                  value={
+                    standard_inspection.find(
+                      (type) => type.id === selectedStandardInspectionFilter
+                    ) || null
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -843,14 +883,46 @@ const InspectionFlow = () => {
                       variant="outlined"
                     />
                   )}
+                  onChange={(event, value) => {
+                    setSelectedStandardInspectionFilter(
+                      value ? value.id : null
+                    );
+                    axios
+                      .get(
+                        `${
+                          import.meta.env.VITE_API_DASHBOARD_URL
+                        }/inspection-photo-geometry/?inspection_photo=${
+                          images.find((image) => image.selected)?.id
+                        }&standard_inspection=${value.id}&sub_inspection=${
+                          selectedSubInspectionFilter
+                            ? selectedSubInspectionFilter
+                            : ""
+                        }&inspection=${
+                          selectedInspectionFilter
+                            ? selectedInspectionFilter
+                            : ""
+                        }`
+                      )
+                      .then((res) => {
+                        setRectangles(res.data);
+                        setRectCount(res.data.length);
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }}
                 />
 
                 <Autocomplete
                   sx={{ mb: 0.5, width: "100%" }}
-                  multiple
-                  options={sub_inspection.map((type) => type.name)}
-                  getOptionLabel={(option) => option}
-                  // disableCloseOnSelect
+                  // multiple
+                  options={sub_inspection}
+                  getOptionLabel={(option) => option.name}
+                  value={
+                    sub_inspection.find(
+                      (type) => type.id === selectedSubInspectionFilter
+                    ) || null
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -858,14 +930,44 @@ const InspectionFlow = () => {
                       variant="outlined"
                     />
                   )}
+                  onChange={(event, value) => {
+                    setSelectedSubInspectionFilter(value ? value.id : null);
+                    axios
+                      .get(
+                        `${
+                          import.meta.env.VITE_API_DASHBOARD_URL
+                        }/inspection-photo-geometry/?inspection_photo=${
+                          images.find((image) => image.selected)?.id
+                        }&standard_inspection=${
+                          selectedStandardInspectionFilter
+                            ? selectedStandardInspectionFilter
+                            : ""
+                        }&sub_inspection=${value.id}&inspection=${
+                          selectedInspectionFilter
+                            ? selectedInspectionFilter
+                            : ""
+                        }`
+                      )
+                      .then((res) => {
+                        setRectangles(res.data);
+                        setRectCount(res.data.length);
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }}
                 />
 
                 <Autocomplete
-                  multiple
+                  // multiple
                   sx={{ mb: 0.5, width: "100%" }}
-                  options={inspection.map((type) => type.name)}
-                  getOptionLabel={(option) => option}
-                  // disableCloseOnSelect
+                  options={inspection}
+                  getOptionLabel={(option) => option.name}
+                  value={
+                    inspection.find(
+                      (type) => type.id === selectedInspectionFilter
+                    ) || null
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -873,6 +975,32 @@ const InspectionFlow = () => {
                       variant="outlined"
                     />
                   )}
+                  onChange={(event, value) => {
+                    setSelectedInspectionFilter(value ? value.id : null);
+                    axios
+                      .get(
+                        `${
+                          import.meta.env.VITE_API_DASHBOARD_URL
+                        }/inspection-photo-geometry/?inspection_photo=${
+                          images.find((image) => image.selected)?.id
+                        }&standard_inspection=${
+                          selectedStandardInspectionFilter
+                            ? selectedStandardInspectionFilter
+                            : ""
+                        }&sub_inspection=${
+                          selectedSubInspectionFilter
+                            ? selectedSubInspectionFilter
+                            : ""
+                        }&inspection=${value.id}`
+                      )
+                      .then((res) => {
+                        setRectangles(res.data);
+                        setRectCount(res.data.length);
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }}
                 />
               </Box>
             </Grid>
