@@ -24,6 +24,7 @@ import Rectangle from "../components/InspectionFlow/Rectangle";
 import RectTransformer from "../components/InspectionFlow/RectangleTransformer";
 import "./InspectionFlow.css";
 import InspectionGeometryForm from "../components/InspectionFlow/InspectionGeometryForm";
+import { Rect } from "react-konva";
 
 function getRelativePointerPosition(node) {
   const transform = node.getAbsoluteTransform().copy();
@@ -853,7 +854,7 @@ const InspectionFlow = () => {
               <Grid item xs={6} md={12}>
                 {images.length > 0 ? (
                   <Box>
-                    <img
+                    {/* <img
                       src={
                         (images.length > 0 &&
                           images.find((image) => image.selected === true)
@@ -865,7 +866,39 @@ const InspectionFlow = () => {
                         height: "30vh",
                         objectFit: "cover",
                       }}
-                    />
+                    /> */}
+                    <Stage
+                      width={window.innerWidth * 0.32}
+                      height={window.innerHeight * 0.32}
+                    >
+                      <Layer>
+                        {images.length > 0 ? (
+                          <URLImage
+                            src={
+                              images.find((image) => image.selected === true)
+                                ?.photo || images[0].photo
+                            }
+                            width={window.innerWidth * 0.32}
+                            height={window.innerHeight * 0.32}
+                          />
+                        ) : null}
+                        {rectangles.map((rect, i) => (
+                          <Rect
+                            x={(rect.x / 0.65) * 0.32}
+                            y={(rect.y / 0.6) * 0.32}
+                            width={(rect.width / 0.65) * 0.32}
+                            height={(rect.height / 0.6) * 0.32}
+                            scaleX={1}
+                            scaleY={1}
+                            fill={"transparent"}
+                            stroke={rect.stroke_color}
+                            strokeWidth={rect.stroke_width}
+                            name={rect.name}
+                            key={i}
+                          />
+                        ))}
+                      </Layer>
+                    </Stage>
                   </Box>
                 ) : null}
               </Grid>
