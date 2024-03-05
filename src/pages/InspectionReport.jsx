@@ -8,9 +8,13 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Appbar from "../components/Common/AppBar";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function InspectionReport() {
+  const { client_id, project_id, inspection_id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const mapContainerReport = useRef(null);
   const [map, setMap] = React.useState(null);
 
@@ -40,13 +44,21 @@ export default function InspectionReport() {
     window.print();
   };
 
-  const handleMap = () => {};
+  const handleInspection = () => {
+    navigate(
+      `/projects/${client_id}/inspections/${project_id}/inspection/${inspection_id}`
+    );
+  };
   return (
     <>
       <Appbar />
       <Grid item>
         <Box sx={{ mt: 4, ml: 5, display: "flex", gap: 2 }}>
-          <Button onClick={handleMap} variant="contained" color="primary">
+          <Button
+            onClick={handleInspection}
+            variant="contained"
+            color="primary"
+          >
             Inspection
           </Button>
           <Button onClick={handlePrint} variant="contained" color="primary">

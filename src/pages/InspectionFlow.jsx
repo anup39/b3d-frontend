@@ -25,6 +25,7 @@ import RectTransformer from "../components/InspectionFlow/RectangleTransformer";
 import "./InspectionFlow.css";
 import InspectionGeometryForm from "../components/InspectionFlow/InspectionGeometryForm";
 import { Rect } from "react-konva";
+import { useNavigate } from "react-router-dom";
 
 function getRelativePointerPosition(node) {
   const transform = node.getAbsoluteTransform().copy();
@@ -34,8 +35,9 @@ function getRelativePointerPosition(node) {
 }
 
 const InspectionFlow = () => {
-  const { inspection_id } = useParams();
+  const { client_id, project_id, inspection_id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [inspectionName, setInspectionName] = useState("");
   const images = useSelector((state) => state.inspectionFlow.images);
   const [draggable, setDraggable] = useState(true);
@@ -743,7 +745,15 @@ const InspectionFlow = () => {
                 </Typography>
               </Grid>
 
-              <Button variant="contained" color="error">
+              <Button
+                onClick={() => {
+                  navigate(
+                    `/projects/${client_id}/inspections/${project_id}/inspection/${inspection_id}/report`
+                  );
+                }}
+                variant="contained"
+                color="error"
+              >
                 Report
               </Button>
             </Box>
@@ -755,7 +765,15 @@ const InspectionFlow = () => {
                 display: { xs: "block", sm: "block", md: "none", lg: "none" },
               }}
             >
-              <Button variant="contained" color="error">
+              <Button
+                onClick={() => {
+                  navigate(
+                    `/projects/${client_id}/inspections/${project_id}/inspection/${inspection_id}/report`
+                  );
+                }}
+                variant="contained"
+                color="error"
+              >
                 Report
               </Button>
             </Grid>
