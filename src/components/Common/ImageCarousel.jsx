@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 export default class ImageCarousel extends Component {
   state = {
     display: true,
-    width: window.innerWidth * 0.5,
+    width: 800,
   };
 
   render() {
@@ -24,7 +24,7 @@ export default class ImageCarousel extends Component {
       <div>
         <div
           style={{
-            width: this.state.width + "px",
+            width: 800,
             display: this.state.display ? "block" : "none",
           }}
         >

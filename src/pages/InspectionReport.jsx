@@ -1,5 +1,5 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import { Typography, Grid, Button } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useRef, useEffect, useState } from "react";
@@ -14,6 +14,7 @@ import { Stage, Layer, Rect } from "react-konva";
 import URLImage from "../components/Common/URLImage";
 import { setImages } from "../reducers/InspectionFlow";
 import Rectangles from "../components/InspectionFlow/Rectangles";
+import TableGeometry from "../components/MapView/TableMeasurings";
 
 export default function InspectionReport() {
   const { client_id, project_id, inspection_id } = useParams();
@@ -118,6 +119,29 @@ export default function InspectionReport() {
   }, [dispatch, inspection_id, map]);
 
   console.log(images);
+
+  const handleWheel = (e) => {
+    e.evt.preventDefault();
+    const stage = e.target.getStage();
+    const oldScale = stage.scaleX();
+    const initialScale = 1; // replace with your initial scale
+    const mousePointTo = {
+      x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
+      y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
+    };
+    let newScale = e.evt.deltaY > 0 ? oldScale * 0.9 : oldScale * 1.1;
+    if (newScale < initialScale) {
+      newScale = initialScale;
+    }
+    stage.scale({ x: newScale, y: newScale });
+
+    const newPos = {
+      x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
+      y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale,
+    };
+    stage.position(newPos);
+    stage.batchDraw();
+  };
   return (
     <>
       <Appbar />
@@ -197,12 +221,27 @@ export default function InspectionReport() {
               </Box>
               {images.map((image) => (
                 <Box key={image.id} sx={{ mt: 5 }}>
-                  <Stage key={image.id} width={820} height={400}>
+                  <Stage
+                    key={image.id}
+                    width={window.innerWidth * 0.43}
+                    height={window.innerHeight * 0.43}
+                    onWheel={handleWheel}
+                  >
                     <Layer>
-                      <URLImage src={image.photo} width={820} height={400} />
+                      <URLImage
+                        src={image.photo}
+                        width={window.innerWidth * 0.43}
+                        height={window.innerHeight * 0.43}
+                      />
                       <Rectangles imageId={image.id} />
                     </Layer>
                   </Stage>
+                  <Box sx={{ mt: 2 }}>
+                    <TextField fullWidth placeholder="Write caption">
+                      {" "}
+                    </TextField>
+                    <TableGeometry imageId={image.id} />
+                  </Box>
                 </Box>
               ))}
 

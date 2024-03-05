@@ -21,10 +21,10 @@ const Rectangles = ({ imageId }) => {
 
   return rectangles.map((rect, i) => (
     <Rect
-      x={(rect.x / 0.65) * 0.32}
-      y={(rect.y / 0.6) * 0.32}
-      width={(rect.width / 0.65) * 0.32}
-      height={(rect.height / 0.6) * 0.32}
+      x={(rect.x / 0.65) * 0.43}
+      y={(rect.y / 0.6) * 0.43}
+      width={(rect.width / 0.65) * 0.43}
+      height={(rect.height / 0.6) * 0.43}
       scaleX={1}
       scaleY={1}
       fill={"transparent"}
