@@ -10,6 +10,10 @@ import axios from "axios";
 import Appbar from "../components/Common/AppBar";
 import { json, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { Stage, Layer, Rect } from "react-konva";
+import URLImage from "../components/Common/URLImage";
+import { setImages } from "../reducers/InspectionFlow";
+import Rectangles from "../components/InspectionFlow/Rectangles";
 
 export default function InspectionReport() {
   const { client_id, project_id, inspection_id } = useParams();
@@ -19,6 +23,7 @@ export default function InspectionReport() {
   const [map, setMap] = React.useState(null);
   const [inspectionName, setInspectionName] = useState("");
   const [inspectionDate, setInspectionDate] = useState("");
+  const images = useSelector((state) => state.inspectionFlow.images);
 
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -72,12 +77,13 @@ export default function InspectionReport() {
       .get(
         `${
           import.meta.env.VITE_API_DASHBOARD_URL
-        }/inspection-photo/?inspection_report=${inspection_id}`
+        }/inspection-photo/?inspection_report=${inspection_id}&is_inspected=true`
       )
       .then((res) => {
         if (res.data.length > 0) {
           res.data[0].selected = true;
         }
+        dispatch(setImages(res.data));
         res.data.forEach((image) => {
           const layerId = `point-${image.id}`;
 
@@ -110,6 +116,8 @@ export default function InspectionReport() {
         });
       });
   }, [dispatch, inspection_id, map]);
+
+  console.log(images);
   return (
     <>
       <Appbar />
@@ -180,15 +188,24 @@ export default function InspectionReport() {
                   style={{
                     borderRadius: "8px",
                     width: "820px",
-                    height: "834px",
+                    height: "980px",
                   }}
                   ref={mapContainerReport}
                   id="map"
                   className="map"
                 ></div>
               </Box>
+              {images.map((image) => (
+                <Box key={image.id} sx={{ mt: 5 }}>
+                  <Stage key={image.id} width={820} height={400}>
+                    <Layer>
+                      <URLImage src={image.photo} width={820} height={400} />
+                      <Rectangles imageId={image.id} />
+                    </Layer>
+                  </Stage>
+                </Box>
+              ))}
 
-              <Box sx={{ mt: 5 }}>{/* Add images here  */}</Box>
               <Box sx={{ ml: "40%" }}>{/* Add more detail here  */}</Box>
             </div>
           </Box>
