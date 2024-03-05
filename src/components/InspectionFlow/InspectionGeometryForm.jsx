@@ -1,4 +1,11 @@
-import { Box, IconButton, TextField, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  IconButton,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -22,6 +29,7 @@ export default function InspectionGeometryForm(props) {
     selectedInspection,
     selectedCost,
     setSelectedCost,
+    loader,
   } = props;
   return (
     <form onSubmit={handleCreateGeometry} style={{ display: "none" }} id="menu">
@@ -34,17 +42,21 @@ export default function InspectionGeometryForm(props) {
       >
         <Typography sx={{ color: "blue" }}>ID:{selectedId || null} </Typography>
         <Tooltip title="Save">
-          <IconButton
-            type="submit"
-            // onClick={(event) => handleMouse(event)}
-          >
-            <DoneIcon
-              sx={{
-                "&:hover": { cursor: "pointer" },
-                color: "red",
-              }}
-            />
-          </IconButton>
+          {loader ? (
+            <CircularProgress size={20}></CircularProgress>
+          ) : (
+            <IconButton
+              type="submit"
+              // onClick={(event) => handleMouse(event)}
+            >
+              <DoneIcon
+                sx={{
+                  "&:hover": { cursor: "pointer" },
+                  color: "red",
+                }}
+              />
+            </IconButton>
+          )}
         </Tooltip>
         <Tooltip title="Delete">
           <IconButton

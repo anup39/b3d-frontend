@@ -62,6 +62,7 @@ const InspectionFlow = () => {
   const [selectedCost, setSelectedCost] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [created, setCreated] = useState(true);
+  const [loader, setLoader] = useState(false);
 
   const [contextMenu, setContextMenu] = useState({
     visible: false,
@@ -255,6 +256,7 @@ const InspectionFlow = () => {
 
     let stroke_color = "#FF0000";
     let stroke_width = 1;
+    setLoader(true);
     if (created) {
       axios
         .get(
@@ -312,6 +314,7 @@ const InspectionFlow = () => {
                   setRectangles(res.data);
                   setRectCount(res.data.length);
                   document.getElementById("menu").style.display = "none";
+                  setLoader(false);
                 })
                 .catch((error) => {
                   console.log(error);
@@ -368,6 +371,7 @@ const InspectionFlow = () => {
                   setRectangles(res.data);
                   setRectCount(res.data.length);
                   document.getElementById("menu").style.display = "none";
+                  setLoader(false);
                 })
                 .catch((error) => {
                   console.log(error);
@@ -626,6 +630,7 @@ const InspectionFlow = () => {
               setSelectedStandardInspection={setSelectedStandardInspection}
               setSelectedSubInspection={setSelectedSubInspection}
               setSelectedInspection={setSelectedInspection}
+              loader={loader}
             />
 
             <div id="stageContainer">
