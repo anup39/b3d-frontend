@@ -216,8 +216,6 @@ const InspectionFlow = () => {
     setDraggable(false);
   };
 
-  const OnDoubleClick = () => {};
-
   const handleRightClick = (
     e,
     standard_inspection,
@@ -428,6 +426,10 @@ const InspectionFlow = () => {
       document.getElementById("menu").style.display = "none";
       setLoaderDelete(false);
     }
+  };
+
+  const handleEditGeometry = () => {
+    console.log("Edit");
   };
 
   const handleSmallImageClick = (value) => {
@@ -661,6 +663,7 @@ const InspectionFlow = () => {
             <InspectionGeometryForm
               handleCreateGeometry={handleCreateGeometry}
               deleteGeometry={deleteGeometry}
+              handleEditGeometry={handleEditGeometry}
               handleCloseMenu={handleCloseMenu}
               selectedStandardInspection={selectedStandardInspection}
               selectedSubInspection={selectedSubInspection}
@@ -691,7 +694,6 @@ const InspectionFlow = () => {
                 onTouchStart={handleMouseDown}
                 onTouchEnd={mouseDown && handleMouseUp}
                 onTouchMove={mouseDown && handleMouseMove}
-                onDblClick={OnDoubleClick}
                 onWheel={handleWheel}
               >
                 <Layer>
@@ -717,7 +719,7 @@ const InspectionFlow = () => {
                       onContextMenu={handleRightClick}
                     />
                   ))}
-                  {/* <RectTransformer selectedShapeName={selectedShapeName} /> */}
+                  <RectTransformer selectedShapeName={selectedShapeName} />
                 </Layer>
               </Stage>
             </div>

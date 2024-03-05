@@ -17,6 +17,7 @@ export default function InspectionGeometryForm(props) {
   const {
     handleCreateGeometry,
     deleteGeometry,
+    handleEditGeometry,
     handleCloseMenu,
     standard_inspection,
     sub_inspection,
@@ -75,9 +76,7 @@ export default function InspectionGeometryForm(props) {
           )}
         </Tooltip>
         <Tooltip title="Edit">
-          <IconButton
-          // onClick={(event) => handleMouse(event)}
-          >
+          <IconButton onClick={handleEditGeometry}>
             <EditIcon
               sx={{
                 "&:hover": { cursor: "pointer" },
@@ -202,6 +201,8 @@ export default function InspectionGeometryForm(props) {
 InspectionGeometryForm.propTypes = {
   handleCreateGeometry: PropTypes.func,
   handleCloseMenu: PropTypes.func,
+  deleteGeometry: PropTypes.func,
+  handleEditGeometry: PropTypes.func,
   standard_inspection: PropTypes.array,
   sub_inspection: PropTypes.array,
   inspection: PropTypes.array,
@@ -214,4 +215,6 @@ InspectionGeometryForm.propTypes = {
   selectedInspection: PropTypes.number,
   selectedCost: PropTypes.number,
   setSelectedCost: PropTypes.func,
+  loaderSave: PropTypes.bool,
+  loaderDelete: PropTypes.bool,
 };
