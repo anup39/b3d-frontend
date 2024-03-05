@@ -16,6 +16,7 @@ import PropTypes from "prop-types";
 export default function InspectionGeometryForm(props) {
   const {
     handleCreateGeometry,
+    deleteGeometry,
     handleCloseMenu,
     standard_inspection,
     sub_inspection,
@@ -29,7 +30,8 @@ export default function InspectionGeometryForm(props) {
     selectedInspection,
     selectedCost,
     setSelectedCost,
-    loader,
+    loaderSave,
+    loaderDelete,
   } = props;
   return (
     <form onSubmit={handleCreateGeometry} style={{ display: "none" }} id="menu">
@@ -42,7 +44,7 @@ export default function InspectionGeometryForm(props) {
       >
         <Typography sx={{ color: "blue" }}>ID:{selectedId || null} </Typography>
         <Tooltip title="Save">
-          {loader ? (
+          {loaderSave ? (
             <CircularProgress size={20}></CircularProgress>
           ) : (
             <IconButton
@@ -59,16 +61,18 @@ export default function InspectionGeometryForm(props) {
           )}
         </Tooltip>
         <Tooltip title="Delete">
-          <IconButton
-          // onClick={(event) => handleMouse(event)}
-          >
-            <DeleteIcon
-              sx={{
-                "&:hover": { cursor: "pointer" },
-                color: "red",
-              }}
-            />
-          </IconButton>
+          {loaderDelete ? (
+            <CircularProgress size={20}></CircularProgress>
+          ) : (
+            <IconButton onClick={deleteGeometry}>
+              <DeleteIcon
+                sx={{
+                  "&:hover": { cursor: "pointer" },
+                  color: "red",
+                }}
+              />
+            </IconButton>
+          )}
         </Tooltip>
         <Tooltip title="Edit">
           <IconButton

@@ -62,7 +62,8 @@ const InspectionFlow = () => {
   const [selectedCost, setSelectedCost] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [created, setCreated] = useState(true);
-  const [loader, setLoader] = useState(false);
+  const [loaderSave, setLoaderSave] = useState(false);
+  const [loaderDelete, setLoaderDelete] = useState(false);
 
   const [contextMenu, setContextMenu] = useState({
     visible: false,
@@ -256,7 +257,7 @@ const InspectionFlow = () => {
 
     let stroke_color = "#FF0000";
     let stroke_width = 1;
-    setLoader(true);
+    setLoaderSave(true);
     if (created) {
       axios
         .get(
@@ -314,7 +315,7 @@ const InspectionFlow = () => {
                   setRectangles(res.data);
                   setRectCount(res.data.length);
                   document.getElementById("menu").style.display = "none";
-                  setLoader(false);
+                  setLoaderSave(false);
                 })
                 .catch((error) => {
                   console.log(error);
@@ -371,7 +372,7 @@ const InspectionFlow = () => {
                   setRectangles(res.data);
                   setRectCount(res.data.length);
                   document.getElementById("menu").style.display = "none";
-                  setLoader(false);
+                  setLoaderSave(false);
                 })
                 .catch((error) => {
                   console.log(error);
@@ -384,6 +385,48 @@ const InspectionFlow = () => {
         .catch((error) => {
           console.log(error);
         });
+    }
+  };
+
+  const deleteGeometry = () => {
+    setLoaderDelete(true);
+    if (!created) {
+      axios
+        .delete(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/inspection-photo-geometry/${selectedId}/`
+        )
+        .then(() => {
+          axios
+            .get(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/inspection-photo-geometry/?inspection_photo=${
+                images.find((image) => image.selected)?.id
+              }`
+            )
+            .then((res) => {
+              setRectangles(res.data);
+              setRectCount(res.data.length);
+              document.getElementById("menu").style.display = "none";
+              setLoaderDelete(false);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      const updatedRectangles = rectangles.filter(
+        (rectangle) => rectangle.id !== selectedId
+      );
+      setRectangles(updatedRectangles);
+      setRectCount(updatedRectangles.length);
+      document.getElementById("menu").style.display = "none";
+      setLoaderDelete(false);
     }
   };
 
@@ -617,6 +660,7 @@ const InspectionFlow = () => {
           <Grid item xs={12} md={8}>
             <InspectionGeometryForm
               handleCreateGeometry={handleCreateGeometry}
+              deleteGeometry={deleteGeometry}
               handleCloseMenu={handleCloseMenu}
               selectedStandardInspection={selectedStandardInspection}
               selectedSubInspection={selectedSubInspection}
@@ -630,7 +674,8 @@ const InspectionFlow = () => {
               setSelectedStandardInspection={setSelectedStandardInspection}
               setSelectedSubInspection={setSelectedSubInspection}
               setSelectedInspection={setSelectedInspection}
-              loader={loader}
+              loaderSave={loaderSave}
+              loaderDelete={loaderDelete}
             />
 
             <div id="stageContainer">
