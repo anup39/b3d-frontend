@@ -48,6 +48,7 @@ const InspectionFlow = () => {
   const [rectCount, setRectCount] = useState(0);
 
   const [selectedShapeName, setSelectedShapeName] = useState("");
+  const [editModeGeom, setEditModeGeom] = useState(false);
   const [mouseDown, setMouseDown] = useState(false);
   const [mouseDraw, setMouseDraw] = useState(false);
   const [newRectX, setNewRectX] = useState(0);
@@ -88,7 +89,7 @@ const InspectionFlow = () => {
       setMouseDown(true);
       setNewRectX(mousePos.x);
       setNewRectY(mousePos.y);
-      setSelectedShapeName("");
+      // setSelectedShapeName("");
       return;
     }
     const clickedOnTransformer =
@@ -98,11 +99,11 @@ const InspectionFlow = () => {
     }
     const name = event.target.name();
     const rect = rectangles.find((r) => r.name === name);
-    if (rect) {
-      setSelectedShapeName(name);
-    } else {
-      setSelectedShapeName("");
-    }
+    // if (rect) {
+    //   setSelectedShapeName(name);
+    // } else {
+    //   setSelectedShapeName("");
+    // }
   };
 
   const handleMouseUp = () => {
@@ -227,7 +228,8 @@ const InspectionFlow = () => {
     x,
     y,
     height,
-    width
+    width,
+    name
   ) => {
     setSelectedStandardInspection(standard_inspection);
     setSelectedSubInspection(sub_inspection);
@@ -239,6 +241,8 @@ const InspectionFlow = () => {
     setNewRectY(y);
     setWidth(width);
     setHeight(height);
+    setSelectedShapeName(name);
+    setEditModeGeom(false);
     e.evt.preventDefault();
     const menuNode = document.getElementById("menu");
     menuNode.style.display = "block";
@@ -430,6 +434,7 @@ const InspectionFlow = () => {
 
   const handleEditGeometry = () => {
     console.log("Edit");
+    setEditModeGeom(true);
   };
 
   const handleSmallImageClick = (value) => {
@@ -719,7 +724,10 @@ const InspectionFlow = () => {
                       onContextMenu={handleRightClick}
                     />
                   ))}
-                  <RectTransformer selectedShapeName={selectedShapeName} />
+                  <RectTransformer
+                    editModeGeom={editModeGeom}
+                    selectedShapeName={selectedShapeName}
+                  />
                 </Layer>
               </Stage>
             </div>
