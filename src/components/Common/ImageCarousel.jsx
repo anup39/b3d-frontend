@@ -20,6 +20,7 @@ export default class ImageCarousel extends Component {
       // slidesToScroll: 1,
     };
 
+    // time
     return (
       <div>
         <div
