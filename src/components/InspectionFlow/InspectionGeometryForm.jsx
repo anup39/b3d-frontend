@@ -13,9 +13,6 @@ import DoneIcon from "@mui/icons-material/Done";
 import EditIcon from "@mui/icons-material/Edit";
 import PropTypes from "prop-types";
 
-// #Fix the things
-// Things to  next time:
-
 export default function InspectionGeometryForm(props) {
   const {
     handleCreateGeometry,
