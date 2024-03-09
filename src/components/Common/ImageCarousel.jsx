@@ -64,9 +64,3 @@ ImageCarousel.propTypes = {
   itemData: PropTypes.array,
   onImageClick: PropTypes.func,
 };
-
-// #new file
-// Path: src/components/Common/ImageCarousel.css
-// .slick-prev:before, .slick-next:before {
-//   color: #000;
-// }
