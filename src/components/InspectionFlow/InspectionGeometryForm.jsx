@@ -220,5 +220,3 @@ InspectionGeometryForm.propTypes = {
   loaderSave: PropTypes.bool,
   loaderDelete: PropTypes.bool,
 };
-
-// things to do in the current situation
