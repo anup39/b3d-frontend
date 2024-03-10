@@ -220,12 +220,3 @@ InspectionGeometryForm.propTypes = {
   loaderSave: PropTypes.bool,
   loaderDelete: PropTypes.bool,
 };
-
-// Test
-
-// Path: src/components/InspectionFlow/InspectionGeometryForm.test.js
-// import { render, screen } from "@testing-library/react";
-// import InspectionGeometryForm from "./InspectionGeometryForm";
-// import { standard_inspection, sub_inspection, inspection } from "../../mocks/inspection";
-
-// const props = {'handleCreateGeometry': jest.fn(),
