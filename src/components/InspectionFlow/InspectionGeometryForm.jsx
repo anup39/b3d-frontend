@@ -227,3 +227,5 @@ InspectionGeometryForm.propTypes = {
 // import { render, screen } from "@testing-library/react";
 // import InspectionGeometryForm from "./InspectionGeometryForm";
 // import { standard_inspection, sub_inspection, inspection } from "../../mocks/inspection";
+
+// const props = {'handleCreateGeometry': jest.fn(),
