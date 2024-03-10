@@ -220,3 +220,7 @@ InspectionGeometryForm.propTypes = {
   loaderSave: PropTypes.bool,
   loaderDelete: PropTypes.bool,
 };
+
+// Test
+
+// Path: src/components/InspectionFlow/InspectionGeometryForm.test.js
