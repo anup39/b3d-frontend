@@ -224,3 +224,5 @@ InspectionGeometryForm.propTypes = {
 // Test
 
 // Path: src/components/InspectionFlow/InspectionGeometryForm.test.js
+// import { render, screen } from "@testing-library/react";
+// import InspectionGeometryForm from "./InspectionGeometryForm";
