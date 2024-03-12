@@ -220,7 +220,3 @@ InspectionGeometryForm.propTypes = {
   loaderSave: PropTypes.bool,
   loaderDelete: PropTypes.bool,
 };
-
-// # things they are money already spent on
-// # things they are money to be spent on
-// # things they are money to be spent on
