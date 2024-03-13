@@ -225,3 +225,8 @@ InspectionGeometryForm.propTypes = {
 // import React, { useState } from "react";
 // import { useDispatch, useSelector } from "react-redux";
 // import { createGeometry, deleteGeometry, editGeometry } from "../../store/actions/inspectionActions";
+// import InspectionGeometryForm from "./InspectionGeometryForm";
+
+// export default function InspectionGeometryFormContainer() {
+//   const dispatch = useDispatch();
+//   const standard_inspection = useSelector(
