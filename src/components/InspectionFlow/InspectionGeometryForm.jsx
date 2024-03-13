@@ -220,3 +220,8 @@ InspectionGeometryForm.propTypes = {
   loaderSave: PropTypes.bool,
   loaderDelete: PropTypes.bool,
 };
+
+// Path: src/components/InspectionFlow/InspectionGeometryForm.jsx
+// import React, { useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { createGeometry, deleteGeometry, editGeometry } from "../../store/actions/inspectionActions";
