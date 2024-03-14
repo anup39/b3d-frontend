@@ -140,8 +140,8 @@ export default function ProjectView({ project }) {
         <ListItemButton
           sx={{
             minHeight: 48,
-            justifyContent: open ? "initial" : "center",
-            px: 2.5,
+            justifyContent: open ? "space-between" : "center",
+            // px: 2,
             "&:hover": {
               backgroundColor: "#F1F7FF",
             },
@@ -162,7 +162,7 @@ export default function ProjectView({ project }) {
             onClick={() => setOpenProperties(!openProperties)}
           />
 
-          <Box sx={{ mr: 1 }}>
+          <Box sx={{ minWidth: 80 }}>
             <ListItemText
               secondary={project.name.slice(0, 10)}
               sx={{ opacity: open ? 1 : 0 }}
