@@ -90,7 +90,6 @@ function AddLayerAndSourceToMap({
       },
     };
     map.addLayer(newLayer);
-    // map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
   } else if (fillType && fillType === "line") {
     const newLayer: LayerSpecification = {
       id: layerId,
@@ -109,7 +108,6 @@ function AddLayerAndSourceToMap({
       },
     };
     map.addLayer(newLayer);
-    // map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
   } else {
     const newLayer: LayerSpecification = {
       id: layerId,
@@ -130,7 +128,6 @@ function AddLayerAndSourceToMap({
       // filter: ["!=", ["id"], 65],
     };
     map.addLayer(newLayer);
-    // map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
   }
 
   console.log(map, "Map after adding layer and source");
