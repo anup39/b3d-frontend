@@ -43,7 +43,13 @@ export default function MoreonProperty({ project_id }) {
       <Tooltip title="Show More">
         <MoreVertIcon
           onClick={handleClick}
-          sx={{ fontSize: 16, color: "#d51b60", cursor: "pointer" }}
+          sx={{
+            fontSize: 16,
+            color: "#d51b60",
+            cursor: "pointer",
+            mr: 2,
+            ml: 0,
+          }}
         />
       </Tooltip>
       <Popover
