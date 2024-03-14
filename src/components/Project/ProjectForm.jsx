@@ -121,7 +121,7 @@ export default function ProjectForm({ client_id }) {
                 <TextField
                   id="description"
                   name="description"
-                  label="Description"
+                  label="Address"
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
