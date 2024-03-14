@@ -132,6 +132,8 @@ function AddLayerAndSourceToMap({
     map.addLayer(newLayer);
     // map.moveLayer(layerId, "gl-draw-polygon-fill-inactive.cold");
   }
+
+  console.log(map, "Map after adding layer and source");
   let hoveredStateId: null = null!;
 
   if (showPopup) {

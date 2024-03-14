@@ -56,7 +56,13 @@ export default function TiffMapView({ tif, project_id }) {
               minzoom: 0,
               maxzoom: 24,
             });
-            map.moveLayer(`${id}-layer`, "gl-draw-polygon-fill-inactive.cold");
+            console.log(map, "map after raster adding");
+            map.moveLayer(`${id}-layer`, "Continent labels");
+            console.log(
+              map,
+              "map after raster adding and movign the layer before draw"
+            );
+
             // dispatch(addSelectedTifId(tif_id));
           }
           dispatch(setcurrentTif(tif));
