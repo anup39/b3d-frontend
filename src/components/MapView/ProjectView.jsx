@@ -140,8 +140,8 @@ export default function ProjectView({ project }) {
         <ListItemButton
           sx={{
             minHeight: 48,
-            justifyContent: open ? "initial" : "center",
-            px: 2.5,
+            justifyContent: open ? "space-between" : "center",
+            // px: 2,
             "&:hover": {
               backgroundColor: "#F1F7FF",
             },
@@ -150,7 +150,7 @@ export default function ProjectView({ project }) {
           <ListItemIcon
             sx={{
               minWidth: "24px",
-              mr: open ? 3 : "auto",
+              mr: open ? 1 : "auto",
               justifyContent: "center",
             }}
           >
@@ -162,11 +162,20 @@ export default function ProjectView({ project }) {
             onClick={() => setOpenProperties(!openProperties)}
           />
 
-          <ListItemText
-            secondary={project.name.slice(0, 10)}
-            sx={{ opacity: open ? 1 : 0 }}
-            secondaryTypographyProps={{ fontSize: 12 }}
-          />
+          <Box sx={{ minWidth: 80 }}>
+            <ListItemText
+              secondary={project.name.slice(0, 10)}
+              sx={{ opacity: open ? 1 : 0 }}
+              secondaryTypographyProps={{ fontSize: 12, color: "#027FFE" }}
+            />
+            <ListItemText
+              secondary={project.description.slice(0, 10)}
+              sx={{ opacity: open ? 1 : 0 }}
+              secondaryTypographyProps={{
+                fontSize: 12,
+              }}
+            />
+          </Box>
 
           <Tooltip title="Show Measurings">
             <Checkbox

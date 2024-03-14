@@ -320,7 +320,7 @@ export default function MapView({ level, client_id, projects }) {
                     }
                     sx={{
                       display: open ? "block" : "none",
-                      mr: 3.5,
+                      mr: 3.3,
                       color: pink[600],
                       "&.Mui-checked": {
                         color: pink[600],

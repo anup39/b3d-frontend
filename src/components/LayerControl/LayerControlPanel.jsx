@@ -566,6 +566,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
     dispatch(setCategoryViewName(cat.view_name));
     dispatch(setMode("Draw"));
     map.on("draw.create", function (event) {
+      console.log(map, "map when drawing");
       const feature = event.features;
       const geometry = feature[0].geometry;
       const type_of_geometry = feature[0].geometry.type;

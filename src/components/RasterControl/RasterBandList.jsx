@@ -55,10 +55,7 @@ export default function RasterBandList() {
               minzoom: 0,
               maxzoom: 24,
             });
-            map.moveLayer(
-              `${id}-${band}-layer`,
-              "gl-draw-polygon-fill-inactive.cold"
-            );
+            map.moveLayer(`${id}-${band}-layer`, "Continent labels");
             // dispatch(addSelectedTifId(tif_id));
           }
           // dispatch(setcurrentTif(tif));

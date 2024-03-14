@@ -65,6 +65,13 @@ export default function Map({ id }) {
         map.fitBounds(currentMapExtent, { padding: 20 });
       }
       map.on("load", () => {
+        const draw = new MapboxDraw({
+          displayControlsDefault: false,
+        });
+
+        // 1 Draw and its layer
+        map.addControl(draw);
+        map.draw = draw;
         const measuringcategories = current_measuring_categories;
         if (measuringcategories) {
           measuringcategories.forEach((measuringcategory) => {
@@ -138,6 +145,8 @@ export default function Map({ id }) {
           });
         }
 
+        console.log(map, "map");
+
         if (current_tif) {
           const id = current_tif.id;
           axios
@@ -163,22 +172,13 @@ export default function Map({ id }) {
                   minzoom: 0,
                   maxzoom: 24,
                 });
-                map.moveLayer(
-                  `${id}-layer`,
-                  "gl-draw-polygon-fill-inactive.cold"
-                );
+                map.moveLayer(`${id}-layer`, "Continent labels");
               }
             })
             .catch(() => {});
         }
 
-        const draw = new MapboxDraw({
-          displayControlsDefault: false,
-        });
-
-        // 1 Draw and its layer
-        map.addControl(draw);
-        map.draw = draw;
+        console.log(map, "map");
       });
     }
   }, [
