@@ -14,7 +14,7 @@ export const Project = createSlice({
     setShowArea: (state, action) => {
       const { id, value } = action.payload;
       const project = state.projects.find((project) => project.id === id);
-      project.showArea = value;
+      project.show_area = value;
     },
   },
 });

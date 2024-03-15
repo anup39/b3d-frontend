@@ -31,6 +31,7 @@ import Checkbox from "@mui/material/Checkbox";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { setShowArea } from "../../reducers/Project";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -202,14 +203,14 @@ export default function ProjectView({ project }) {
           {project.show_area ? (
             <Tooltip title="Hide Area">
               <RemoveRedEyeIcon
-                // onClick={() => setShowArea(false)}
+                onClick={() => dispatch(setShowArea(project.id, false))}
                 sx={{ fontSize: 14 }}
               />
             </Tooltip>
           ) : (
             <Tooltip title="Show Area">
               <VisibilityOffIcon
-                // onClick={() => setShowArea(true)}
+                onClick={() => dispatch(setShowArea(project.id, true))}
                 sx={{ fontSize: 14 }}
               />
             </Tooltip>
