@@ -203,14 +203,18 @@ export default function ProjectView({ project }) {
           {project.show_area ? (
             <Tooltip title="Hide Area">
               <RemoveRedEyeIcon
-                onClick={() => dispatch(setShowArea(project.id, false))}
+                onClick={() =>
+                  dispatch(setShowArea({ id: project.id, value: false }))
+                }
                 sx={{ fontSize: 14 }}
               />
             </Tooltip>
           ) : (
             <Tooltip title="Show Area">
               <VisibilityOffIcon
-                onClick={() => dispatch(setShowArea(project.id, true))}
+                onClick={() =>
+                  dispatch(setShowArea({ id: project.id, value: true }))
+                }
                 sx={{ fontSize: 14 }}
               />
             </Tooltip>
