@@ -106,7 +106,9 @@ export default function Save() {
               .catch(() => {
                 dispatch(setshowToast(true));
                 dispatch(settoastType("error"));
-                dispatch(settoastMessage("Failed to create the Category"));
+                dispatch(
+                  settoastMessage("Failed to create the Project Polygon ")
+                );
                 setTimeout(() => {
                   dispatch(setshowMapLoader(false));
                   if (window.map_global) {
