@@ -7,6 +7,7 @@ import {
   setViewName,
   setMode,
   setFeatureId,
+  setComponent,
 } from "../../reducers/DrawnGeometry";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -32,6 +33,7 @@ export default function Cancel() {
       dispatch(setViewName(null));
       dispatch(setMode(null));
       dispatch(setFeatureId(null));
+      dispatch(setComponent(null));
     }
   };
   return (

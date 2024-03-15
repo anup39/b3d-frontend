@@ -26,6 +26,7 @@ import {
   setWKTGeometry,
   setFeatureId,
   setMode,
+  setComponent,
 } from "../../reducers/DrawnGeometry";
 import RectangleIcon from "@mui/icons-material/Rectangle";
 import axios from "axios";
@@ -136,6 +137,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     dispatch(setId(null));
     dispatch(setViewName(null));
     dispatch(setFeatureId(null));
+    dispatch(setComponent(null));
 
     if (mode && mode === "Edit") {
       const layerId = String(currentClient) + `${currentProject}` + "layer";
@@ -147,6 +149,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
       setViewName(String(currentClient) + `${currentProject}` + "layer")
     );
     dispatch(setMode("Draw"));
+    dispatch(setComponent("project"));
     map.on("draw.create", function (event) {
       console.log(map, "map when drawing");
       const feature = event.features;

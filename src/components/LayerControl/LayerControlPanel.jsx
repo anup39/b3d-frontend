@@ -23,6 +23,7 @@ import {
   setWKTGeometry,
   setMode,
   setFeatureId,
+  setComponent,
 } from "../../reducers/DrawnGeometry";
 
 const all_categories = [
@@ -545,6 +546,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
     dispatch(setId(null));
     dispatch(setViewName(null));
     dispatch(setFeatureId(null));
+    dispatch(setComponent(null));
 
     if (mode && mode === "Edit") {
       const layerId = String(client_id) + view_name + "layer";
@@ -563,6 +565,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
     dispatch(setId(cat.id));
     dispatch(setViewName(cat.view_name));
     dispatch(setMode("Draw"));
+    dispatch(setComponent("category"));
     map.on("draw.create", function (event) {
       console.log(map, "map when drawing");
       const feature = event.features;

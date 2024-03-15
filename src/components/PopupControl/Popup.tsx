@@ -9,6 +9,7 @@ import {
   setWKTGeometry,
   setMode,
   setFeatureId,
+  setComponent,
 } from "../../reducers/DrawnGeometry";
 import { RootState } from "../../store";
 
@@ -147,6 +148,8 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     dispatch(setViewName(properties.view_name));
     dispatch(setMode("Edit"));
     dispatch(setFeatureId(feature_id));
+    //Note: Here i have to find if the clicked featue is of category or project
+    dispatch(setComponent("category"));
     const popups = document.getElementsByClassName("maplibregl-popup");
     if (popups.length) {
       popups[0].remove();

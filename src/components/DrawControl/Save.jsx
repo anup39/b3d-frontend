@@ -15,6 +15,7 @@ import {
   setWKTGeometry,
   setMode,
   setFeatureId,
+  setComponent,
 } from "../../reducers/DrawnGeometry";
 
 export default function Save() {
@@ -94,6 +95,7 @@ export default function Save() {
                       dispatch(setViewName(null));
                       dispatch(setMode(null));
                       dispatch(setFeatureId(null));
+                      dispatch(setComponent(null));
                     }
                   }, 3000);
                 })
@@ -113,6 +115,7 @@ export default function Save() {
                       dispatch(setViewName(null));
                       dispatch(setMode(null));
                       dispatch(setFeatureId(null));
+                      dispatch(setComponent(null));
                     }
                   }, 3000);
                 });
@@ -155,6 +158,7 @@ export default function Save() {
                       dispatch(setViewName(null));
                       dispatch(setMode(null));
                       dispatch(setFeatureId(null));
+                      dispatch(setComponent(null));
                     }
                   }, 3000);
                 })
@@ -174,6 +178,7 @@ export default function Save() {
                       dispatch(setViewName(null));
                       dispatch(setMode(null));
                       dispatch(setFeatureId(null));
+                      dispatch(setComponent(null));
                     }
                   }, 3000);
                 });
@@ -215,6 +220,7 @@ export default function Save() {
                       dispatch(setViewName(null));
                       dispatch(setMode(null));
                       dispatch(setFeatureId(null));
+                      dispatch(setComponent(null));
                     }
                   }, 3000);
                 })
@@ -234,6 +240,7 @@ export default function Save() {
                       dispatch(setViewName(null));
                       dispatch(setMode(null));
                       dispatch(setFeatureId(null));
+                      dispatch(setComponent(null));
                     }
                   }, 3000);
                 });
@@ -288,6 +295,7 @@ export default function Save() {
                   dispatch(setViewName(null));
                   dispatch(setMode(null));
                   dispatch(setFeatureId(null));
+                  dispatch(setComponent(null));
                 }
               }, 3000);
             })
@@ -307,6 +315,7 @@ export default function Save() {
                   dispatch(setViewName(null));
                   dispatch(setMode(null));
                   dispatch(setFeatureId(null));
+                  dispatch(setComponent(null));
                 }
               }, 3000);
             });
@@ -353,6 +362,7 @@ export default function Save() {
                   dispatch(setViewName(null));
                   dispatch(setMode(null));
                   dispatch(setFeatureId(null));
+                  dispatch(setComponent(null));
                 }
               }, 3000);
             })
@@ -372,6 +382,7 @@ export default function Save() {
                   dispatch(setViewName(null));
                   dispatch(setMode(null));
                   dispatch(setFeatureId(null));
+                  dispatch(setComponent(null));
                 }
               }, 3000);
             });
@@ -418,6 +429,7 @@ export default function Save() {
                   dispatch(setViewName(null));
                   dispatch(setMode(null));
                   dispatch(setFeatureId(null));
+                  dispatch(setComponent(null));
                 }
               }, 3000);
             })
@@ -437,6 +449,7 @@ export default function Save() {
                   dispatch(setViewName(null));
                   dispatch(setMode(null));
                   dispatch(setFeatureId(null));
+                  dispatch(setComponent(null));
                 }
               }, 3000);
             });
