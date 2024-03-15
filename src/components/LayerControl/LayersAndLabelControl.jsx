@@ -19,6 +19,7 @@ import {
   setTableSummationData,
   setCurrentMapExtent,
 } from "../../reducers/MapView";
+import RectangleIcon from "@mui/icons-material/Rectangle";
 import axios from "axios";
 
 export default function LayersAndLabelControl({ map, popUpRef }) {
@@ -117,6 +118,10 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     }
     dispatch(setshowPiechart(!showPiechart));
   };
+
+  const handleDrawPolygon = () => {
+    console.log("Draw Polygon");
+  };
   return (
     <>
       {showMeasuringsPanel ? (
@@ -192,6 +197,17 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
               <Tooltip title="Pie Chart">
                 <PieChartIcon
                   onClick={handlePieChart}
+                  sx={{
+                    "&:hover": { cursor: "pointer" },
+                    mt: 1,
+                    mr: 1,
+                    color: "#d61b60",
+                  }}
+                />
+              </Tooltip>
+              <Tooltip title="Draw Polygon">
+                <RectangleIcon
+                  onClick={handleDrawPolygon}
                   sx={{
                     "&:hover": { cursor: "pointer" },
                     mt: 1,
