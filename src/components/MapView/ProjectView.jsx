@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Icon, IconButton } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -29,6 +29,9 @@ import {
 } from "../../reducers/MapView";
 import Checkbox from "@mui/material/Checkbox";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { setShowArea, setShowAreaDisabled } from "../../reducers/Project";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -77,6 +80,7 @@ export default function ProjectView({ project }) {
       // dispatch(addSelectedProjectId(id));
       dispatch(setcurrentProjectName(project.name));
       dispatch(addcurrentProjectMeasuringTable(project_id));
+      dispatch(setShowAreaDisabled({ id: project_id, value: false }));
     } else {
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(false));
@@ -89,6 +93,7 @@ export default function ProjectView({ project }) {
       dispatch(setshowPiechart(false));
       dispatch(setshowReport(false));
       dispatch(setshowTifPanel(false));
+      dispatch(setShowAreaDisabled({ id: project_id, value: true }));
 
       const map = window.map_global;
 
@@ -196,6 +201,30 @@ export default function ProjectView({ project }) {
               }}
             />
           </Tooltip>
+
+          {project.show_area ? (
+            <IconButton
+              onClick={() =>
+                dispatch(setShowArea({ id: project.id, value: false }))
+              }
+              disabled={project.show_area_disabled} // Set this to the condition when you want to disable the button
+            >
+              <Tooltip title="Show Area">
+                <RemoveRedEyeIcon sx={{ fontSize: 14 }} />
+              </Tooltip>
+            </IconButton>
+          ) : (
+            <IconButton
+              onClick={() =>
+                dispatch(setShowArea({ id: project.id, value: true }))
+              }
+              disabled={project.show_area_disabled} // Set this to the condition when you want to disable the button
+            >
+              <Tooltip title="Show Area">
+                <VisibilityOffIcon sx={{ fontSize: 14 }} />
+              </Tooltip>
+            </IconButton>
+          )}
 
           {openProperties ? (
             <ExpandLess onClick={() => setOpenProperties(!openProperties)} />
