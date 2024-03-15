@@ -11,10 +11,15 @@ export const Project = createSlice({
     setprojects: (state, action) => {
       state.projects = action.payload;
     },
+    setShowArea: (state, action) => {
+      const { id, value } = action.payload;
+      const project = state.projects.find((project) => project.id === id);
+      project.showArea = value;
+    },
   },
 });
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const { setprojects } = Project.actions;
+export const { setprojects, setShowArea } = Project.actions;
 
 export default Project.reducer;
