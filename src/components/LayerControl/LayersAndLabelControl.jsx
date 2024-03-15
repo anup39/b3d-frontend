@@ -19,6 +19,13 @@ import {
   setTableSummationData,
   setCurrentMapExtent,
 } from "../../reducers/MapView";
+import {
+  setCategoryId,
+  setCategoryViewName,
+  setTypeOfGeometry,
+  setWKTGeometry,
+  setFeatureId,
+} from "../../reducers/DrawnGeometry";
 import RectangleIcon from "@mui/icons-material/Rectangle";
 import axios from "axios";
 
@@ -46,6 +53,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
   );
 
   const showPiechart = useSelector((state) => state.mapView.showPiechart);
+  const mode = useSelector((state) => state.drawnPolygon.mode);
 
   const handleCloseMeasurings = () => {
     setExpandMeasurings(!expandMeasurings);
@@ -120,7 +128,19 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
   };
 
   const handleDrawPolygon = () => {
-    console.log("Draw Polygon");
+    const draw = map.draw;
+    draw.deleteAll();
+    dispatch(setWKTGeometry(null));
+    dispatch(setTypeOfGeometry(null));
+    dispatch(setCategoryId(null));
+    dispatch(setCategoryViewName(null));
+    dispatch(setFeatureId(null));
+
+    if (mode && mode === "Edit") {
+      const layerId = String(currentClient) + `${currentProject}` + "layer";
+      map.setFilter(layerId, null);
+    }
+    draw.changeMode("draw_polygon");
   };
   return (
     <>
