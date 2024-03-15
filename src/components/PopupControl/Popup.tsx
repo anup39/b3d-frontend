@@ -3,13 +3,14 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import { setshowMapLoader } from "../../reducers/MapView";
 import {
-  setCategoryId,
-  setCategoryViewName,
+  setId,
+  setViewName,
   setTypeOfGeometry,
   setWKTGeometry,
   setMode,
   setFeatureId,
 } from "../../reducers/DrawnGeometry";
+import { RootState } from "../../store";
 
 interface PopupProps {
   properties: {
@@ -28,18 +29,20 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
   const dispatch = useDispatch();
   // const state = useSelector((state) => state.drawnPolygon);
   const client_id = useSelector(
-    (state) => state.mapView.clientDetail.client_id
+    (state: RootState) => state.mapView.clientDetail.client_id
   );
   const project_id = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+    (state: RootState) =>
+      state.mapView.currentMapDetail.current_project_measuring_table
   );
   const current_measuring_categories = useSelector(
-    (state) => state.mapView.currentMapDetail.current_measuring_categories
+    (state: RootState) =>
+      state.mapView.currentMapDetail.current_measuring_categories
   );
 
-  const category_id = useSelector((state) => state.drawnPolygon.category_id);
-  const category_view_name = useSelector(
-    (state) => state.drawnPolygon.category_view_name
+  const id = useSelector((state: RootState) => state.drawnPolygon.id);
+  const view_name = useSelector(
+    (state: RootState) => state.drawnPolygon.view_name
   );
 
   const propertyElements = properties
@@ -140,8 +143,8 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     // First remove the poup content
     dispatch(setWKTGeometry(null));
     dispatch(setTypeOfGeometry(null));
-    dispatch(setCategoryId(properties.category_id));
-    dispatch(setCategoryViewName(properties.view_name));
+    dispatch(setId(properties.category_id));
+    dispatch(setViewName(properties.view_name));
     dispatch(setMode("Edit"));
     dispatch(setFeatureId(feature_id));
     const popups = document.getElementsByClassName("maplibregl-popup");
@@ -152,8 +155,8 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     const draw = map.draw;
     draw.deleteAll();
     draw.add(features[0]);
-    if (category_view_name) {
-      const layerId = String(client_id) + category_view_name + "layer";
+    if (view_name) {
+      const layerId = String(client_id) + view_name + "layer";
       map.setFilter(layerId, null);
     }
     const layerId = String(client_id) + properties.view_name + "layer";

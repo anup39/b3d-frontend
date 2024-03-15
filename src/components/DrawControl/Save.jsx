@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setshowMapLoader } from "../../reducers/MapView";
 import axios from "axios";
 import {
-  setCategoryId,
-  setCategoryViewName,
+  setId,
+  setViewName,
   setTypeOfGeometry,
   setWKTGeometry,
   setMode,
@@ -29,27 +29,19 @@ export default function Save() {
   const project_id = useSelector(
     (state) => state.mapView.currentMapDetail.current_project_measuring_table
   );
-  const category_id = useSelector((state) => state.drawnPolygon.category_id);
+  const id = useSelector((state) => state.drawnPolygon.id);
   const feature_id = useSelector((state) => state.drawnPolygon.feature_id);
 
-  const category_view_name = useSelector(
-    (state) => state.drawnPolygon.category_view_name
-  );
+  const view_name = useSelector((state) => state.drawnPolygon.view_name);
   const mode = useSelector((state) => state.drawnPolygon.mode);
 
   const handleSave = () => {
-    if (
-      wkt_geometry &&
-      type_of_geometry &&
-      category_id &&
-      category_view_name &&
-      mode
-    ) {
+    if (wkt_geometry && type_of_geometry && id && view_name && mode) {
       // dispatch(setshowGeomFormPopup("block"));
       if (mode === "Draw") {
         console.log("Draw mode");
         dispatch(setshowMapLoader(true));
-        const selectedCategoryId = category_id;
+        const selectedCategoryId = id;
         axios
           .get(
             `${
@@ -76,23 +68,21 @@ export default function Save() {
                   dispatch(settoastType("success"));
                   dispatch(
                     settoastMessage(
-                      `Successfully created the Category ${category_view_name}`
+                      `Successfully created the Category ${view_name}`
                     )
                   );
                   setTimeout(() => {
                     dispatch(setshowMapLoader(false));
                     if (window.map_global) {
-                      const sourceId =
-                        String(client_id) + category_view_name + "source";
-                      const layerId =
-                        String(client_id) + category_view_name + "layer";
+                      const sourceId = String(client_id) + view_name + "source";
+                      const layerId = String(client_id) + view_name + "layer";
                       const map = window.map_global;
                       if (map.getSource(sourceId) && map.getLayer(layerId)) {
                         const source = map.getSource(sourceId);
                         source.setData(
                           `${
                             import.meta.env.VITE_API_DASHBOARD_URL
-                          }/category-point-geojson/?project=${project_id}&category=${category_id}`
+                          }/category-point-geojson/?project=${project_id}&category=${id}`
                         );
                       }
                       const drawInstance = window.map_global.draw;
@@ -100,8 +90,8 @@ export default function Save() {
                       drawInstance.changeMode("simple_select");
                       dispatch(setWKTGeometry(null));
                       dispatch(setTypeOfGeometry(null));
-                      dispatch(setCategoryId(null));
-                      dispatch(setCategoryViewName(null));
+                      dispatch(setId(null));
+                      dispatch(setViewName(null));
                       dispatch(setMode(null));
                       dispatch(setFeatureId(null));
                     }
@@ -119,8 +109,8 @@ export default function Save() {
                       drawInstance.changeMode("simple_select");
                       dispatch(setWKTGeometry(null));
                       dispatch(setTypeOfGeometry(null));
-                      dispatch(setCategoryId(null));
-                      dispatch(setCategoryViewName(null));
+                      dispatch(setId(null));
+                      dispatch(setViewName(null));
                       dispatch(setMode(null));
                       dispatch(setFeatureId(null));
                     }
@@ -138,23 +128,21 @@ export default function Save() {
                   dispatch(settoastType("success"));
                   dispatch(
                     settoastMessage(
-                      `Successfully created the Category ${category_view_name}`
+                      `Successfully created the Category ${view_name}`
                     )
                   );
                   setTimeout(() => {
                     dispatch(setshowMapLoader(false));
                     if (window.map_global) {
-                      const sourceId =
-                        String(client_id) + category_view_name + "source";
-                      const layerId =
-                        String(client_id) + category_view_name + "layer";
+                      const sourceId = String(client_id) + view_name + "source";
+                      const layerId = String(client_id) + view_name + "layer";
                       const map = window.map_global;
                       if (map.getSource(sourceId) && map.getLayer(layerId)) {
                         const source = map.getSource(sourceId);
                         source.setData(
                           `${
                             import.meta.env.VITE_API_DASHBOARD_URL
-                          }/category-linestring-geojson/?project=${project_id}&category=${category_id}`
+                          }/category-linestring-geojson/?project=${project_id}&category=${id}`
                         );
                       }
 
@@ -163,8 +151,8 @@ export default function Save() {
                       drawInstance.changeMode("simple_select");
                       dispatch(setWKTGeometry(null));
                       dispatch(setTypeOfGeometry(null));
-                      dispatch(setCategoryId(null));
-                      dispatch(setCategoryViewName(null));
+                      dispatch(setId(null));
+                      dispatch(setViewName(null));
                       dispatch(setMode(null));
                       dispatch(setFeatureId(null));
                     }
@@ -182,8 +170,8 @@ export default function Save() {
                       drawInstance.changeMode("simple_select");
                       dispatch(setWKTGeometry(null));
                       dispatch(setTypeOfGeometry(null));
-                      dispatch(setCategoryId(null));
-                      dispatch(setCategoryViewName(null));
+                      dispatch(setId(null));
+                      dispatch(setViewName(null));
                       dispatch(setMode(null));
                       dispatch(setFeatureId(null));
                     }
@@ -201,23 +189,21 @@ export default function Save() {
                   dispatch(settoastType("success"));
                   dispatch(
                     settoastMessage(
-                      `Successfully created the Category ${category_view_name}`
+                      `Successfully created the Category ${view_name}`
                     )
                   );
                   setTimeout(() => {
                     dispatch(setshowMapLoader(false));
                     if (window.map_global) {
-                      const sourceId =
-                        String(client_id) + category_view_name + "source";
-                      const layerId =
-                        String(client_id) + category_view_name + "layer";
+                      const sourceId = String(client_id) + view_name + "source";
+                      const layerId = String(client_id) + view_name + "layer";
                       const map = window.map_global;
                       if (map.getSource(sourceId) && map.getLayer(layerId)) {
                         const source = map.getSource(sourceId);
                         source.setData(
                           `${
                             import.meta.env.VITE_API_DASHBOARD_URL
-                          }/category-polygon-geojson/?project=${project_id}&category=${category_id}`
+                          }/category-polygon-geojson/?project=${project_id}&category=${id}`
                         );
                       }
                       const drawInstance = window.map_global.draw;
@@ -225,8 +211,8 @@ export default function Save() {
                       drawInstance.changeMode("simple_select");
                       dispatch(setWKTGeometry(null));
                       dispatch(setTypeOfGeometry(null));
-                      dispatch(setCategoryId(null));
-                      dispatch(setCategoryViewName(null));
+                      dispatch(setId(null));
+                      dispatch(setViewName(null));
                       dispatch(setMode(null));
                       dispatch(setFeatureId(null));
                     }
@@ -244,8 +230,8 @@ export default function Save() {
                       drawInstance.changeMode("simple_select");
                       dispatch(setWKTGeometry(null));
                       dispatch(setTypeOfGeometry(null));
-                      dispatch(setCategoryId(null));
-                      dispatch(setCategoryViewName(null));
+                      dispatch(setId(null));
+                      dispatch(setViewName(null));
                       dispatch(setMode(null));
                       dispatch(setFeatureId(null));
                     }
@@ -273,23 +259,21 @@ export default function Save() {
               dispatch(settoastType("success"));
               dispatch(
                 settoastMessage(
-                  `Successfully updated the Category ${category_view_name}`
+                  `Successfully updated the Category ${view_name}`
                 )
               );
               setTimeout(() => {
                 dispatch(setshowMapLoader(false));
                 if (window.map_global) {
-                  const sourceId =
-                    String(client_id) + category_view_name + "source";
-                  const layerId =
-                    String(client_id) + category_view_name + "layer";
+                  const sourceId = String(client_id) + view_name + "source";
+                  const layerId = String(client_id) + view_name + "layer";
                   const map = window.map_global;
                   if (map.getSource(sourceId) && map.getLayer(layerId)) {
                     const source = map.getSource(sourceId);
                     source.setData(
                       `${
                         import.meta.env.VITE_API_DASHBOARD_URL
-                      }/category-point-geojson/?project=${project_id}&category=${category_id}`
+                      }/category-point-geojson/?project=${project_id}&category=${id}`
                     );
                   }
                   if (mode === "Edit") {
@@ -300,8 +284,8 @@ export default function Save() {
                   drawInstance.changeMode("simple_select");
                   dispatch(setWKTGeometry(null));
                   dispatch(setTypeOfGeometry(null));
-                  dispatch(setCategoryId(null));
-                  dispatch(setCategoryViewName(null));
+                  dispatch(setId(null));
+                  dispatch(setViewName(null));
                   dispatch(setMode(null));
                   dispatch(setFeatureId(null));
                 }
@@ -319,8 +303,8 @@ export default function Save() {
                   drawInstance.changeMode("simple_select");
                   dispatch(setWKTGeometry(null));
                   dispatch(setTypeOfGeometry(null));
-                  dispatch(setCategoryId(null));
-                  dispatch(setCategoryViewName(null));
+                  dispatch(setId(null));
+                  dispatch(setViewName(null));
                   dispatch(setMode(null));
                   dispatch(setFeatureId(null));
                 }
@@ -340,23 +324,21 @@ export default function Save() {
               dispatch(settoastType("success"));
               dispatch(
                 settoastMessage(
-                  `Successfully updated the Category ${category_view_name}`
+                  `Successfully updated the Category ${view_name}`
                 )
               );
               setTimeout(() => {
                 dispatch(setshowMapLoader(false));
                 if (window.map_global) {
-                  const sourceId =
-                    String(client_id) + category_view_name + "source";
-                  const layerId =
-                    String(client_id) + category_view_name + "layer";
+                  const sourceId = String(client_id) + view_name + "source";
+                  const layerId = String(client_id) + view_name + "layer";
                   const map = window.map_global;
                   if (map.getSource(sourceId) && map.getLayer(layerId)) {
                     const source = map.getSource(sourceId);
                     source.setData(
                       `${
                         import.meta.env.VITE_API_DASHBOARD_URL
-                      }/category-linestring-geojson/?project=${project_id}&category=${category_id}`
+                      }/category-linestring-geojson/?project=${project_id}&category=${id}`
                     );
                   }
                   if (mode === "Edit") {
@@ -367,8 +349,8 @@ export default function Save() {
                   drawInstance.changeMode("simple_select");
                   dispatch(setWKTGeometry(null));
                   dispatch(setTypeOfGeometry(null));
-                  dispatch(setCategoryId(null));
-                  dispatch(setCategoryViewName(null));
+                  dispatch(setId(null));
+                  dispatch(setViewName(null));
                   dispatch(setMode(null));
                   dispatch(setFeatureId(null));
                 }
@@ -386,8 +368,8 @@ export default function Save() {
                   drawInstance.changeMode("simple_select");
                   dispatch(setWKTGeometry(null));
                   dispatch(setTypeOfGeometry(null));
-                  dispatch(setCategoryId(null));
-                  dispatch(setCategoryViewName(null));
+                  dispatch(setId(null));
+                  dispatch(setViewName(null));
                   dispatch(setMode(null));
                   dispatch(setFeatureId(null));
                 }
@@ -407,23 +389,21 @@ export default function Save() {
               dispatch(settoastType("success"));
               dispatch(
                 settoastMessage(
-                  `Successfully updated the Category ${category_view_name}`
+                  `Successfully updated the Category ${view_name}`
                 )
               );
               setTimeout(() => {
                 dispatch(setshowMapLoader(false));
                 if (window.map_global) {
-                  const sourceId =
-                    String(client_id) + category_view_name + "source";
-                  const layerId =
-                    String(client_id) + category_view_name + "layer";
+                  const sourceId = String(client_id) + view_name + "source";
+                  const layerId = String(client_id) + view_name + "layer";
                   const map = window.map_global;
                   if (map.getSource(sourceId) && map.getLayer(layerId)) {
                     const source = map.getSource(sourceId);
                     source.setData(
                       `${
                         import.meta.env.VITE_API_DASHBOARD_URL
-                      }/category-polygon-geojson/?project=${project_id}&category=${category_id}`
+                      }/category-polygon-geojson/?project=${project_id}&category=${id}`
                     );
                   }
                   if (mode === "Edit") {
@@ -434,8 +414,8 @@ export default function Save() {
                   drawInstance.changeMode("simple_select");
                   dispatch(setWKTGeometry(null));
                   dispatch(setTypeOfGeometry(null));
-                  dispatch(setCategoryId(null));
-                  dispatch(setCategoryViewName(null));
+                  dispatch(setId(null));
+                  dispatch(setViewName(null));
                   dispatch(setMode(null));
                   dispatch(setFeatureId(null));
                 }
@@ -453,8 +433,8 @@ export default function Save() {
                   drawInstance.changeMode("simple_select");
                   dispatch(setWKTGeometry(null));
                   dispatch(setTypeOfGeometry(null));
-                  dispatch(setCategoryId(null));
-                  dispatch(setCategoryViewName(null));
+                  dispatch(setId(null));
+                  dispatch(setViewName(null));
                   dispatch(setMode(null));
                   dispatch(setFeatureId(null));
                 }

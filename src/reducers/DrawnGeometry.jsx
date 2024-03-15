@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   wkt_geometry: null,
   type_of_geometry: null,
-  category_id: null,
-  category_view_name: null,
+  id: null,
+  view_name: null,
   mode: null,
   feature_id: null,
 };
@@ -19,11 +19,11 @@ export const DrawnGeometry = createSlice({
     setTypeOfGeometry: (state, action) => {
       state.type_of_geometry = action.payload;
     },
-    setCategoryId: (state, action) => {
-      state.category_id = action.payload;
+    setId: (state, action) => {
+      state.id = action.payload;
     },
-    setCategoryViewName: (state, action) => {
-      state.category_view_name = action.payload;
+    setViewName: (state, action) => {
+      state.view_name = action.payload;
     },
     setMode: (state, action) => {
       state.mode = action.payload;
@@ -38,8 +38,8 @@ export const DrawnGeometry = createSlice({
 export const {
   setWKTGeometry,
   setTypeOfGeometry,
-  setCategoryId,
-  setCategoryViewName,
+  setId,
+  setViewName,
   setMode,
   setFeatureId,
 } = DrawnGeometry.actions;

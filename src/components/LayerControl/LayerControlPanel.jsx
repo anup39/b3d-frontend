@@ -17,8 +17,8 @@ import RectangleIcon from "@mui/icons-material/Rectangle";
 import CircleIcon from "@mui/icons-material/Circle";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import {
-  setCategoryId,
-  setCategoryViewName,
+  setId,
+  setViewName,
   setTypeOfGeometry,
   setWKTGeometry,
   setMode,
@@ -123,9 +123,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
   );
 
   const mode = useSelector((state) => state.drawnPolygon.mode);
-  const category_view_name = useSelector(
-    (state) => state.drawnPolygon.category_view_name
-  );
+  const view_name = useSelector((state) => state.drawnPolygon.view_name);
 
   useEffect(() => {
     if (current_measuring_categories) {
@@ -544,12 +542,12 @@ export default function LayersControlPanel({ map, popUpRef }) {
     draw.deleteAll();
     dispatch(setWKTGeometry(null));
     dispatch(setTypeOfGeometry(null));
-    dispatch(setCategoryId(null));
-    dispatch(setCategoryViewName(null));
+    dispatch(setId(null));
+    dispatch(setViewName(null));
     dispatch(setFeatureId(null));
 
     if (mode && mode === "Edit") {
-      const layerId = String(client_id) + category_view_name + "layer";
+      const layerId = String(client_id) + view_name + "layer";
       map.setFilter(layerId, null);
     }
     const type_of_geometry = cat.type_of_geometry;
@@ -562,8 +560,8 @@ export default function LayersControlPanel({ map, popUpRef }) {
     if (type_of_geometry === "Point") {
       draw.changeMode("draw_point");
     }
-    dispatch(setCategoryId(cat.id));
-    dispatch(setCategoryViewName(cat.view_name));
+    dispatch(setId(cat.id));
+    dispatch(setViewName(cat.view_name));
     dispatch(setMode("Draw"));
     map.on("draw.create", function (event) {
       console.log(map, "map when drawing");

@@ -1,10 +1,10 @@
 import { Tooltip, IconButton } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {
-  setCategoryId,
+  setId,
   setTypeOfGeometry,
   setWKTGeometry,
-  setCategoryViewName,
+  setViewName,
   setMode,
   setFeatureId,
 } from "../../reducers/DrawnGeometry";
@@ -15,23 +15,21 @@ export default function Cancel() {
   const client_id = useSelector(
     (state) => state.mapView.clientDetail.client_id
   );
-  const category_view_name = useSelector(
-    (state) => state.drawnPolygon.category_view_name
-  );
+  const view_name = useSelector((state) => state.drawnPolygon.view_name);
   const mode = useSelector((state) => state.drawnPolygon.mode);
   const handleCancelDraw = () => {
     if (window.map_global) {
       const draw = window.map_global.draw;
       if (mode === "Edit") {
-        const layerId = String(client_id) + category_view_name + "layer";
+        const layerId = String(client_id) + view_name + "layer";
         window.map_global.setFilter(layerId, null);
       }
       draw.deleteAll();
       draw.changeMode("simple_select");
       dispatch(setWKTGeometry(null));
       dispatch(setTypeOfGeometry(null));
-      dispatch(setCategoryId(null));
-      dispatch(setCategoryViewName(null));
+      dispatch(setId(null));
+      dispatch(setViewName(null));
       dispatch(setMode(null));
       dispatch(setFeatureId(null));
     }

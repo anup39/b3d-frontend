@@ -20,8 +20,8 @@ import {
   setCurrentMapExtent,
 } from "../../reducers/MapView";
 import {
-  setCategoryId,
-  setCategoryViewName,
+  setId,
+  setViewName,
   setTypeOfGeometry,
   setWKTGeometry,
   setFeatureId,
@@ -133,8 +133,8 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     draw.deleteAll();
     dispatch(setWKTGeometry(null));
     dispatch(setTypeOfGeometry(null));
-    dispatch(setCategoryId(null));
-    dispatch(setCategoryViewName(null));
+    dispatch(setId(null));
+    dispatch(setViewName(null));
     dispatch(setFeatureId(null));
 
     if (mode && mode === "Edit") {
@@ -142,9 +142,9 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
       map.setFilter(layerId, null);
     }
     draw.changeMode("draw_polygon");
-    dispatch(setCategoryId(currentProject));
+    dispatch(setId(currentProject));
     dispatch(
-      setCategoryViewName(String(currentClient) + `${currentProject}` + "layer")
+      setViewName(String(currentClient) + `${currentProject}` + "layer")
     );
     dispatch(setMode("Draw"));
     map.on("draw.create", function (event) {
@@ -315,4 +315,5 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
 
 LayersAndLabelControl.propTypes = {
   map: PropTypes.object,
+  popUpRef: PropTypes.object,
 };
