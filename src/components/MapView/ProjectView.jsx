@@ -29,6 +29,8 @@ import {
 } from "../../reducers/MapView";
 import Checkbox from "@mui/material/Checkbox";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -36,6 +38,7 @@ export default function ProjectView({ project }) {
   const dispatch = useDispatch();
   const [openProperties, setOpenProperties] = useState(false);
   const [tifs, setTifs] = useState([]);
+  const [showArea, setShowArea] = useState(true);
 
   const current_measuring_categories = useSelector(
     (state) => state.mapView.currentMapDetail.current_measuring_categories
@@ -196,6 +199,22 @@ export default function ProjectView({ project }) {
               }}
             />
           </Tooltip>
+
+          {showArea ? (
+            <Tooltip title="Hide Area">
+              <RemoveRedEyeIcon
+                onClick={() => setShowArea(false)}
+                sx={{ fontSize: 14 }}
+              />
+            </Tooltip>
+          ) : (
+            <Tooltip title="Show Area">
+              <VisibilityOffIcon
+                onClick={() => setShowArea(true)}
+                sx={{ fontSize: 14 }}
+              />
+            </Tooltip>
+          )}
 
           {openProperties ? (
             <ExpandLess onClick={() => setOpenProperties(!openProperties)} />
