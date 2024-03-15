@@ -19,6 +19,16 @@ import {
   setTableSummationData,
   setCurrentMapExtent,
 } from "../../reducers/MapView";
+import {
+  setId,
+  setViewName,
+  setTypeOfGeometry,
+  setWKTGeometry,
+  setFeatureId,
+  setMode,
+  setComponent,
+} from "../../reducers/DrawnGeometry";
+import RectangleIcon from "@mui/icons-material/Rectangle";
 import axios from "axios";
 
 export default function LayersAndLabelControl({ map, popUpRef }) {
@@ -45,6 +55,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
   );
 
   const showPiechart = useSelector((state) => state.mapView.showPiechart);
+  const mode = useSelector((state) => state.drawnPolygon.mode);
 
   const handleCloseMeasurings = () => {
     setExpandMeasurings(!expandMeasurings);
@@ -116,6 +127,62 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
         });
     }
     dispatch(setshowPiechart(!showPiechart));
+  };
+
+  const handleDrawPolygon = () => {
+    const draw = map.draw;
+    draw.deleteAll();
+    dispatch(setWKTGeometry(null));
+    dispatch(setTypeOfGeometry(null));
+    dispatch(setId(null));
+    dispatch(setViewName(null));
+    dispatch(setFeatureId(null));
+    dispatch(setComponent(null));
+
+    if (mode && mode === "Edit") {
+      const layerId = String(currentClient) + `${currentProject}` + "layer";
+      map.setFilter(layerId, null);
+    }
+    draw.changeMode("draw_polygon");
+    dispatch(setId(currentProject));
+    dispatch(
+      setViewName(String(currentClient) + `${currentProject}` + "layer")
+    );
+    dispatch(setMode("Draw"));
+    dispatch(setComponent("project"));
+    map.on("draw.create", function (event) {
+      console.log(map, "map when drawing");
+      const feature = event.features;
+      const geometry = feature[0].geometry;
+      const type_of_geometry = feature[0].geometry.type;
+      if (type_of_geometry === "Polygon") {
+        const coordinates = geometry.coordinates[0];
+        const wktCoordinates = coordinates
+          .map((coord) => `${coord[0]} ${coord[1]}`)
+          .join(", ");
+        const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
+        console.log(wktCoordinates_final, "wkt polygon ");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+      }
+    });
+    map.on("draw.update", function (event) {
+      const draw = map.draw;
+      console.log(draw, "draw update");
+      const feature = event.features;
+      const geometry = feature[0].geometry;
+      const type_of_geometry = feature[0].geometry.type;
+      if (type_of_geometry === "Polygon") {
+        const coordinates = geometry.coordinates[0];
+        const wktCoordinates = coordinates
+          .map((coord) => `${coord[0]} ${coord[1]}`)
+          .join(", ");
+        const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
+        console.log(wktCoordinates_final, "wkt polygon ");
+        dispatch(setWKTGeometry(wktCoordinates_final));
+        dispatch(setTypeOfGeometry(type_of_geometry));
+      }
+    });
   };
   return (
     <>
@@ -200,6 +267,17 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                   }}
                 />
               </Tooltip>
+              <Tooltip title="Draw Polygon">
+                <RectangleIcon
+                  onClick={handleDrawPolygon}
+                  sx={{
+                    "&:hover": { cursor: "pointer" },
+                    mt: 1,
+                    mr: 1,
+                    color: "#d61b60",
+                  }}
+                />
+              </Tooltip>
             </Box>
 
             {expandMeasurings ? (
@@ -240,4 +318,5 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
 
 LayersAndLabelControl.propTypes = {
   map: PropTypes.object,
+  popUpRef: PropTypes.object,
 };
