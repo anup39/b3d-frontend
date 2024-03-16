@@ -193,8 +193,7 @@ export default function ProjectView({ project, popUpRef }) {
         <ListItemButton
           sx={{
             minHeight: 48,
-            justifyContent: open ? "space-between" : "center",
-            // px: 2,
+            justifyContent: open ? "center" : "center",
             "&:hover": {
               backgroundColor: "#F1F7FF",
             },
@@ -203,7 +202,7 @@ export default function ProjectView({ project, popUpRef }) {
           <ListItemIcon
             sx={{
               minWidth: "24px",
-              mr: open ? 1 : "auto",
+              mr: open ? 0 : "auto",
               justifyContent: "center",
             }}
           >
@@ -219,13 +218,13 @@ export default function ProjectView({ project, popUpRef }) {
             <ListItemText
               secondary={project.name.slice(0, 10)}
               sx={{ opacity: open ? 1 : 0 }}
-              secondaryTypographyProps={{ fontSize: 12, color: "#027FFE" }}
+              secondaryTypographyProps={{ fontSize: 11, color: "#027FFE" }}
             />
             <ListItemText
               secondary={project.description.slice(0, 10)}
               sx={{ opacity: open ? 1 : 0 }}
               secondaryTypographyProps={{
-                fontSize: 12,
+                fontSize: 11,
               }}
             />
           </Box>
