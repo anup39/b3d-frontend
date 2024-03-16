@@ -150,6 +150,7 @@ export default function MapView({ level, client_id, projects }) {
     dispatch(setcurrentTif(null));
   }, [dispatch]);
 
+  // This is the logic or function for All measurements clicked
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
     if (checked) {
