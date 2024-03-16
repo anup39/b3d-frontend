@@ -74,6 +74,8 @@ export default function ProjectView({ project }) {
 
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
+    console.log(checked, "checked");
+    console.log(project_id, "project_id");
     if (checked) {
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(true));
@@ -207,7 +209,9 @@ export default function ProjectView({ project }) {
               onClick={() =>
                 dispatch(setShowArea({ id: project.id, value: false }))
               }
-              disabled={project.show_area_disabled} // Set this to the condition when you want to disable the button
+              disabled={
+                current_project_measuring_table === project.id ? false : true
+              } // Set this to the condition when you want to disable the button
             >
               <Tooltip title="Show Area">
                 <RemoveRedEyeIcon sx={{ fontSize: 14 }} />
@@ -218,7 +222,9 @@ export default function ProjectView({ project }) {
               onClick={() =>
                 dispatch(setShowArea({ id: project.id, value: true }))
               }
-              disabled={project.show_area_disabled} // Set this to the condition when you want to disable the button
+              disabled={
+                current_project_measuring_table === project.id ? true : false
+              } // Set this to the condition when you want to disable the button
             >
               <Tooltip title="Show Area">
                 <VisibilityOffIcon sx={{ fontSize: 14 }} />
