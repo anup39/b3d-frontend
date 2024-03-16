@@ -18,11 +18,12 @@ import AddLayerAndSourceToMap from "../maputils/AddLayerAndSourceToMap";
 import { Button } from "@mui/material";
 import { setCurrentMapExtent, setDisplayType } from "../reducers/MapView";
 
-export default function Map({ id }) {
+export default function Map({ id, popUpRef }) {
+  console.log(popUpRef, "popUpRef");
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
-  const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
+  // const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
 
   const currentMapExtent = useSelector(
     (state) => state.mapView.printDetails.currentMapExtent
@@ -237,7 +238,7 @@ export default function Map({ id }) {
       // const popup_control = new PopupControl();
       // map.addControl(popup_control, "bottom-left");
     }
-  }, [map, id]);
+  }, [map, id, popUpRef]);
 
   return (
     <>
@@ -274,6 +275,7 @@ export default function Map({ id }) {
 }
 
 Map.propTypes = {
+  popUpRef: PropTypes.object,
   refObj: PropTypes.object,
   id: PropTypes.string,
 };

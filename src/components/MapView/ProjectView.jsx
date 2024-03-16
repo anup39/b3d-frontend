@@ -36,7 +36,7 @@ import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-export default function ProjectView({ project }) {
+export default function ProjectView({ project, popUpRef }) {
   const dispatch = useDispatch();
   const [openProperties, setOpenProperties] = useState(false);
   const [tifs, setTifs] = useState([]);
@@ -109,17 +109,18 @@ export default function ProjectView({ project }) {
                 import.meta.env.VITE_API_DASHBOARD_URL
               }/project-polygon/?client=${currentClient}&project=${project_id}`,
               source_layer: sourceId,
-              // popUpRef :
+              popUpRef: popUpRef,
               showPopup: true,
               style: {
-                fill_color: "trsansparent",
+                fill_color: "red",
                 fill_opacity: 0.5,
                 stroke_color: "red",
+                stroke_width: 2,
               },
               zoomToLayer: false,
               extent: [],
               geomType: "geojson",
-              fillType: "fill",
+              fillType: "line",
               trace: false,
               component: "project-view",
             });

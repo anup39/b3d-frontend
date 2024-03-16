@@ -8,8 +8,9 @@ import CategoryGeomForm from "../components/Category/CategoryGeomForm";
 import Map3D from "../map/Map3D";
 // import ThreeScene from "../map/MapThree";
 import MapLoader from "../components/MapLoader/MapLoader";
+import PropTypes from "prop-types";
 
-export default function MapSection() {
+export default function MapSection({ popUpRef }) {
   const dispatch = useDispatch();
   const { level } = useParams();
   const { id } = useParams();
@@ -36,9 +37,17 @@ export default function MapSection() {
       <CategoryGeomForm />
       {showMapLoader ? <MapLoader /> : null}
 
-      {display_type && display_type === "2D" ? <Map id={id} /> : <Map3D />}
+      {display_type && display_type === "2D" ? (
+        <Map popUpRef={popUpRef} id={id} />
+      ) : (
+        <Map3D />
+      )}
 
       {/* <ThreeScene /> */}
     </div>
   );
 }
+
+MapSection.propTypes = {
+  popUpRef: PropTypes.object,
+};
