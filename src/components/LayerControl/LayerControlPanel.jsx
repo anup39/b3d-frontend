@@ -25,7 +25,7 @@ import {
   setFeatureId,
   setComponent,
 } from "../../reducers/DrawnGeometry";
-import { all_categories } from "../../utils/Constants";
+import all_categories from "./measurings_categories_sample";
 
 export default function LayersControlPanel({ map, popUpRef }) {
   const dispatch = useDispatch();

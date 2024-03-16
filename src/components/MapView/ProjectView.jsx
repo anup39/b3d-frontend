@@ -32,6 +32,7 @@ import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFrom
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { setShowArea, setShowAreaDisabled } from "../../reducers/Project";
+import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -83,6 +84,50 @@ export default function ProjectView({ project }) {
       dispatch(setcurrentProjectName(project.name));
       dispatch(addcurrentProjectMeasuringTable(project_id));
       dispatch(setShowAreaDisabled({ id: project_id, value: false }));
+
+      // Here add Property polygon to the map by calling the api
+      const map = window.map_global;
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/project-polygon/?client=${currentClient}&project=${project_id}`
+        )
+        .then((res) => {
+          console.log(res.data, "property-polygon");
+          const property_polygon_geojson = res.data;
+          if (property_polygon_geojson?.features?.length > 0) {
+            const layerId =
+              String(currentClient) + String(project_id) + "layer";
+            const sourceId =
+              String(currentClient) + String(project_id) + "source";
+            AddLayerAndSourceToMap({
+              map,
+              layerId: layerId,
+              sourceId: sourceId,
+              url: `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/project-polygon/?client=${currentClient}&project=${project_id}`,
+              source_layer: sourceId,
+              // popUpRef :
+              showPopup: true,
+              style: {
+                fill_color: "trsansparent",
+                fill_opacity: 0.5,
+                stroke_color: "red",
+              },
+              zoomToLayer: false,
+              extent: [],
+              geomType: "geojson",
+              fillType: "fill",
+              trace: false,
+              component: "project-view",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err, "property-polygon error");
+        });
     } else {
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(false));
