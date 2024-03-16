@@ -32,10 +32,11 @@ import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFrom
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { setShowArea, setShowAreaDisabled } from "../../reducers/Project";
+import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-export default function ProjectView({ project }) {
+export default function ProjectView({ project, popUpRef }) {
   const dispatch = useDispatch();
   const [openProperties, setOpenProperties] = useState(false);
   const [tifs, setTifs] = useState([]);
@@ -74,6 +75,8 @@ export default function ProjectView({ project }) {
 
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
+    console.log(checked, "checked");
+    console.log(project_id, "project_id");
     if (checked) {
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(true));
@@ -81,6 +84,51 @@ export default function ProjectView({ project }) {
       dispatch(setcurrentProjectName(project.name));
       dispatch(addcurrentProjectMeasuringTable(project_id));
       dispatch(setShowAreaDisabled({ id: project_id, value: false }));
+
+      // Here add Property polygon to the map by calling the api
+      const map = window.map_global;
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/project-polygon/?client=${currentClient}&project=${project_id}`
+        )
+        .then((res) => {
+          console.log(res.data, "property-polygon");
+          const property_polygon_geojson = res.data;
+          if (property_polygon_geojson?.features?.length > 0) {
+            const layerId =
+              String(currentClient) + String(project_id) + "layer";
+            const sourceId =
+              String(currentClient) + String(project_id) + "source";
+            AddLayerAndSourceToMap({
+              map,
+              layerId: layerId,
+              sourceId: sourceId,
+              url: `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/project-polygon/?client=${currentClient}&project=${project_id}`,
+              source_layer: sourceId,
+              popUpRef: popUpRef,
+              showPopup: true,
+              style: {
+                fill_color: "red",
+                fill_opacity: 0.5,
+                stroke_color: "red",
+                stroke_width: 2,
+              },
+              zoomToLayer: false,
+              extent: [],
+              geomType: "geojson",
+              fillType: "line",
+              trace: false,
+              component: "project-view",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err, "property-polygon error");
+        });
     } else {
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(false));
@@ -145,8 +193,7 @@ export default function ProjectView({ project }) {
         <ListItemButton
           sx={{
             minHeight: 48,
-            justifyContent: open ? "space-between" : "center",
-            // px: 2,
+            justifyContent: open ? "center" : "center",
             "&:hover": {
               backgroundColor: "#F1F7FF",
             },
@@ -155,7 +202,7 @@ export default function ProjectView({ project }) {
           <ListItemIcon
             sx={{
               minWidth: "24px",
-              mr: open ? 1 : "auto",
+              mr: open ? 0 : "auto",
               justifyContent: "center",
             }}
           >
@@ -171,13 +218,13 @@ export default function ProjectView({ project }) {
             <ListItemText
               secondary={project.name.slice(0, 10)}
               sx={{ opacity: open ? 1 : 0 }}
-              secondaryTypographyProps={{ fontSize: 12, color: "#027FFE" }}
+              secondaryTypographyProps={{ fontSize: 11, color: "#027FFE" }}
             />
             <ListItemText
               secondary={project.description.slice(0, 10)}
               sx={{ opacity: open ? 1 : 0 }}
               secondaryTypographyProps={{
-                fontSize: 12,
+                fontSize: 11,
               }}
             />
           </Box>
@@ -207,7 +254,9 @@ export default function ProjectView({ project }) {
               onClick={() =>
                 dispatch(setShowArea({ id: project.id, value: false }))
               }
-              disabled={project.show_area_disabled} // Set this to the condition when you want to disable the button
+              disabled={
+                current_project_measuring_table === project.id ? false : true
+              } // Set this to the condition when you want to disable the button
             >
               <Tooltip title="Show Area">
                 <RemoveRedEyeIcon sx={{ fontSize: 14 }} />
@@ -218,7 +267,9 @@ export default function ProjectView({ project }) {
               onClick={() =>
                 dispatch(setShowArea({ id: project.id, value: true }))
               }
-              disabled={project.show_area_disabled} // Set this to the condition when you want to disable the button
+              disabled={
+                current_project_measuring_table === project.id ? true : false
+              } // Set this to the condition when you want to disable the button
             >
               <Tooltip title="Show Area">
                 <VisibilityOffIcon sx={{ fontSize: 14 }} />

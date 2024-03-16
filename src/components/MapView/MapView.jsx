@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import UploadPropertyForm from "../Property/UploadPropertyForm";
 import UploadProgress from "../Property/UploadProgress";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   setCurrentMapExtent,
   setCategoriesState,
@@ -48,6 +48,7 @@ import {
 import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteProperties from "./AutoCompleteProperties";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
+import maplibregl from "maplibre-gl";
 
 const drawerWidth = 240;
 
@@ -101,6 +102,7 @@ export default function MapView({ level, client_id, projects }) {
   const dispatch = useDispatch();
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
+  const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
 
   const clientDetail = useSelector((state) => state.mapView.clientDetail);
   const current_measuring_categories = useSelector(
@@ -150,6 +152,7 @@ export default function MapView({ level, client_id, projects }) {
     dispatch(setcurrentTif(null));
   }, [dispatch]);
 
+  // This is the logic or function for All measurements clicked
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
     if (checked) {
@@ -342,7 +345,11 @@ export default function MapView({ level, client_id, projects }) {
 
           {projects
             ? projects.map((project) => (
-                <ProjectView key={project.id} project={project} />
+                <ProjectView
+                  key={project.id}
+                  project={project}
+                  popUpRef={popUpRef}
+                />
               ))
             : null}
         </List>
@@ -351,7 +358,7 @@ export default function MapView({ level, client_id, projects }) {
       {showMap ? (
         <>
           <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
-            <MapSection />
+            <MapSection popUpRef={popUpRef} />
           </Box>
         </>
       ) : null}
