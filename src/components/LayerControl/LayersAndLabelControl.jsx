@@ -1,5 +1,5 @@
 import LayersControlPanel from "./LayerControlPanel";
-import { Box, Tooltip, Typography } from "@mui/material";
+import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import BackupIcon from "@mui/icons-material/Backup";
@@ -267,17 +267,19 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                   }}
                 />
               </Tooltip>
-              <Tooltip title="Draw Polygon">
-                <RectangleIcon
-                  onClick={handleDrawPolygon}
-                  sx={{
-                    "&:hover": { cursor: "pointer" },
-                    mt: 1,
-                    mr: 1,
-                    color: "#d61b60",
-                  }}
-                />
-              </Tooltip>
+
+              <IconButton onClick={handleDrawPolygon}>
+                <Tooltip title="Draw Polygon">
+                  <RectangleIcon
+                    sx={{
+                      "&:hover": { cursor: "pointer" },
+                      mt: 1,
+                      mr: 1,
+                      color: "#d61b60",
+                    }}
+                  />
+                </Tooltip>
+              </IconButton>
             </Box>
 
             {expandMeasurings ? (
