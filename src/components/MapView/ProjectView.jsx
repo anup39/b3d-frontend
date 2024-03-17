@@ -180,6 +180,11 @@ export default function ProjectView({ project, popUpRef }) {
           map.removeSource(`${id}-source`);
         }
       }
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        sourceId: String(currentClient) + String(project_id) + "source",
+        layerId: String(currentClient) + String(project_id) + "layer",
+      });
     }
   };
 
