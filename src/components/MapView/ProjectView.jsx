@@ -141,6 +141,10 @@ export default function ProjectView({ project, popUpRef }) {
           layerId: String(currentClient) + String(currentProject) + "layer",
         });
       }
+      // Here when another project is clicked make the eye button back to default
+      if (currentProject) {
+        dispatch(setShowArea({ id: currentProject, value: true }));
+      }
     } else {
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(false));
@@ -268,9 +272,10 @@ export default function ProjectView({ project, popUpRef }) {
 
           {project.show_area ? (
             <IconButton
-              onClick={() =>
-                dispatch(setShowArea({ id: project.id, value: false }))
-              }
+              onClick={() => {
+                console.log("show area button clicked");
+                dispatch(setShowArea({ id: project.id, value: false }));
+              }}
               disabled={
                 current_project_measuring_table === project.id ? false : true
               } // Set this to the condition when you want to disable the button
@@ -281,11 +286,12 @@ export default function ProjectView({ project, popUpRef }) {
             </IconButton>
           ) : (
             <IconButton
-              onClick={() =>
-                dispatch(setShowArea({ id: project.id, value: true }))
-              }
+              onClick={() => {
+                console.log("hide area button clicked");
+                dispatch(setShowArea({ id: project.id, value: true }));
+              }}
               disabled={
-                current_project_measuring_table === project.id ? true : false
+                current_project_measuring_table === project.id ? false : true
               } // Set this to the condition when you want to disable the button
             >
               <Tooltip title="Show Area">
