@@ -133,6 +133,14 @@ export default function ProjectView({ project, popUpRef }) {
         .catch((err) => {
           console.log(err, "property-polygon error");
         });
+      // Here also removed the property polygon which is previosuly in the map
+      if (currentProject) {
+        RemoveSourceAndLayerFromMap({
+          map: map,
+          sourceId: String(currentClient) + String(currentProject) + "source",
+          layerId: String(currentClient) + String(currentProject) + "layer",
+        });
+      }
     } else {
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(false));
