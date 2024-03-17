@@ -57,6 +57,10 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
   const showPiechart = useSelector((state) => state.mapView.showPiechart);
   const mode = useSelector((state) => state.drawnPolygon.mode);
 
+  const currentPropertyPolygonGeojson = useSelector(
+    (state) => state.mapView.currentMapDetail.current_property_polygon_geojson
+  );
+
   const handleCloseMeasurings = () => {
     setExpandMeasurings(!expandMeasurings);
   };
@@ -268,14 +272,30 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                 />
               </Tooltip>
 
-              <IconButton disabled={false} onClick={handleDrawPolygon}>
-                <Tooltip title="Draw Polygon">
+              <IconButton
+                disabled={
+                  currentPropertyPolygonGeojson?.features?.length > 0
+                    ? true
+                    : false
+                }
+                onClick={handleDrawPolygon}
+              >
+                <Tooltip
+                  title={
+                    currentPropertyPolygonGeojson?.features?.length > 0
+                      ? "Already drawn polygon exists. Please delete it first."
+                      : "Draw Polygon"
+                  }
+                >
                   <RectangleIcon
                     sx={{
                       "&:hover": { cursor: "pointer" },
                       mt: 1,
                       mr: 1,
-                      color: "#d61b60",
+                      color:
+                        currentPropertyPolygonGeojson?.features?.length > 0
+                          ? false
+                          : "#d61b60",
                     }}
                   />
                 </Tooltip>
