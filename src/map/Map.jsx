@@ -228,7 +228,9 @@ export default function Map({ id, popUpRef }) {
       const piechart_control = new PieChartControl();
       map.addControl(piechart_control, "bottom-left");
       raster_control.updateProject(id);
-      map.addControl(new DrawControl(), "top-right");
+      const draw_control = new DrawControl();
+      map.addControl(draw_control, "top-right");
+      draw_control.updateDrawControl(popUpRef);
 
       // const popup_control = new PopupControl();
       // map.addControl(popup_control, "bottom-left");

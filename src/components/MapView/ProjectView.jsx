@@ -130,6 +130,7 @@ export default function ProjectView({ project, popUpRef }) {
               component: "project-view",
             });
           }
+
           // Now add the property polygon geojson from the current Mapview state
           dispatch(setCurrentPropertyPolygonGeojson(property_polygon_geojson));
         })
@@ -386,4 +387,5 @@ export default function ProjectView({ project, popUpRef }) {
 
 ProjectView.propTypes = {
   project: PropTypes.object,
+  popUpRef: PropTypes.object,
 };

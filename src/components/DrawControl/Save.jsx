@@ -6,7 +6,10 @@ import {
   settoastType,
 } from "../../reducers/DisplaySettings";
 import { useDispatch, useSelector } from "react-redux";
-import { setshowMapLoader } from "../../reducers/MapView";
+import {
+  setCurrentPropertyPolygonGeojson,
+  setshowMapLoader,
+} from "../../reducers/MapView";
 import axios from "axios";
 import {
   setId,
@@ -18,8 +21,9 @@ import {
   setComponent,
 } from "../../reducers/DrawnGeometry";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
+import PropTypes from "prop-types";
 
-export default function Save() {
+export default function Save({ popUpRef }) {
   const dispatch = useDispatch();
   const wkt_geometry = useSelector((state) => state.drawnPolygon.wkt_geometry);
   const type_of_geometry = useSelector(
@@ -119,6 +123,21 @@ export default function Save() {
                       trace: false,
                       component: "project-view",
                     });
+
+                    axios
+                      .get(
+                        `${
+                          import.meta.env.VITE_API_DASHBOARD_URL
+                        }/project-polygon/?client=${currentClient}&project=${currentProject}`
+                      )
+                      .then((res) => {
+                        const project_polygon_geojson = res.data;
+                        dispatch(
+                          setCurrentPropertyPolygonGeojson(
+                            project_polygon_geojson
+                          )
+                        );
+                      });
                   }
                 }, 3000);
               })
@@ -595,3 +614,7 @@ export default function Save() {
     </div>
   );
 }
+
+Save.propTypes = {
+  popUpRef: PropTypes.object,
+};
