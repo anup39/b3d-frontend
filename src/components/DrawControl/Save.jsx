@@ -17,6 +17,7 @@ import {
   setFeatureId,
   setComponent,
 } from "../../reducers/DrawnGeometry";
+import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 
 export default function Save() {
   const dispatch = useDispatch();
@@ -24,10 +25,10 @@ export default function Save() {
   const type_of_geometry = useSelector(
     (state) => state.drawnPolygon.type_of_geometry
   );
-  const client_id = useSelector(
+  const currentClient = useSelector(
     (state) => state.mapView.clientDetail.client_id
   );
-  const project_id = useSelector(
+  const currentProject = useSelector(
     (state) => state.mapView.currentMapDetail.current_project_measuring_table
   );
   const id = useSelector((state) => state.drawnPolygon.id);
@@ -54,8 +55,8 @@ export default function Save() {
         if (component === "project") {
           if (type_of_geometry === "Polygon") {
             const project_polygon_data = {
-              client: parseInt(client_id),
-              project: parseInt(project_id),
+              client: parseInt(currentClient),
+              project: parseInt(currentProject),
               geom: wkt_geometry,
               attributes: JSON.stringify({ name: view_name }),
               is_displayed: true,
@@ -70,38 +71,56 @@ export default function Save() {
                 dispatch(settoastType("success"));
                 dispatch(
                   settoastMessage(
-                    `Successfully created the Project Polygon of  ${project_id}`
+                    `Successfully created the Project Polygon of  ${currentProject}`
                   )
                 );
-                dispatch(setshowMapLoader(false));
 
                 // Need to revise this logic
-                // setTimeout(() => {
-                //   dispatch(setshowMapLoader(false));
-                //   if (window.map_global) {
-                //     const sourceId = String(client_id) + view_name + "source";
-                //     const layerId = String(client_id) + view_name + "layer";
-                //     const map = window.map_global;
-                //     if (map.getSource(sourceId) && map.getLayer(layerId)) {
-                //       const source = map.getSource(sourceId);
-                //       source.setData(
-                //         `${
-                //           import.meta.env.VITE_API_DASHBOARD_URL
-                //         }/category-polygon-geojson/?project=${project_id}&category=${id}`
-                //       );
-                //     }
-                //     const drawInstance = window.map_global.draw;
-                //     drawInstance.deleteAll();
-                //     drawInstance.changeMode("simple_select");
-                //     dispatch(setWKTGeometry(null));
-                //     dispatch(setTypeOfGeometry(null));
-                //     dispatch(setId(null));
-                //     dispatch(setViewName(null));
-                //     dispatch(setMode(null));
-                //     dispatch(setFeatureId(null));
-                //     dispatch(setComponent(null));
-                //   }
-                // }, 3000);
+                setTimeout(() => {
+                  dispatch(setshowMapLoader(false));
+                  if (window.map_global) {
+                    const map = window.map_global;
+                    const drawInstance = map.draw;
+                    drawInstance.deleteAll();
+                    drawInstance.changeMode("simple_select");
+                    dispatch(setWKTGeometry(null));
+                    dispatch(setTypeOfGeometry(null));
+                    dispatch(setId(null));
+                    dispatch(setViewName(null));
+                    dispatch(setMode(null));
+                    dispatch(setFeatureId(null));
+                    dispatch(setComponent(null));
+
+                    // Here after the project polygon is created, we need to fetch the project polygon data and set it to the map
+                    const layerId =
+                      String(currentClient) + String(currentProject) + "layer";
+                    const sourceId =
+                      String(currentClient) + String(currentProject) + "source";
+                    AddLayerAndSourceToMap({
+                      map,
+                      layerId: layerId,
+                      sourceId: sourceId,
+                      url: `${
+                        import.meta.env.VITE_API_DASHBOARD_URL
+                      }/project-polygon/?client=${currentClient}&project=${currentProject}`,
+                      source_layer: sourceId,
+                      popUpRef: popUpRef,
+                      showPopup: true,
+                      style: {
+                        fill_color: "red",
+                        fill_opacity: 0.5,
+                        stroke_color: "red",
+                        stroke_width: 2,
+                      },
+                      zoomToLayer: false,
+                      extent: [],
+                      geomType: "geojson",
+                      fillType: "line",
+                      trace: false,
+                      component: "project-view",
+                    });
+                  }
+                }, 3000);
               })
               .catch(() => {
                 dispatch(setshowToast(true));
@@ -135,8 +154,8 @@ export default function Save() {
             )
             .then((res) => {
               const data = {
-                client: parseInt(client_id),
-                project: parseInt(project_id),
+                client: parseInt(currentClient),
+                project: parseInt(currentProject),
                 standard_category: res.data.standard_category,
                 sub_category: res.data.sub_category,
                 category: selectedCategoryId,
@@ -160,15 +179,16 @@ export default function Save() {
                       dispatch(setshowMapLoader(false));
                       if (window.map_global) {
                         const sourceId =
-                          String(client_id) + view_name + "source";
-                        const layerId = String(client_id) + view_name + "layer";
+                          String(currentClient) + view_name + "source";
+                        const layerId =
+                          String(currentClient) + view_name + "layer";
                         const map = window.map_global;
                         if (map.getSource(sourceId) && map.getLayer(layerId)) {
                           const source = map.getSource(sourceId);
                           source.setData(
                             `${
                               import.meta.env.VITE_API_DASHBOARD_URL
-                            }/category-point-geojson/?project=${project_id}&category=${id}`
+                            }/category-point-geojson/?project=${currentProject}&category=${id}`
                           );
                         }
                         const drawInstance = window.map_global.draw;
@@ -225,15 +245,16 @@ export default function Save() {
                       dispatch(setshowMapLoader(false));
                       if (window.map_global) {
                         const sourceId =
-                          String(client_id) + view_name + "source";
-                        const layerId = String(client_id) + view_name + "layer";
+                          String(currentClient) + view_name + "source";
+                        const layerId =
+                          String(currentClient) + view_name + "layer";
                         const map = window.map_global;
                         if (map.getSource(sourceId) && map.getLayer(layerId)) {
                           const source = map.getSource(sourceId);
                           source.setData(
                             `${
                               import.meta.env.VITE_API_DASHBOARD_URL
-                            }/category-linestring-geojson/?project=${project_id}&category=${id}`
+                            }/category-linestring-geojson/?project=${currentProject}&category=${id}`
                           );
                         }
 
@@ -289,15 +310,16 @@ export default function Save() {
                       dispatch(setshowMapLoader(false));
                       if (window.map_global) {
                         const sourceId =
-                          String(client_id) + view_name + "source";
-                        const layerId = String(client_id) + view_name + "layer";
+                          String(currentClient) + view_name + "source";
+                        const layerId =
+                          String(currentClient) + view_name + "layer";
                         const map = window.map_global;
                         if (map.getSource(sourceId) && map.getLayer(layerId)) {
                           const source = map.getSource(sourceId);
                           source.setData(
                             `${
                               import.meta.env.VITE_API_DASHBOARD_URL
-                            }/category-polygon-geojson/?project=${project_id}&category=${id}`
+                            }/category-polygon-geojson/?project=${currentProject}&category=${id}`
                           );
                         }
                         const drawInstance = window.map_global.draw;
@@ -362,15 +384,15 @@ export default function Save() {
               setTimeout(() => {
                 dispatch(setshowMapLoader(false));
                 if (window.map_global) {
-                  const sourceId = String(client_id) + view_name + "source";
-                  const layerId = String(client_id) + view_name + "layer";
+                  const sourceId = String(currentClient) + view_name + "source";
+                  const layerId = String(currentClient) + view_name + "layer";
                   const map = window.map_global;
                   if (map.getSource(sourceId) && map.getLayer(layerId)) {
                     const source = map.getSource(sourceId);
                     source.setData(
                       `${
                         import.meta.env.VITE_API_DASHBOARD_URL
-                      }/category-point-geojson/?project=${project_id}&category=${id}`
+                      }/category-point-geojson/?project=${currentProject}&category=${id}`
                     );
                   }
                   if (mode === "Edit") {
@@ -429,15 +451,15 @@ export default function Save() {
               setTimeout(() => {
                 dispatch(setshowMapLoader(false));
                 if (window.map_global) {
-                  const sourceId = String(client_id) + view_name + "source";
-                  const layerId = String(client_id) + view_name + "layer";
+                  const sourceId = String(currentClient) + view_name + "source";
+                  const layerId = String(currentClient) + view_name + "layer";
                   const map = window.map_global;
                   if (map.getSource(sourceId) && map.getLayer(layerId)) {
                     const source = map.getSource(sourceId);
                     source.setData(
                       `${
                         import.meta.env.VITE_API_DASHBOARD_URL
-                      }/category-linestring-geojson/?project=${project_id}&category=${id}`
+                      }/category-linestring-geojson/?project=${currentProject}&category=${id}`
                     );
                   }
                   if (mode === "Edit") {
@@ -496,15 +518,15 @@ export default function Save() {
               setTimeout(() => {
                 dispatch(setshowMapLoader(false));
                 if (window.map_global) {
-                  const sourceId = String(client_id) + view_name + "source";
-                  const layerId = String(client_id) + view_name + "layer";
+                  const sourceId = String(currentClient) + view_name + "source";
+                  const layerId = String(currentClient) + view_name + "layer";
                   const map = window.map_global;
                   if (map.getSource(sourceId) && map.getLayer(layerId)) {
                     const source = map.getSource(sourceId);
                     source.setData(
                       `${
                         import.meta.env.VITE_API_DASHBOARD_URL
-                      }/category-polygon-geojson/?project=${project_id}&category=${id}`
+                      }/category-polygon-geojson/?project=${currentProject}&category=${id}`
                     );
                   }
                   if (mode === "Edit") {
