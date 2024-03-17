@@ -16,6 +16,7 @@ const initialState = {
     display_type: "2D",
     current_project_measuring_table: null,
     current_project_name: null,
+    current_property_polygon_geojson: null,
     current_tif: null,
     current_measuring_categories: null,
     selected_tif: null,
@@ -162,6 +163,9 @@ export const MapView = createSlice({
     setDisplayType: (state, action) => {
       state.currentMapDetail.display_type = action.payload;
     },
+    setCurrentPropertyPolygonGeojson: (state, action) => {
+      state.currentMapDetail.current_property_polygon_geojson = action.payload;
+    },
   },
 });
 
@@ -191,6 +195,7 @@ export const {
   setTableSummationDataColumns,
   setCurrentMapExtent,
   setDisplayType,
+  setCurrentPropertyPolygonGeojson,
 } = MapView.actions;
 
 export default MapView.reducer;

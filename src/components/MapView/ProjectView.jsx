@@ -26,6 +26,7 @@ import {
   setshowPiechart,
   setshowReport,
   setshowTifPanel,
+  setCurrentPropertyPolygonGeojson,
 } from "../../reducers/MapView";
 import Checkbox from "@mui/material/Checkbox";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
@@ -47,6 +48,9 @@ export default function ProjectView({ project, popUpRef }) {
 
   const currentClient = useSelector(
     (state) => state.mapView.clientDetail.client_id
+  );
+  const currentProject = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring_table
   );
 
   const current_tif = useSelector(
@@ -75,8 +79,7 @@ export default function ProjectView({ project, popUpRef }) {
 
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
-    console.log(checked, "checked");
-    console.log(project_id, "project_id");
+    console.log(project_id, "project_id from event");
     if (checked) {
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(true));
@@ -84,6 +87,9 @@ export default function ProjectView({ project, popUpRef }) {
       dispatch(setcurrentProjectName(project.name));
       dispatch(addcurrentProjectMeasuringTable(project_id));
       dispatch(setShowAreaDisabled({ id: project_id, value: false }));
+
+      console.log(currentClient, "client_id from state");
+      console.log(currentProject, "project_id from state");
 
       // Here add Property polygon to the map by calling the api
       const map = window.map_global;
@@ -94,7 +100,6 @@ export default function ProjectView({ project, popUpRef }) {
           }/project-polygon/?client=${currentClient}&project=${project_id}`
         )
         .then((res) => {
-          console.log(res.data, "property-polygon");
           const property_polygon_geojson = res.data;
           if (property_polygon_geojson?.features?.length > 0) {
             const layerId =
@@ -125,10 +130,25 @@ export default function ProjectView({ project, popUpRef }) {
               component: "project-view",
             });
           }
+
+          // Now add the property polygon geojson from the current Mapview state
+          dispatch(setCurrentPropertyPolygonGeojson(property_polygon_geojson));
         })
         .catch((err) => {
           console.log(err, "property-polygon error");
         });
+      // Here also removed the property polygon which is previosuly in the map
+      if (currentProject) {
+        RemoveSourceAndLayerFromMap({
+          map: map,
+          sourceId: String(currentClient) + String(currentProject) + "source",
+          layerId: String(currentClient) + String(currentProject) + "layer",
+        });
+      }
+      // Here when another project is clicked make the eye button back to default
+      if (currentProject) {
+        dispatch(setShowArea({ id: currentProject, value: true }));
+      }
     } else {
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(false));
@@ -180,6 +200,78 @@ export default function ProjectView({ project, popUpRef }) {
           map.removeSource(`${id}-source`);
         }
       }
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        sourceId: String(currentClient) + String(project_id) + "source",
+        layerId: String(currentClient) + String(project_id) + "layer",
+      });
+
+      // Here when the  project is un clicked make the eye button back to default
+      if (currentProject) {
+        dispatch(setShowArea({ id: currentProject, value: true }));
+      }
+
+      // Now remove the property polygon geojson from the current Mapview state
+      dispatch(setCurrentPropertyPolygonGeojson(null));
+    }
+  };
+
+  const handleEyeButton = () => {
+    dispatch(setShowArea({ id: project.id, value: false }));
+    // Here remove the property polygon to map the Map
+    const map = window.map_global;
+    const project_id = project.id;
+    RemoveSourceAndLayerFromMap({
+      map: map,
+      sourceId: String(currentClient) + String(project_id) + "source",
+      layerId: String(currentClient) + String(project_id) + "layer",
+    });
+  };
+
+  const handleHideButton = () => {
+    dispatch(setShowArea({ id: project.id, value: true }));
+
+    // Here add the property polygon to map the Map
+    const map = window.map_global;
+    const project_id = project.id;
+    if (project) {
+      const layerId = String(currentClient) + String(project_id) + "layer";
+      const sourceId = String(currentClient) + String(project_id) + "source";
+      const style = map.getStyle();
+      const existingLayer = style?.layers?.find(
+        (layer) => layer.id === layerId
+      );
+      const existingSource = style?.sources[sourceId];
+      if (existingLayer) {
+        map.off("click", layerId);
+        map.removeLayer(layerId);
+      }
+      if (existingSource) {
+        map.removeSource(sourceId);
+      }
+      AddLayerAndSourceToMap({
+        map,
+        layerId: layerId,
+        sourceId: sourceId,
+        url: `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/project-polygon/?client=${currentClient}&project=${project_id}`,
+        source_layer: sourceId,
+        popUpRef: popUpRef,
+        showPopup: true,
+        style: {
+          fill_color: "red",
+          fill_opacity: 0.5,
+          stroke_color: "red",
+          stroke_width: 2,
+        },
+        zoomToLayer: false,
+        extent: [],
+        geomType: "geojson",
+        fillType: "line",
+        trace: false,
+        component: "project-view",
+      });
     }
   };
 
@@ -251,9 +343,7 @@ export default function ProjectView({ project, popUpRef }) {
 
           {project.show_area ? (
             <IconButton
-              onClick={() =>
-                dispatch(setShowArea({ id: project.id, value: false }))
-              }
+              onClick={handleEyeButton}
               disabled={
                 current_project_measuring_table === project.id ? false : true
               } // Set this to the condition when you want to disable the button
@@ -264,11 +354,9 @@ export default function ProjectView({ project, popUpRef }) {
             </IconButton>
           ) : (
             <IconButton
-              onClick={() =>
-                dispatch(setShowArea({ id: project.id, value: true }))
-              }
+              onClick={handleHideButton}
               disabled={
-                current_project_measuring_table === project.id ? true : false
+                current_project_measuring_table === project.id ? false : true
               } // Set this to the condition when you want to disable the button
             >
               <Tooltip title="Show Area">
@@ -299,4 +387,5 @@ export default function ProjectView({ project, popUpRef }) {
 
 ProjectView.propTypes = {
   project: PropTypes.object,
+  popUpRef: PropTypes.object,
 };

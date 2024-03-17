@@ -9,15 +9,27 @@ export default class DrawControl {
     this._map = map;
     this._container = document.createElement("div");
     this._container.className = "maplibregl-ctrl maplibregl-ctrl-group";
+    // ReactDOM.createRoot(this._container).render(
+    //   <Provider store={store}>
+    //     <div className="maplibregl-ctrl-draw-control">
+    //       <Cancel />
+    //       <Save />
+    //     </div>
+    //   </Provider>
+    // );
+    return this._container;
+  }
+
+  updateDrawControl(popUpRef) {
+    this._popUpRef = popUpRef;
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
         <div className="maplibregl-ctrl-draw-control">
-          <Cancel />
-          <Save />
+          <Cancel popUpRef={this._popUpRef} />
+          <Save popUpRef={this._popUpRef} />
         </div>
       </Provider>
     );
-    return this._container;
   }
 
   onRemove() {

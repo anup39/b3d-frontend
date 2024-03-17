@@ -130,7 +130,6 @@ function AddLayerAndSourceToMap({
     map.addLayer(newLayer);
   }
 
-  console.log(map, "Map after adding layer and source");
   let hoveredStateId: null = null!;
 
   if (showPopup) {

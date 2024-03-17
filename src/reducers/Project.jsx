@@ -13,16 +13,12 @@ export const Project = createSlice({
     },
     setShowArea: (state, action) => {
       const { id, value } = action.payload;
-      console.log(id, value, "id, value");
       const project = state.projects.find((project) => project.id === id);
-      console.log(project, value, "project");
       project.show_area = value;
     },
     setShowAreaDisabled: (state, action) => {
       const { id, value } = action.payload;
-      console.log(id, value, "id, value");
       const project = state.projects.find((project) => project.id === id);
-      console.log(project, value, "project");
       project.show_area_disabled = value;
     },
   },

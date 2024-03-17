@@ -19,7 +19,6 @@ import { Button } from "@mui/material";
 import { setCurrentMapExtent, setDisplayType } from "../reducers/MapView";
 
 export default function Map({ id, popUpRef }) {
-  console.log(popUpRef, "popUpRef");
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
@@ -146,8 +145,6 @@ export default function Map({ id, popUpRef }) {
           });
         }
 
-        console.log(map, "map");
-
         if (current_tif) {
           const id = current_tif.id;
           axios
@@ -178,8 +175,6 @@ export default function Map({ id, popUpRef }) {
             })
             .catch(() => {});
         }
-
-        console.log(map, "map");
       });
     }
   }, [
@@ -233,7 +228,9 @@ export default function Map({ id, popUpRef }) {
       const piechart_control = new PieChartControl();
       map.addControl(piechart_control, "bottom-left");
       raster_control.updateProject(id);
-      map.addControl(new DrawControl(), "top-right");
+      const draw_control = new DrawControl();
+      map.addControl(draw_control, "top-right");
+      draw_control.updateDrawControl(popUpRef);
 
       // const popup_control = new PopupControl();
       // map.addControl(popup_control, "bottom-left");
