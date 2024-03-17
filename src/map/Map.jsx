@@ -19,7 +19,6 @@ import { Button } from "@mui/material";
 import { setCurrentMapExtent, setDisplayType } from "../reducers/MapView";
 
 export default function Map({ id, popUpRef }) {
-  console.log(popUpRef, "popUpRef");
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
@@ -146,8 +145,6 @@ export default function Map({ id, popUpRef }) {
           });
         }
 
-        console.log(map, "map");
-
         if (current_tif) {
           const id = current_tif.id;
           axios
@@ -178,8 +175,6 @@ export default function Map({ id, popUpRef }) {
             })
             .catch(() => {});
         }
-
-        console.log(map, "map");
       });
     }
   }, [

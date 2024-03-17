@@ -48,6 +48,9 @@ export default function ProjectView({ project, popUpRef }) {
   const currentClient = useSelector(
     (state) => state.mapView.clientDetail.client_id
   );
+  const currentProject = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  );
 
   const current_tif = useSelector(
     (state) => state.mapView.currentMapDetail.current_tif
@@ -75,8 +78,7 @@ export default function ProjectView({ project, popUpRef }) {
 
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
-    console.log(checked, "checked");
-    console.log(project_id, "project_id");
+    console.log(project_id, "project_id from event");
     if (checked) {
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(true));
@@ -84,6 +86,9 @@ export default function ProjectView({ project, popUpRef }) {
       dispatch(setcurrentProjectName(project.name));
       dispatch(addcurrentProjectMeasuringTable(project_id));
       dispatch(setShowAreaDisabled({ id: project_id, value: false }));
+
+      console.log(currentClient, "client_id from state");
+      console.log(currentProject, "project_id from state");
 
       // Here add Property polygon to the map by calling the api
       const map = window.map_global;
@@ -94,7 +99,6 @@ export default function ProjectView({ project, popUpRef }) {
           }/project-polygon/?client=${currentClient}&project=${project_id}`
         )
         .then((res) => {
-          console.log(res.data, "property-polygon");
           const property_polygon_geojson = res.data;
           if (property_polygon_geojson?.features?.length > 0) {
             const layerId =
