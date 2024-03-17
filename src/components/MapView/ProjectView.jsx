@@ -26,6 +26,7 @@ import {
   setshowPiechart,
   setshowReport,
   setshowTifPanel,
+  setCurrentPropertyPolygonGeojson,
 } from "../../reducers/MapView";
 import Checkbox from "@mui/material/Checkbox";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
@@ -129,6 +130,8 @@ export default function ProjectView({ project, popUpRef }) {
               component: "project-view",
             });
           }
+          // Now add the property polygon geojson from the current Mapview state
+          dispatch(setCurrentPropertyPolygonGeojson(property_polygon_geojson));
         })
         .catch((err) => {
           console.log(err, "property-polygon error");
@@ -206,6 +209,9 @@ export default function ProjectView({ project, popUpRef }) {
       if (currentProject) {
         dispatch(setShowArea({ id: currentProject, value: true }));
       }
+
+      // Now remove the property polygon geojson from the current Mapview state
+      dispatch(setCurrentPropertyPolygonGeojson(null));
     }
   };
 

@@ -268,7 +268,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                 />
               </Tooltip>
 
-              <IconButton onClick={handleDrawPolygon}>
+              <IconButton disabled={false} onClick={handleDrawPolygon}>
                 <Tooltip title="Draw Polygon">
                   <RectangleIcon
                     sx={{
