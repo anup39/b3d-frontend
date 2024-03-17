@@ -201,6 +201,70 @@ export default function ProjectView({ project, popUpRef }) {
         sourceId: String(currentClient) + String(project_id) + "source",
         layerId: String(currentClient) + String(project_id) + "layer",
       });
+
+      // Here when the  project is un clicked make the eye button back to default
+      if (currentProject) {
+        dispatch(setShowArea({ id: currentProject, value: true }));
+      }
+    }
+  };
+
+  const handleEyeButton = () => {
+    dispatch(setShowArea({ id: project.id, value: false }));
+    // Here remove the property polygon to map the Map
+    const map = window.map_global;
+    const project_id = project.id;
+    RemoveSourceAndLayerFromMap({
+      map: map,
+      sourceId: String(currentClient) + String(project_id) + "source",
+      layerId: String(currentClient) + String(project_id) + "layer",
+    });
+  };
+
+  const handleHideButton = () => {
+    dispatch(setShowArea({ id: project.id, value: true }));
+
+    // Here add the property polygon to map the Map
+    const map = window.map_global;
+    const project_id = project.id;
+    if (project) {
+      const layerId = String(currentClient) + String(project_id) + "layer";
+      const sourceId = String(currentClient) + String(project_id) + "source";
+      const style = map.getStyle();
+      const existingLayer = style?.layers?.find(
+        (layer) => layer.id === layerId
+      );
+      const existingSource = style?.sources[sourceId];
+      if (existingLayer) {
+        map.off("click", layerId);
+        map.removeLayer(layerId);
+      }
+      if (existingSource) {
+        map.removeSource(sourceId);
+      }
+      AddLayerAndSourceToMap({
+        map,
+        layerId: layerId,
+        sourceId: sourceId,
+        url: `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/project-polygon/?client=${currentClient}&project=${project_id}`,
+        source_layer: sourceId,
+        popUpRef: popUpRef,
+        showPopup: true,
+        style: {
+          fill_color: "red",
+          fill_opacity: 0.5,
+          stroke_color: "red",
+          stroke_width: 2,
+        },
+        zoomToLayer: false,
+        extent: [],
+        geomType: "geojson",
+        fillType: "line",
+        trace: false,
+        component: "project-view",
+      });
     }
   };
 
@@ -272,10 +336,7 @@ export default function ProjectView({ project, popUpRef }) {
 
           {project.show_area ? (
             <IconButton
-              onClick={() => {
-                console.log("show area button clicked");
-                dispatch(setShowArea({ id: project.id, value: false }));
-              }}
+              onClick={handleEyeButton}
               disabled={
                 current_project_measuring_table === project.id ? false : true
               } // Set this to the condition when you want to disable the button
@@ -286,10 +347,7 @@ export default function ProjectView({ project, popUpRef }) {
             </IconButton>
           ) : (
             <IconButton
-              onClick={() => {
-                console.log("hide area button clicked");
-                dispatch(setShowArea({ id: project.id, value: true }));
-              }}
+              onClick={handleHideButton}
               disabled={
                 current_project_measuring_table === project.id ? false : true
               } // Set this to the condition when you want to disable the button
