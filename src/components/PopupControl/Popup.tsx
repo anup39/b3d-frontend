@@ -148,7 +148,6 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
   };
   const handleEditCategory = () => {
     // First remove the popup content
-
     const popups = document.getElementsByClassName("maplibregl-popup");
     if (popups.length) {
       popups[0].remove();
