@@ -149,9 +149,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     }
     draw.changeMode("draw_polygon");
     dispatch(setId(currentProject));
-    dispatch(
-      setViewName(String(currentClient) + `${currentProject}` + "layer")
-    );
+    dispatch(setViewName(`${currentProject}`));
     dispatch(setMode("Draw"));
     dispatch(setComponent("project"));
     map.on("draw.create", function (event) {
