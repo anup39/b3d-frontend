@@ -141,9 +141,6 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     }
   };
   const handleEditCategory = (properties, feature_id) => {
-    console.log(properties.component, "properties");
-    console.log(feature_id, "feature_id");
-    console.log(features, "features");
     // First remove the poup content
     dispatch(setWKTGeometry(null));
     dispatch(setTypeOfGeometry(null));
