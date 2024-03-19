@@ -37,8 +37,6 @@ export default function Cancel() {
       dispatch(setFeatureId(null));
       dispatch(setComponent(null));
     }
-
-    // No additional code here as you want to remove the draw.update function
   };
 
   return (

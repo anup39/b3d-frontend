@@ -208,7 +208,7 @@ export default function Map({ id, popUpRef }) {
         map.draw = draw;
         map.on("draw.update", function updateFunctionProject(event) {
           console.log("draw update event listner from map");
-          const draw = map.draw;
+          // const draw = map.draw;
           console.log(draw, "draw update from layer control panel");
           const feature = event.features;
           const geometry = feature[0].geometry;
