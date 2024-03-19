@@ -1,6 +1,6 @@
 import LayersControlPanel from "./LayerControlPanel";
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
-import { PropTypes } from "prop-types";
+import { PropTypes, object } from "prop-types";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import BackupIcon from "@mui/icons-material/Backup";
 import TableChartIcon from "@mui/icons-material/TableChart";
@@ -29,7 +29,11 @@ import {
   setComponent,
 } from "../../reducers/DrawnGeometry";
 import RectangleIcon from "@mui/icons-material/Rectangle";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
+import { update } from "lodash";
 
 export default function LayersAndLabelControl({ map, popUpRef }) {
   const dispatch = useDispatch();
@@ -60,6 +64,8 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
   const currentPropertyPolygonGeojson = useSelector(
     (state) => state.mapView.currentMapDetail.current_property_polygon_geojson
   );
+
+  const view_name = useSelector((state) => state.drawnPolygon.view_name);
 
   const handleCloseMeasurings = () => {
     setExpandMeasurings(!expandMeasurings);
@@ -152,39 +158,48 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     dispatch(setViewName(`${currentProject}`));
     dispatch(setMode("Draw"));
     dispatch(setComponent("project"));
-    map.on("draw.create", function (event) {
-      console.log(map, "map when drawing");
-      const feature = event.features;
-      const geometry = feature[0].geometry;
-      const type_of_geometry = feature[0].geometry.type;
-      if (type_of_geometry === "Polygon") {
-        const coordinates = geometry.coordinates[0];
-        const wktCoordinates = coordinates
-          .map((coord) => `${coord[0]} ${coord[1]}`)
-          .join(", ");
-        const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-        console.log(wktCoordinates_final, "wkt polygon ");
-        dispatch(setWKTGeometry(wktCoordinates_final));
-        dispatch(setTypeOfGeometry(type_of_geometry));
-      }
+  };
+
+  const handleEditPolygon = () => {
+    console.log("edit polygon");
+    // First of all remove the existing popup in the map
+    const popups = document.getElementsByClassName("mapboxgl-popup");
+    if (popups.length > 0) {
+      popups[0].remove();
+    }
+    // now get he draw object from the map
+    const draw = map.draw;
+    draw.deleteAll();
+    // Now before adding the current features to the map we need to get it from the map
+    const features = map.queryRenderedFeatures({
+      layers: [`${currentClient}${currentProject}layer`],
     });
-    map.on("draw.update", function (event) {
-      const draw = map.draw;
-      console.log(draw, "draw update");
-      const feature = event.features;
-      const geometry = feature[0].geometry;
-      const type_of_geometry = feature[0].geometry.type;
-      if (type_of_geometry === "Polygon") {
-        const coordinates = geometry.coordinates[0];
-        const wktCoordinates = coordinates
-          .map((coord) => `${coord[0]} ${coord[1]}`)
-          .join(", ");
-        const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-        console.log(wktCoordinates_final, "wkt polygon ");
-        dispatch(setWKTGeometry(wktCoordinates_final));
-        dispatch(setTypeOfGeometry(type_of_geometry));
-      }
-    });
+    console.log(features, "features");
+    // Now add the features to the to draw mode
+    draw.add(features[0]);
+    // also once the is added to map remove the layer from the map
+    if (view_name) {
+      const layerId = String(currentClient) + `${view_name}` + "layer";
+      map.setFilter(layerId, null);
+    }
+    const layerId = String(currentClient) + `${currentProject}` + "layer";
+    map.setFilter(layerId, null);
+    const layer = map.getLayer(layerId);
+    const existingFilter = layer.filter || ["all"];
+    const feature_id = features[0].id;
+    const filterCondition = ["!=", ["id"], feature_id];
+    const updatedFilter = ["all", existingFilter, filterCondition];
+    map.setFilter(layerId, updatedFilter);
+
+    dispatch(setMode("Edit"));
+    dispatch(setComponent("project"));
+    dispatch(setId(currentProject));
+    dispatch(setViewName(`${currentProject}`));
+    dispatch(setFeatureId(feature_id));
+  };
+
+  const handleDeletePolygon = () => {
+    console.log("delete polygon");
   };
   return (
     <>
@@ -219,9 +234,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                   {current_project_name ? current_project_name : null}
                 </span>
               </Typography>
-              <Box></Box>
 
-              {/* <Tooltip title="Report"> */}
               <SummarizeIcon
                 onClick={handleShowReport}
                 sx={{
@@ -235,7 +248,6 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
               >
                 Report
               </span>
-              {/* </Tooltip> */}
               <Tooltip title="Import">
                 <BackupIcon
                   onClick={handleImportShapefile}
@@ -298,6 +310,56 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                   />
                 </Tooltip>
               </IconButton>
+
+              <Box>
+                <IconButton
+                  disabled={
+                    currentPropertyPolygonGeojson?.features?.length > 0
+                      ? false
+                      : true
+                  }
+                  onClick={handleEditPolygon}
+                >
+                  <Tooltip title="Edit Poygon">
+                    <EditIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        mt: 1,
+                        mr: 1,
+
+                        color:
+                          currentPropertyPolygonGeojson?.features?.length > 0
+                            ? "#d61b60"
+                            : false,
+                      }}
+                    />
+                  </Tooltip>
+                </IconButton>
+              </Box>
+              <Box>
+                <IconButton
+                  disabled={
+                    currentPropertyPolygonGeojson?.features?.length > 0
+                      ? false
+                      : true
+                  }
+                  onClick={handleDeletePolygon}
+                >
+                  <Tooltip title="Delete Poygon">
+                    <DeleteIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        mt: 1,
+                        mr: 1,
+                        color:
+                          currentPropertyPolygonGeojson?.features?.length > 0
+                            ? "#d61b60"
+                            : false,
+                      }}
+                    />
+                  </Tooltip>
+                </IconButton>
+              </Box>
             </Box>
 
             {expandMeasurings ? (

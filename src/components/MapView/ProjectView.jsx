@@ -115,7 +115,7 @@ export default function ProjectView({ project, popUpRef }) {
               }/project-polygon/?client=${currentClient}&project=${project_id}`,
               source_layer: sourceId,
               popUpRef: popUpRef,
-              showPopup: true,
+              showPopup: false,
               style: {
                 fill_color: "red",
                 fill_opacity: 0.5,
