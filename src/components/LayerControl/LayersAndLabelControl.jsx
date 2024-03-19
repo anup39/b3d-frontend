@@ -174,23 +174,23 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
         dispatch(setTypeOfGeometry(type_of_geometry));
       }
     });
-    map.on("draw.update", function updateFunctionProject(event) {
-      const draw = map.draw;
-      console.log(draw, "draw update from layerand label control");
-      const feature = event.features;
-      const geometry = feature[0].geometry;
-      const type_of_geometry = feature[0].geometry.type;
-      if (type_of_geometry === "Polygon") {
-        const coordinates = geometry.coordinates[0];
-        const wktCoordinates = coordinates
-          .map((coord) => `${coord[0]} ${coord[1]}`)
-          .join(", ");
-        const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-        console.log(wktCoordinates_final, "wkt polygon ");
-        dispatch(setWKTGeometry(wktCoordinates_final));
-        dispatch(setTypeOfGeometry(type_of_geometry));
-      }
-    });
+    // map.on("draw.update", function updateFunctionProject(event) {
+    //   const draw = map.draw;
+    //   console.log(draw, "draw update from layerand label control");
+    //   const feature = event.features;
+    //   const geometry = feature[0].geometry;
+    //   const type_of_geometry = feature[0].geometry.type;
+    //   if (type_of_geometry === "Polygon") {
+    //     const coordinates = geometry.coordinates[0];
+    //     const wktCoordinates = coordinates
+    //       .map((coord) => `${coord[0]} ${coord[1]}`)
+    //       .join(", ");
+    //     const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
+    //     console.log(wktCoordinates_final, "wkt polygon ");
+    //     dispatch(setWKTGeometry(wktCoordinates_final));
+    //     dispatch(setTypeOfGeometry(type_of_geometry));
+    //   }
+    // });
   };
 
   const handleEditPolygon = () => {
@@ -224,28 +224,28 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     const updatedFilter = ["all", existingFilter, filterCondition];
     map.setFilter(layerId, updatedFilter);
 
-    // Now update the drawPolygon state with the current geometry
-    map.on("draw.update", function updateFunctionProject(event) {
-      console.log("draw update from layers and label contorl");
-      const feature = event.features;
-      const geometry = feature[0].geometry;
-      const type_of_geometry = feature[0].geometry.type;
-      if (type_of_geometry === "Polygon") {
-        const coordinates = geometry.coordinates[0];
-        const wktCoordinates = coordinates
-          .map((coord) => `${coord[0]} ${coord[1]}`)
-          .join(", ");
-        const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-        console.log(wktCoordinates_final, "wkt polygon ");
-        dispatch(setWKTGeometry(wktCoordinates_final));
-        dispatch(setTypeOfGeometry(type_of_geometry));
-        dispatch(setMode("Edit"));
-        dispatch(setComponent("project"));
-        dispatch(setId(currentProject));
-        dispatch(setViewName(`${currentProject}`));
-        dispatch(setFeatureId(feature_id));
-      }
-    });
+    // // Now update the drawPolygon state with the current geometry
+    // map.on("draw.update", function updateFunctionProject(event) {
+    //   console.log("draw update from layers and label contorl");
+    //   const feature = event.features;
+    //   const geometry = feature[0].geometry;
+    //   const type_of_geometry = feature[0].geometry.type;
+    //   if (type_of_geometry === "Polygon") {
+    //     const coordinates = geometry.coordinates[0];
+    //     const wktCoordinates = coordinates
+    //       .map((coord) => `${coord[0]} ${coord[1]}`)
+    //       .join(", ");
+    //     const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
+    //     console.log(wktCoordinates_final, "wkt polygon ");
+    //     dispatch(setWKTGeometry(wktCoordinates_final));
+    //     dispatch(setTypeOfGeometry(type_of_geometry));
+    //     dispatch(setMode("Edit"));
+    //     dispatch(setComponent("project"));
+    //     dispatch(setId(currentProject));
+    //     dispatch(setViewName(`${currentProject}`));
+    //     dispatch(setFeatureId(feature_id));
+    //   }
+    // });
   };
 
   const handleDeletePolygon = () => {
