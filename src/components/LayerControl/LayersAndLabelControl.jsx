@@ -158,22 +158,6 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     dispatch(setViewName(`${currentProject}`));
     dispatch(setMode("Draw"));
     dispatch(setComponent("project"));
-    map.on("draw.create", function (event) {
-      console.log(map, "map when drawing");
-      const feature = event.features;
-      const geometry = feature[0].geometry;
-      const type_of_geometry = feature[0].geometry.type;
-      if (type_of_geometry === "Polygon") {
-        const coordinates = geometry.coordinates[0];
-        const wktCoordinates = coordinates
-          .map((coord) => `${coord[0]} ${coord[1]}`)
-          .join(", ");
-        const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
-        console.log(wktCoordinates_final, "wkt polygon ");
-        dispatch(setWKTGeometry(wktCoordinates_final));
-        dispatch(setTypeOfGeometry(type_of_geometry));
-      }
-    });
   };
 
   const handleEditPolygon = () => {

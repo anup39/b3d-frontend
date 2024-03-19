@@ -206,6 +206,39 @@ export default function Map({ id, popUpRef }) {
         // 1 Draw and its layer
         map.addControl(draw);
         map.draw = draw;
+        map.on("draw.create", function (event) {
+          console.log(map, "map when drawing");
+          const feature = event.features;
+          const geometry = feature[0].geometry;
+          const type_of_geometry = feature[0].geometry.type;
+          if (type_of_geometry === "Point") {
+            const coordinates = geometry.coordinates;
+            const wktCoordinates_final = `POINT (${coordinates[0]} ${coordinates[1]})`;
+            console.log(wktCoordinates_final, "wkt point");
+            dispatch(setWKTGeometry(wktCoordinates_final));
+            dispatch(setTypeOfGeometry(type_of_geometry));
+          }
+          if (type_of_geometry === "Polygon") {
+            const coordinates = geometry.coordinates[0];
+            const wktCoordinates = coordinates
+              .map((coord) => `${coord[0]} ${coord[1]}`)
+              .join(", ");
+            const wktCoordinates_final = `POLYGON ((${wktCoordinates}))`;
+            console.log(wktCoordinates_final, "wkt polygon ");
+            dispatch(setWKTGeometry(wktCoordinates_final));
+            dispatch(setTypeOfGeometry(type_of_geometry));
+          }
+          if (type_of_geometry === "LineString") {
+            const coordinates = geometry.coordinates;
+            const wktCoordinates = coordinates
+              .map((coord) => `${coord[0]} ${coord[1]}`)
+              .join(", ");
+            const wktCoordinates_final = `LINESTRING (${wktCoordinates})`;
+            console.log(wktCoordinates_final, "wkt line string");
+            dispatch(setWKTGeometry(wktCoordinates_final));
+            dispatch(setTypeOfGeometry(type_of_geometry));
+          }
+        });
         map.on("draw.update", function updateFunctionProject(event) {
           console.log("draw update event listner from map");
           // const draw = map.draw;
