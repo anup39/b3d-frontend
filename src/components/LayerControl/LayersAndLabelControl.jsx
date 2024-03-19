@@ -200,11 +200,9 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     if (popups.length > 0) {
       popups[0].remove();
     }
-
     // now get he draw object from the map
     const draw = map.draw;
     draw.deleteAll();
-
     // Now before adding the current features to the map we need to get it from the map
     const features = map.queryRenderedFeatures({
       layers: [`${currentClient}${currentProject}layer`],
@@ -213,8 +211,6 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     // Now add the features to the to draw mode
     draw.add(features[0]);
     // also once the is added to map remove the layer from the map
-
-    // RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
     if (view_name) {
       const layerId = String(currentClient) + `${view_name}` + "layer";
       map.setFilter(layerId, null);
