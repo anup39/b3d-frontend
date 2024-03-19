@@ -519,71 +519,144 @@ export default function Save({ popUpRef }) {
             });
         }
         if (type_of_geometry === "Polygon") {
-          axios
-            .put(
-              `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/polygon-data/${feature_id}/`,
-              data
-            )
-            .then(() => {
-              dispatch(setshowToast(true));
-              dispatch(settoastType("success"));
-              dispatch(
-                settoastMessage(
-                  `Successfully updated the Category ${view_name}`
-                )
-              );
-              setTimeout(() => {
-                dispatch(setshowMapLoader(false));
-                if (window.map_global) {
-                  const sourceId = String(currentClient) + view_name + "source";
-                  const layerId = String(currentClient) + view_name + "layer";
-                  const map = window.map_global;
-                  if (map.getSource(sourceId) && map.getLayer(layerId)) {
-                    const source = map.getSource(sourceId);
-                    source.setData(
-                      `${
-                        import.meta.env.VITE_API_DASHBOARD_URL
-                      }/category-polygon-geojson/?project=${currentProject}&category=${id}`
-                    );
+          console.log(component, "component");
+          if (component === "project") {
+            axios
+              .put(
+                `${
+                  import.meta.env.VITE_API_DASHBOARD_URL
+                }/project-polygon/${feature_id}/`,
+                data
+              )
+              .then(() => {
+                dispatch(setshowToast(true));
+                dispatch(settoastType("success"));
+                dispatch(
+                  settoastMessage(
+                    `Successfully updated the  Project Polygon of  ${view_name}`
+                  )
+                );
+                setTimeout(() => {
+                  dispatch(setshowMapLoader(false));
+                  if (window.map_global) {
+                    const sourceId =
+                      String(currentClient) + view_name + "source";
+                    const layerId = String(currentClient) + view_name + "layer";
+                    const map = window.map_global;
+                    if (map.getSource(sourceId) && map.getLayer(layerId)) {
+                      const source = map.getSource(sourceId);
+                      source.setData(
+                        `${
+                          import.meta.env.VITE_API_DASHBOARD_URL
+                        }/project-polygon/?client=${currentClient}&project=${currentProject}`
+                      );
+                    }
+                    if (mode === "Edit") {
+                      map.setFilter(layerId, null);
+                    }
+                    const drawInstance = window.map_global.draw;
+                    drawInstance.deleteAll();
+                    drawInstance.changeMode("simple_select");
+                    dispatch(setWKTGeometry(null));
+                    dispatch(setTypeOfGeometry(null));
+                    dispatch(setId(null));
+                    dispatch(setViewName(null));
+                    dispatch(setMode(null));
+                    dispatch(setFeatureId(null));
+                    dispatch(setComponent(null));
                   }
-                  if (mode === "Edit") {
-                    map.setFilter(layerId, null);
+                }, 3000);
+              })
+              .catch(() => {
+                dispatch(setshowToast(true));
+                dispatch(settoastType("error"));
+                dispatch(
+                  settoastMessage("Failed to update the Project Polygon")
+                );
+                setTimeout(() => {
+                  dispatch(setshowMapLoader(false));
+                  if (window.map_global) {
+                    const drawInstance = window.map_global.draw;
+                    drawInstance.deleteAll();
+                    drawInstance.changeMode("simple_select");
+                    dispatch(setWKTGeometry(null));
+                    dispatch(setTypeOfGeometry(null));
+                    dispatch(setId(null));
+                    dispatch(setViewName(null));
+                    dispatch(setMode(null));
+                    dispatch(setFeatureId(null));
+                    dispatch(setComponent(null));
                   }
-                  const drawInstance = window.map_global.draw;
-                  drawInstance.deleteAll();
-                  drawInstance.changeMode("simple_select");
-                  dispatch(setWKTGeometry(null));
-                  dispatch(setTypeOfGeometry(null));
-                  dispatch(setId(null));
-                  dispatch(setViewName(null));
-                  dispatch(setMode(null));
-                  dispatch(setFeatureId(null));
-                  dispatch(setComponent(null));
-                }
-              }, 3000);
-            })
-            .catch(() => {
-              dispatch(setshowToast(true));
-              dispatch(settoastType("error"));
-              dispatch(settoastMessage("Failed to update the Category"));
-              setTimeout(() => {
-                dispatch(setshowMapLoader(false));
-                if (window.map_global) {
-                  const drawInstance = window.map_global.draw;
-                  drawInstance.deleteAll();
-                  drawInstance.changeMode("simple_select");
-                  dispatch(setWKTGeometry(null));
-                  dispatch(setTypeOfGeometry(null));
-                  dispatch(setId(null));
-                  dispatch(setViewName(null));
-                  dispatch(setMode(null));
-                  dispatch(setFeatureId(null));
-                  dispatch(setComponent(null));
-                }
-              }, 3000);
-            });
+                }, 3000);
+              });
+          } else {
+            axios
+              .put(
+                `${
+                  import.meta.env.VITE_API_DASHBOARD_URL
+                }/polygon-data/${feature_id}/`,
+                data
+              )
+              .then(() => {
+                dispatch(setshowToast(true));
+                dispatch(settoastType("success"));
+                dispatch(
+                  settoastMessage(
+                    `Successfully updated the Category ${view_name}`
+                  )
+                );
+                setTimeout(() => {
+                  dispatch(setshowMapLoader(false));
+                  if (window.map_global) {
+                    const sourceId =
+                      String(currentClient) + view_name + "source";
+                    const layerId = String(currentClient) + view_name + "layer";
+                    const map = window.map_global;
+                    if (map.getSource(sourceId) && map.getLayer(layerId)) {
+                      const source = map.getSource(sourceId);
+                      source.setData(
+                        `${
+                          import.meta.env.VITE_API_DASHBOARD_URL
+                        }/category-polygon-geojson/?project=${currentProject}&category=${id}`
+                      );
+                    }
+                    if (mode === "Edit") {
+                      map.setFilter(layerId, null);
+                    }
+                    const drawInstance = window.map_global.draw;
+                    drawInstance.deleteAll();
+                    drawInstance.changeMode("simple_select");
+                    dispatch(setWKTGeometry(null));
+                    dispatch(setTypeOfGeometry(null));
+                    dispatch(setId(null));
+                    dispatch(setViewName(null));
+                    dispatch(setMode(null));
+                    dispatch(setFeatureId(null));
+                    dispatch(setComponent(null));
+                  }
+                }, 3000);
+              })
+              .catch(() => {
+                dispatch(setshowToast(true));
+                dispatch(settoastType("error"));
+                dispatch(settoastMessage("Failed to update the Category"));
+                setTimeout(() => {
+                  dispatch(setshowMapLoader(false));
+                  if (window.map_global) {
+                    const drawInstance = window.map_global.draw;
+                    drawInstance.deleteAll();
+                    drawInstance.changeMode("simple_select");
+                    dispatch(setWKTGeometry(null));
+                    dispatch(setTypeOfGeometry(null));
+                    dispatch(setId(null));
+                    dispatch(setViewName(null));
+                    dispatch(setMode(null));
+                    dispatch(setFeatureId(null));
+                    dispatch(setComponent(null));
+                  }
+                }, 3000);
+              });
+          }
         }
       }
     } else {

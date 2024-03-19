@@ -21,12 +21,14 @@ export default function Cancel() {
   const handleCancelDraw = () => {
     if (window.map_global) {
       const draw = window.map_global.draw;
+
       if (mode === "Edit") {
         const layerId = String(client_id) + view_name + "layer";
         window.map_global.setFilter(layerId, null);
       }
       draw.deleteAll();
       draw.changeMode("simple_select");
+      console.log(window.map_global, "map global");
       dispatch(setWKTGeometry(null));
       dispatch(setTypeOfGeometry(null));
       dispatch(setId(null));
@@ -35,7 +37,10 @@ export default function Cancel() {
       dispatch(setFeatureId(null));
       dispatch(setComponent(null));
     }
+
+    // No additional code here as you want to remove the draw.update function
   };
+
   return (
     <div>
       <Tooltip title="Cancel">

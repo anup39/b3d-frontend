@@ -159,6 +159,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     draw.add(features[0]);
 
     // Here setting the state of the draw object in drawPolygon
+    console.log(properties, "properties");
     dispatch(setWKTGeometry(null));
     dispatch(setTypeOfGeometry(null));
     dispatch(setMode("Edit"));
@@ -184,9 +185,9 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     const updatedFilter = ["all", existingFilter, filterCondition];
     map.setFilter(layerId, updatedFilter);
     // Loop through the elements and hide them
-    map.on("draw.update", function (event) {
+    map.on("draw.update", function updateFunction(event) {
       const draw = map.draw;
-      console.log(draw, "draw update");
+      console.log(draw, "draw update from popup");
       const feature = event.features;
       const geometry = feature[0].geometry;
       const type_of_geometry = feature[0].geometry.type;
@@ -196,6 +197,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
         console.log(wktCoordinates_final, "wkt point");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setComponent(properties.component));
       }
       if (type_of_geometry === "Polygon") {
         const coordinates = geometry.coordinates[0];
@@ -206,6 +208,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
         console.log(wktCoordinates_final, "wkt polygon ");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setComponent(properties.component));
       }
       if (type_of_geometry === "LineString") {
         const coordinates = geometry.coordinates;
@@ -216,7 +219,9 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
         console.log(wktCoordinates_final, "wkt line string");
         dispatch(setWKTGeometry(wktCoordinates_final));
         dispatch(setTypeOfGeometry(type_of_geometry));
+        dispatch(setComponent(properties.component));
       }
+      // Remove the event listener
     });
   };
   return (

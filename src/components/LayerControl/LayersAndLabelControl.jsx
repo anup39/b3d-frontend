@@ -174,9 +174,9 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
         dispatch(setTypeOfGeometry(type_of_geometry));
       }
     });
-    map.on("draw.update", function (event) {
+    map.on("draw.update", function updateFunctionProject(event) {
       const draw = map.draw;
-      console.log(draw, "draw update");
+      console.log(draw, "draw update from layerand label control");
       const feature = event.features;
       const geometry = feature[0].geometry;
       const type_of_geometry = feature[0].geometry.type;
@@ -225,7 +225,8 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     map.setFilter(layerId, updatedFilter);
 
     // Now update the drawPolygon state with the current geometry
-    map.on("draw.update", function (event) {
+    map.on("draw.update", function updateFunctionProject(event) {
+      console.log("draw update from layers and label contorl");
       const feature = event.features;
       const geometry = feature[0].geometry;
       const type_of_geometry = feature[0].geometry.type;
