@@ -29,6 +29,8 @@ import {
   setComponent,
 } from "../../reducers/DrawnGeometry";
 import RectangleIcon from "@mui/icons-material/Rectangle";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
 export default function LayersAndLabelControl({ map, popUpRef }) {
@@ -219,9 +221,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                   {current_project_name ? current_project_name : null}
                 </span>
               </Typography>
-              <Box></Box>
 
-              {/* <Tooltip title="Report"> */}
               <SummarizeIcon
                 onClick={handleShowReport}
                 sx={{
@@ -235,7 +235,6 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
               >
                 Report
               </span>
-              {/* </Tooltip> */}
               <Tooltip title="Import">
                 <BackupIcon
                   onClick={handleImportShapefile}
@@ -298,6 +297,54 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
                   />
                 </Tooltip>
               </IconButton>
+
+              <Box>
+                <IconButton
+                  disabled={
+                    currentPropertyPolygonGeojson?.features?.length > 0
+                      ? false
+                      : true
+                  }
+                >
+                  <Tooltip title="Edit Poygon">
+                    <EditIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        mt: 1,
+                        mr: 1,
+
+                        color:
+                          currentPropertyPolygonGeojson?.features?.length > 0
+                            ? "#d61b60"
+                            : false,
+                      }}
+                    />
+                  </Tooltip>
+                </IconButton>
+              </Box>
+              <Box>
+                <IconButton
+                  disabled={
+                    currentPropertyPolygonGeojson?.features?.length > 0
+                      ? false
+                      : true
+                  }
+                >
+                  <Tooltip title="Delete Poygon">
+                    <DeleteIcon
+                      sx={{
+                        "&:hover": { cursor: "pointer" },
+                        mt: 1,
+                        mr: 1,
+                        color:
+                          currentPropertyPolygonGeojson?.features?.length > 0
+                            ? "#d61b60"
+                            : false,
+                      }}
+                    />
+                  </Tooltip>
+                </IconButton>
+              </Box>
             </Box>
 
             {expandMeasurings ? (
