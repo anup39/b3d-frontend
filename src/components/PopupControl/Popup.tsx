@@ -13,6 +13,12 @@ import {
 } from "../../reducers/DrawnGeometry";
 import { RootState } from "../../store";
 
+declare global {
+  interface Window {
+    map_global: any;
+  }
+}
+
 interface PopupProps {
   properties: {
     [key: string]: string | number;
@@ -140,24 +146,32 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
         });
     }
   };
-  const handleEditCategory = (properties, feature_id) => {
-    // First remove the poup content
-    dispatch(setWKTGeometry(null));
-    dispatch(setTypeOfGeometry(null));
-    dispatch(setId(properties.category_id));
-    dispatch(setViewName(properties.view_name));
-    dispatch(setMode("Edit"));
-    dispatch(setFeatureId(feature_id));
-    //Note: Here i have to find if the clicked featue is of category or project
-    dispatch(setComponent("category"));
+  const handleEditCategory = () => {
+    // First remove the popup content
     const popups = document.getElementsByClassName("maplibregl-popup");
     if (popups.length) {
       popups[0].remove();
     }
+    // Here now get the map object and then get the draw object and delete all the layers in draw and add the current features to the draw object
     const map = window.map_global;
     const draw = map.draw;
     draw.deleteAll();
     draw.add(features[0]);
+
+    // Here setting the state of the draw object in drawPolygon
+    dispatch(setWKTGeometry(null));
+    dispatch(setTypeOfGeometry(null));
+    dispatch(setMode("Edit"));
+    dispatch(setFeatureId(feature_id));
+    dispatch(setComponent(properties.component));
+    dispatch(setViewName(properties.view_name));
+    if (properties.component === "category") {
+      dispatch(setId(properties.category_id));
+    } else {
+      dispatch(setId(properties.project_id));
+    }
+
+    //Note: Here i have to find if the clicked featue is of category or project
     if (view_name) {
       const layerId = String(client_id) + view_name + "layer";
       map.setFilter(layerId, null);
@@ -234,7 +248,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                   backgroundColor: "black",
                 },
               }}
-              onClick={() => handleEditCategory(properties, feature_id)}
+              onClick={() => handleEditCategory()}
             >
               Edit
             </Button>
