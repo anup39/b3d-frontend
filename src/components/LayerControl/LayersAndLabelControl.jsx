@@ -33,6 +33,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
+import { update } from "lodash";
 
 export default function LayersAndLabelControl({ map, popUpRef }) {
   const dispatch = useDispatch();
@@ -63,6 +64,8 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
   const currentPropertyPolygonGeojson = useSelector(
     (state) => state.mapView.currentMapDetail.current_property_polygon_geojson
   );
+
+  const view_name = useSelector((state) => state.drawnPolygon.view_name);
 
   const handleCloseMeasurings = () => {
     setExpandMeasurings(!expandMeasurings);
@@ -210,9 +213,20 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
     // Now add the features to the to draw mode
     draw.add(features[0]);
     // also once the is added to map remove the layer from the map
+
+    // RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
+    if (view_name) {
+      const layerId = String(currentClient) + `${view_name}` + "layer";
+      map.setFilter(layerId, null);
+    }
     const layerId = String(currentClient) + `${currentProject}` + "layer";
-    const sourceId = String(currentClient) + `${currentProject}` + "source";
-    RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
+    map.setFilter(layerId, null);
+    const layer = map.getLayer(layerId);
+    const existingFilter = layer.filter || ["all"];
+    const feature_id = features[0].id;
+    const filterCondition = ["!=", ["id"], feature_id];
+    const updatedFilter = ["all", existingFilter, filterCondition];
+    map.setFilter(layerId, updatedFilter);
 
     // Now update the drawPolygon state with the current geometry
     map.on("draw.update", function (event) {
@@ -232,7 +246,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
         dispatch(setComponent("project"));
         dispatch(setId(currentProject));
         dispatch(setViewName(`${currentProject}`));
-        dispatch(setFeatureId(feature[0].id));
+        dispatch(setFeatureId(feature_id));
       }
     });
   };
