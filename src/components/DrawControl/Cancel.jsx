@@ -10,6 +10,7 @@ import {
   setComponent,
 } from "../../reducers/DrawnGeometry";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 export default function Cancel() {
   const dispatch = useDispatch();
@@ -38,6 +39,23 @@ export default function Cancel() {
       dispatch(setComponent(null));
     }
   };
+
+  // Using key bindings for map related activities
+  useEffect(() => {
+    const map = window.map_global;
+    if (map) {
+      const keyDownHandler = (e) => {
+        console.log(e.key);
+        if (e.key === "Escape") {
+          handleCancelDraw();
+        }
+      };
+      window.addEventListener("keydown", keyDownHandler);
+      return () => {
+        window.removeEventListener("keydown", keyDownHandler);
+      };
+    }
+  }, []);
 
   return (
     <div>
