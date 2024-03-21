@@ -57,6 +57,9 @@ export default function Cancel() {
     }
   }, []);
 
+  // here fix the current time and index
+  // and dispatch the action to update the current time and index
+
   return (
     <div>
       <Tooltip title="Cancel">
