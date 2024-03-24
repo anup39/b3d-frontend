@@ -10,7 +10,7 @@ import {
   setComponent,
 } from "../../reducers/DrawnGeometry";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 
 export default function Cancel() {
   const dispatch = useDispatch();
@@ -19,13 +19,15 @@ export default function Cancel() {
   );
   const view_name = useSelector((state) => state.drawnPolygon.view_name);
   const mode = useSelector((state) => state.drawnPolygon.mode);
-  const handleCancelDraw = () => {
+
+  const handleCancelDraw = useCallback(() => {
     if (window.map_global) {
       const draw = window.map_global.draw;
 
       if (mode === "Edit") {
         const layerId = String(client_id) + view_name + "layer";
         window.map_global.setFilter(layerId, null);
+        console.log(window.map_global, "map global");
       }
       draw.deleteAll();
       draw.changeMode("simple_select");
@@ -38,9 +40,29 @@ export default function Cancel() {
       dispatch(setFeatureId(null));
       dispatch(setComponent(null));
     }
-  };
+  }, [client_id, dispatch, mode, view_name]); // Add any dependencies of handleCancelDraw here
 
-  // Using key bindings for map related activities
+  // const handleCancelDraw = () => {
+  //   if (window.map_global) {
+  //     const draw = window.map_global.draw;
+
+  //     if (mode === "Edit") {
+  //       const layerId = String(client_id) + view_name + "layer";
+  //       window.map_global.setFilter(layerId, null);
+  //       console.log(window.map_global, "map global");
+  //     }
+  //     draw.deleteAll();
+  //     draw.changeMode("simple_select");
+  //     console.log(window.map_global, "map global");
+  //     dispatch(setWKTGeometry(null));
+  //     dispatch(setTypeOfGeometry(null));
+  //     dispatch(setId(null));
+  //     dispatch(setViewName(null));
+  //     dispatch(setMode(null));
+  //     dispatch(setFeatureId(null));
+  //     dispatch(setComponent(null));
+  //   }
+  // };
   useEffect(() => {
     const map = window.map_global;
     if (map) {
@@ -55,7 +77,7 @@ export default function Cancel() {
         window.removeEventListener("keydown", keyDownHandler);
       };
     }
-  }, []);
+  }, [handleCancelDraw]);
 
   return (
     <div>
