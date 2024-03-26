@@ -22,6 +22,7 @@ import {
 } from "../../reducers/DrawnGeometry";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import PropTypes from "prop-types";
+import { useEffect, useCallback } from "react";
 
 export default function Save({ popUpRef }) {
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ export default function Save({ popUpRef }) {
   const mode = useSelector((state) => state.drawnPolygon.mode);
   const component = useSelector((state) => state.drawnPolygon.component);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     if (
       wkt_geometry &&
       type_of_geometry &&
@@ -668,7 +669,36 @@ export default function Save({ popUpRef }) {
         )
       );
     }
-  };
+  }, [
+    component,
+    currentClient,
+    currentProject,
+    dispatch,
+    feature_id,
+    id,
+    mode,
+    popUpRef,
+    type_of_geometry,
+    view_name,
+    wkt_geometry,
+  ]);
+
+  useEffect(() => {
+    const map = window.map_global;
+    if (map) {
+      const keyDownHandler = (e) => {
+        console.log(e.key);
+        if (e.key === "Enter") {
+          handleSave();
+        }
+      };
+      window.addEventListener("keydown", keyDownHandler);
+      return () => {
+        window.removeEventListener("keydown", keyDownHandler);
+      };
+    }
+  }, [handleSave]);
+
   return (
     <div>
       <Tooltip title="Save">
