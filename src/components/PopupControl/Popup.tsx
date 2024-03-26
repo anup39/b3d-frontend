@@ -12,6 +12,9 @@ import {
   setComponent,
 } from "../../reducers/DrawnGeometry";
 import { RootState } from "../../store";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import { useState, useEffect } from "react";
 
 declare global {
   interface Window {
@@ -33,6 +36,7 @@ interface PopupProps {
 }
 
 const Popup = ({ properties, feature_id, features }: PopupProps) => {
+  const [options, setOptions] = useState([]);
   const dispatch = useDispatch();
   // const state = useSelector((state) => state.drawnPolygon);
   const client_id = useSelector(
@@ -186,11 +190,46 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     map.setFilter(layerId, updatedFilter);
     // Loop through the elements and hide them
   };
+
+  useEffect(() => {
+    if (client_id) {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/category/?client=${parseInt(client_id)}`
+        )
+        .then((response) => {
+          setOptions(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
+  }, [client_id]);
   return (
     <>
       {properties ? (
         <div>
           <div>{propertyElements}</div>
+          <div>
+            <span>
+              <Autocomplete
+                size="small"
+                disablePortal
+                id="autocomplete-category"
+                options={options}
+                getOptionLabel={(option) =>
+                  option.name + " " + `(${option.type_of_geometry})`
+                }
+                sx={{ width: 200 }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Category" />
+                )}
+              />
+            </span>
+          </div>
+
           <div style={{ display: "flex", gap: 15, marginTop: 10 }}>
             <Button
               size="small"
