@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Button } from "@mui/material";
+import { Button, Icon, IconButton } from "@mui/material";
 import axios from "axios";
 import { setshowMapLoader } from "../../reducers/MapView";
 import {
@@ -15,6 +15,8 @@ import { RootState } from "../../store";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useState, useEffect } from "react";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Tooltip from "@mui/material/Tooltip";
 
 declare global {
   interface Window {
@@ -37,6 +39,10 @@ interface PopupProps {
 
 const Popup = ({ properties, feature_id, features }: PopupProps) => {
   const [options, setOptions] = useState([]);
+  const [value, setValue] = useState<string | null>(options[0]);
+  const [inputValue, setInputValue] = useState("");
+  console.log(properties, "properties");
+  console.log(options, "options");
   const dispatch = useDispatch();
   // const state = useSelector((state) => state.drawnPolygon);
   const client_id = useSelector(
@@ -197,7 +203,9 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
         .get(
           `${
             import.meta.env.VITE_API_DASHBOARD_URL
-          }/category/?client=${parseInt(client_id)}`
+          }/category/?client=${parseInt(client_id)}&type_of_geometry=${
+            properties.type_of_geometry
+          }`
         )
         .then((response) => {
           setOptions(response.data);
@@ -212,22 +220,46 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
       {properties ? (
         <div>
           <div>{propertyElements}</div>
-          <div>
-            <span>
-              <Autocomplete
-                size="small"
-                disablePortal
-                id="autocomplete-category"
-                options={options}
-                getOptionLabel={(option) =>
-                  option.name + " " + `(${option.type_of_geometry})`
-                }
-                sx={{ width: 200 }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Category" />
-                )}
-              />
-            </span>
+          <br></br>
+          <div style={{ display: "flex" }}>
+            <Autocomplete
+              size="small"
+              disablePortal
+              id="autocomplete-category"
+              options={options}
+              getOptionLabel={(option) => option.name}
+              sx={{ width: 200 }}
+              value={
+                options.find(
+                  (option) => option.id === properties.category_id
+                ) || null
+              }
+              onChange={(event: any, newValue: string | null) => {
+                setValue(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  sx={{ fontFamily: "Roboto", fontSize: "5px" }}
+                  label="Category"
+                  // value={properties.name}
+                />
+              )}
+            />
+
+            <Tooltip title="Save Category">
+              <IconButton>
+                <CheckCircleIcon
+                  sx={{
+                    backgroundColor: "white",
+                    color: "#D51B60",
+                    "&:hover": {
+                      backgroundColor: "black",
+                    },
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
           </div>
 
           <div style={{ display: "flex", gap: 15, marginTop: 10 }}>
