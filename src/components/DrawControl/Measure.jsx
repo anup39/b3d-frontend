@@ -2,13 +2,13 @@ import StraightenIcon from "@mui/icons-material/Straighten";
 import { IconButton, Tooltip } from "@mui/material";
 import * as turf from "@turf/turf";
 import { useState } from "react";
+import maplibregl from "maplibre-gl";
 
 export default function Measure() {
   const [distance, setDistance] = useState(0);
 
   const handleMeasure = () => {
     const map = window.map_global;
-    const distanceContainer = document.getElementById("distance");
 
     // GeoJSON object to hold our measurement features
     const geojson = {
@@ -67,7 +67,6 @@ export default function Measure() {
       if (geojson.features.length > 1) geojson.features.pop();
 
       // Clear the distance container to populate it with a new value.
-      distanceContainer.innerHTML = "";
 
       // If a feature was clicked, remove it from the map.
       if (features.length) {
@@ -98,18 +97,11 @@ export default function Measure() {
         geojson.features.push(linestring);
 
         // Populate the distanceContainer with total distance
-        const value = document.createElement("pre");
         const distance = turf.length(linestring);
-        value.textContent = `Total distance: ${distance.toLocaleString()}km`;
-        distanceContainer.appendChild(value);
+        setDistance(`Total distance: ${distance.toLocaleString()}km`);
       }
 
       map.getSource("geojson").setData(geojson);
-
-      map.addPopup({
-        coordinates: e.lngLat,
-        content: "Distance: " + value,
-      });
     });
     // });
 
@@ -120,6 +112,10 @@ export default function Measure() {
       // Change the cursor to a pointer when hovering over a point on the map.
       // Otherwise cursor is a crosshair.
       map.getCanvas().style.cursor = features.length ? "pointer" : "crosshair";
+    });
+
+    map.on("click", function (e) {
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(distance).addTo(map);
     });
   };
   return (
