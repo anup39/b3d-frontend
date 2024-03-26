@@ -3,6 +3,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import * as turf from "@turf/turf";
 import { useState } from "react";
 import maplibregl from "maplibre-gl";
+import "./measure.css";
 
 export default function Measure() {
   const [distance, setDistance] = useState(0);
@@ -38,7 +39,7 @@ export default function Measure() {
       source: "geojson",
       paint: {
         "circle-radius": 5,
-        "circle-color": "#000",
+        "circle-color": "red",
       },
       filter: ["in", "$type", "Point"],
     });
@@ -51,7 +52,7 @@ export default function Measure() {
         "line-join": "round",
       },
       paint: {
-        "line-color": "#000",
+        "line-color": "blue",
         "line-width": 2.5,
       },
       filter: ["in", "$type", "LineString"],
@@ -98,7 +99,17 @@ export default function Measure() {
 
         // Populate the distanceContainer with total distance
         const distance = turf.length(linestring);
-        setDistance(`Total distance: ${distance.toLocaleString()}km`);
+        setDistance(`${distance.toFixed(2).toLocaleString()} km`);
+        // console.log(map, "map");
+
+        new maplibregl.Popup()
+          .setLngLat(e.lngLat)
+          .addTo(map)
+          .setHTML(
+            `<div id="measure-popup">${distance
+              .toFixed(2)
+              .toLocaleString()}km </div>`
+          );
       }
 
       map.getSource("geojson").setData(geojson);
@@ -112,10 +123,6 @@ export default function Measure() {
       // Change the cursor to a pointer when hovering over a point on the map.
       // Otherwise cursor is a crosshair.
       map.getCanvas().style.cursor = features.length ? "pointer" : "crosshair";
-    });
-
-    map.on("click", function (e) {
-      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(distance).addTo(map);
     });
   };
   return (
