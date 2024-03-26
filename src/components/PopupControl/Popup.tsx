@@ -240,6 +240,31 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
         )
         .then((res) => {
           console.log(res, "res");
+          const sourceId = String(client_id) + properties.view_name + "source";
+          const layerId = String(client_id) + properties.view_name + "layer";
+          const map = window.map_global;
+          if (map.getSource(sourceId) && map.getLayer(layerId)) {
+            const source = map.getSource(sourceId);
+            source.setData(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-polygon-geojson/?project=${project_id}&category=${
+                properties.category_id
+              }`
+            );
+          }
+          const sourceId_new = String(client_id) + value.view_name + "source";
+          const layerId_new = String(client_id) + value.view_name + "layer";
+          if (map.getSource(sourceId_new) && map.getLayer(layerId_new)) {
+            const source_new = map.getSource(sourceId_new);
+            source_new.setData(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-polygon-geojson/?project=${project_id}&category=${
+                value.id
+              }`
+            );
+          }
         });
     }
     if (properties.type_of_geometry === "LineString") {
@@ -252,6 +277,31 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
         )
         .then((res) => {
           console.log(res, "res");
+          const sourceId = String(client_id) + properties.view_name + "source";
+          const layerId = String(client_id) + properties.view_name + "layer";
+          const map = window.map_global;
+          if (map.getSource(sourceId) && map.getLayer(layerId)) {
+            const source = map.getSource(sourceId);
+            source.setData(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-linestring-geojson/?project=${project_id}&category=${
+                properties.category_id
+              }`
+            );
+          }
+          const sourceId_new = String(client_id) + value.view_name + "source";
+          const layerId_new = String(client_id) + value.view_name + "layer";
+          if (map.getSource(sourceId_new) && map.getLayer(layerId_new)) {
+            const source_new = map.getSource(sourceId_new);
+            source_new.setData(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-linestring-geojson/?project=${project_id}&category=${
+                value.id
+              }`
+            );
+          }
         });
     }
     if (properties.type_of_geometry === "Point") {
@@ -262,6 +312,31 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
         )
         .then((res) => {
           console.log(res, "res");
+          const sourceId = String(client_id) + properties.view_name + "source";
+          const layerId = String(client_id) + properties.view_name + "layer";
+          const map = window.map_global;
+          if (map.getSource(sourceId) && map.getLayer(layerId)) {
+            const source = map.getSource(sourceId);
+            source.setData(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-point-geojson/?project=${project_id}&category=${
+                properties.category_id
+              }`
+            );
+          }
+          const sourceId_new = String(client_id) + value.view_name + "source";
+          const layerId_new = String(client_id) + value.view_name + "layer";
+          if (map.getSource(sourceId_new) && map.getLayer(layerId_new)) {
+            const source_new = map.getSource(sourceId_new);
+            source_new.setData(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/category-point-geojson/?project=${project_id}&category=${
+                value.id
+              }`
+            );
+          }
         });
     }
   };
