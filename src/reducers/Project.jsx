@@ -21,11 +21,25 @@ export const Project = createSlice({
       const project = state.projects.find((project) => project.id === id);
       project.show_area_disabled = value;
     },
+    setProjectChecked: (state, action) => {
+      const { id, value } = action.payload;
+      state.projects.map((project) => {
+        if (project.id === id) {
+          project.checked = value;
+        } else {
+          project.checked = false;
+        }
+      });
+    },
   },
 });
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const { setprojects, setShowArea, setShowAreaDisabled } =
-  Project.actions;
+export const {
+  setprojects,
+  setShowArea,
+  setShowAreaDisabled,
+  setProjectChecked,
+} = Project.actions;
 
 export default Project.reducer;

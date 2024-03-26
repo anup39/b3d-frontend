@@ -32,7 +32,11 @@ import Checkbox from "@mui/material/Checkbox";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { setShowArea, setShowAreaDisabled } from "../../reducers/Project";
+import {
+  setProjectChecked,
+  setShowArea,
+  setShowAreaDisabled,
+} from "../../reducers/Project";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
@@ -85,6 +89,7 @@ export default function ProjectView({ project, popUpRef }) {
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
     console.log(project_id, "project_id from event");
+    dispatch(setProjectChecked({ id: project_id, value: checked }));
     if (checked) {
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(true));
@@ -138,6 +143,7 @@ export default function ProjectView({ project, popUpRef }) {
 
           // Now add the property polygon geojson from the current Mapview state
           dispatch(setCurrentPropertyPolygonGeojson(property_polygon_geojson));
+          setOpenProperties(true);
         })
         .catch((err) => {
           console.log(err, "property-polygon error");
@@ -218,6 +224,7 @@ export default function ProjectView({ project, popUpRef }) {
 
       // Now remove the property polygon geojson from the current Mapview state
       dispatch(setCurrentPropertyPolygonGeojson(null));
+      setOpenProperties(false);
     }
   };
 
@@ -334,9 +341,10 @@ export default function ProjectView({ project, popUpRef }) {
               size="small"
               {...label}
               // defaultChecked={false}
-              checked={
-                current_project_measuring_table === project.id ? true : false
-              }
+              // checked={
+              //   current_project_measuring_table === project.id ? true : false
+              // }
+              checked={project.checked}
               sx={{
                 color: pink[600],
                 "&.Mui-checked": {

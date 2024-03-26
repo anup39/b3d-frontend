@@ -29,7 +29,12 @@ export default function Projects() {
         }
       )
       .then((res) => {
-        dispatch(setprojects(res.data));
+        console.log(res.data, "projects");
+        const projects = res.data;
+        projects.map((project) => {
+          project.checked = false;
+        });
+        dispatch(setprojects(projects));
       });
     axios
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${client_id}/`)
@@ -86,7 +91,7 @@ export default function Projects() {
           </div>
         </div>
       ) : (
-        <MapView level={"Projects"} client_id={client_id} projects={projects} />
+        <MapView level={"Projects"} client_id={client_id} />
       )}
     </>
   );
