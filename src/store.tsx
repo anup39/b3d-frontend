@@ -3,6 +3,7 @@ import DisplaySettings from "./reducers/DisplaySettings";
 import Auth from "./reducers/Auth";
 import Client from "./reducers/Client";
 import Project from "./reducers/Project";
+import Tifs from "./reducers/Tifs";
 import StandardCategory from "./reducers/StandardCategory";
 import SubCategory from "./reducers/SubCategory";
 import Category from "./reducers/Category";
@@ -25,6 +26,7 @@ export const store = configureStore({
     auth: Auth,
     client: Client,
     project: Project,
+    tifs: Tifs,
     property: Property,
     standardCategory: StandardCategory,
     subCategory: SubCategory,

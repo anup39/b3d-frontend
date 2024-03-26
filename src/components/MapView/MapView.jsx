@@ -98,11 +98,12 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MapView({ level, client_id, projects }) {
+export default function MapView({ level, client_id }) {
   const dispatch = useDispatch();
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
+  const projects = useSelector((state) => state.project.projects);
 
   const clientDetail = useSelector((state) => state.mapView.clientDetail);
   const current_measuring_categories = useSelector(

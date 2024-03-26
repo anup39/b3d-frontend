@@ -32,15 +32,21 @@ import Checkbox from "@mui/material/Checkbox";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { setShowArea, setShowAreaDisabled } from "../../reducers/Project";
+import {
+  setProjectOpenProperties,
+  setProjectChecked,
+  setShowArea,
+  setShowAreaDisabled,
+} from "../../reducers/Project";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
+import { settifs } from "../../reducers/Tifs";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function ProjectView({ project, popUpRef }) {
   const dispatch = useDispatch();
-  const [openProperties, setOpenProperties] = useState(false);
-  const [tifs, setTifs] = useState([]);
+
+  const tifs = useSelector((state) => state.tifs.tifs);
 
   const current_measuring_categories = useSelector(
     (state) => state.mapView.currentMapDetail.current_measuring_categories
@@ -57,7 +63,13 @@ export default function ProjectView({ project, popUpRef }) {
     (state) => state.mapView.currentMapDetail.current_tif
   );
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(settifs([]));
+  //   };
+  // }, [project, dispatch]);
+
+  const handleSetTifs = () => {
     axios
       .get(
         `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=${
@@ -65,9 +77,23 @@ export default function ProjectView({ project, popUpRef }) {
         }`
       )
       .then((res) => {
-        setTifs(res.data);
+        // const data = res.data.map((item, index) => ({
+        //   ...item,
+        //   checked: index === 0, // true for the first item, false for the rest
+        // }));
+        // setTifs(data);
+        // console.log(data, "tiff data");
+        const tifs = res.data;
+        tifs.map((tif, index) => {
+          if (index === 0) {
+            tif.checked = true;
+          } else {
+            tif.checked = false;
+          }
+        });
+        dispatch(settifs(tifs));
       });
-  }, [project]);
+  };
 
   // const selected_projects_ids = useSelector(
   //   (state) => state.mapView.currentMapDetail.selected_projects_ids
@@ -80,7 +106,9 @@ export default function ProjectView({ project, popUpRef }) {
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
     console.log(project_id, "project_id from event");
+    dispatch(setProjectChecked({ id: project_id, value: checked }));
     if (checked) {
+      handleSetTifs();
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(true));
       // dispatch(addSelectedProjectId(id));
@@ -303,7 +331,7 @@ export default function ProjectView({ project, popUpRef }) {
 
           <MoreonProperty
             project_id={project.id}
-            onClick={() => setOpenProperties(!openProperties)}
+            // onClick={() => setOpenProperties(!openProperties)}
           />
 
           <Box sx={{ minWidth: 80 }}>
@@ -329,9 +357,10 @@ export default function ProjectView({ project, popUpRef }) {
               size="small"
               {...label}
               // defaultChecked={false}
-              checked={
-                current_project_measuring_table === project.id ? true : false
-              }
+              // checked={
+              //   current_project_measuring_table === project.id ? true : false
+              // }
+              checked={project.checked}
               sx={{
                 color: pink[600],
                 "&.Mui-checked": {
@@ -365,17 +394,45 @@ export default function ProjectView({ project, popUpRef }) {
             </IconButton>
           )}
 
-          {openProperties ? (
-            <ExpandLess onClick={() => setOpenProperties(!openProperties)} />
+          {project.openProperties ? (
+            <IconButton
+              disabled={
+                current_project_measuring_table === project.id ? false : true
+              }
+              onClick={() => {
+                dispatch(
+                  setProjectOpenProperties({ id: project.id, value: false })
+                );
+              }}
+            >
+              <ExpandLess />
+            </IconButton>
           ) : (
-            <ExpandMore onClick={() => setOpenProperties(!openProperties)} />
+            <IconButton
+              disabled={
+                current_project_measuring_table === project.id ? false : true
+              }
+              onClick={() => {
+                dispatch(
+                  setProjectOpenProperties({ id: project.id, value: true })
+                );
+              }}
+            >
+              <ExpandMore />
+            </IconButton>
           )}
         </ListItemButton>
-        <Collapse in={openProperties} timeout="auto" unmountOnExit>
+        <Collapse in={project.openProperties} timeout="auto" unmountOnExit>
           <List sx={{ fontSize: 2 }} component="div" disablePadding>
             {tifs && tifs.length > 0
-              ? tifs.map((tif) => (
-                  <TiffMapView key={tif.id} tif={tif} project_id={project.id} />
+              ? tifs.map((tif, index) => (
+                  <TiffMapView
+                    key={tif.id}
+                    tif={tif}
+                    project_id={project.id}
+                    project_checked={project.checked}
+                    index={index}
+                  />
                 ))
               : null}
           </List>

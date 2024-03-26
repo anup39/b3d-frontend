@@ -11,6 +11,8 @@ import ButtonBase from "@mui/material/ButtonBase";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setcurrentTif } from "../../reducers/MapView";
+import { setTifChecked } from "../../reducers/Tifs";
+import { useEffect } from "react";
 
 const Img = styled("img")({
   margin: "auto",
@@ -22,7 +24,13 @@ const Img = styled("img")({
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-export default function TiffMapView({ tif, project_id }) {
+export default function TiffMapView({
+  tif,
+  project_id,
+  project_checked,
+  index,
+}) {
+  console.log(tif, "tiff");
   const dispatch = useDispatch();
   const current_project_measuring_table = useSelector(
     (state) => state.mapView.currentMapDetail.current_project_measuring_table
@@ -32,6 +40,7 @@ export default function TiffMapView({ tif, project_id }) {
     const checked = event.target.checked;
     const id = tif_id;
     const map = window.map_global;
+    dispatch(setTifChecked({ tif_id, checked }));
     if (checked) {
       axios
         .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
@@ -86,6 +95,47 @@ export default function TiffMapView({ tif, project_id }) {
     }
   };
 
+  useEffect(() => {
+    if (tif.checked) {
+      const map = window.map_global;
+      axios
+        .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${tif.id}`)
+        .then((res) => {
+          if (res.data.bounds) {
+            const bounds = res.data.bounds;
+            map.fitBounds(bounds);
+            map.addSource(`${tif.id}-source`, {
+              type: "raster",
+              tiles: [
+                `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
+                  tif.id
+                }/{z}/{x}/{y}.png`,
+              ],
+              tileSize: 512,
+            });
+
+            map.addLayer({
+              id: `${tif.id}-layer`,
+              type: "raster",
+              source: `${tif.id}-source`,
+              minzoom: 0,
+              maxzoom: 24,
+            });
+            console.log(map, "map after raster adding");
+            map.moveLayer(`${tif.id}-layer`, "Continent labels");
+            console.log(
+              map,
+              "map after raster adding and movign the layer before draw"
+            );
+
+            // dispatch(addSelectedTifId(tif_id));
+          }
+          dispatch(setcurrentTif(tif));
+        })
+        .catch(() => {});
+    }
+  }, []);
+
   return (
     <Box>
       <ListItemButton
@@ -108,10 +158,12 @@ export default function TiffMapView({ tif, project_id }) {
           secondaryTypographyProps={{ fontSize: 13 }}
         />
         <Checkbox
+          // checked={current_project_measuring_table && tif.checked}
+          checked={tif.checked}
           onChange={(event) => handleTifChecked(event, tif.id)}
           size="small"
           {...label}
-          defaultChecked={false}
+          // defaultChecked={false}
           sx={{
             color: pink[600],
             "&.Mui-checked": {
@@ -133,4 +185,6 @@ export default function TiffMapView({ tif, project_id }) {
 TiffMapView.propTypes = {
   tif: PropTypes.object,
   project_id: PropTypes.number,
+  project_checked: PropTypes.bool,
+  index: PropTypes.number,
 };
