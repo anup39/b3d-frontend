@@ -65,7 +65,9 @@ export default function ProjectView({ project, popUpRef }) {
         }`
       )
       .then((res) => {
-        setTifs(res.data);
+        const data = res.data;
+        setTifs(data);
+        console.log(data, "tiff data");
       });
   }, [project]);
 
@@ -374,8 +376,13 @@ export default function ProjectView({ project, popUpRef }) {
         <Collapse in={openProperties} timeout="auto" unmountOnExit>
           <List sx={{ fontSize: 2 }} component="div" disablePadding>
             {tifs && tifs.length > 0
-              ? tifs.map((tif) => (
-                  <TiffMapView key={tif.id} tif={tif} project_id={project.id} />
+              ? tifs.map((tif, index) => (
+                  <TiffMapView
+                    key={tif.id}
+                    tif={tif}
+                    project_id={project.id}
+                    index={index}
+                  />
                 ))
               : null}
           </List>
