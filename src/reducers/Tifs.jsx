@@ -12,10 +12,12 @@ export const Tifs = createSlice({
       state.tifs = action.payload;
     },
     setTifChecked: (state, action) => {
-      const { id, value } = action.payload;
+      console.log(action.payload, "action.payload");
+      const { tif_id, checked } = action.payload;
       state.tifs.map((tif) => {
-        if (tif.id === id) {
-          tif.checked = value;
+        if (tif.id === tif_id) {
+          console.log("HERE ");
+          tif.checked = checked;
         } else {
           tif.checked = false;
         }

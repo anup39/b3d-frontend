@@ -11,6 +11,7 @@ import ButtonBase from "@mui/material/ButtonBase";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setcurrentTif } from "../../reducers/MapView";
+import { setTifChecked } from "../../reducers/Tifs";
 
 const Img = styled("img")({
   margin: "auto",
@@ -38,6 +39,7 @@ export default function TiffMapView({
     const checked = event.target.checked;
     const id = tif_id;
     const map = window.map_global;
+    dispatch(setTifChecked({ tif_id, checked }));
     if (checked) {
       axios
         .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
@@ -115,7 +117,7 @@ export default function TiffMapView({
         />
         <Checkbox
           // checked={current_project_measuring_table && tif.checked}
-          checked={project_checked && tif.checked}
+          checked={tif.checked}
           onChange={(event) => handleTifChecked(event, tif.id)}
           size="small"
           {...label}
