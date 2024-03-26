@@ -40,6 +40,7 @@ const initialState = {
   printDetails: {
     currentMapExtent: null,
   },
+  tifs: [],
 };
 
 export const MapView = createSlice({
