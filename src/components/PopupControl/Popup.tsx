@@ -17,6 +17,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { useState, useEffect } from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Tooltip from "@mui/material/Tooltip";
+import CircularProgress from "@mui/material/CircularProgress";
 
 declare global {
   interface Window {
@@ -40,6 +41,7 @@ interface PopupProps {
 const Popup = ({ properties, feature_id, features }: PopupProps) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   // const state = useSelector((state) => state.drawnPolygon);
@@ -230,6 +232,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
       sub_category_name: value.sub_category_name,
       category_name: value.name,
     };
+    setLoading(true);
     if (properties.type_of_geometry === "Polygon") {
       axios
         .patch(
@@ -252,6 +255,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                 properties.category_id
               }`
             );
+            setLoading(false);
           }
           const sourceId_new = String(client_id) + value.view_name + "source";
           const layerId_new = String(client_id) + value.view_name + "layer";
@@ -289,6 +293,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                 properties.category_id
               }`
             );
+            setLoading(false);
           }
           const sourceId_new = String(client_id) + value.view_name + "source";
           const layerId_new = String(client_id) + value.view_name + "layer";
@@ -324,6 +329,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                 properties.category_id
               }`
             );
+            setLoading(false);
           }
           const sourceId_new = String(client_id) + value.view_name + "source";
           const layerId_new = String(client_id) + value.view_name + "layer";
@@ -368,19 +374,23 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
               )}
             />
 
-            <Tooltip title="Save Category">
-              <IconButton onClick={handleSaveCategory}>
-                <CheckCircleIcon
-                  sx={{
-                    backgroundColor: "white",
-                    color: "#D51B60",
-                    "&:hover": {
-                      backgroundColor: "black",
-                    },
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
+            {loading ? (
+              <CircularProgress sx={{ p: 1 }} size={40} />
+            ) : (
+              <Tooltip title="Save Category">
+                <IconButton onClick={handleSaveCategory}>
+                  <CheckCircleIcon
+                    sx={{
+                      backgroundColor: "white",
+                      color: "#D51B60",
+                      "&:hover": {
+                        backgroundColor: "black",
+                      },
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
           </div>
 
           <div style={{ display: "flex", gap: 15, marginTop: 10 }}>
