@@ -221,6 +221,49 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
 
   const handleSaveCategory = () => {
     console.log(value, "value");
+    console.log(feature_id, "feature_id");
+    const data = {
+      standard_category: value.standard_category,
+      sub_category: value.sub_category,
+      category: value.id,
+      standard_category_name: value.standard_category_name,
+      sub_category_name: value.sub_category_name,
+      category_name: value.name,
+    };
+    if (properties.type_of_geometry === "Polygon") {
+      axios
+        .patch(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/polygon-data/${feature_id}/`,
+          data
+        )
+        .then((res) => {
+          console.log(res, "res");
+        });
+    }
+    if (properties.type_of_geometry === "LineString") {
+      axios
+        .patch(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/linestring-data/${feature_id}/`,
+          data
+        )
+        .then((res) => {
+          console.log(res, "res");
+        });
+    }
+    if (properties.type_of_geometry === "Point") {
+      axios
+        .patch(
+          `${import.meta.env.VITE_API_DASHBOARD_URL}/point-data/${feature_id}/`,
+          data
+        )
+        .then((res) => {
+          console.log(res, "res");
+        });
+    }
   };
   return (
     <>
