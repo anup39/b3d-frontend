@@ -26,8 +26,10 @@ export const Project = createSlice({
       state.projects.map((project) => {
         if (project.id === id) {
           project.checked = value;
+          project.openProperties = value;
         } else {
           project.checked = false;
+          project.openProperties = false;
         }
       });
     },

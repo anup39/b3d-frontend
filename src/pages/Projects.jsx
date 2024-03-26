@@ -33,6 +33,7 @@ export default function Projects() {
         const projects = res.data;
         projects.map((project) => {
           project.checked = false;
+          project.openProperties = false;
         });
         dispatch(setprojects(projects));
       });

@@ -43,7 +43,7 @@ const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function ProjectView({ project, popUpRef }) {
   const dispatch = useDispatch();
-  const [openProperties, setOpenProperties] = useState(false);
+  // const [openProperties, setOpenProperties] = useState(false);
   const [tifs, setTifs] = useState([]);
 
   const current_measuring_categories = useSelector(
@@ -315,7 +315,7 @@ export default function ProjectView({ project, popUpRef }) {
 
           <MoreonProperty
             project_id={project.id}
-            onClick={() => setOpenProperties(!openProperties)}
+            // onClick={() => setOpenProperties(!openProperties)}
           />
 
           <Box sx={{ minWidth: 80 }}>
@@ -378,13 +378,13 @@ export default function ProjectView({ project, popUpRef }) {
             </IconButton>
           )}
 
-          {openProperties ? (
+          {/* {openProperties ? (
             <ExpandLess onClick={() => setOpenProperties(!openProperties)} />
           ) : (
             <ExpandMore onClick={() => setOpenProperties(!openProperties)} />
-          )}
+          )} */}
         </ListItemButton>
-        <Collapse in={openProperties} timeout="auto" unmountOnExit>
+        <Collapse in={project.openProperties} timeout="auto" unmountOnExit>
           <List sx={{ fontSize: 2 }} component="div" disablePadding>
             {tifs && tifs.length > 0
               ? tifs.map((tif, index) => (
