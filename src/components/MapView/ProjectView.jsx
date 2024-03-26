@@ -39,12 +39,14 @@ import {
   setShowAreaDisabled,
 } from "../../reducers/Project";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
+import { settifs } from "../../reducers/Tifs";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function ProjectView({ project, popUpRef }) {
   const dispatch = useDispatch();
-  const [tifs, setTifs] = useState([]);
+
+  const tifs = useSelector((state) => state.tifs.tifs);
 
   const current_measuring_categories = useSelector(
     (state) => state.mapView.currentMapDetail.current_measuring_categories
@@ -61,7 +63,13 @@ export default function ProjectView({ project, popUpRef }) {
     (state) => state.mapView.currentMapDetail.current_tif
   );
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(settifs([]));
+  //   };
+  // }, [project, dispatch]);
+
+  const handleSetTifs = () => {
     axios
       .get(
         `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=${
@@ -73,10 +81,11 @@ export default function ProjectView({ project, popUpRef }) {
           ...item,
           checked: index === 0, // true for the first item, false for the rest
         }));
-        setTifs(data);
-        console.log(data, "tiff data");
+        // setTifs(data);
+        // console.log(data, "tiff data");
+        dispatch(settifs(data));
       });
-  }, [project]);
+  };
 
   // const selected_projects_ids = useSelector(
   //   (state) => state.mapView.currentMapDetail.selected_projects_ids
@@ -91,6 +100,7 @@ export default function ProjectView({ project, popUpRef }) {
     console.log(project_id, "project_id from event");
     dispatch(setProjectChecked({ id: project_id, value: checked }));
     if (checked) {
+      handleSetTifs();
       dispatch(setCategoriesState(null));
       dispatch(setshowMeasuringsPanel(true));
       // dispatch(addSelectedProjectId(id));
@@ -377,21 +387,31 @@ export default function ProjectView({ project, popUpRef }) {
           )}
 
           {project.openProperties ? (
-            <ExpandLess
+            <IconButton
+              disabled={
+                current_project_measuring_table === project.id ? false : true
+              }
               onClick={() => {
                 dispatch(
                   setProjectOpenProperties({ id: project.id, value: false })
                 );
               }}
-            />
+            >
+              <ExpandLess />
+            </IconButton>
           ) : (
-            <ExpandMore
+            <IconButton
+              disabled={
+                current_project_measuring_table === project.id ? false : true
+              }
               onClick={() => {
                 dispatch(
                   setProjectOpenProperties({ id: project.id, value: true })
                 );
               }}
-            />
+            >
+              <ExpandMore />
+            </IconButton>
           )}
         </ListItemButton>
         <Collapse in={project.openProperties} timeout="auto" unmountOnExit>
