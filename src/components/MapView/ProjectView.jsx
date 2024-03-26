@@ -65,7 +65,10 @@ export default function ProjectView({ project, popUpRef }) {
         }`
       )
       .then((res) => {
-        const data = res.data;
+        const data = res.data.map((item, index) => ({
+          ...item,
+          checked: index === 0, // true for the first item, false for the rest
+        }));
         setTifs(data);
         console.log(data, "tiff data");
       });

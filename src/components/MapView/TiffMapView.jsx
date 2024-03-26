@@ -109,13 +109,11 @@ export default function TiffMapView({ tif, project_id, index }) {
           secondaryTypographyProps={{ fontSize: 13 }}
         />
         <Checkbox
-          checked={
-            (current_project_measuring_table && index === 0) || tif.checked
-          }
+          checked={current_project_measuring_table && tif.checked}
           onChange={(event) => handleTifChecked(event, tif.id)}
           size="small"
           {...label}
-          defaultChecked={false}
+          // defaultChecked={false}
           sx={{
             color: pink[600],
             "&.Mui-checked": {
