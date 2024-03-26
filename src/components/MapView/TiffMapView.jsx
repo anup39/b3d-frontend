@@ -12,6 +12,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setcurrentTif } from "../../reducers/MapView";
 import { setTifChecked } from "../../reducers/Tifs";
+import { useEffect } from "react";
 
 const Img = styled("img")({
   margin: "auto",
@@ -93,6 +94,47 @@ export default function TiffMapView({
       }
     }
   };
+
+  useEffect(() => {
+    if (tif.checked) {
+      const map = window.map_global;
+      axios
+        .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${tif.id}`)
+        .then((res) => {
+          if (res.data.bounds) {
+            const bounds = res.data.bounds;
+            map.fitBounds(bounds);
+            map.addSource(`${tif.id}-source`, {
+              type: "raster",
+              tiles: [
+                `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
+                  tif.id
+                }/{z}/{x}/{y}.png`,
+              ],
+              tileSize: 512,
+            });
+
+            map.addLayer({
+              id: `${tif.id}-layer`,
+              type: "raster",
+              source: `${tif.id}-source`,
+              minzoom: 0,
+              maxzoom: 24,
+            });
+            console.log(map, "map after raster adding");
+            map.moveLayer(`${tif.id}-layer`, "Continent labels");
+            console.log(
+              map,
+              "map after raster adding and movign the layer before draw"
+            );
+
+            // dispatch(addSelectedTifId(tif_id));
+          }
+          dispatch(setcurrentTif(tif));
+        })
+        .catch(() => {});
+    }
+  }, []);
 
   return (
     <Box>
