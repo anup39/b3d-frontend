@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom/client";
 import Save from "./Save";
 import Cancel from "./Cancel";
+import Measure from "./Measure";
 import { store } from "../../store";
 import { Provider } from "react-redux";
 
@@ -27,6 +28,7 @@ export default class DrawControl {
         <div className="maplibregl-ctrl-draw-control">
           <Cancel popUpRef={this._popUpRef} />
           <Save popUpRef={this._popUpRef} />
+          <Measure />
         </div>
       </Provider>
     );
