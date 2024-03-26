@@ -1,32 +1,22 @@
 import ReactDOM from "react-dom/client";
-import Save from "./Save";
-import Cancel from "./Cancel";
+import Measure from "./Measure";
 import { store } from "../../store";
 import { Provider } from "react-redux";
 
-export default class DrawControl {
+export default class MeasureControl {
   onAdd(map) {
     this._map = map;
     this._container = document.createElement("div");
     this._container.className = "maplibregl-ctrl maplibregl-ctrl-group";
-    // ReactDOM.createRoot(this._container).render(
-    //   <Provider store={store}>
-    //     <div className="maplibregl-ctrl-draw-control">
-    //       <Cancel />
-    //       <Save />
-    //     </div>
-    //   </Provider>
-    // );
     return this._container;
   }
 
-  updateDrawControl(popUpRef) {
+  updateMeasureControl(popUpRef) {
     this._popUpRef = popUpRef;
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        <div className="maplibregl-ctrl-draw-control">
-          <Cancel popUpRef={this._popUpRef} />
-          <Save popUpRef={this._popUpRef} />
+        <div className="maplibregl-ctrl-measure-control">
+          <Measure popUpRef={popUpRef} />
         </div>
       </Provider>
     );

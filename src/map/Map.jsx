@@ -18,6 +18,7 @@ import AddLayerAndSourceToMap from "../maputils/AddLayerAndSourceToMap";
 import { Button } from "@mui/material";
 import { setCurrentMapExtent, setDisplayType } from "../reducers/MapView";
 import { setWKTGeometry, setTypeOfGeometry } from "../reducers/DrawnGeometry";
+import MeasureControl from "../components/DrawControl/MeasureControl";
 
 export default function Map({ id, popUpRef }) {
   const dispatch = useDispatch();
@@ -306,6 +307,9 @@ export default function Map({ id, popUpRef }) {
       const draw_control = new DrawControl();
       map.addControl(draw_control, "top-right");
       draw_control.updateDrawControl(popUpRef);
+      const measure_control = new MeasureControl();
+      map.addControl(measure_control, "top-right");
+      measure_control.updateMeasureControl(popUpRef);
 
       // const popup_control = new PopupControl();
       // map.addControl(popup_control, "bottom-left");
