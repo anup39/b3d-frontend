@@ -33,6 +33,7 @@ import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFrom
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
+  setProjectOpenProperties,
   setProjectChecked,
   setShowArea,
   setShowAreaDisabled,
@@ -378,11 +379,23 @@ export default function ProjectView({ project, popUpRef }) {
             </IconButton>
           )}
 
-          {/* {openProperties ? (
-            <ExpandLess onClick={() => setOpenProperties(!openProperties)} />
+          {project.openProperties ? (
+            <ExpandLess
+              onClick={() => {
+                dispatch(
+                  setProjectOpenProperties({ id: project.id, value: false })
+                );
+              }}
+            />
           ) : (
-            <ExpandMore onClick={() => setOpenProperties(!openProperties)} />
-          )} */}
+            <ExpandMore
+              onClick={() => {
+                dispatch(
+                  setProjectOpenProperties({ id: project.id, value: true })
+                );
+              }}
+            />
+          )}
         </ListItemButton>
         <Collapse in={project.openProperties} timeout="auto" unmountOnExit>
           <List sx={{ fontSize: 2 }} component="div" disablePadding>

@@ -33,6 +33,16 @@ export const Project = createSlice({
         }
       });
     },
+    setProjectOpenProperties: (state, action) => {
+      const { id, value } = action.payload;
+      state.projects.map((project) => {
+        if (project.id === id) {
+          project.openProperties = value;
+        } else {
+          project.openProperties = false;
+        }
+      });
+    },
   },
 });
 
@@ -42,6 +52,7 @@ export const {
   setShowArea,
   setShowAreaDisabled,
   setProjectChecked,
+  setProjectOpenProperties,
 } = Project.actions;
 
 export default Project.reducer;
