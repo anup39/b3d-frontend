@@ -51,13 +51,3 @@ export default function MapSection({ popUpRef }) {
 MapSection.propTypes = {
   popUpRef: PropTypes.object,
 };
-
-// Path: src/pages/MapSection.jsx
-// Compare this snippet from src/components/DrawControl/Cancel.jsx:
-// import {
-//   setId,
-//   setTypeOfGeometry,
-//   setWKTGeometry,
-//   setViewName,
-//   setMode,
-//   setFeatureId,
