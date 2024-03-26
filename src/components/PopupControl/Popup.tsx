@@ -39,10 +39,8 @@ interface PopupProps {
 
 const Popup = ({ properties, feature_id, features }: PopupProps) => {
   const [options, setOptions] = useState([]);
-  const [value, setValue] = useState<string | null>(options[0]);
-  const [inputValue, setInputValue] = useState("");
-  console.log(properties, "properties");
-  console.log(options, "options");
+  const [value, setValue] = useState(null);
+
   const dispatch = useDispatch();
   // const state = useSelector((state) => state.drawnPolygon);
   const client_id = useSelector(
@@ -169,7 +167,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     draw.add(features[0]);
 
     // Here setting the state of the draw object in drawPolygon
-    console.log(properties, "properties");
+
     dispatch(setWKTGeometry(null));
     dispatch(setTypeOfGeometry(null));
     dispatch(setMode("Edit"));
@@ -209,12 +207,21 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
         )
         .then((response) => {
           setOptions(response.data);
+          setValue(
+            response.data.find(
+              (option) => option.id === properties.category_id
+            ) || null
+          );
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
     }
   }, [client_id]);
+
+  const handleSaveCategory = () => {
+    console.log(value, "value");
+  };
   return (
     <>
       {properties ? (
@@ -229,11 +236,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
               options={options}
               getOptionLabel={(option) => option.name}
               sx={{ width: 200 }}
-              value={
-                options.find(
-                  (option) => option.id === properties.category_id
-                ) || null
-              }
+              value={value}
               onChange={(event: any, newValue: string | null) => {
                 setValue(newValue);
               }}
@@ -248,7 +251,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
             />
 
             <Tooltip title="Save Category">
-              <IconButton>
+              <IconButton onClick={handleSaveCategory}>
                 <CheckCircleIcon
                   sx={{
                     backgroundColor: "white",

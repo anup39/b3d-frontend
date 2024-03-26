@@ -30,7 +30,6 @@ export default function TiffMapView({
   project_checked,
   index,
 }) {
-  console.log(tif, "tiff");
   const dispatch = useDispatch();
   const current_project_measuring_table = useSelector(
     (state) => state.mapView.currentMapDetail.current_project_measuring_table
