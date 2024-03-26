@@ -44,7 +44,6 @@ const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function ProjectView({ project, popUpRef }) {
   const dispatch = useDispatch();
-  // const [openProperties, setOpenProperties] = useState(false);
   const [tifs, setTifs] = useState([]);
 
   const current_measuring_categories = useSelector(
@@ -144,7 +143,6 @@ export default function ProjectView({ project, popUpRef }) {
 
           // Now add the property polygon geojson from the current Mapview state
           dispatch(setCurrentPropertyPolygonGeojson(property_polygon_geojson));
-          setOpenProperties(true);
         })
         .catch((err) => {
           console.log(err, "property-polygon error");
@@ -225,7 +223,6 @@ export default function ProjectView({ project, popUpRef }) {
 
       // Now remove the property polygon geojson from the current Mapview state
       dispatch(setCurrentPropertyPolygonGeojson(null));
-      setOpenProperties(false);
     }
   };
 
