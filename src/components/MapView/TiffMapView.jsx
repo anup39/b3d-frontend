@@ -22,7 +22,12 @@ const Img = styled("img")({
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-export default function TiffMapView({ tif, project_id, index }) {
+export default function TiffMapView({
+  tif,
+  project_id,
+  project_checked,
+  index,
+}) {
   console.log(tif, "tiff");
   const dispatch = useDispatch();
   const current_project_measuring_table = useSelector(
@@ -109,7 +114,8 @@ export default function TiffMapView({ tif, project_id, index }) {
           secondaryTypographyProps={{ fontSize: 13 }}
         />
         <Checkbox
-          checked={current_project_measuring_table && tif.checked}
+          // checked={current_project_measuring_table && tif.checked}
+          checked={project_checked && tif.checked}
           onChange={(event) => handleTifChecked(event, tif.id)}
           size="small"
           {...label}
@@ -135,5 +141,6 @@ export default function TiffMapView({ tif, project_id, index }) {
 TiffMapView.propTypes = {
   tif: PropTypes.object,
   project_id: PropTypes.number,
+  project_checked: PropTypes.bool,
   index: PropTypes.number,
 };

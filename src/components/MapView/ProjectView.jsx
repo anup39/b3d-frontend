@@ -402,6 +402,7 @@ export default function ProjectView({ project, popUpRef }) {
                     key={tif.id}
                     tif={tif}
                     project_id={project.id}
+                    project_checked={project.checked}
                     index={index}
                   />
                 ))
