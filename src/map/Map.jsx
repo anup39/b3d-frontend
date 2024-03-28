@@ -24,22 +24,14 @@ export default function Map({ popUpRef }) {
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
-  // const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
-
-  const currentMapExtent = useSelector(
-    (state) => state.mapView.printDetails.currentMapExtent
-  );
-  const current_measuring_categories = useSelector(
-    (state) => state.mapView.currentMapDetail.current_measuring_categories
-  );
-  const current_tif = useSelector(
-    (state) => state.mapView.currentMapDetail.current_tif
-  );
-  const currentClient = useSelector(
+  const client_id = useSelector(
     (state) => state.mapView.clientDetail.client_id
   );
-  const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.project_id
+  const { current_measuring_categories, current_tif, project_id } = useSelector(
+    (state) => state.mapView.currentMapDetail
+  );
+  const currentMapExtent = useSelector(
+    (state) => state.mapView.printDetails.currentMapExtent
   );
 
   useEffect(() => {
@@ -75,9 +67,8 @@ export default function Map({ popUpRef }) {
                 if (cat.checked) {
                   if (cat.type_of_geometry) {
                     const sourceId =
-                      String(currentClient) + cat.view_name + "source";
-                    const layerId =
-                      String(currentClient) + cat.view_name + "layer";
+                      String(client_id) + cat.view_name + "source";
+                    const layerId = String(client_id) + cat.view_name + "layer";
                     axios
                       .get(
                         `${
@@ -91,7 +82,7 @@ export default function Map({ popUpRef }) {
                         if (cat.type_of_geometry === "Point") {
                           url = `${
                             import.meta.env.VITE_API_DASHBOARD_URL
-                          }/category-point-geojson/?project=${currentProject}&category=${
+                          }/category-point-geojson/?project=${project_id}&category=${
                             cat.id
                           }`;
                           fillType = "circle";
@@ -99,7 +90,7 @@ export default function Map({ popUpRef }) {
                         if (cat.type_of_geometry === "LineString") {
                           url = `${
                             import.meta.env.VITE_API_DASHBOARD_URL
-                          }/category-linestring-geojson/?project=${currentProject}&category=${
+                          }/category-linestring-geojson/?project=${project_id}&category=${
                             cat.id
                           }`;
                           fillType = "line";
@@ -107,7 +98,7 @@ export default function Map({ popUpRef }) {
                         if (cat.type_of_geometry === "Polygon") {
                           url = `${
                             import.meta.env.VITE_API_DASHBOARD_URL
-                          }/category-polygon-geojson/?project=${currentProject}&category=${
+                          }/category-polygon-geojson/?project=${project_id}&category=${
                             cat.id
                           }`;
                           fillType = "fill";
@@ -177,8 +168,8 @@ export default function Map({ popUpRef }) {
     dispatch,
     currentMapExtent,
     current_measuring_categories,
-    currentClient,
-    currentProject,
+    client_id,
+    project_id,
     current_tif,
   ]);
 
