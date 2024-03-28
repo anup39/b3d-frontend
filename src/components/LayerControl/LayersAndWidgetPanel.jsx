@@ -36,34 +36,20 @@ import axios from "axios";
 export default function LayersAndWidgetControl({ map, popUpRef }) {
   const dispatch = useDispatch();
   const [expandMeasurings, setExpandMeasurings] = useState(true);
-  const showMeasuringsPanel = useSelector(
-    (state) => state.mapView.showMeasuringsPanel
-  );
-  const showShapefileUpload = useSelector(
-    (state) => state.mapView.showShapefileUpload
-  );
-  const showTableMeasurings = useSelector(
-    (state) => state.mapView.showTableMeasurings
-  );
-  const current_project_name = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_name
-  );
-
-  const currentClient = useSelector(
+  const mode = useSelector((state) => state.drawnPolygon.mode);
+  const view_name = useSelector((state) => state.drawnPolygon.view_name);
+  const client_id = useSelector(
     (state) => state.mapView.clientDetail.client_id
   );
-  const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.project_id
-  );
+  const {
+    showMeasuringsPanel,
+    showShapefileUpload,
+    showTableMeasurings,
+    showPiechart,
+  } = useSelector((state) => state.mapView);
 
-  const showPiechart = useSelector((state) => state.mapView.showPiechart);
-  const mode = useSelector((state) => state.drawnPolygon.mode);
-
-  const currentPropertyPolygonGeojson = useSelector(
-    (state) => state.mapView.currentMapDetail.current_property_polygon_geojson
-  );
-
-  const view_name = useSelector((state) => state.drawnPolygon.view_name);
+  const { project_id, current_project_name, currentPropertyPolygonGeojson } =
+    useSelector((state) => state.mapView.currentMapDetail);
 
   const handleCloseMeasurings = () => {
     setExpandMeasurings(!expandMeasurings);
@@ -74,12 +60,12 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   };
 
   const handleShowReport = () => {
-    if (currentClient && currentProject) {
+    if (client_id && project_id) {
       axios
         .get(
           `${
             import.meta.env.VITE_API_DASHBOARD_URL
-          }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
+          }/measuring-table-summation/?client=${client_id}&project=${project_id}`
         )
         .then((res) => {
           if (res.data.rows.length > 0) {
@@ -100,12 +86,12 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   };
 
   const handleMeasuringsTable = () => {
-    if (currentClient && currentProject) {
+    if (client_id && project_id) {
       axios
         .get(
           `${
             import.meta.env.VITE_API_DASHBOARD_URL
-          }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
+          }/measuring-table-summation/?client=${client_id}&project=${project_id}`
         )
         .then((res) => {
           if (res.data.rows.length > 0) {
@@ -119,12 +105,12 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   };
 
   const handlePieChart = () => {
-    if (currentClient && currentProject) {
+    if (client_id && project_id) {
       axios
         .get(
           `${
             import.meta.env.VITE_API_DASHBOARD_URL
-          }/measuring-table-summation/?client=${currentClient}&project=${currentProject}`
+          }/measuring-table-summation/?client=${client_id}&project=${project_id}`
         )
         .then((res) => {
           if (res.data.rows.length > 0) {
@@ -148,12 +134,12 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     dispatch(setComponent(null));
 
     if (mode && mode === "Edit") {
-      const layerId = String(currentClient) + `${currentProject}` + "layer";
+      const layerId = String(client_id) + `${project_id}` + "layer";
       map.setFilter(layerId, null);
     }
     draw.changeMode("draw_polygon");
-    dispatch(setId(currentProject));
-    dispatch(setViewName(`${currentProject}`));
+    dispatch(setId(project_id));
+    dispatch(setViewName(`${project_id}`));
     dispatch(setMode("Draw"));
     dispatch(setComponent("project"));
   };
@@ -170,17 +156,17 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     draw.deleteAll();
     // Now before adding the current features to the map we need to get it from the map
     const features = map.queryRenderedFeatures({
-      layers: [`${currentClient}${currentProject}layer`],
+      layers: [`${client_id}${project_id}layer`],
     });
     console.log(features, "features");
     // Now add the features to the to draw mode
     draw.add(features[0]);
     // also once the is added to map remove the layer from the map
     if (view_name) {
-      const layerId = String(currentClient) + `${view_name}` + "layer";
+      const layerId = String(client_id) + `${view_name}` + "layer";
       map.setFilter(layerId, null);
     }
-    const layerId = String(currentClient) + `${currentProject}` + "layer";
+    const layerId = String(client_id) + `${project_id}` + "layer";
     map.setFilter(layerId, null);
     const layer = map.getLayer(layerId);
     const existingFilter = layer.filter || ["all"];
@@ -191,8 +177,8 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
 
     dispatch(setMode("Edit"));
     dispatch(setComponent("project"));
-    dispatch(setId(currentProject));
-    dispatch(setViewName(`${currentProject}`));
+    dispatch(setId(project_id));
+    dispatch(setViewName(`${project_id}`));
     dispatch(setFeatureId(feature_id));
   };
 

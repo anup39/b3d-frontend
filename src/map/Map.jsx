@@ -296,12 +296,7 @@ export default function Map({ popUpRef }) {
 
   return (
     <>
-      <div
-        // style={{ borderRadius: "8px", width: "820px", height: "834px" }}
-        ref={mapContainer}
-        id="map"
-        className="map"
-      >
+      <div ref={mapContainer} id="map" className="map">
         <Button
           onClick={() => {
             dispatch(setDisplayType("3D"));
