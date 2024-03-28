@@ -43,6 +43,7 @@ import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteProperties from "./AutoCompleteProperties";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import maplibregl from "maplibre-gl";
+import { useGetProjectsByClientIdQuery } from "../../api/projectApi";
 
 const drawerWidth = 240;
 

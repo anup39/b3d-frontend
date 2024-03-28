@@ -1,10 +1,11 @@
+/// <reference types="vite/client" />
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // Define a service using a base URL and expected endpoints
 export const projectApi = createApi({
   reducerPath: "projectApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.VITE_API_DASHBOARD_URL as string,
+    baseUrl: import.meta.env.VITE_API_DASHBOARD_URL as string,
   }),
 
   endpoints: (builder) => ({
@@ -15,6 +16,15 @@ export const projectApi = createApi({
           Authorization: "Token " + localStorage.getItem("token"),
         },
       }),
+      transformResponse: (response: any[]) => {
+        return response.map((project) => {
+          return {
+            ...project,
+            checked: false,
+            openProperties: false,
+          };
+        });
+      },
     }),
     getClientDetailsByClientId: builder.query<any, string>({
       query: (client_id: string) => ({
