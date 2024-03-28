@@ -34,7 +34,7 @@ export default function Save({ popUpRef }) {
     (state) => state.mapView.clientDetail.client_id
   );
   const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+    (state) => state.mapView.currentMapDetail.current_project_measuring
   );
   const id = useSelector((state) => state.drawnPolygon.id);
   const feature_id = useSelector((state) => state.drawnPolygon.feature_id);

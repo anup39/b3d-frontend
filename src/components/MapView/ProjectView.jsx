@@ -56,7 +56,7 @@ export default function ProjectView({ project, popUpRef }) {
     (state) => state.mapView.clientDetail.client_id
   );
   const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+    (state) => state.mapView.currentMapDetail.current_project_measuring
   );
 
   const current_tif = useSelector(
@@ -99,8 +99,8 @@ export default function ProjectView({ project, popUpRef }) {
   //   (state) => state.mapView.currentMapDetail.selected_projects_ids
   // );
 
-  const current_project_measuring_table = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  const current_project_measuring = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring
   );
 
   const handleMeasuringsPanelChecked = (event, project_id) => {
@@ -358,7 +358,7 @@ export default function ProjectView({ project, popUpRef }) {
               {...label}
               // defaultChecked={false}
               // checked={
-              //   current_project_measuring_table === project.id ? true : false
+              //   current_project_measuring === project.id ? true : false
               // }
               checked={project.checked}
               sx={{
@@ -373,9 +373,7 @@ export default function ProjectView({ project, popUpRef }) {
           {project.show_area ? (
             <IconButton
               onClick={handleEyeButton}
-              disabled={
-                current_project_measuring_table === project.id ? false : true
-              } // Set this to the condition when you want to disable the button
+              disabled={current_project_measuring === project.id ? false : true} // Set this to the condition when you want to disable the button
             >
               <Tooltip title="Show Area">
                 <RemoveRedEyeIcon sx={{ fontSize: 14 }} />
@@ -384,9 +382,7 @@ export default function ProjectView({ project, popUpRef }) {
           ) : (
             <IconButton
               onClick={handleHideButton}
-              disabled={
-                current_project_measuring_table === project.id ? false : true
-              } // Set this to the condition when you want to disable the button
+              disabled={current_project_measuring === project.id ? false : true} // Set this to the condition when you want to disable the button
             >
               <Tooltip title="Show Area">
                 <VisibilityOffIcon sx={{ fontSize: 14 }} />
@@ -396,9 +392,7 @@ export default function ProjectView({ project, popUpRef }) {
 
           {project.openProperties ? (
             <IconButton
-              disabled={
-                current_project_measuring_table === project.id ? false : true
-              }
+              disabled={current_project_measuring === project.id ? false : true}
               onClick={() => {
                 dispatch(
                   setProjectOpenProperties({ id: project.id, value: false })
@@ -409,9 +403,7 @@ export default function ProjectView({ project, popUpRef }) {
             </IconButton>
           ) : (
             <IconButton
-              disabled={
-                current_project_measuring_table === project.id ? false : true
-              }
+              disabled={current_project_measuring === project.id ? false : true}
               onClick={() => {
                 dispatch(
                   setProjectOpenProperties({ id: project.id, value: true })

@@ -31,8 +31,8 @@ export default function TiffMapView({
   index,
 }) {
   const dispatch = useDispatch();
-  const current_project_measuring_table = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  const current_project_measuring = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring
   );
 
   const handleTifChecked = (event, tif_id) => {
@@ -157,7 +157,7 @@ export default function TiffMapView({
           secondaryTypographyProps={{ fontSize: 13 }}
         />
         <Checkbox
-          // checked={current_project_measuring_table && tif.checked}
+          // checked={current_project_measuring && tif.checked}
           checked={tif.checked}
           onChange={(event) => handleTifChecked(event, tif.id)}
           size="small"
@@ -169,11 +169,9 @@ export default function TiffMapView({
               color: pink[600],
             },
           }}
-          disabled={
-            current_project_measuring_table === project_id ? false : true
-          }
+          disabled={current_project_measuring === project_id ? false : true}
         />
-        {current_project_measuring_table === project_id ? (
+        {current_project_measuring === project_id ? (
           <MoreonMap tif={tif} />
         ) : null}
       </ListItemButton>

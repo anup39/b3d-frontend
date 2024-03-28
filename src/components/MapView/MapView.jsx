@@ -129,8 +129,8 @@ export default function MapView({ level, client_id }) {
     (state) => state.property.showProgressFormOpen
   );
 
-  const current_project_measuring_table = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  const current_project_measuring = useSelector(
+    (state) => state.mapView.currentMapDetail.current_project_measuring
   );
 
   const current_tif = useSelector(
@@ -319,9 +319,7 @@ export default function MapView({ level, client_id }) {
                     size="small"
                     // {...label}
                     // defaultChecked={false}
-                    checked={
-                      current_project_measuring_table === "All" ? true : false
-                    }
+                    checked={current_project_measuring === "All" ? true : false}
                     sx={{
                       display: open ? "block" : "none",
                       mr: 3.3,

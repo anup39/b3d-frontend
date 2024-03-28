@@ -50,7 +50,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
   );
   const project_id = useSelector(
     (state: RootState) =>
-      state.mapView.currentMapDetail.current_project_measuring_table
+      state.mapView.currentMapDetail.current_project_measuring
   );
   const current_measuring_categories = useSelector(
     (state: RootState) =>

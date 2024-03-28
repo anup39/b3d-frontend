@@ -30,7 +30,7 @@ export default function CategoryGeomForm() {
     (state) => state.mapView.clientDetail.client_id
   );
   const project_id = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+    (state) => state.mapView.currentMapDetail.current_project_measuring
   );
 
   const handleCreateCategoryStyle = (event) => {
