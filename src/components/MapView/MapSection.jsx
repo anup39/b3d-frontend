@@ -9,9 +9,6 @@ import MapLoader from "./MapLoader";
 import PropTypes from "prop-types";
 
 export default function MapSection({ popUpRef }) {
-  // const dispatch = useDispatch();
-  // const { level } = useParams();
-  const { id } = useParams();
   const display_type = useSelector(
     (state) => state.mapView.currentMapDetail.display_type
   );
@@ -36,7 +33,7 @@ export default function MapSection({ popUpRef }) {
       {showMapLoader ? <MapLoader /> : null}
 
       {display_type && display_type === "2D" ? (
-        <Map popUpRef={popUpRef} id={id} />
+        <Map popUpRef={popUpRef} />
       ) : (
         <Map3D />
       )}

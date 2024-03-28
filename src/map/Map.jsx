@@ -20,7 +20,7 @@ import { setCurrentMapExtent, setDisplayType } from "../reducers/MapView";
 import { setWKTGeometry, setTypeOfGeometry } from "../reducers/DrawnGeometry";
 import MeasureControl from "../components/DrawControl/MeasureControl";
 
-export default function Map({ id, popUpRef }) {
+export default function Map({ popUpRef }) {
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
@@ -283,7 +283,7 @@ export default function Map({ id, popUpRef }) {
     if (map) {
       const layer_control = new LayersControl();
       map.addControl(layer_control, "top-left");
-      layer_control.updateProject(id, popUpRef);
+      layer_control.updateProject(popUpRef);
       // map.addControl(
       //   new MaplibreExportControl({
       //     PageSize: Size.A3,
@@ -303,7 +303,7 @@ export default function Map({ id, popUpRef }) {
       map.addControl(table_measurings_control, "bottom-right");
       const piechart_control = new PieChartControl();
       map.addControl(piechart_control, "bottom-left");
-      raster_control.updateProject(id);
+      raster_control.updateProject();
       const draw_control = new DrawControl();
       map.addControl(draw_control, "top-right");
       draw_control.updateDrawControl(popUpRef);
@@ -314,7 +314,7 @@ export default function Map({ id, popUpRef }) {
       // const popup_control = new PopupControl();
       // map.addControl(popup_control, "bottom-left");
     }
-  }, [map, id, popUpRef]);
+  }, [map, popUpRef]);
 
   return (
     <>
@@ -352,6 +352,4 @@ export default function Map({ id, popUpRef }) {
 
 Map.propTypes = {
   popUpRef: PropTypes.object,
-  refObj: PropTypes.object,
-  id: PropTypes.string,
 };
