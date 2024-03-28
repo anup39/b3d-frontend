@@ -26,7 +26,7 @@ import UploadProgress from "../Property/UploadProgress";
 import { useEffect, useRef } from "react";
 import {
   setCurrentMapExtent,
-  setCategoriesState,
+  setCurrentMeasuringCategories,
   setcurrentTif,
 } from "../../reducers/MapView";
 import {
@@ -38,7 +38,7 @@ import {
 import {
   setcurrentProjectName,
   setshowMeasuringsPanel,
-  addcurrentProjectMeasuringTable,
+  setcurrentProjectMeasuring,
   setshowTableMeasurings,
   setshowPiechart,
   setshowReport,
@@ -149,7 +149,7 @@ export default function MapView({ level, client_id }) {
 
   useEffect(() => {
     dispatch(setCurrentMapExtent(null));
-    dispatch(setCategoriesState(null));
+    dispatch(setCurrentMeasuringCategories(null));
     dispatch(setcurrentTif(null));
   }, [dispatch]);
 
@@ -157,18 +157,18 @@ export default function MapView({ level, client_id }) {
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
     if (checked) {
-      dispatch(setCategoriesState(null));
+      dispatch(setCurrentMeasuringCategories(null));
       dispatch(setshowMeasuringsPanel(true));
       // dispatch(addSelectedProjectId(id));
       dispatch(setcurrentProjectName("All"));
-      dispatch(addcurrentProjectMeasuringTable(project_id));
+      dispatch(setcurrentProjectMeasuring(project_id));
     } else {
-      dispatch(setCategoriesState(null));
+      dispatch(setCurrentMeasuringCategories(null));
       dispatch(setshowMeasuringsPanel(false));
       // dispatch(removeSelectedProjectId(id));
       dispatch(setcurrentProjectName(null));
-      dispatch(addcurrentProjectMeasuringTable(null));
-      dispatch(setCategoriesState(null));
+      dispatch(setcurrentProjectMeasuring(null));
+      dispatch(setCurrentMeasuringCategories(null));
       dispatch(setcurrentTif(null));
       dispatch(setshowTableMeasurings(false));
       dispatch(setshowPiechart(false));

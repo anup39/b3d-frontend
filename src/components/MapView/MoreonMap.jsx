@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import { Box, Tooltip } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
-  resetCurrentBandCheckedInfomation,
+  resetCurrentBandInformation,
   setSelectedTif,
   setshowTifPanel,
 } from "../../reducers/MapView";
@@ -35,7 +35,7 @@ export default function MoreonMap({ tif }) {
     dispatch(setshowTifPanel(true));
     dispatch(setSelectedTif(tif));
     if (selected_tif?.id !== tif.id) {
-      dispatch(resetCurrentBandCheckedInfomation());
+      dispatch(resetCurrentBandInformation());
     }
   };
 

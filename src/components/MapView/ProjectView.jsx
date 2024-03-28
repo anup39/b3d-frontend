@@ -19,8 +19,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setcurrentProjectName,
   setshowMeasuringsPanel,
-  addcurrentProjectMeasuringTable,
-  setCategoriesState,
+  setcurrentProjectMeasuring,
+  setCurrentMeasuringCategories,
   setcurrentTif,
   setshowTableMeasurings,
   setshowPiechart,
@@ -109,11 +109,11 @@ export default function ProjectView({ project, popUpRef }) {
     dispatch(setProjectChecked({ id: project_id, value: checked }));
     if (checked) {
       handleSetTifs();
-      dispatch(setCategoriesState(null));
+      dispatch(setCurrentMeasuringCategories(null));
       dispatch(setshowMeasuringsPanel(true));
       // dispatch(addSelectedProjectId(id));
       dispatch(setcurrentProjectName(project.name));
-      dispatch(addcurrentProjectMeasuringTable(project_id));
+      dispatch(setcurrentProjectMeasuring(project_id));
       dispatch(setShowAreaDisabled({ id: project_id, value: false }));
 
       console.log(currentClient, "client_id from state");
@@ -178,12 +178,12 @@ export default function ProjectView({ project, popUpRef }) {
         dispatch(setShowArea({ id: currentProject, value: true }));
       }
     } else {
-      dispatch(setCategoriesState(null));
+      dispatch(setCurrentMeasuringCategories(null));
       dispatch(setshowMeasuringsPanel(false));
       // dispatch(removeSelectedProjectId(id));
       dispatch(setcurrentProjectName(null));
-      dispatch(addcurrentProjectMeasuringTable(null));
-      dispatch(setCategoriesState(null));
+      dispatch(setcurrentProjectMeasuring(null));
+      dispatch(setCurrentMeasuringCategories(null));
       dispatch(setcurrentTif(null));
       dispatch(setshowTableMeasurings(false));
       dispatch(setshowPiechart(false));

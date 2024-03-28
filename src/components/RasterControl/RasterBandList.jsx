@@ -5,8 +5,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setCurrentBandCheckedInfomation,
-  setCurrentBandColorInfomation,
+  setCurrentBandCheckedInformation,
+  setCurrentBandColorInformation,
 } from "../../reducers/MapView";
 import axios from "axios";
 
@@ -21,7 +21,7 @@ export default function RasterBandList() {
 
   const handleChange = (event, band) => {
     const checked = event.target.checked;
-    dispatch(setCurrentBandCheckedInfomation({ checked, band }));
+    dispatch(setCurrentBandCheckedInformation({ checked, band }));
     // Map logic here
     // console.log(
     //   selected_tif.id,
@@ -81,7 +81,7 @@ export default function RasterBandList() {
 
   const handleColorChange = (event, band) => {
     const color = event.target.value;
-    dispatch(setCurrentBandColorInfomation({ color, band }));
+    dispatch(setCurrentBandColorInformation({ color, band }));
   };
 
   const handleDoneColorChange = (band) => {

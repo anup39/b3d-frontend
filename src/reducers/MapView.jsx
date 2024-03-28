@@ -20,7 +20,7 @@ const initialState = {
     current_tif: null,
     current_measuring_categories: null,
     selected_tif: null,
-    current_band_infomation: {
+    current_band_information: {
       band_red: {
         checked: false,
         color: "red",
@@ -73,21 +73,10 @@ export const MapView = createSlice({
     setshowTifPanel: (state, action) => {
       state.showTifPanel = action.payload;
     },
-    // addSelectedProjectId: (state, action) => {
-    //   const newId = action.payload;
-    //   state.currentMapDetail.selected_projects_ids.push(newId);
-    // },
-    // removeSelectedProjectId: (state, action) => {
-    //   const idToRemove = action.payload;
-    //   state.currentMapDetail.selected_projects_ids =
-    //     state.currentMapDetail.selected_projects_ids.filter(
-    //       (id) => id !== idToRemove
-    //     );
-    // },
     setshowMapLoader: (state, action) => {
       state.showMapLoader = action.payload;
     },
-    addcurrentProjectMeasuringTable: (state, action) => {
+    setcurrentProjectMeasuring: (state, action) => {
       const newId = action.payload;
       state.currentMapDetail.current_project_measuring = newId;
     },
@@ -103,40 +92,41 @@ export const MapView = createSlice({
       const tif_data = action.payload;
       state.currentMapDetail.selected_tif = tif_data;
     },
-    setCategoriesState: (state, action) => {
+    setCurrentMeasuringCategories: (state, action) => {
       const current_measuring_categories = action.payload;
       state.currentMapDetail.current_measuring_categories =
         current_measuring_categories;
     },
-    setCurrentBandCheckedInfomation: (state, action) => {
+    setCurrentBandCheckedInformation: (state, action) => {
       const { checked, band } = action.payload;
       if (band === "red") {
-        state.currentMapDetail.current_band_infomation.band_red.checked =
+        state.currentMapDetail.current_band_information.band_red.checked =
           checked;
       }
       if (band === "green") {
-        state.currentMapDetail.current_band_infomation.band_green.checked =
+        state.currentMapDetail.current_band_information.band_green.checked =
           checked;
       }
       if (band === "blue") {
-        state.currentMapDetail.current_band_infomation.band_blue.checked =
+        state.currentMapDetail.current_band_information.band_blue.checked =
           checked;
       }
     },
-    setCurrentBandColorInfomation: (state, action) => {
+    setCurrentBandColorInformation: (state, action) => {
       const { color, band } = action.payload;
       if (band === "red") {
-        state.currentMapDetail.current_band_infomation.band_red.color = color;
+        state.currentMapDetail.current_band_information.band_red.color = color;
       }
       if (band === "green") {
-        state.currentMapDetail.current_band_infomation.band_green.color = color;
+        state.currentMapDetail.current_band_information.band_green.color =
+          color;
       }
       if (band === "blue") {
-        state.currentMapDetail.current_band_infomation.band_blue.color = color;
+        state.currentMapDetail.current_band_information.band_blue.color = color;
       }
     },
-    resetCurrentBandCheckedInfomation: (state) => {
-      state.currentMapDetail.current_band_infomation = {
+    resetCurrentBandInformation: (state) => {
+      state.currentMapDetail.current_band_information = {
         band_red: {
           checked: false,
           color: "#FF0000",
@@ -183,14 +173,14 @@ export const {
   setshowMapLoader,
   addSelectedProjectId,
   removeSelectedProjectId,
-  addcurrentProjectMeasuringTable,
+  setcurrentProjectMeasuring,
   setcurrentProjectName,
   setcurrentTif,
   setSelectedTif,
-  setCategoriesState,
-  setCurrentBandCheckedInfomation,
-  setCurrentBandColorInfomation,
-  resetCurrentBandCheckedInfomation,
+  setCurrentMeasuringCategories,
+  setCurrentBandCheckedInformation,
+  setCurrentBandColorInformation,
+  resetCurrentBandInformation,
   setTableSummationData,
   setTableSummationDataColumns,
   setCurrentMapExtent,
