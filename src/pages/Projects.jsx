@@ -2,57 +2,40 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setprojects } from "../reducers/Project";
-import axios from "axios";
 import AppBar from "../components/Common/AppBar";
 import ProjectCard from "../components/Project/ProjectCard";
 import ProjectForm from "../components/Project/ProjectForm";
 import MapView from "../components/MapView/MapView";
 import { Box } from "@mui/material";
 import { setClientDetail } from "../reducers/MapView";
+import {
+  fetchProjectsByClientId,
+  fetchClientDetailsByClientId,
+} from "../api/api";
 
 export default function Projects() {
   const { client_id, view } = useParams();
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.project.projects);
-  const user_id = useSelector((state) => state.auth.user_id);
 
   useEffect(() => {
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/projects/?client=${client_id}`,
-        {
-          headers: {
-            Authorization: "Token " + localStorage.getItem("token"),
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data, "projects");
-        const projects = res.data;
-        projects.map((project) => {
-          project.checked = false;
-          project.openProperties = false;
-        });
-        dispatch(setprojects(projects));
+    fetchProjectsByClientId(client_id).then((projects) => {
+      projects.map((project) => {
+        project.checked = false;
+        project.openProperties = false;
       });
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${client_id}/`)
-      .then((res) => {
-        const client_detail = {
-          client_id: client_id,
-          client_name: res.data.name,
-          client_image: res.data.name.charAt(0).toUpperCase(),
-        };
-        dispatch(setClientDetail(client_detail));
-      });
-  }, [client_id, user_id, dispatch]);
+      dispatch(setprojects(projects));
+    });
 
-  const handleViewInMap = () => {
-    // navigate(`/projects/${client_id}/Map`);
-    window.location.replace(`/projects/${client_id}/Map`);
-  };
+    fetchClientDetailsByClientId(client_id).then((client) => {
+      const client_detail = {
+        client_id: client_id,
+        client_name: client.name,
+        client_image: client.name.charAt(0).toUpperCase(),
+      };
+      dispatch(setClientDetail(client_detail));
+    });
+  }, [client_id, dispatch]);
 
   return (
     <>
@@ -63,16 +46,9 @@ export default function Projects() {
             sx={{
               display: "flex",
               alignItems: "center",
-              // justifyContent: "space-between",
             }}
           >
             <ProjectForm client_id={client_id} />
-            {/* <Tooltip title="MapView">
-              <MapIcon
-                onClick={handleViewInMap}
-                sx={{ "&:hover": { cursor: "pointer" }, mr: 1 }}
-              />
-            </Tooltip> */}
           </Box>
 
           <div>
