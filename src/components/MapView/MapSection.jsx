@@ -1,11 +1,11 @@
-import Map from "../map/Map";
+import Map from "../../map/Map";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import AppBar from "../components/Common/AppBar";
-import CategoryGeomForm from "../components/Category/CategoryGeomForm";
-import Map3D from "../map/Map3D";
+import AppBar from "../Common/AppBar";
+import CategoryGeomForm from "../Category/CategoryGeomForm";
+import Map3D from "../../map/Map3D";
 // import ThreeScene from "../map/MapThree";
-import MapLoader from "../components/MapLoader/MapLoader";
+import MapLoader from "../MapLoader/MapLoader";
 import PropTypes from "prop-types";
 
 export default function MapSection({ popUpRef }) {

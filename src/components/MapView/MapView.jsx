@@ -9,7 +9,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import MapSection from "../../pages/MapSection";
+import MapSection from "./MapSection";
 import { Tooltip } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import { useNavigate } from "react-router-dom";
