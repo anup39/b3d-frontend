@@ -5,7 +5,7 @@ import AppBar from "../Common/AppBar";
 import CategoryGeomForm from "../Category/CategoryGeomForm";
 import Map3D from "../../map/Map3D";
 // import ThreeScene from "../map/MapThree";
-import MapLoader from "../MapLoader/MapLoader";
+import MapLoader from "./MapLoader";
 import PropTypes from "prop-types";
 
 export default function MapSection({ popUpRef }) {
