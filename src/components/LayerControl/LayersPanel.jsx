@@ -31,21 +31,13 @@ export default function LayersPanel({ map, popUpRef }) {
   const dispatch = useDispatch();
   const [categories, setCategories] = useState(all_categories);
   const [loading, setLoading] = useState(true);
-  // const client_id = useSelector((state) => state.mapCategories.client_id);
+  const { mode, view_name } = useSelector((state) => state.drawnPolygon);
   const client_id = useSelector(
     (state) => state.mapView.clientDetail.client_id
   );
-
-  const current_measuring_categories = useSelector(
-    (state) => state.mapView.currentMapDetail.current_measuring_categories
+  const { project_id, current_measuring_categories } = useSelector(
+    (state) => state.mapView.currentMapDetail
   );
-
-  const project_id = useSelector(
-    (state) => state.mapView.currentMapDetail.project_id
-  );
-
-  const mode = useSelector((state) => state.drawnPolygon.mode);
-  const view_name = useSelector((state) => state.drawnPolygon.view_name);
 
   useEffect(() => {
     if (current_measuring_categories) {

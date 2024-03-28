@@ -36,8 +36,7 @@ import axios from "axios";
 export default function LayersAndWidgetControl({ map, popUpRef }) {
   const dispatch = useDispatch();
   const [expandMeasurings, setExpandMeasurings] = useState(true);
-  const mode = useSelector((state) => state.drawnPolygon.mode);
-  const view_name = useSelector((state) => state.drawnPolygon.view_name);
+  const { mode, view_name } = useSelector((state) => state.drawnPolygon);
   const client_id = useSelector(
     (state) => state.mapView.clientDetail.client_id
   );
