@@ -18,6 +18,8 @@ import InspectionFlow from "./reducers/InspectionFlow";
 import StandardInspection from "./reducers/StandardInspection";
 import SubInspection from "./reducers/SubInspection";
 import Inspections from "./reducers/Inspections";
+import { projectApi } from "./api/projectApi";
+import { setupListeners } from "@reduxjs/toolkit/query";
 
 export const store = configureStore({
   reducer: {
@@ -40,8 +42,13 @@ export const store = configureStore({
     standardInspection: StandardInspection,
     subInspection: SubInspection,
     inspections: Inspections,
+    [projectApi.reducerPath]: projectApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(projectApi.middleware),
 });
+
+setupListeners(store.dispatch);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
