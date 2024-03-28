@@ -107,11 +107,9 @@ export default function MapView({ level, client_id }) {
     showUploadingCategories,
   } = useSelector((state) => state.mapView);
 
-  const {
-    current_project_measuring,
-    current_measuring_categories,
-    current_tif,
-  } = useSelector((state) => state.mapView.currentMapDetail);
+  const { project_id, current_measuring_categories, current_tif } = useSelector(
+    (state) => state.mapView.currentMapDetail
+  );
 
   const showTifUpload = useSelector(
     (state) => state.displaySettings.showTifUpload
@@ -298,7 +296,7 @@ export default function MapView({ level, client_id }) {
                     size="small"
                     // {...label}
                     // defaultChecked={false}
-                    checked={current_project_measuring === "All" ? true : false}
+                    checked={project_id === "All" ? true : false}
                     sx={{
                       display: open ? "block" : "none",
                       mr: 3.3,

@@ -14,7 +14,7 @@ const initialState = {
   currentMapDetail: {
     // selected_projects_ids: [],
     display_type: "2D",
-    current_project_measuring: null,
+    project_id: null,
     current_project_name: null,
     current_property_polygon_geojson: null,
     current_tif: null,
@@ -78,7 +78,7 @@ export const MapView = createSlice({
     },
     setcurrentProjectMeasuring: (state, action) => {
       const newId = action.payload;
-      state.currentMapDetail.current_project_measuring = newId;
+      state.currentMapDetail.project_id = newId;
     },
     setcurrentProjectName: (state, action) => {
       const name = action.payload;

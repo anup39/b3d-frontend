@@ -55,7 +55,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     (state) => state.mapView.clientDetail.client_id
   );
   const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring
+    (state) => state.mapView.currentMapDetail.project_id
   );
 
   const showPiechart = useSelector((state) => state.mapView.showPiechart);

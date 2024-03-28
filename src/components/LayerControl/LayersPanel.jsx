@@ -41,7 +41,7 @@ export default function LayersPanel({ map, popUpRef }) {
   );
 
   const project_id = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring
+    (state) => state.mapView.currentMapDetail.project_id
   );
 
   const mode = useSelector((state) => state.drawnPolygon.mode);
