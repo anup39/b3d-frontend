@@ -27,7 +27,7 @@ import {
 } from "../../reducers/DrawnGeometry";
 import all_categories from "./measurings_categories_sample";
 
-export default function LayersControlPanel({ map, popUpRef }) {
+export default function LayersPanel({ map, popUpRef }) {
   const dispatch = useDispatch();
   const [categories, setCategories] = useState(all_categories);
   const [loading, setLoading] = useState(true);
@@ -723,7 +723,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
   );
 }
 
-LayersControlPanel.propTypes = {
+LayersPanel.propTypes = {
   map: PropTypes.object,
   popUpRef: PropTypes.object,
 };

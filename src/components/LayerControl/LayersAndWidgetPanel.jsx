@@ -1,4 +1,4 @@
-import LayersControlPanel from "./LayerControlPanel";
+import LayersPanel from "./LayersPanel";
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import { PropTypes, object } from "prop-types";
 import SummarizeIcon from "@mui/icons-material/Summarize";
@@ -35,7 +35,7 @@ import axios from "axios";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import { update } from "lodash";
 
-export default function LayersAndLabelControl({ map, popUpRef }) {
+export default function LayersAndWidgetControl({ map, popUpRef }) {
   const dispatch = useDispatch();
   const [expandMeasurings, setExpandMeasurings] = useState(true);
   const showMeasuringsPanel = useSelector(
@@ -363,7 +363,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
             </Box>
 
             {expandMeasurings ? (
-              <LayersControlPanel map={map} popUpRef={popUpRef} />
+              <LayersPanel map={map} popUpRef={popUpRef} />
             ) : null}
 
             {expandMeasurings ? (
@@ -398,7 +398,7 @@ export default function LayersAndLabelControl({ map, popUpRef }) {
   );
 }
 
-LayersAndLabelControl.propTypes = {
+LayersAndWidgetControl.propTypes = {
   map: PropTypes.object,
   popUpRef: PropTypes.object,
 };

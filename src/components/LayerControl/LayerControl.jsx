@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom/client";
 import { store } from "../../store";
 import { Provider } from "react-redux";
-import LayersAndLabelControl from "./LayersAndLabelControl";
+import LayersAndWidgetPanel from "./LayersAndWidgetPanel";
 
 export default class LayersControl {
   onAdd(map) {
@@ -19,7 +19,7 @@ export default class LayersControl {
 
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        <LayersAndLabelControl map={this._map} popUpRef={this._popUpRef} />
+        <LayersAndWidgetPanel map={this._map} popUpRef={this._popUpRef} />
       </Provider>
     );
   }

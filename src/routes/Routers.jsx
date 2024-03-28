@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "../pages/Login";
-import MapSection from "../pages/MapSection";
+import MapSection from "../components/MapView/MapSection";
 import Projects from "../pages/Projects";
 import Classification from "../pages/Classification";
 import InspectionTypes from "../pages/InspectionTypes";
