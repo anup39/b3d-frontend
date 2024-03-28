@@ -1,4 +1,3 @@
-import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -9,7 +8,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import MapSection from "../../pages/MapSection";
+import MapSection from "./MapSection";
 import { Tooltip } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import { useNavigate } from "react-router-dom";
@@ -23,22 +22,17 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import UploadPropertyForm from "../Property/UploadPropertyForm";
 import UploadProgress from "../Property/UploadProgress";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   setCurrentMapExtent,
-  setCategoriesState,
+  setCurrentMeasuringCategories,
   setcurrentTif,
 } from "../../reducers/MapView";
-import {
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { ListItem, ListItemButton, ListItemText } from "@mui/material";
 import {
   setcurrentProjectName,
   setshowMeasuringsPanel,
-  addcurrentProjectMeasuringTable,
+  setcurrentProjectMeasuring,
   setshowTableMeasurings,
   setshowPiechart,
   setshowReport,
@@ -99,45 +93,30 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MapView({ level, client_id }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
   const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
   const projects = useSelector((state) => state.project.projects);
+  const {
+    clientDetail,
+    showReport,
+    showMap,
+    showShapefileUpload,
+    showUploadingCategories,
+  } = useSelector((state) => state.mapView);
 
-  const clientDetail = useSelector((state) => state.mapView.clientDetail);
-  const current_measuring_categories = useSelector(
-    (state) => state.mapView.currentMapDetail.current_measuring_categories
-  );
-  const currentClient = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
-  const showShapefileUpload = useSelector(
-    (state) => state.mapView.showShapefileUpload
-  );
-
-  const showUploadingCategories = useSelector(
-    (state) => state.mapView.showUploadingCategories
+  const { project_id, current_measuring_categories, current_tif } = useSelector(
+    (state) => state.mapView.currentMapDetail
   );
 
-  const showReport = useSelector((state) => state.mapView.showReport);
-  const showMap = useSelector((state) => state.mapView.showMap);
   const showTifUpload = useSelector(
     (state) => state.displaySettings.showTifUpload
   );
   const showProgressFormOpen = useSelector(
     (state) => state.property.showProgressFormOpen
   );
-
-  const current_project_measuring_table = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
-  );
-
-  const current_tif = useSelector(
-    (state) => state.mapView.currentMapDetail.current_tif
-  );
-
-  const navigate = useNavigate();
 
   const handleDrawerClose = () => {
     setOpen(!open);
@@ -149,7 +128,7 @@ export default function MapView({ level, client_id }) {
 
   useEffect(() => {
     dispatch(setCurrentMapExtent(null));
-    dispatch(setCategoriesState(null));
+    dispatch(setCurrentMeasuringCategories(null));
     dispatch(setcurrentTif(null));
   }, [dispatch]);
 
@@ -157,18 +136,18 @@ export default function MapView({ level, client_id }) {
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
     if (checked) {
-      dispatch(setCategoriesState(null));
+      dispatch(setCurrentMeasuringCategories(null));
       dispatch(setshowMeasuringsPanel(true));
       // dispatch(addSelectedProjectId(id));
       dispatch(setcurrentProjectName("All"));
-      dispatch(addcurrentProjectMeasuringTable(project_id));
+      dispatch(setcurrentProjectMeasuring(project_id));
     } else {
-      dispatch(setCategoriesState(null));
+      dispatch(setCurrentMeasuringCategories(null));
       dispatch(setshowMeasuringsPanel(false));
       // dispatch(removeSelectedProjectId(id));
       dispatch(setcurrentProjectName(null));
-      dispatch(addcurrentProjectMeasuringTable(null));
-      dispatch(setCategoriesState(null));
+      dispatch(setcurrentProjectMeasuring(null));
+      dispatch(setCurrentMeasuringCategories(null));
       dispatch(setcurrentTif(null));
       dispatch(setshowTableMeasurings(false));
       dispatch(setshowPiechart(false));
@@ -184,10 +163,8 @@ export default function MapView({ level, client_id }) {
             sub_category?.category?.forEach((cat) => {
               if (cat.checked) {
                 if (cat.type_of_geometry) {
-                  const sourceId =
-                    String(currentClient) + cat.view_name + "source";
-                  const layerId =
-                    String(currentClient) + cat.view_name + "layer";
+                  const sourceId = String(client_id) + cat.view_name + "source";
+                  const layerId = String(client_id) + cat.view_name + "layer";
                   if (map) {
                     RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
                   }
@@ -319,9 +296,7 @@ export default function MapView({ level, client_id }) {
                     size="small"
                     // {...label}
                     // defaultChecked={false}
-                    checked={
-                      current_project_measuring_table === "All" ? true : false
-                    }
+                    checked={project_id === "All" ? true : false}
                     sx={{
                       display: open ? "block" : "none",
                       mr: 3.3,
@@ -372,5 +347,4 @@ export default function MapView({ level, client_id }) {
 MapView.propTypes = {
   level: PropTypes.string,
   client_id: PropTypes.string,
-  projects: PropTypes.array,
 };

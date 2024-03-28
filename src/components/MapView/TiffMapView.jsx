@@ -24,15 +24,10 @@ const Img = styled("img")({
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-export default function TiffMapView({
-  tif,
-  project_id,
-  project_checked,
-  index,
-}) {
+export default function TiffMapView({ tif, projectId }) {
   const dispatch = useDispatch();
-  const current_project_measuring_table = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+  const project_id = useSelector(
+    (state) => state.mapView.currentMapDetail.project_id
   );
 
   const handleTifChecked = (event, tif_id) => {
@@ -157,7 +152,7 @@ export default function TiffMapView({
           secondaryTypographyProps={{ fontSize: 13 }}
         />
         <Checkbox
-          // checked={current_project_measuring_table && tif.checked}
+          // checked={project_id && tif.checked}
           checked={tif.checked}
           onChange={(event) => handleTifChecked(event, tif.id)}
           size="small"
@@ -169,13 +164,9 @@ export default function TiffMapView({
               color: pink[600],
             },
           }}
-          disabled={
-            current_project_measuring_table === project_id ? false : true
-          }
+          disabled={project_id === projectId ? false : true}
         />
-        {current_project_measuring_table === project_id ? (
-          <MoreonMap tif={tif} />
-        ) : null}
+        {project_id === projectId ? <MoreonMap tif={tif} /> : null}
       </ListItemButton>
     </Box>
   );
@@ -183,7 +174,5 @@ export default function TiffMapView({
 
 TiffMapView.propTypes = {
   tif: PropTypes.object,
-  project_id: PropTypes.number,
-  project_checked: PropTypes.bool,
-  index: PropTypes.number,
+  projectId: PropTypes.number,
 };

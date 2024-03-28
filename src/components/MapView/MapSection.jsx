@@ -1,29 +1,24 @@
-import { useEffect } from "react";
-import Map from "../map/Map";
+import Map from "../../map/Map";
 import { useParams } from "react-router-dom";
-import { setClient } from "../reducers/MapCategories";
-import { useDispatch, useSelector } from "react-redux";
-import AppBar from "../components/Common/AppBar";
-import CategoryGeomForm from "../components/Category/CategoryGeomForm";
-import Map3D from "../map/Map3D";
+import { useSelector } from "react-redux";
+import AppBar from "../Common/AppBar";
+import CategoryGeomForm from "../Category/CategoryGeomForm";
+import Map3D from "../../map/Map3D";
 // import ThreeScene from "../map/MapThree";
-import MapLoader from "../components/MapLoader/MapLoader";
+import MapLoader from "./MapLoader";
 import PropTypes from "prop-types";
 
 export default function MapSection({ popUpRef }) {
-  const dispatch = useDispatch();
-  const { level } = useParams();
-  const { id } = useParams();
   const display_type = useSelector(
     (state) => state.mapView.currentMapDetail.display_type
   );
 
   const showMapLoader = useSelector((state) => state.mapView.showMapLoader);
-  useEffect(() => {
-    if (level === "client") {
-      dispatch(setClient(id));
-    }
-  }, [dispatch, level, id]);
+  // useEffect(() => {
+  //   if (level === "client") {
+  //     dispatch(setClient(id));
+  //   }
+  // }, [dispatch, level, id]);
 
   return (
     <div
@@ -38,7 +33,7 @@ export default function MapSection({ popUpRef }) {
       {showMapLoader ? <MapLoader /> : null}
 
       {display_type && display_type === "2D" ? (
-        <Map popUpRef={popUpRef} id={id} />
+        <Map popUpRef={popUpRef} />
       ) : (
         <Map3D />
       )}

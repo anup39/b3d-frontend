@@ -12,8 +12,7 @@ export default class RasterControl {
     return this._container;
   }
 
-  updateProject(project_id) {
-    this._project_id = project_id;
+  updateProject() {
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
         <RasterControlPanel></RasterControlPanel>

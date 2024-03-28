@@ -35,7 +35,7 @@ export default function UploadingCategories() {
     (state) => state.mapView.clientDetail.client_id
   );
   const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+    (state) => state.mapView.currentMapDetail.project_id
   );
   const currentUser = useSelector((state) => state.auth.user_id);
 

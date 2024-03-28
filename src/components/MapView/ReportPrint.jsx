@@ -27,7 +27,7 @@ export default function ReportPrint() {
     (state) => state.mapView.clientDetail.client_id
   );
   const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+    (state) => state.mapView.currentMapDetail.project_id
   );
   const current_measuring_categories = useSelector(
     (state) => state.mapView.currentMapDetail.current_measuring_categories

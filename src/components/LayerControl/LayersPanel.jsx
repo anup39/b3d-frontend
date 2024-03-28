@@ -12,7 +12,7 @@ import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFrom
 import { Slider } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
-import { setCategoriesState } from "../../reducers/MapView";
+import { setCurrentMeasuringCategories } from "../../reducers/MapView";
 import RectangleIcon from "@mui/icons-material/Rectangle";
 import CircleIcon from "@mui/icons-material/Circle";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
@@ -27,7 +27,7 @@ import {
 } from "../../reducers/DrawnGeometry";
 import all_categories from "./measurings_categories_sample";
 
-export default function LayersControlPanel({ map, popUpRef }) {
+export default function LayersPanel({ map, popUpRef }) {
   const dispatch = useDispatch();
   const [categories, setCategories] = useState(all_categories);
   const [loading, setLoading] = useState(true);
@@ -41,7 +41,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
   );
 
   const project_id = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring_table
+    (state) => state.mapView.currentMapDetail.project_id
   );
 
   const mode = useSelector((state) => state.drawnPolygon.mode);
@@ -59,7 +59,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
           }/map-measurings/?client=${client_id}`
         )
         .then((res) => {
-          dispatch(setCategoriesState(res.data));
+          dispatch(setCurrentMeasuringCategories(res.data));
           setLoading(false);
         });
     }
@@ -157,7 +157,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
       });
     });
     setCategories(updatedCategories);
-    dispatch(setCategoriesState(updatedCategories));
+    dispatch(setCurrentMeasuringCategories(updatedCategories));
   };
 
   // TODO: Here small issue , when the categories are empty for sub category , in this case when i selected any catgroy it will be automatically checked
@@ -275,7 +275,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
     }
 
     setCategories(updatedCategories);
-    dispatch(setCategoriesState(updatedCategories));
+    dispatch(setCurrentMeasuringCategories(updatedCategories));
   };
 
   const handleChangecat = (event, sdIndex, subIndex, catIndex) => {
@@ -419,7 +419,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
     }
 
     setCategories(updatedCategories);
-    dispatch(setCategoriesState(updatedCategories));
+    dispatch(setCurrentMeasuringCategories(updatedCategories));
   };
 
   const handleChangeExpandSd = (event, sdIndex) => {
@@ -427,7 +427,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
     updatedCategories[sdIndex].expand = !updatedCategories[sdIndex].expand;
 
     setCategories(updatedCategories);
-    dispatch(setCategoriesState(updatedCategories));
+    dispatch(setCurrentMeasuringCategories(updatedCategories));
   };
 
   const handleChangeExpandSub = (event, sdIndex, subIndex) => {
@@ -435,7 +435,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
     updatedCategories[sdIndex].sub_category[subIndex].expand =
       !updatedCategories[sdIndex].sub_category[subIndex].expand;
     setCategories(updatedCategories);
-    dispatch(setCategoriesState(updatedCategories));
+    dispatch(setCurrentMeasuringCategories(updatedCategories));
   };
 
   const handleChangeSlider = (event, value, cat) => {
@@ -723,7 +723,7 @@ export default function LayersControlPanel({ map, popUpRef }) {
   );
 }
 
-LayersControlPanel.propTypes = {
+LayersPanel.propTypes = {
   map: PropTypes.object,
   popUpRef: PropTypes.object,
 };
