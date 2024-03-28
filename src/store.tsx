@@ -7,7 +7,6 @@ import Tifs from "./reducers/Tifs";
 import StandardCategory from "./reducers/StandardCategory";
 import SubCategory from "./reducers/SubCategory";
 import Category from "./reducers/Category";
-import MapCategories from "./reducers/MapCategories";
 import DrawnPolygon from "./reducers/DrawnGeometry";
 import Users from "./reducers/Users";
 import Property from "./reducers/Property";
@@ -31,7 +30,6 @@ export const store = configureStore({
     standardCategory: StandardCategory,
     subCategory: SubCategory,
     category: Category,
-    mapCategories: MapCategories,
     drawnPolygon: DrawnPolygon,
     users: Users,
     mapView: MapView,
