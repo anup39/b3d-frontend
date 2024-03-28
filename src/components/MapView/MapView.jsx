@@ -1,4 +1,3 @@
-import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -23,18 +22,13 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import UploadPropertyForm from "../Property/UploadPropertyForm";
 import UploadProgress from "../Property/UploadProgress";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   setCurrentMapExtent,
   setCurrentMeasuringCategories,
   setcurrentTif,
 } from "../../reducers/MapView";
-import {
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { ListItem, ListItemButton, ListItemText } from "@mui/material";
 import {
   setcurrentProjectName,
   setshowMeasuringsPanel,
@@ -99,45 +93,32 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MapView({ level, client_id }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
   const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
   const projects = useSelector((state) => state.project.projects);
+  const {
+    clientDetail,
+    showReport,
+    showMap,
+    showShapefileUpload,
+    showUploadingCategories,
+  } = useSelector((state) => state.mapView);
 
-  const clientDetail = useSelector((state) => state.mapView.clientDetail);
-  const current_measuring_categories = useSelector(
-    (state) => state.mapView.currentMapDetail.current_measuring_categories
-  );
-  const currentClient = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
-  const showShapefileUpload = useSelector(
-    (state) => state.mapView.showShapefileUpload
-  );
+  const {
+    current_project_measuring,
+    current_measuring_categories,
+    current_tif,
+  } = useSelector((state) => state.mapView.currentMapDetail);
 
-  const showUploadingCategories = useSelector(
-    (state) => state.mapView.showUploadingCategories
-  );
-
-  const showReport = useSelector((state) => state.mapView.showReport);
-  const showMap = useSelector((state) => state.mapView.showMap);
   const showTifUpload = useSelector(
     (state) => state.displaySettings.showTifUpload
   );
   const showProgressFormOpen = useSelector(
     (state) => state.property.showProgressFormOpen
   );
-
-  const current_project_measuring = useSelector(
-    (state) => state.mapView.currentMapDetail.current_project_measuring
-  );
-
-  const current_tif = useSelector(
-    (state) => state.mapView.currentMapDetail.current_tif
-  );
-
-  const navigate = useNavigate();
 
   const handleDrawerClose = () => {
     setOpen(!open);
@@ -184,10 +165,8 @@ export default function MapView({ level, client_id }) {
             sub_category?.category?.forEach((cat) => {
               if (cat.checked) {
                 if (cat.type_of_geometry) {
-                  const sourceId =
-                    String(currentClient) + cat.view_name + "source";
-                  const layerId =
-                    String(currentClient) + cat.view_name + "layer";
+                  const sourceId = String(client_id) + cat.view_name + "source";
+                  const layerId = String(client_id) + cat.view_name + "layer";
                   if (map) {
                     RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
                   }
@@ -370,5 +349,4 @@ export default function MapView({ level, client_id }) {
 MapView.propTypes = {
   level: PropTypes.string,
   client_id: PropTypes.string,
-  projects: PropTypes.array,
 };
