@@ -401,14 +401,8 @@ export default function ProjectView({ project, popUpRef }) {
         <Collapse in={project.openProperties} timeout="auto" unmountOnExit>
           <List sx={{ fontSize: 2 }} component="div" disablePadding>
             {tifs && tifs.length > 0
-              ? tifs.map((tif, index) => (
-                  <TiffMapView
-                    key={tif.id}
-                    tif={tif}
-                    projectId={project.id}
-                    project_checked={project.checked}
-                    index={index}
-                  />
+              ? tifs.map((tif) => (
+                  <TiffMapView key={tif.id} tif={tif} projectId={project.id} />
                 ))
               : null}
           </List>

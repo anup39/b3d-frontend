@@ -24,12 +24,7 @@ const Img = styled("img")({
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-export default function TiffMapView({
-  tif,
-  projectId,
-  project_checked,
-  index,
-}) {
+export default function TiffMapView({ tif, projectId }) {
   const dispatch = useDispatch();
   const project_id = useSelector(
     (state) => state.mapView.currentMapDetail.project_id
@@ -180,6 +175,4 @@ export default function TiffMapView({
 TiffMapView.propTypes = {
   tif: PropTypes.object,
   projectId: PropTypes.number,
-  project_checked: PropTypes.bool,
-  index: PropTypes.number,
 };
