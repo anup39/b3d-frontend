@@ -1,6 +1,6 @@
 import LayersPanel from "./LayersPanel";
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
-import { PropTypes, object } from "prop-types";
+import { PropTypes } from "prop-types";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import BackupIcon from "@mui/icons-material/Backup";
 import TableChartIcon from "@mui/icons-material/TableChart";
@@ -32,8 +32,6 @@ import RectangleIcon from "@mui/icons-material/Rectangle";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
-import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
-import { update } from "lodash";
 
 export default function LayersAndWidgetControl({ map, popUpRef }) {
   const dispatch = useDispatch();

@@ -275,18 +275,6 @@ export default function Map({ popUpRef }) {
       const layer_control = new LayersControl();
       map.addControl(layer_control, "top-left");
       layer_control.updateProject(popUpRef);
-      // map.addControl(
-      //   new MaplibreExportControl({
-      //     PageSize: Size.A3,
-      //     PageOrientation: PageOrientation.Portrait,
-      //     Format: Format.PNG,
-      //     DPI: DPI[96],
-      //     Crosshair: true,
-      //     PrintableArea: true,
-      //   }),
-      //   "top-right"
-      // );
-
       map.addControl(new maplibregl.NavigationControl(), "top-right");
       const raster_control = new RasterControl();
       map.addControl(raster_control, "top-left");
@@ -301,7 +289,6 @@ export default function Map({ popUpRef }) {
       const measure_control = new MeasureControl();
       map.addControl(measure_control, "top-right");
       measure_control.updateMeasureControl(popUpRef);
-
       // const popup_control = new PopupControl();
       // map.addControl(popup_control, "bottom-left");
     }
