@@ -139,65 +139,65 @@ export default function MapView() {
   // }, [dispatch]);
 
   // This is the logic or function for All measurements clicked
-  const handleMeasuringsPanelChecked = (event, project_id) => {
-    console.log("All measurements clicked");
-    const checked = event.target.checked;
-    if (checked) {
-      dispatch(setCurrentMeasuringCategories(null));
-      dispatch(setshowMeasuringsPanel(true));
-      // dispatch(addSelectedProjectId(id));
-      dispatch(setcurrentProjectName("All"));
-      dispatch(setcurrentProjectMeasuring(project_id));
-    } else {
-      dispatch(setCurrentMeasuringCategories(null));
-      dispatch(setshowMeasuringsPanel(false));
-      // dispatch(removeSelectedProjectId(id));
-      dispatch(setcurrentProjectName(null));
-      dispatch(setcurrentProjectMeasuring(null));
-      dispatch(setCurrentMeasuringCategories(null));
-      dispatch(setcurrentTif(null));
-      dispatch(setshowTableMeasurings(false));
-      dispatch(setshowPiechart(false));
-      dispatch(setshowReport(false));
-      dispatch(setshowTifPanel(false));
+  // const handleMeasuringsPanelChecked = (event, project_id) => {
+  //   console.log("All measurements clicked");
+  //   const checked = event.target.checked;
+  //   if (checked) {
+  //     dispatch(setCurrentMeasuringCategories(null));
+  //     dispatch(setshowMeasuringsPanel(true));
+  //     // dispatch(addSelectedProjectId(id));
+  //     dispatch(setcurrentProjectName("All"));
+  //     dispatch(setcurrentProjectMeasuring(project_id));
+  //   } else {
+  //     dispatch(setCurrentMeasuringCategories(null));
+  //     dispatch(setshowMeasuringsPanel(false));
+  //     // dispatch(removeSelectedProjectId(id));
+  //     dispatch(setcurrentProjectName(null));
+  //     dispatch(setcurrentProjectMeasuring(null));
+  //     dispatch(setCurrentMeasuringCategories(null));
+  //     dispatch(setcurrentTif(null));
+  //     dispatch(setshowTableMeasurings(false));
+  //     dispatch(setshowPiechart(false));
+  //     dispatch(setshowReport(false));
+  //     dispatch(setshowTifPanel(false));
 
-      const map = window.map_global;
+  //     const map = window.map_global;
 
-      const measuringcategories = current_measuring_categories;
-      if (measuringcategories) {
-        measuringcategories?.forEach((measuringcategory) => {
-          measuringcategory?.sub_category?.forEach((sub_category) => {
-            sub_category?.category?.forEach((cat) => {
-              if (cat.checked) {
-                if (cat.type_of_geometry) {
-                  const sourceId = String(client_id) + cat.view_name + "source";
-                  const layerId = String(client_id) + cat.view_name + "layer";
-                  if (map) {
-                    RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
-                  }
-                }
-              }
-            });
-          });
-        });
-      }
-      if (current_tif) {
-        const id = current_tif.id;
-        const style = map.getStyle();
-        const existingLayer = style?.layers?.find(
-          (layer) => layer.id === `${id}-layer`
-        );
-        const existingSource = style?.sources[`${id}-source`];
-        if (existingLayer) {
-          map.off("click", `${id}-layer`);
-          map.removeLayer(`${id}-layer`);
-        }
-        if (existingSource) {
-          map.removeSource(`${id}-source`);
-        }
-      }
-    }
-  };
+  //     const measuringcategories = current_measuring_categories;
+  //     if (measuringcategories) {
+  //       measuringcategories?.forEach((measuringcategory) => {
+  //         measuringcategory?.sub_category?.forEach((sub_category) => {
+  //           sub_category?.category?.forEach((cat) => {
+  //             if (cat.checked) {
+  //               if (cat.type_of_geometry) {
+  //                 const sourceId = String(client_id) + cat.view_name + "source";
+  //                 const layerId = String(client_id) + cat.view_name + "layer";
+  //                 if (map) {
+  //                   RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
+  //                 }
+  //               }
+  //             }
+  //           });
+  //         });
+  //       });
+  //     }
+  //     if (current_tif) {
+  //       const id = current_tif.id;
+  //       const style = map.getStyle();
+  //       const existingLayer = style?.layers?.find(
+  //         (layer) => layer.id === `${id}-layer`
+  //       );
+  //       const existingSource = style?.sources[`${id}-source`];
+  //       if (existingLayer) {
+  //         map.off("click", `${id}-layer`);
+  //         map.removeLayer(`${id}-layer`);
+  //       }
+  //       if (existingSource) {
+  //         map.removeSource(`${id}-source`);
+  //       }
+  //     }
+  //   }
+  // };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -299,9 +299,9 @@ export default function MapView() {
 
                 <Tooltip title="Show All Measurings">
                   <Checkbox
-                    onChange={(event) =>
-                      handleMeasuringsPanelChecked(event, "All")
-                    }
+                    // onChange={(event) =>
+                    //   handleMeasuringsPanelChecked(event, "All")
+                    // }
                     size="small"
                     // {...label}
                     // defaultChecked={false}
