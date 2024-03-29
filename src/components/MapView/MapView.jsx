@@ -273,7 +273,7 @@ export default function MapView() {
             </IconButton>
           </DrawerHeader>
         </Box>
-        <Divider sx={{ mt: 0.5 }} />
+        <Divider sx={{ mt: 0.1 }} />
 
         <List>
           {/* Properties */}
@@ -282,7 +282,7 @@ export default function MapView() {
             <ListItem disablePadding sx={{ display: "block", fontSize: 14 }}>
               <ListItemButton
                 sx={{
-                  minHeight: 48,
+                  // minHeight: 48,
                   justifyContent: openSidebar ? "initial" : "center",
                   py: 0,
                   "&:hover": {
@@ -293,8 +293,8 @@ export default function MapView() {
                 {/* #Ui for all the measurements */}
                 <ListItemText
                   secondary={"All Measurements"}
-                  sx={{ opacity: openSidebar ? 1 : 0, ml: 0.7 }}
-                  secondaryTypographyProps={{ fontSize: 12 }}
+                  // sx={{ opacity: openSidebar ? 1 : 0, ml: 0.7 }}
+                  // secondaryTypographyProps={{ fontSize: 12 }}
                 />
 
                 <Tooltip title="Show All Measurings">
@@ -302,13 +302,13 @@ export default function MapView() {
                     // onChange={(event) =>
                     //   handleMeasuringsPanelChecked(event, "All")
                     // }
-                    size="small"
+                    // size="small"
                     // {...label}
                     // defaultChecked={false}
                     checked={project_id === "All" ? true : false}
                     sx={{
                       display: openSidebar ? "block" : "none",
-                      mr: 3.3,
+                      // mr: 5,
                       color: pink[600],
                       "&.Mui-checked": {
                         color: pink[600],

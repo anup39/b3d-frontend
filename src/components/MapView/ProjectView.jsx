@@ -293,7 +293,7 @@ export default function ProjectView({ project, popUpRef }) {
       <ListItem
         key={project.id}
         disablePadding
-        sx={{ display: "block", fontSize: 28 }}
+        sx={{ display: "block", fontSize: 20, mr: 1, ml: 0.5 }}
       >
         <ListItemButton
           sx={{
@@ -306,9 +306,9 @@ export default function ProjectView({ project, popUpRef }) {
         >
           <ListItemIcon
             sx={{
-              minWidth: "24px",
+              minWidth: "18px",
               mr: open ? 0 : "auto",
-              justifyContent: "center",
+              justifyContent: "space-evenly",
             }}
           >
             <LocationCityIcon />
