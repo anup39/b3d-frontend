@@ -26,6 +26,17 @@ export const projectApi = createApi({
         });
       },
     }),
+    getProjectsByClientIdAndProjectId: builder.query<
+      any,
+      { client_id: string; project_id: string }
+    >({
+      query: ({ client_id, project_id }) => ({
+        url: `/projects/?client=${client_id}&id=${project_id}`,
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"),
+        },
+      }),
+    }),
     getClientDetailsByClientId: builder.query<any, string>({
       query: (client_id: string) => ({
         url: `/clients/${client_id}/`,
@@ -41,5 +52,6 @@ export const projectApi = createApi({
 // auto-generated based on the defined endpoints
 export const {
   useGetProjectsByClientIdQuery,
+  useGetProjectsByClientIdAndProjectIdQuery,
   useGetClientDetailsByClientIdQuery,
 } = projectApi;
