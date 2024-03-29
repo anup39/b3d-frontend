@@ -46,6 +46,7 @@ export default function ProjectView({ project, popUpRef }) {
   const dispatch = useDispatch();
 
   const tifs = useSelector((state) => state.tifs.tifs);
+  const openSidebar = useSelector((state) => state.mapView.openSidebar);
 
   const { current_measuring_categories, project_id, current_tif } = useSelector(
     (state) => state.mapView.currentMapDetail

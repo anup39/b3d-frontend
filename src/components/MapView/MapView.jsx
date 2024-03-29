@@ -278,7 +278,7 @@ export default function MapView() {
         <List>
           {/* Properties */}
 
-          {level === "Projects" ? (
+          {level === "Projects" && openSidebar ? (
             <ListItem disablePadding sx={{ display: "block", fontSize: 14 }}>
               <ListItemButton
                 sx={{
@@ -324,9 +324,11 @@ export default function MapView() {
 
           {/* Search functionality for the properties  */}
 
-          {level === "Projects" ? <AutoCompleteProperties /> : null}
+          {level === "Projects" && openSidebar ? (
+            <AutoCompleteProperties />
+          ) : null}
 
-          {projects
+          {projects && openSidebar
             ? projects.map((project) => (
                 <ProjectView
                   key={project.id}
