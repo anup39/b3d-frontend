@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import CloseIcon from "@mui/icons-material/Close";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 import { useDispatch, useSelector } from "react-redux";
 import { filterProjects } from "../../reducers/Project";
@@ -17,16 +17,17 @@ export default function AutoCompleteProperties() {
         display: "flex",
         alingItems: "center",
         justifyContent: "flex-start",
+        backgroundColor: "#F5F5F5",
       }}
     >
       <TextField
         sx={{
-          width: 175,
+          width: 173,
           fontFamily: "Roboto",
           fontSize: "5px",
-          marginTop: "10px",
+          marginTop: "5px",
           marginBottom: "10px",
-          marginLeft: "15px",
+          marginLeft: "11px",
         }}
         size="small"
         value={searchText}
@@ -48,7 +49,7 @@ export default function AutoCompleteProperties() {
         size="small"
       >
         <Tooltip title="Clear Search" placement="top">
-          <CloseIcon sx={{ fontSize: 20, color: "#E91E62" }} />
+          <CancelIcon sx={{ fontSize: 20, color: "#E91E62" }} />
         </Tooltip>
       </IconButton>
     </Box>
