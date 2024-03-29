@@ -320,13 +320,11 @@ export default function MapView() {
             </ListItem>
           ) : null}
 
-          {level & (level === "Projects") ? <Divider /> : null}
+          {level === "Projects" ? <Divider /> : null}
 
           {/* Search functionality for the properties  */}
 
-          {level & (level === "Projects") ? (
-            <AutoCompleteProperties client_id={client_id} />
-          ) : null}
+          {level === "Projects" ? <AutoCompleteProperties /> : null}
 
           {projects
             ? projects.map((project) => (
