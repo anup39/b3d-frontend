@@ -93,13 +93,17 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MapView({ level, client_id }) {
+export default function MapView() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
   const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
   const projects = useSelector((state) => state.project.projects);
+  const client_id = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
   const {
+    level,
     openSidebar,
     clientDetail,
     showReport,
@@ -136,6 +140,7 @@ export default function MapView({ level, client_id }) {
 
   // This is the logic or function for All measurements clicked
   const handleMeasuringsPanelChecked = (event, project_id) => {
+    console.log("All measurements clicked");
     const checked = event.target.checked;
     if (checked) {
       dispatch(setCurrentMeasuringCategories(null));
@@ -315,11 +320,11 @@ export default function MapView({ level, client_id }) {
             </ListItem>
           ) : null}
 
-          {level === "Projects" ? <Divider /> : null}
+          {level & (level === "Projects") ? <Divider /> : null}
 
           {/* Search functionality for the properties  */}
 
-          {level === "Projects" ? (
+          {level & (level === "Projects") ? (
             <AutoCompleteProperties client_id={client_id} />
           ) : null}
 
@@ -348,7 +353,4 @@ export default function MapView({ level, client_id }) {
   );
 }
 
-MapView.propTypes = {
-  level: PropTypes.string,
-  client_id: PropTypes.string,
-};
+MapView.propTypes = {};

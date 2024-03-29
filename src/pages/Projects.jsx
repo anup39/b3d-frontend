@@ -65,7 +65,7 @@ export default function Projects() {
           </div>
         </div>
       ) : (
-        <MapView level={"Projects"} client_id={client_id} />
+        <MapView />
       )}
     </>
   );
