@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   level: "Projects",
+  searchText: "",
   openSidebar: true,
   clientDetail: { client_id: null, client_name: null, client_image: null },
   showShapefileUpload: false,
@@ -50,6 +51,9 @@ export const MapView = createSlice({
   reducers: {
     setLevel: (state, action) => {
       state.level = action.payload;
+    },
+    setSearchText: (state, action) => {
+      state.searchText = action.payload;
     },
     setOpenSidebar: (state, action) => {
       state.openSidebar = action.payload;
@@ -170,6 +174,7 @@ export const MapView = createSlice({
 // eslint-disable-next-line react-refresh/only-export-components
 export const {
   setLevel,
+  setSearchText,
   setOpenSidebar,
   setClientDetail,
   setshowShapefileUpload,
