@@ -32,7 +32,7 @@ export default function Projects() {
       };
       dispatch(setClientDetail(client_detail));
     }
-  });
+  }, [projects, clientData, dispatch, client_id]);
 
   return (
     <>

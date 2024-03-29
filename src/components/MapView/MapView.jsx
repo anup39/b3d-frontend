@@ -37,13 +37,13 @@ import {
   setshowPiechart,
   setshowReport,
   setshowTifPanel,
+  setOpenSidebar,
 } from "../../reducers/MapView";
 
 import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteProperties from "./AutoCompleteProperties";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import maplibregl from "maplibre-gl";
-import { useGetProjectsByClientIdQuery } from "../../api/projectApi";
 
 const drawerWidth = 240;
 
@@ -97,10 +97,11 @@ export default function MapView({ level, client_id }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
-  const [open, setOpen] = useState(true);
+  // const [open, setOpen] = useState(true);
   const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
   const projects = useSelector((state) => state.project.projects);
   const {
+    openSidebar,
     clientDetail,
     showReport,
     showMap,
@@ -120,18 +121,19 @@ export default function MapView({ level, client_id }) {
   );
 
   const handleDrawerClose = () => {
-    setOpen(!open);
+    console.log(!openSidebar);
+    dispatch(setOpenSidebar(!openSidebar));
   };
 
   const handleListView = () => {
     navigate(`/projects/${client_id}/List`);
   };
 
-  useEffect(() => {
-    dispatch(setCurrentMapExtent(null));
-    dispatch(setCurrentMeasuringCategories(null));
-    dispatch(setcurrentTif(null));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(setCurrentMapExtent(null));
+  //   dispatch(setCurrentMeasuringCategories(null));
+  //   dispatch(setcurrentTif(null));
+  // }, [dispatch]);
 
   // This is the logic or function for All measurements clicked
   const handleMeasuringsPanelChecked = (event, project_id) => {
@@ -203,7 +205,7 @@ export default function MapView({ level, client_id }) {
       {showProgressFormOpen ? <UploadProgress /> : null}
 
       <CssBaseline />
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={openSidebar}>
         {/* Top part */}
 
         <Box
@@ -215,7 +217,7 @@ export default function MapView({ level, client_id }) {
         >
           <Box
             sx={{
-              display: { md: open ? "flex" : "none", sm: "none" },
+              display: { md: openSidebar ? "flex" : "none", sm: "none" },
               alignItems: "center",
             }}
           >
@@ -254,7 +256,9 @@ export default function MapView({ level, client_id }) {
 
           <DrawerHeader>
             <IconButton
-              sx={{ transform: open ? "rotate(360deg)" : "rotate(180deg)" }}
+              sx={{
+                transform: openSidebar ? "rotate(360deg)" : "rotate(180deg)",
+              }}
               onClick={handleDrawerClose}
             >
               {theme.direction === "rtl" ? (
@@ -275,7 +279,7 @@ export default function MapView({ level, client_id }) {
               <ListItemButton
                 sx={{
                   minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
+                  justifyContent: openSidebar ? "initial" : "center",
                   py: 0,
                   "&:hover": {
                     backgroundColor: "#F1F7FF",
@@ -285,7 +289,7 @@ export default function MapView({ level, client_id }) {
                 {/* #Ui for all the measurements */}
                 <ListItemText
                   secondary={"All Measurements"}
-                  sx={{ opacity: open ? 1 : 0, ml: 0.7 }}
+                  sx={{ opacity: openSidebar ? 1 : 0, ml: 0.7 }}
                   secondaryTypographyProps={{ fontSize: 12 }}
                 />
 
@@ -299,7 +303,7 @@ export default function MapView({ level, client_id }) {
                     // defaultChecked={false}
                     checked={project_id === "All" ? true : false}
                     sx={{
-                      display: open ? "block" : "none",
+                      display: openSidebar ? "block" : "none",
                       mr: 3.3,
                       color: pink[600],
                       "&.Mui-checked": {
@@ -317,7 +321,7 @@ export default function MapView({ level, client_id }) {
           {/* Search functionality for the properties  */}
 
           {level === "Projects" ? (
-            <AutoCompleteProperties client_id={client_id} open={open} />
+            <AutoCompleteProperties client_id={client_id} />
           ) : null}
 
           {projects

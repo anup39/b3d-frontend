@@ -64,5 +64,4 @@ export default function AutoCompleteProperties({ client_id }) {
 
 AutoCompleteProperties.propTypes = {
   client_id: PropTypes.string,
-  open: PropTypes.bool,
 };
