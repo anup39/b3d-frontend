@@ -97,7 +97,6 @@ export default function MapView({ level, client_id }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
-  // const [open, setOpen] = useState(true);
   const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
   const projects = useSelector((state) => state.project.projects);
   const {
