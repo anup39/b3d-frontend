@@ -24,4 +24,40 @@ const fetchClientDetailsByClientId = async (client_id) => {
   return response.data;
 };
 
-export { fetchProjectsByClientId, fetchClientDetailsByClientId };
+const fetchTifDataByProjectId = async (project_id) => {
+  const response = await axios.get(
+    `${
+      import.meta.env.VITE_API_DASHBOARD_URL
+    }/raster-data/?project=${project_id}`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+  return response.data;
+};
+
+const fetchProjectPolygonGeojsonByClientIdAndProjectId = async ({
+  client_id,
+  project_id,
+}) => {
+  const response = await axios.get(
+    `${
+      import.meta.env.VITE_API_DASHBOARD_URL
+    }/project-polygon/?client=${client_id}&project=${project_id}`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+  return response.data;
+};
+
+export {
+  fetchProjectsByClientId,
+  fetchClientDetailsByClientId,
+  fetchTifDataByProjectId,
+  fetchProjectPolygonGeojsonByClientIdAndProjectId,
+};

@@ -26,6 +26,7 @@ import {
   setshowReport,
   setshowTifPanel,
   setCurrentPropertyPolygonGeojson,
+  resetMapView,
 } from "../../reducers/MapView";
 import Checkbox from "@mui/material/Checkbox";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
@@ -39,119 +40,114 @@ import {
 } from "../../reducers/Project";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import { settifs } from "../../reducers/Tifs";
+import {
+  fetchProjectPolygonGeojsonByClientIdAndProjectId,
+  fetchTifDataByProjectId,
+} from "../../api/api";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function ProjectView({ project, popUpRef }) {
+  const map = window.map_global;
   const dispatch = useDispatch();
-
   const tifs = useSelector((state) => state.tifs.tifs);
-  const openSidebar = useSelector((state) => state.mapView.openSidebar);
-
   const { current_measuring_categories, project_id, current_tif } = useSelector(
     (state) => state.mapView.currentMapDetail
   );
-
   const client_id = useSelector(
     (state) => state.mapView.clientDetail.client_id
   );
-
-  // useEffect(() => {
-  //   return () => {
-  //     dispatch(settifs([]));
-  //   };
-  // }, [project, dispatch]);
-
-  const handleSetTifs = () => {
-    axios
-      .get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=${
-          project.id
-        }`
-      )
-      .then((res) => {
-        // const data = res.data.map((item, index) => ({
-        //   ...item,
-        //   checked: index === 0, // true for the first item, false for the rest
-        // }));
-        // setTifs(data);
-        // console.log(data, "tiff data");
-        const tifs = res.data;
-        tifs.map((tif, index) => {
-          if (index === 0) {
-            tif.checked = true;
-          } else {
-            tif.checked = false;
-          }
-        });
-        dispatch(settifs(tifs));
+  const handleTifPanel = () => {
+    fetchTifDataByProjectId(project.id).then((res) => {
+      const tifs = res;
+      tifs.map((tif, index) => {
+        if (index === 0) {
+          tif.checked = true;
+        } else {
+          tif.checked = false;
+        }
       });
+      dispatch(settifs(tifs));
+    });
   };
-
-  // const selected_projects_ids = useSelector(
-  //   (state) => state.mapView.currentMapDetail.selected_projects_ids
-  // );
-
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
-    console.log(project_id, "project_id from event");
     dispatch(setProjectChecked({ id: project_id, value: checked }));
-    if (checked) {
-      handleSetTifs();
-      dispatch(setCurrentMeasuringCategories(null));
-      dispatch(setshowMeasuringsPanel(true));
-      // dispatch(addSelectedProjectId(id));
-      dispatch(setcurrentProjectName(project.name));
-      dispatch(setcurrentProjectMeasuring(project_id));
-      dispatch(setShowAreaDisabled({ id: project_id, value: false }));
-
-      console.log(client_id, "client_id from state");
-      console.log(project_id, "project_id from state");
-
-      // Here add Property polygon to the map by calling the api
-      const map = window.map_global;
-      axios
-        .get(
-          `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/project-polygon/?client=${client_id}&project=${project_id}`
-        )
-        .then((res) => {
-          const property_polygon_geojson = res.data;
-          if (property_polygon_geojson?.features?.length > 0) {
-            const layerId = String(client_id) + String(project_id) + "layer";
-            const sourceId = String(client_id) + String(project_id) + "source";
-            AddLayerAndSourceToMap({
-              map,
-              layerId: layerId,
-              sourceId: sourceId,
-              url: `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/project-polygon/?client=${client_id}&project=${project_id}`,
-              source_layer: sourceId,
-              popUpRef: popUpRef,
-              showPopup: false,
-              style: {
-                fill_color: "red",
-                fill_opacity: 0.5,
-                stroke_color: "red",
-                stroke_width: 2,
-              },
-              zoomToLayer: false,
-              extent: [],
-              geomType: "geojson",
-              fillType: "line",
-              trace: false,
-              component: "project-view",
-            });
-          }
-
-          // Now add the property polygon geojson from the current Mapview state
-          dispatch(setCurrentPropertyPolygonGeojson(property_polygon_geojson));
-        })
-        .catch((err) => {
-          console.log(err, "property-polygon error");
+    dispatch(setCurrentMeasuringCategories(null));
+    const measuringcategories = current_measuring_categories;
+    if (measuringcategories) {
+      measuringcategories?.forEach((measuringcategory) => {
+        measuringcategory?.sub_category?.forEach((sub_category) => {
+          sub_category?.category?.forEach((cat) => {
+            if (cat.checked) {
+              if (cat.type_of_geometry) {
+                const sourceId = String(client_id) + cat.view_name + "source";
+                const layerId = String(client_id) + cat.view_name + "layer";
+                if (map) {
+                  RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
+                }
+              }
+            }
+          });
         });
+      });
+    }
+    if (current_tif) {
+      const id = current_tif.id;
+      const style = map.getStyle();
+      const existingLayer = style?.layers?.find(
+        (layer) => layer.id === `${id}-layer`
+      );
+      const existingSource = style?.sources[`${id}-source`];
+      if (existingLayer) {
+        map.off("click", `${id}-layer`);
+        map.removeLayer(`${id}-layer`);
+      }
+      if (existingSource) {
+        map.removeSource(`${id}-source`);
+      }
+    }
+    if (checked) {
+      handleTifPanel();
+      dispatch(setshowMeasuringsPanel(true));
+      dispatch(setcurrentProjectMeasuring(project_id));
+      dispatch(setcurrentProjectName(project.name));
+      dispatch(setShowAreaDisabled({ id: project_id, value: false }));
+      // Here add Property polygon to the map by calling the api
+      fetchProjectPolygonGeojsonByClientIdAndProjectId({
+        client_id,
+        project_id,
+      }).then((res) => {
+        const property_polygon_geojson = res;
+        dispatch(setCurrentPropertyPolygonGeojson(property_polygon_geojson));
+        if (property_polygon_geojson?.features?.length > 0) {
+          const layerId = String(client_id) + String(project_id) + "layer";
+          const sourceId = String(client_id) + String(project_id) + "source";
+          AddLayerAndSourceToMap({
+            map,
+            layerId: layerId,
+            sourceId: sourceId,
+            url: `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/project-polygon/?client=${client_id}&project=${project_id}`,
+            source_layer: sourceId,
+            popUpRef: popUpRef,
+            showPopup: false,
+            style: {
+              fill_color: "red",
+              fill_opacity: 0.5,
+              stroke_color: "red",
+              stroke_width: 2,
+            },
+            zoomToLayer: false,
+            extent: [],
+            geomType: "geojson",
+            fillType: "line",
+            trace: false,
+            component: "project-view",
+          });
+        }
+      });
       // Here also removed the property polygon which is previosuly in the map
       if (project_id) {
         RemoveSourceAndLayerFromMap({
@@ -159,13 +155,9 @@ export default function ProjectView({ project, popUpRef }) {
           sourceId: String(client_id) + String(project_id) + "source",
           layerId: String(client_id) + String(project_id) + "layer",
         });
-      }
-      // Here when another project is clicked make the eye button back to default
-      if (project_id) {
         dispatch(setShowArea({ id: project_id, value: true }));
       }
     } else {
-      dispatch(setCurrentMeasuringCategories(null));
       dispatch(setshowMeasuringsPanel(false));
       // dispatch(removeSelectedProjectId(id));
       dispatch(setcurrentProjectName(null));
@@ -177,42 +169,6 @@ export default function ProjectView({ project, popUpRef }) {
       dispatch(setshowReport(false));
       dispatch(setshowTifPanel(false));
       dispatch(setShowAreaDisabled({ id: project_id, value: true }));
-
-      const map = window.map_global;
-
-      const measuringcategories = current_measuring_categories;
-      if (measuringcategories) {
-        measuringcategories?.forEach((measuringcategory) => {
-          measuringcategory?.sub_category?.forEach((sub_category) => {
-            sub_category?.category?.forEach((cat) => {
-              if (cat.checked) {
-                if (cat.type_of_geometry) {
-                  const sourceId = String(client_id) + cat.view_name + "source";
-                  const layerId = String(client_id) + cat.view_name + "layer";
-                  if (map) {
-                    RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
-                  }
-                }
-              }
-            });
-          });
-        });
-      }
-      if (current_tif) {
-        const id = current_tif.id;
-        const style = map.getStyle();
-        const existingLayer = style?.layers?.find(
-          (layer) => layer.id === `${id}-layer`
-        );
-        const existingSource = style?.sources[`${id}-source`];
-        if (existingLayer) {
-          map.off("click", `${id}-layer`);
-          map.removeLayer(`${id}-layer`);
-        }
-        if (existingSource) {
-          map.removeSource(`${id}-source`);
-        }
-      }
       RemoveSourceAndLayerFromMap({
         map: map,
         sourceId: String(client_id) + String(project_id) + "source",
@@ -223,9 +179,6 @@ export default function ProjectView({ project, popUpRef }) {
       if (project_id) {
         dispatch(setShowArea({ id: project_id, value: true }));
       }
-
-      // Now remove the property polygon geojson from the current Mapview state
-      dispatch(setCurrentPropertyPolygonGeojson(null));
     }
   };
 
@@ -358,7 +311,7 @@ export default function ProjectView({ project, popUpRef }) {
           {project.show_area ? (
             <IconButton
               onClick={handleEyeButton}
-              disabled={project_id === project.id ? false : true} // Set this to the condition when you want to disable the button
+              disabled={project_id === project.id ? false : true}
             >
               <Tooltip title="Show Area">
                 <RemoveRedEyeIcon sx={{ fontSize: 14 }} />
@@ -367,7 +320,7 @@ export default function ProjectView({ project, popUpRef }) {
           ) : (
             <IconButton
               onClick={handleHideButton}
-              disabled={project_id === project.id ? false : true} // Set this to the condition when you want to disable the button
+              disabled={project_id === project.id ? false : true}
             >
               <Tooltip title="Show Area">
                 <VisibilityOffIcon sx={{ fontSize: 14 }} />
