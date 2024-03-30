@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setprojects } from "../reducers/Project";
 import AppBar from "../components/Common/AppBar";
@@ -9,33 +9,30 @@ import MapView from "../components/MapView/MapView";
 import { Box } from "@mui/material";
 import { setClientDetail } from "../reducers/MapView";
 import {
-  fetchProjectsByClientId,
-  fetchClientDetailsByClientId,
-} from "../api/api";
+  useGetProjectsByClientIdQuery,
+  useGetClientDetailsByClientIdQuery,
+} from "../api/projectApi";
 
 export default function Projects() {
   const { client_id, view } = useParams();
   const dispatch = useDispatch();
-  const projects = useSelector((state) => state.project.projects);
+
+  const { data: projects } = useGetProjectsByClientIdQuery(client_id);
+  const { data: clientData } = useGetClientDetailsByClientIdQuery(client_id);
 
   useEffect(() => {
-    fetchProjectsByClientId(client_id).then((projects) => {
-      projects.map((project) => {
-        project.checked = false;
-        project.openProperties = false;
-      });
+    if (projects) {
       dispatch(setprojects(projects));
-    });
-
-    fetchClientDetailsByClientId(client_id).then((client) => {
+    }
+    if (clientData) {
       const client_detail = {
         client_id: client_id,
-        client_name: client.name,
-        client_image: client.name.charAt(0).toUpperCase(),
+        client_name: clientData.name,
+        client_image: clientData.name.charAt(0).toUpperCase(),
       };
       dispatch(setClientDetail(client_detail));
-    });
-  }, [client_id, dispatch]);
+    }
+  }, [projects, clientData, dispatch, client_id]);
 
   return (
     <>
@@ -68,7 +65,7 @@ export default function Projects() {
           </div>
         </div>
       ) : (
-        <MapView level={"Projects"} client_id={client_id} />
+        <MapView />
       )}
     </>
   );

@@ -28,7 +28,7 @@ export default function MapSection({ popUpRef }) {
         height: "100vh",
       }}
     >
-      <AppBar />
+      {/* <AppBar /> */}
       <CategoryGeomForm />
       {showMapLoader ? <MapLoader /> : null}
 

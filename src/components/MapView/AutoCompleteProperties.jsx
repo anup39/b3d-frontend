@@ -1,68 +1,59 @@
 import TextField from "@mui/material/TextField";
-import { useEffect } from "react";
-import axios from "axios";
-import PropTypes from "prop-types";
-import { setprojects } from "../../reducers/Project";
-import { useDispatch } from "react-redux";
-import { debounce } from "lodash";
+import Box from "@mui/material/Box";
+import CancelIcon from "@mui/icons-material/Cancel";
 
-export default function AutoCompleteProperties({ client_id }) {
+import { useDispatch, useSelector } from "react-redux";
+import { filterProjects } from "../../reducers/Project";
+import { setSearchText } from "../../reducers/MapView";
+import { IconButton, Tooltip } from "@mui/material";
+
+export default function AutoCompleteProperties() {
   const dispatch = useDispatch();
+  const searchText = useSelector((state) => state.mapView.searchText);
 
-  const fetchProjects = debounce((searchTerm) => {
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/projects/?client=${client_id}&search=${searchTerm}`,
-        {
-          headers: {
-            Authorization: "Token " + localStorage.getItem("token"),
-          },
-        }
-      )
-      .then((res) => {
-        dispatch(setprojects(res.data));
-      });
-  }, 100); // delay in milliseconds
-
-  useEffect(() => {
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/projects/?client=${client_id}`,
-        {
-          headers: {
-            Authorization: "Token " + localStorage.getItem("token"),
-          },
-        }
-      )
-      .then(() => {})
-      .catch(() => {});
-  }, [dispatch, client_id]);
   return (
-    <TextField
+    <Box
       sx={{
-        width: 200,
-        fontFamily: "Roboto",
-        fontSize: "7px",
-        marginTop: "10px",
-        marginBottom: "10px",
-        marginLeft: "15px",
+        display: "flex",
+        alingItems: "center",
+        justifyContent: "flex-start",
+        backgroundColor: "#F5F5F5",
       }}
-      size="small"
-      onChange={(event) => {
-        fetchProjects(event.target.value);
-      }}
-      id="search-properties"
-      label="Search Properties"
-      variant="outlined"
-    />
+    >
+      <TextField
+        sx={{
+          width: 173,
+          fontFamily: "Roboto",
+          fontSize: "5px",
+          marginTop: "5px",
+          marginBottom: "10px",
+          marginLeft: "11px",
+        }}
+        size="small"
+        value={searchText}
+        onChange={(event) => {
+          dispatch(filterProjects(event.target.value));
+          dispatch(setSearchText(event.target.value));
+        }}
+        id="search-properties"
+        label="Search Properties"
+        variant="outlined"
+      />
+
+      <IconButton
+        sx={{ borderRadius: 0 }}
+        onClick={() => {
+          dispatch(filterProjects(""));
+          dispatch(setSearchText(""));
+        }}
+        size="small"
+      >
+        <Tooltip title="Clear Search" placement="top">
+          <CancelIcon sx={{ fontSize: 20, color: "#E91E62" }} />
+        </Tooltip>
+      </IconButton>
+    </Box>
   );
 }
 
-AutoCompleteProperties.propTypes = {
-  client_id: PropTypes.string,
-  open: PropTypes.bool,
-};
+AutoCompleteProperties.propTypes = {};

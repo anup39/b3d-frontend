@@ -37,6 +37,7 @@ import {
   setshowPiechart,
   setshowReport,
   setshowTifPanel,
+  setOpenSidebar,
 } from "../../reducers/MapView";
 
 import Checkbox from "@mui/material/Checkbox";
@@ -92,14 +93,18 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MapView({ level, client_id }) {
+export default function MapView() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
-  const [open, setOpen] = useState(true);
   const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
   const projects = useSelector((state) => state.project.projects);
+  const client_id = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
   const {
+    level,
+    openSidebar,
     clientDetail,
     showReport,
     showMap,
@@ -119,78 +124,80 @@ export default function MapView({ level, client_id }) {
   );
 
   const handleDrawerClose = () => {
-    setOpen(!open);
+    console.log(!openSidebar);
+    dispatch(setOpenSidebar(!openSidebar));
   };
 
   const handleListView = () => {
     navigate(`/projects/${client_id}/List`);
   };
 
-  useEffect(() => {
-    dispatch(setCurrentMapExtent(null));
-    dispatch(setCurrentMeasuringCategories(null));
-    dispatch(setcurrentTif(null));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(setCurrentMapExtent(null));
+  //   dispatch(setCurrentMeasuringCategories(null));
+  //   dispatch(setcurrentTif(null));
+  // }, [dispatch]);
 
   // This is the logic or function for All measurements clicked
-  const handleMeasuringsPanelChecked = (event, project_id) => {
-    const checked = event.target.checked;
-    if (checked) {
-      dispatch(setCurrentMeasuringCategories(null));
-      dispatch(setshowMeasuringsPanel(true));
-      // dispatch(addSelectedProjectId(id));
-      dispatch(setcurrentProjectName("All"));
-      dispatch(setcurrentProjectMeasuring(project_id));
-    } else {
-      dispatch(setCurrentMeasuringCategories(null));
-      dispatch(setshowMeasuringsPanel(false));
-      // dispatch(removeSelectedProjectId(id));
-      dispatch(setcurrentProjectName(null));
-      dispatch(setcurrentProjectMeasuring(null));
-      dispatch(setCurrentMeasuringCategories(null));
-      dispatch(setcurrentTif(null));
-      dispatch(setshowTableMeasurings(false));
-      dispatch(setshowPiechart(false));
-      dispatch(setshowReport(false));
-      dispatch(setshowTifPanel(false));
+  // const handleMeasuringsPanelChecked = (event, project_id) => {
+  //   console.log("All measurements clicked");
+  //   const checked = event.target.checked;
+  //   if (checked) {
+  //     dispatch(setCurrentMeasuringCategories(null));
+  //     dispatch(setshowMeasuringsPanel(true));
+  //     // dispatch(addSelectedProjectId(id));
+  //     dispatch(setcurrentProjectName("All"));
+  //     dispatch(setcurrentProjectMeasuring(project_id));
+  //   } else {
+  //     dispatch(setCurrentMeasuringCategories(null));
+  //     dispatch(setshowMeasuringsPanel(false));
+  //     // dispatch(removeSelectedProjectId(id));
+  //     dispatch(setcurrentProjectName(null));
+  //     dispatch(setcurrentProjectMeasuring(null));
+  //     dispatch(setCurrentMeasuringCategories(null));
+  //     dispatch(setcurrentTif(null));
+  //     dispatch(setshowTableMeasurings(false));
+  //     dispatch(setshowPiechart(false));
+  //     dispatch(setshowReport(false));
+  //     dispatch(setshowTifPanel(false));
 
-      const map = window.map_global;
+  //     const map = window.map_global;
 
-      const measuringcategories = current_measuring_categories;
-      if (measuringcategories) {
-        measuringcategories?.forEach((measuringcategory) => {
-          measuringcategory?.sub_category?.forEach((sub_category) => {
-            sub_category?.category?.forEach((cat) => {
-              if (cat.checked) {
-                if (cat.type_of_geometry) {
-                  const sourceId = String(client_id) + cat.view_name + "source";
-                  const layerId = String(client_id) + cat.view_name + "layer";
-                  if (map) {
-                    RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
-                  }
-                }
-              }
-            });
-          });
-        });
-      }
-      if (current_tif) {
-        const id = current_tif.id;
-        const style = map.getStyle();
-        const existingLayer = style?.layers?.find(
-          (layer) => layer.id === `${id}-layer`
-        );
-        const existingSource = style?.sources[`${id}-source`];
-        if (existingLayer) {
-          map.off("click", `${id}-layer`);
-          map.removeLayer(`${id}-layer`);
-        }
-        if (existingSource) {
-          map.removeSource(`${id}-source`);
-        }
-      }
-    }
-  };
+  //     const measuringcategories = current_measuring_categories;
+  //     if (measuringcategories) {
+  //       measuringcategories?.forEach((measuringcategory) => {
+  //         measuringcategory?.sub_category?.forEach((sub_category) => {
+  //           sub_category?.category?.forEach((cat) => {
+  //             if (cat.checked) {
+  //               if (cat.type_of_geometry) {
+  //                 const sourceId = String(client_id) + cat.view_name + "source";
+  //                 const layerId = String(client_id) + cat.view_name + "layer";
+  //                 if (map) {
+  //                   RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
+  //                 }
+  //               }
+  //             }
+  //           });
+  //         });
+  //       });
+  //     }
+  //     if (current_tif) {
+  //       const id = current_tif.id;
+  //       const style = map.getStyle();
+  //       const existingLayer = style?.layers?.find(
+  //         (layer) => layer.id === `${id}-layer`
+  //       );
+  //       const existingSource = style?.sources[`${id}-source`];
+  //       if (existingLayer) {
+  //         map.off("click", `${id}-layer`);
+  //         map.removeLayer(`${id}-layer`);
+  //       }
+  //       if (existingSource) {
+  //         map.removeSource(`${id}-source`);
+  //       }
+  //     }
+  //   }
+  // };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -202,7 +209,7 @@ export default function MapView({ level, client_id }) {
       {showProgressFormOpen ? <UploadProgress /> : null}
 
       <CssBaseline />
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={openSidebar}>
         {/* Top part */}
 
         <Box
@@ -214,7 +221,7 @@ export default function MapView({ level, client_id }) {
         >
           <Box
             sx={{
-              display: { md: open ? "flex" : "none", sm: "none" },
+              display: { md: openSidebar ? "flex" : "none", sm: "none" },
               alignItems: "center",
             }}
           >
@@ -253,7 +260,9 @@ export default function MapView({ level, client_id }) {
 
           <DrawerHeader>
             <IconButton
-              sx={{ transform: open ? "rotate(360deg)" : "rotate(180deg)" }}
+              sx={{
+                transform: openSidebar ? "rotate(360deg)" : "rotate(180deg)",
+              }}
               onClick={handleDrawerClose}
             >
               {theme.direction === "rtl" ? (
@@ -264,17 +273,17 @@ export default function MapView({ level, client_id }) {
             </IconButton>
           </DrawerHeader>
         </Box>
-        <Divider sx={{ mt: 0.5 }} />
+        <Divider sx={{ mt: 0.1 }} />
 
         <List>
           {/* Properties */}
 
-          {level === "Projects" ? (
+          {level === "Projects" && openSidebar ? (
             <ListItem disablePadding sx={{ display: "block", fontSize: 14 }}>
               <ListItemButton
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
+                  // minHeight: 48,
+                  justifyContent: openSidebar ? "initial" : "center",
                   py: 0,
                   "&:hover": {
                     backgroundColor: "#F1F7FF",
@@ -284,22 +293,22 @@ export default function MapView({ level, client_id }) {
                 {/* #Ui for all the measurements */}
                 <ListItemText
                   secondary={"All Measurements"}
-                  sx={{ opacity: open ? 1 : 0, ml: 0.7 }}
-                  secondaryTypographyProps={{ fontSize: 12 }}
+                  // sx={{ opacity: openSidebar ? 1 : 0, ml: 0.7 }}
+                  // secondaryTypographyProps={{ fontSize: 12 }}
                 />
 
                 <Tooltip title="Show All Measurings">
                   <Checkbox
-                    onChange={(event) =>
-                      handleMeasuringsPanelChecked(event, "All")
-                    }
-                    size="small"
+                    // onChange={(event) =>
+                    //   handleMeasuringsPanelChecked(event, "All")
+                    // }
+                    // size="small"
                     // {...label}
                     // defaultChecked={false}
                     checked={project_id === "All" ? true : false}
                     sx={{
-                      display: open ? "block" : "none",
-                      mr: 3.3,
+                      display: openSidebar ? "block" : "none",
+                      // mr: 5,
                       color: pink[600],
                       "&.Mui-checked": {
                         color: pink[600],
@@ -315,11 +324,11 @@ export default function MapView({ level, client_id }) {
 
           {/* Search functionality for the properties  */}
 
-          {level === "Projects" ? (
-            <AutoCompleteProperties client_id={client_id} open={open} />
+          {level === "Projects" && openSidebar ? (
+            <AutoCompleteProperties />
           ) : null}
 
-          {projects
+          {projects && openSidebar
             ? projects.map((project) => (
                 <ProjectView
                   key={project.id}
@@ -344,7 +353,4 @@ export default function MapView({ level, client_id }) {
   );
 }
 
-MapView.propTypes = {
-  level: PropTypes.string,
-  client_id: PropTypes.string,
-};
+MapView.propTypes = {};

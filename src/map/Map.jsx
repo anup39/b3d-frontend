@@ -24,22 +24,15 @@ export default function Map({ popUpRef }) {
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
-  // const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
+  const client_id = useSelector(
+    (state) => state.mapView.clientDetail.client_id
+  );
+  const { current_measuring_categories, current_tif, project_id } = useSelector(
+    (state) => state.mapView.currentMapDetail
+  );
 
   const currentMapExtent = useSelector(
     (state) => state.mapView.printDetails.currentMapExtent
-  );
-  const current_measuring_categories = useSelector(
-    (state) => state.mapView.currentMapDetail.current_measuring_categories
-  );
-  const current_tif = useSelector(
-    (state) => state.mapView.currentMapDetail.current_tif
-  );
-  const currentClient = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
-  const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.project_id
   );
 
   useEffect(() => {
@@ -48,8 +41,9 @@ export default function Map({ popUpRef }) {
       style: `https://api.maptiler.com/maps/satellite/style.json?key=${
         import.meta.env.VITE_MAPTILER_TOKEN
       }`,
-      center: [10.035153, 56.464267],
-      zoom: 15,
+      // center: [10.035153, 56.464267],
+      center: [11.326301469413806, 55.39925417342158],
+      zoom: 16,
       attributionControl: false,
     });
 
@@ -61,126 +55,127 @@ export default function Map({ popUpRef }) {
     };
   }, []);
 
-  useEffect(() => {
-    if (map) {
-      if (currentMapExtent) {
-        map.fitBounds(currentMapExtent, { padding: 20 });
-      }
-      map.on("load", () => {
-        const measuringcategories = current_measuring_categories;
-        if (measuringcategories) {
-          measuringcategories.forEach((measuringcategory) => {
-            measuringcategory.sub_category.forEach((sub_category) => {
-              sub_category.category.forEach((cat) => {
-                if (cat.checked) {
-                  if (cat.type_of_geometry) {
-                    const sourceId =
-                      String(currentClient) + cat.view_name + "source";
-                    const layerId =
-                      String(currentClient) + cat.view_name + "layer";
-                    axios
-                      .get(
-                        `${
-                          import.meta.env.VITE_API_DASHBOARD_URL
-                        }/category-style/?category=${cat.id}`
-                      )
-                      .then((response) => {
-                        const categoryStyle = response.data[0];
-                        let url = null;
-                        let fillType = null;
-                        if (cat.type_of_geometry === "Point") {
-                          url = `${
-                            import.meta.env.VITE_API_DASHBOARD_URL
-                          }/category-point-geojson/?project=${currentProject}&category=${
-                            cat.id
-                          }`;
-                          fillType = "circle";
-                        }
-                        if (cat.type_of_geometry === "LineString") {
-                          url = `${
-                            import.meta.env.VITE_API_DASHBOARD_URL
-                          }/category-linestring-geojson/?project=${currentProject}&category=${
-                            cat.id
-                          }`;
-                          fillType = "line";
-                        }
-                        if (cat.type_of_geometry === "Polygon") {
-                          url = `${
-                            import.meta.env.VITE_API_DASHBOARD_URL
-                          }/category-polygon-geojson/?project=${currentProject}&category=${
-                            cat.id
-                          }`;
-                          fillType = "fill";
-                        }
-                        AddLayerAndSourceToMap({
-                          map: map,
-                          layerId: layerId,
-                          sourceId: sourceId,
-                          url: url,
-                          source_layer: sourceId,
-                          popUpRef: null,
-                          showPopup: false,
-                          style: {
-                            fill_color: categoryStyle.fill,
-                            fill_opacity: categoryStyle.fill_opacity,
-                            stroke_color: categoryStyle.stroke,
-                          },
-                          zoomToLayer: false,
-                          extent: [],
-                          geomType: "geojson",
-                          fillType: fillType,
-                          trace: false,
-                          component: "map",
-                        });
-                      });
-                  }
-                }
-              });
-            });
-          });
-        }
+  // useEffect(() => {
+  //   if (map) {
+  //     if (currentMapExtent) {
+  //       map.fitBounds(currentMapExtent, { padding: 20 });
+  //     }
+  //     map.on("load", () => {
+  //       console.log("map loaded from map componenet ");
+  //       const measuringcategories = current_measuring_categories;
+  //       if (measuringcategories) {
+  //         console.log(measuringcategories, "measuring categories");
+  //         measuringcategories.forEach((measuringcategory) => {
+  //           measuringcategory.sub_category.forEach((sub_category) => {
+  //             sub_category.category.forEach((cat) => {
+  //               if (cat.checked) {
+  //                 if (cat.type_of_geometry) {
+  //                   const sourceId =
+  //                     String(client_id) + cat.view_name + "source";
+  //                   const layerId = String(client_id) + cat.view_name + "layer";
+  //                   axios
+  //                     .get(
+  //                       `${
+  //                         import.meta.env.VITE_API_DASHBOARD_URL
+  //                       }/category-style/?category=${cat.id}`
+  //                     )
+  //                     .then((response) => {
+  //                       const categoryStyle = response.data[0];
+  //                       let url = null;
+  //                       let fillType = null;
+  //                       if (cat.type_of_geometry === "Point") {
+  //                         url = `${
+  //                           import.meta.env.VITE_API_DASHBOARD_URL
+  //                         }/category-point-geojson/?project=${project_id}&category=${
+  //                           cat.id
+  //                         }`;
+  //                         fillType = "circle";
+  //                       }
+  //                       if (cat.type_of_geometry === "LineString") {
+  //                         url = `${
+  //                           import.meta.env.VITE_API_DASHBOARD_URL
+  //                         }/category-linestring-geojson/?project=${project_id}&category=${
+  //                           cat.id
+  //                         }`;
+  //                         fillType = "line";
+  //                       }
+  //                       if (cat.type_of_geometry === "Polygon") {
+  //                         url = `${
+  //                           import.meta.env.VITE_API_DASHBOARD_URL
+  //                         }/category-polygon-geojson/?project=${project_id}&category=${
+  //                           cat.id
+  //                         }`;
+  //                         fillType = "fill";
+  //                       }
+  //                       AddLayerAndSourceToMap({
+  //                         map: map,
+  //                         layerId: layerId,
+  //                         sourceId: sourceId,
+  //                         url: url,
+  //                         source_layer: sourceId,
+  //                         popUpRef: null,
+  //                         showPopup: false,
+  //                         style: {
+  //                           fill_color: categoryStyle.fill,
+  //                           fill_opacity: categoryStyle.fill_opacity,
+  //                           stroke_color: categoryStyle.stroke,
+  //                         },
+  //                         zoomToLayer: false,
+  //                         extent: [],
+  //                         geomType: "geojson",
+  //                         fillType: fillType,
+  //                         trace: false,
+  //                         component: "map",
+  //                       });
+  //                     });
+  //                 }
+  //               }
+  //             });
+  //           });
+  //         });
+  //       }
 
-        if (current_tif) {
-          const id = current_tif.id;
-          axios
-            .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
-            .then((res) => {
-              if (res.data.bounds) {
-                // const bounds = res.data.bounds;
-                // map.fitBounds(bounds);
-                map.addSource(`${id}-source`, {
-                  type: "raster",
-                  tiles: [
-                    `${
-                      import.meta.env.VITE_API_RASTER_URL
-                    }/tile-async/${id}/{z}/{x}/{y}.png`,
-                  ],
-                  tileSize: 512,
-                });
+  //       if (current_tif) {
+  //         const id = current_tif.id;
+  //         axios
+  //           .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
+  //           .then((res) => {
+  //             if (res.data.bounds) {
+  //               // const bounds = res.data.bounds;
+  //               // map.fitBounds(bounds);
+  //               map.addSource(`${id}-source`, {
+  //                 type: "raster",
+  //                 tiles: [
+  //                   `${
+  //                     import.meta.env.VITE_API_RASTER_URL
+  //                   }/tile-async/${id}/{z}/{x}/{y}.png`,
+  //                 ],
+  //                 tileSize: 512,
+  //               });
 
-                map.addLayer({
-                  id: `${id}-layer`,
-                  type: "raster",
-                  source: `${id}-source`,
-                  minzoom: 0,
-                  maxzoom: 24,
-                });
-                map.moveLayer(`${id}-layer`, "Continent labels");
-              }
-            })
-            .catch(() => {});
-        }
-      });
-    }
-  }, [
-    map,
-    dispatch,
-    currentMapExtent,
-    current_measuring_categories,
-    currentClient,
-    currentProject,
-    current_tif,
-  ]);
+  //               map.addLayer({
+  //                 id: `${id}-layer`,
+  //                 type: "raster",
+  //                 source: `${id}-source`,
+  //                 minzoom: 0,
+  //                 maxzoom: 24,
+  //               });
+  //               map.moveLayer(`${id}-layer`, "Continent labels");
+  //             }
+  //           })
+  //           .catch(() => {});
+  //       }
+  //     });
+  //   }
+  // }, [
+  //   map,
+  //   dispatch,
+  //   currentMapExtent,
+  //   current_measuring_categories,
+  //   client_id,
+  //   project_id,
+  //   current_tif,
+  // ]);
 
   // useEffect(() => {
   //   if (map) {
@@ -284,18 +279,6 @@ export default function Map({ popUpRef }) {
       const layer_control = new LayersControl();
       map.addControl(layer_control, "top-left");
       layer_control.updateProject(popUpRef);
-      // map.addControl(
-      //   new MaplibreExportControl({
-      //     PageSize: Size.A3,
-      //     PageOrientation: PageOrientation.Portrait,
-      //     Format: Format.PNG,
-      //     DPI: DPI[96],
-      //     Crosshair: true,
-      //     PrintableArea: true,
-      //   }),
-      //   "top-right"
-      // );
-
       map.addControl(new maplibregl.NavigationControl(), "top-right");
       const raster_control = new RasterControl();
       map.addControl(raster_control, "top-left");
@@ -310,7 +293,6 @@ export default function Map({ popUpRef }) {
       const measure_control = new MeasureControl();
       map.addControl(measure_control, "top-right");
       measure_control.updateMeasureControl(popUpRef);
-
       // const popup_control = new PopupControl();
       // map.addControl(popup_control, "bottom-left");
     }
@@ -318,12 +300,7 @@ export default function Map({ popUpRef }) {
 
   return (
     <>
-      <div
-        // style={{ borderRadius: "8px", width: "820px", height: "834px" }}
-        ref={mapContainer}
-        id="map"
-        className="map"
-      >
+      <div ref={mapContainer} id="map" className="map">
         <Button
           onClick={() => {
             dispatch(setDisplayType("3D"));

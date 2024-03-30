@@ -11,9 +11,12 @@ import {
   setProjectIdProperty,
 } from "../reducers/Property";
 import MapView from "../components/MapView/MapView";
-import axios from "axios";
 import { setprojects } from "../reducers/Project";
-import { setClientDetail } from "../reducers/MapView";
+import { setClientDetail, setLevel } from "../reducers/MapView";
+import {
+  useGetProjectsByClientIdAndProjectIdQuery,
+  useGetClientDetailsByClientIdQuery,
+} from "../api/projectApi";
 
 export default function Properties() {
   const { client_id, project_id, view } = useParams();
@@ -24,37 +27,34 @@ export default function Properties() {
   const showProgressFormOpen = useSelector(
     (state) => state.property.showProgressFormOpen
   );
-  const projects = useSelector((state) => state.project.projects);
+  const { data: projects } = useGetProjectsByClientIdAndProjectIdQuery({
+    client_id,
+    project_id,
+  });
+  const { data: clientData } = useGetClientDetailsByClientIdQuery(client_id);
 
   useEffect(() => {
     dispatch(setClientIdProperty(client_id));
     dispatch(setProjectIdProperty(project_id));
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/projects/?client=${client_id}&id=${project_id}`,
-        {
-          headers: {
-            Authorization: "Token " + localStorage.getItem("token"),
-          },
-        }
-      )
-      .then((res) => {
-        dispatch(setprojects(res.data));
-      });
-
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${client_id}/`)
-      .then((res) => {
-        const client_detail = {
-          client_id: client_id,
-          client_name: res.data.name,
-          client_image: res.data.name.charAt(0).toUpperCase(),
-        };
-        dispatch(setClientDetail(client_detail));
-      });
   }, [client_id, project_id, dispatch]);
+
+  useEffect(() => {
+    if (projects) {
+      dispatch(setprojects(projects));
+    }
+    if (clientData) {
+      const client_detail = {
+        client_id: client_id,
+        client_name: clientData.name,
+        client_image: clientData.name.charAt(0).toUpperCase(),
+      };
+      dispatch(setClientDetail(client_detail));
+    }
+  }, [projects, dispatch, client_id, clientData]);
+
+  useEffect(() => {
+    dispatch(setLevel("Properties"));
+  }, [dispatch]);
 
   return (
     <>
@@ -67,11 +67,7 @@ export default function Properties() {
           <PropertyContainer project_id={project_id} />{" "}
         </>
       ) : (
-        <MapView
-          level={"Properties"}
-          client_id={client_id}
-          projects={projects}
-        />
+        <MapView />
       )}
     </>
   );
