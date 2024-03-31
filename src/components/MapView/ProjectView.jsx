@@ -55,8 +55,11 @@ export default function ProjectView({ project, popUpRef }) {
   const map = window.map_global;
   const dispatch = useDispatch();
   const tifs = useSelector((state) => state.tifs.tifs);
-  const { current_measuring_categories, current_tif } = useSelector(
+  const { current_tif } = useSelector(
     (state) => state.mapView.currentMapDetail
+  );
+  const current_measuring_categories = useSelector(
+    (state) => state.client.current_measuring_categories
   );
   const client_id = useSelector((state) => state.client.clientDetail.client_id);
   const project_id = useSelector((state) => state.project.project_id);

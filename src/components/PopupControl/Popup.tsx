@@ -52,8 +52,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     (state: RootState) => state.project.project_id
   );
   const current_measuring_categories = useSelector(
-    (state: RootState) =>
-      state.mapView.currentMapDetail.current_measuring_categories
+    (state: RootState) => state.client.current_measuring_categories
   );
 
   const id = useSelector((state: RootState) => state.drawnPolygon.id);

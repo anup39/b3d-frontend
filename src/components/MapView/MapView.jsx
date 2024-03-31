@@ -111,8 +111,11 @@ export default function MapView() {
     showUploadingCategories,
   } = useSelector((state) => state.mapView);
 
-  const { current_measuring_categories, current_tif } = useSelector(
-    (state) => state.mapView.currentMapDetail
+  const current_tif = useSelector(
+    (state) => state.mapView.currentMapDetail.current_tif
+  );
+  const current_measuring_categories = useSelector(
+    (state) => state.client.current_measuring_categories
   );
 
   const project_id = useSelector((state) => state.project.project_id);
