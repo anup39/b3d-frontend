@@ -1,6 +1,10 @@
 import RemoveSourceAndLayerFromMap from "./RemoveSourceAndLayerFromMap";
 
-const removeCheckedCategoriesLayers = (measuringcategories, client_id, map) => {
+const removeCheckedCategoriesLayersFromMap = (
+  measuringcategories,
+  client_id,
+  map
+) => {
   measuringcategories?.forEach((measuringcategory) => {
     measuringcategory?.sub_category?.forEach((sub_category) => {
       sub_category?.category?.forEach((cat) => {
@@ -16,4 +20,4 @@ const removeCheckedCategoriesLayers = (measuringcategories, client_id, map) => {
   });
 };
 
-export default removeCheckedCategoriesLayers;
+export default removeCheckedCategoriesLayersFromMap;

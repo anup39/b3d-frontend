@@ -49,8 +49,8 @@ function AddRasterToMap({
       minzoom: 0,
       maxzoom: 24,
     };
-    map.moveLayer(`${layerId}`, "Continent labels");
     map.addLayer(newLayer);
+    map.moveLayer(`${layerId}`, "Continent labels");
   }
 }
 

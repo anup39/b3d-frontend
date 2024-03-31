@@ -70,10 +70,19 @@ const fetchMeasuringCategories = async (client_id) => {
   return response.data;
 };
 
+const fetchBoundingBoxByTifId = async (tif_id) => {
+  const response = await axios.get(
+    `${import.meta.env.VITE_API_RASTER_URL}/bounds/${tif_id}`
+  );
+
+  return response.data.bounds;
+};
+
 export {
   fetchProjectsByClientId,
   fetchClientDetailsByClientId,
   fetchTifDataByProjectId,
   fetchProjectPolygonGeojsonByClientIdAndProjectId,
   fetchMeasuringCategories,
+  fetchBoundingBoxByTifId,
 };

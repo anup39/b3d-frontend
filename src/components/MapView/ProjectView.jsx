@@ -49,14 +49,14 @@ import {
   fetchProjectPolygonGeojsonByClientIdAndProjectId,
   fetchTifDataByProjectId,
   fetchMeasuringCategories,
+  fetchBoundingBoxByTifId,
 } from "../../api/api";
-
+import AddRasterToMap from "../../maputils/AddRasterToMap";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function ProjectView({ project, popUpRef }) {
   const map = window.map_global;
   const dispatch = useDispatch();
-  const tifs = useSelector((state) => state.tifs.tifs);
   const { current_tif } = useSelector(
     (state) => state.mapView.currentMapDetail
   );
@@ -65,12 +65,37 @@ export default function ProjectView({ project, popUpRef }) {
   );
   const client_id = useSelector((state) => state.client.clientDetail.client_id);
   const project_id = useSelector((state) => state.project.project_id);
+
   const handleTifPanel = () => {
     fetchTifDataByProjectId(project.id).then((res) => {
       const tifs = res;
       tifs.map((tif, index) => {
         if (index === 0) {
           tif.checked = true;
+          dispatch(setcurrentTif(tif));
+          fetchBoundingBoxByTifId(tif.id).then((res) => {
+            if (res) {
+              const bounds = res;
+              const layerId = `${tif.id}-layer`;
+              const sourceId = `${tif.id}-source`;
+              const url = `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
+                tif.id
+              }/{z}/{x}/{y}.png`;
+
+              AddRasterToMap({
+                map: map,
+                layerId: layerId,
+                sourceId: sourceId,
+                url: url,
+                source_layer: sourceId,
+                zoomToLayer: true,
+
+                extent: bounds,
+                type: "raster",
+                component: "project-view",
+              });
+            }
+          });
         } else {
           tif.checked = false;
         }
@@ -87,6 +112,15 @@ export default function ProjectView({ project, popUpRef }) {
         client_id,
         map
       );
+    }
+    if (current_tif) {
+      const layerId = `${current_tif.id}-layer`;
+      const sourceId = `${current_tif.id}-source`;
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        layerId: layerId,
+        sourceId: sourceId,
+      });
     }
     if (checked) {
       handleTifPanel();

@@ -29,9 +29,6 @@ export default function TiffMapView({ projectId }) {
   const dispatch = useDispatch();
   const project_id = useSelector((state) => state.project.project_id);
   const tifs = useSelector((state) => state.tifs.tifs);
-  const current_tif = useSelector(
-    (state) => state.mapView.currentMapDetail.current_tif
-  );
 
   const handleTifChecked = (event, tif_id, tif) => {
     const checked = event.target.checked;
@@ -91,65 +88,6 @@ export default function TiffMapView({ projectId }) {
       }
     }
   };
-
-  useEffect(() => {
-    if (current_tif) {
-      const map = window.map_global;
-      console.log("current_tif", current_tif);
-      const layerId = `${current_tif.id}-layer`;
-      const sourceId = `${current_tif.id}-source`;
-      RemoveSourceAndLayerFromMap({
-        map: map,
-        layerId: layerId,
-        sourceId: sourceId,
-      });
-    }
-
-    if (tifs.length > 0) {
-      console.log("tifs", tifs);
-      tifs.map((tif) => {
-        if (tif.checked) {
-          dispatch(setcurrentTif(tif));
-          const map = window.map_global;
-          axios
-            .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${tif.id}`)
-            .then((res) => {
-              if (res.data.bounds) {
-                const bounds = res.data.bounds;
-                map.fitBounds(bounds);
-                map.addSource(`${tif.id}-source`, {
-                  type: "raster",
-                  tiles: [
-                    `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
-                      tif.id
-                    }/{z}/{x}/{y}.png`,
-                  ],
-                  tileSize: 512,
-                });
-
-                map.addLayer({
-                  id: `${tif.id}-layer`,
-                  type: "raster",
-                  source: `${tif.id}-source`,
-                  minzoom: 0,
-                  maxzoom: 24,
-                });
-                console.log(map, "map after raster adding");
-                map.moveLayer(`${tif.id}-layer`, "Continent labels");
-                console.log(
-                  map,
-                  "map after raster adding and movign the layer before draw"
-                );
-
-                // dispatch(addSelectedTifId(tif_id));
-                console.log(map, "map");
-              }
-            })
-            .catch(() => {});
-        }
-      });
-    }
-  }, [tifs, dispatch, current_tif]);
 
   return (
     <>
