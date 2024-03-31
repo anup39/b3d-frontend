@@ -55,9 +55,25 @@ const fetchProjectPolygonGeojsonByClientIdAndProjectId = async ({
   return response.data;
 };
 
+const fetchMeasuringCategories = async (client_id) => {
+  const response = await axios.get(
+    `${
+      import.meta.env.VITE_API_DASHBOARD_URL
+    }/map-measurings/?client=${client_id}`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export {
   fetchProjectsByClientId,
   fetchClientDetailsByClientId,
   fetchTifDataByProjectId,
   fetchProjectPolygonGeojsonByClientIdAndProjectId,
+  fetchMeasuringCategories,
 };

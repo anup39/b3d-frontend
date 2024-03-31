@@ -24,6 +24,7 @@ import UploadPropertyForm from "../Property/UploadPropertyForm";
 import UploadProgress from "../Property/UploadProgress";
 import { useState, useEffect, useRef } from "react";
 import { setCurrentMapExtent, setcurrentTif } from "../../reducers/MapView";
+import axios from "axios";
 
 import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import { ListItem, ListItemButton, ListItemText } from "@mui/material";
@@ -135,12 +136,6 @@ export default function MapView() {
   const handleListView = () => {
     navigate(`/projects/${client_id}/List`);
   };
-
-  // useEffect(() => {
-  //   dispatch(setCurrentMapExtent(null));
-  //   dispatch(setCurrentMeasuringCategories(null));
-  //   dispatch(setcurrentTif(null));
-  // }, [dispatch]);
 
   // This is the logic or function for All measurements clicked
   // const handleMeasuringsPanelChecked = (event, project_id) => {

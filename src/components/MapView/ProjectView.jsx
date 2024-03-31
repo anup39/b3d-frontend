@@ -47,6 +47,7 @@ import { settifs } from "../../reducers/Tifs";
 import {
   fetchProjectPolygonGeojsonByClientIdAndProjectId,
   fetchTifDataByProjectId,
+  fetchMeasuringCategories,
 } from "../../api/api";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
@@ -79,8 +80,6 @@ export default function ProjectView({ project, popUpRef }) {
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
     dispatch(setProjectChecked({ id: project_id, value: checked }));
-    dispatch(setCurrentMeasuringCategories(null));
-    console.log("current_measuring_categories", current_measuring_categories);
     const measuringcategories = current_measuring_categories;
     if (measuringcategories) {
       measuringcategories?.forEach((measuringcategory) => {
@@ -121,6 +120,11 @@ export default function ProjectView({ project, popUpRef }) {
       dispatch(setcurrentProject(project_id));
       dispatch(setcurrentProjectName(project.name));
       dispatch(setShowAreaDisabled({ id: project_id, value: false }));
+      fetchMeasuringCategories(client_id).then((res) => {
+        const measuringcategories = res;
+        console.log("measuringcategories", measuringcategories);
+        dispatch(setCurrentMeasuringCategories(measuringcategories));
+      });
       // Here add Property polygon to the map by calling the api
       fetchProjectPolygonGeojsonByClientIdAndProjectId({
         client_id,
