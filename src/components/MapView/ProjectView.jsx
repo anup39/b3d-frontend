@@ -16,18 +16,22 @@ import { Tooltip } from "@mui/material";
 import { pink } from "@mui/material/colors";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setcurrentProjectName,
   setshowMeasuringsPanel,
-  setcurrentProjectMeasuring,
-  setCurrentMeasuringCategories,
   setcurrentTif,
   setshowTableMeasurings,
   setshowPiechart,
   setshowReport,
   setshowTifPanel,
   setCurrentPropertyPolygonGeojson,
-  resetMapView,
 } from "../../reducers/MapView";
+
+import { setCurrentMeasuringCategories } from "../../reducers/Client";
+
+import {
+  setcurrentProject,
+  setcurrentProjectName,
+} from "../../reducers/Project";
+
 import Checkbox from "@mui/material/Checkbox";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
@@ -51,12 +55,11 @@ export default function ProjectView({ project, popUpRef }) {
   const map = window.map_global;
   const dispatch = useDispatch();
   const tifs = useSelector((state) => state.tifs.tifs);
-  const { current_measuring_categories, project_id, current_tif } = useSelector(
+  const { current_measuring_categories, current_tif } = useSelector(
     (state) => state.mapView.currentMapDetail
   );
-  const client_id = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
+  const client_id = useSelector((state) => state.client.clientDetail.client_id);
+  const project_id = useSelector((state) => state.project.project_id);
   const handleTifPanel = () => {
     fetchTifDataByProjectId(project.id).then((res) => {
       const tifs = res;
@@ -74,6 +77,7 @@ export default function ProjectView({ project, popUpRef }) {
     const checked = event.target.checked;
     dispatch(setProjectChecked({ id: project_id, value: checked }));
     dispatch(setCurrentMeasuringCategories(null));
+    console.log("current_measuring_categories", current_measuring_categories);
     const measuringcategories = current_measuring_categories;
     if (measuringcategories) {
       measuringcategories?.forEach((measuringcategory) => {
@@ -92,6 +96,7 @@ export default function ProjectView({ project, popUpRef }) {
         });
       });
     }
+    console.log(current_tif, "current_tif");
     if (current_tif) {
       const id = current_tif.id;
       const style = map.getStyle();
@@ -110,7 +115,7 @@ export default function ProjectView({ project, popUpRef }) {
     if (checked) {
       handleTifPanel();
       dispatch(setshowMeasuringsPanel(true));
-      dispatch(setcurrentProjectMeasuring(project_id));
+      dispatch(setcurrentProject(project_id));
       dispatch(setcurrentProjectName(project.name));
       dispatch(setShowAreaDisabled({ id: project_id, value: false }));
       // Here add Property polygon to the map by calling the api
@@ -161,7 +166,7 @@ export default function ProjectView({ project, popUpRef }) {
       dispatch(setshowMeasuringsPanel(false));
       // dispatch(removeSelectedProjectId(id));
       dispatch(setcurrentProjectName(null));
-      dispatch(setcurrentProjectMeasuring(null));
+      dispatch(setcurrentProject(null));
       dispatch(setCurrentMeasuringCategories(null));
       dispatch(setcurrentTif(null));
       dispatch(setshowTableMeasurings(false));

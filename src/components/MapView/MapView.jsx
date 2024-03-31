@@ -23,22 +23,23 @@ import PropTypes from "prop-types";
 import UploadPropertyForm from "../Property/UploadPropertyForm";
 import UploadProgress from "../Property/UploadProgress";
 import { useState, useEffect, useRef } from "react";
-import {
-  setCurrentMapExtent,
-  setCurrentMeasuringCategories,
-  setcurrentTif,
-} from "../../reducers/MapView";
+import { setCurrentMapExtent, setcurrentTif } from "../../reducers/MapView";
+
+import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import { ListItem, ListItemButton, ListItemText } from "@mui/material";
 import {
-  setcurrentProjectName,
   setshowMeasuringsPanel,
-  setcurrentProjectMeasuring,
   setshowTableMeasurings,
   setshowPiechart,
   setshowReport,
   setshowTifPanel,
   setOpenSidebar,
 } from "../../reducers/MapView";
+
+import {
+  setcurrentProject,
+  setcurrentProjectName,
+} from "../../reducers/Project";
 
 import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteProperties from "./AutoCompleteProperties";
@@ -99,22 +100,22 @@ export default function MapView() {
   const theme = useTheme();
   const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
   const projects = useSelector((state) => state.project.projects);
-  const client_id = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
+  const client_id = useSelector((state) => state.client.clientDetail.client_id);
+  const clientDetail = useSelector((state) => state.client.clientDetail);
   const {
     level,
     openSidebar,
-    clientDetail,
     showReport,
     showMap,
     showShapefileUpload,
     showUploadingCategories,
   } = useSelector((state) => state.mapView);
 
-  const { project_id, current_measuring_categories, current_tif } = useSelector(
+  const { current_measuring_categories, current_tif } = useSelector(
     (state) => state.mapView.currentMapDetail
   );
+
+  const project_id = useSelector((state) => state.project.project_id);
 
   const showTifUpload = useSelector(
     (state) => state.displaySettings.showTifUpload
@@ -147,13 +148,13 @@ export default function MapView() {
   //     dispatch(setshowMeasuringsPanel(true));
   //     // dispatch(addSelectedProjectId(id));
   //     dispatch(setcurrentProjectName("All"));
-  //     dispatch(setcurrentProjectMeasuring(project_id));
+  //     dispatch(setcurrentProject(project_id));
   //   } else {
   //     dispatch(setCurrentMeasuringCategories(null));
   //     dispatch(setshowMeasuringsPanel(false));
   //     // dispatch(removeSelectedProjectId(id));
   //     dispatch(setcurrentProjectName(null));
-  //     dispatch(setcurrentProjectMeasuring(null));
+  //     dispatch(setcurrentProject(null));
   //     dispatch(setCurrentMeasuringCategories(null));
   //     dispatch(setcurrentTif(null));
   //     dispatch(setshowTableMeasurings(false));

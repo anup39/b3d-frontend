@@ -12,7 +12,8 @@ import {
 } from "../reducers/Property";
 import MapView from "../components/MapView/MapView";
 import { setprojects } from "../reducers/Project";
-import { setClientDetail, setLevel } from "../reducers/MapView";
+import { setClientDetail } from "../reducers/Client";
+import { setLevel } from "../reducers/MapView";
 import {
   useGetProjectsByClientIdAndProjectIdQuery,
   useGetClientDetailsByClientIdQuery,

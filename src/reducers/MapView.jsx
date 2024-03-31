@@ -4,7 +4,6 @@ const initialState = {
   level: "Projects",
   searchText: "",
   openSidebar: true,
-  clientDetail: { client_id: null, client_name: null, client_image: null },
   showShapefileUpload: false,
   showUploadingCategories: false,
   showReport: false,
@@ -15,13 +14,9 @@ const initialState = {
   showTifPanel: false,
   showMapLoader: false,
   currentMapDetail: {
-    // selected_projects_ids: [],
     display_type: "2D",
-    project_id: null,
-    current_project_name: null,
     current_property_polygon_geojson: null,
     current_tif: null,
-    current_measuring_categories: null,
     selected_tif: null,
     current_band_information: {
       band_red: {
@@ -58,9 +53,6 @@ export const MapView = createSlice({
     setOpenSidebar: (state, action) => {
       state.openSidebar = action.payload;
     },
-    setClientDetail: (state, action) => {
-      state.clientDetail = action.payload;
-    },
     setshowShapefileUpload: (state, action) => {
       state.showShapefileUpload = action.payload;
     },
@@ -88,14 +80,6 @@ export const MapView = createSlice({
     setshowMapLoader: (state, action) => {
       state.showMapLoader = action.payload;
     },
-    setcurrentProjectMeasuring: (state, action) => {
-      const newId = action.payload;
-      state.currentMapDetail.project_id = newId;
-    },
-    setcurrentProjectName: (state, action) => {
-      const name = action.payload;
-      state.currentMapDetail.current_project_name = name;
-    },
     setcurrentTif: (state, action) => {
       const tif_data = action.payload;
       state.currentMapDetail.current_tif = tif_data;
@@ -103,11 +87,6 @@ export const MapView = createSlice({
     setSelectedTif: (state, action) => {
       const tif_data = action.payload;
       state.currentMapDetail.selected_tif = tif_data;
-    },
-    setCurrentMeasuringCategories: (state, action) => {
-      const current_measuring_categories = action.payload;
-      state.currentMapDetail.current_measuring_categories =
-        current_measuring_categories;
     },
     setCurrentBandCheckedInformation: (state, action) => {
       const { checked, band } = action.payload;
@@ -169,44 +148,6 @@ export const MapView = createSlice({
       state.currentMapDetail.current_property_polygon_geojson = action.payload;
     },
 
-    resetMapView: (state) => {
-      state.showShapefileUpload = false;
-      state.showUploadingCategories = false;
-      state.showReport = false;
-      state.showMap = true;
-      state.showMeasuringsPanel = false;
-      state.showTableMeasurings = false;
-      state.showPiechart = false;
-      state.showTifPanel = false;
-      state.showMapLoader = false;
-      state.currentMapDetail = {
-        display_type: "2D",
-        project_id: null,
-        current_project_name: null,
-        current_property_polygon_geojson: null,
-        current_measuring_categories: null,
-        selected_tif: null,
-        current_band_information: {
-          band_red: {
-            checked: false,
-            color: "red",
-          },
-          band_green: {
-            checked: false,
-            color: "green",
-          },
-          band_blue: {
-            checked: false,
-            color: "blue",
-          },
-        },
-      };
-      state.tableSummationData = [];
-      state.tableSummationDataColumns = [];
-      state.printDetails = {
-        currentMapExtent: null,
-      };
-    },
     resetCurrentMapDetail: (state) => {
       state.currentMapDetail = {
         display_type: "2D",
@@ -240,7 +181,6 @@ export const {
   setLevel,
   setSearchText,
   setOpenSidebar,
-  setClientDetail,
   setshowShapefileUpload,
   setshowUploadingCategories,
   setshowReport,
@@ -252,11 +192,8 @@ export const {
   setshowMapLoader,
   addSelectedProjectId,
   removeSelectedProjectId,
-  setcurrentProjectMeasuring,
-  setcurrentProjectName,
   setcurrentTif,
   setSelectedTif,
-  setCurrentMeasuringCategories,
   setCurrentBandCheckedInformation,
   setCurrentBandColorInformation,
   resetCurrentBandInformation,
@@ -265,7 +202,6 @@ export const {
   setCurrentMapExtent,
   setDisplayType,
   setCurrentPropertyPolygonGeojson,
-  resetMapView,
   resetCurrentMapDetail,
 } = MapView.actions;
 

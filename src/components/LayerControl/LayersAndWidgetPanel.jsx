@@ -37,9 +37,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   const dispatch = useDispatch();
   const [expandMeasurings, setExpandMeasurings] = useState(true);
   const { mode, view_name } = useSelector((state) => state.drawnPolygon);
-  const client_id = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
+  const client_id = useSelector((state) => state.client.clientDetail.client_id);
   const {
     showMeasuringsPanel,
     showShapefileUpload,
@@ -47,8 +45,13 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     showPiechart,
   } = useSelector((state) => state.mapView);
 
-  const { project_id, current_project_name, currentPropertyPolygonGeojson } =
-    useSelector((state) => state.mapView.currentMapDetail);
+  const { currentPropertyPolygonGeojson } = useSelector(
+    (state) => state.mapView.currentMapDetail
+  );
+
+  const { project_id, current_project_name } = useSelector(
+    (state) => state.project
+  );
 
   const handleCloseMeasurings = () => {
     setExpandMeasurings(!expandMeasurings);

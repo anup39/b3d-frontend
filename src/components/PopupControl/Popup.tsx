@@ -46,10 +46,10 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
   const dispatch = useDispatch();
   // const state = useSelector((state) => state.drawnPolygon);
   const client_id = useSelector(
-    (state: RootState) => state.mapView.clientDetail.client_id
+    (state: RootState) => state.client.clientDetail.client_id
   );
   const project_id = useSelector(
-    (state: RootState) => state.mapView.currentMapDetail.project_id
+    (state: RootState) => state.project.project_id
   );
   const current_measuring_categories = useSelector(
     (state: RootState) =>

@@ -31,11 +31,9 @@ export default function Save({ popUpRef }) {
     (state) => state.drawnPolygon.type_of_geometry
   );
   const currentClient = useSelector(
-    (state) => state.mapView.clientDetail.client_id
+    (state) => state.client.clientDetail.client_id
   );
-  const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.project_id
-  );
+  const currentProject = useSelector((state) => state.project.project_id);
   const id = useSelector((state) => state.drawnPolygon.id);
   const feature_id = useSelector((state) => state.drawnPolygon.feature_id);
 

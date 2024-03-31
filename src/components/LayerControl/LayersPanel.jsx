@@ -12,7 +12,7 @@ import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFrom
 import { Slider } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
-import { setCurrentMeasuringCategories } from "../../reducers/MapView";
+import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import RectangleIcon from "@mui/icons-material/Rectangle";
 import CircleIcon from "@mui/icons-material/Circle";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
@@ -32,13 +32,11 @@ export default function LayersPanel({ map, popUpRef }) {
   const [categories, setCategories] = useState(all_categories);
   const [loading, setLoading] = useState(true);
   const { mode, view_name } = useSelector((state) => state.drawnPolygon);
-  const client_id = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
-  const { project_id, current_measuring_categories } = useSelector(
+  const client_id = useSelector((state) => state.client.clientDetail.client_id);
+  const { current_measuring_categories } = useSelector(
     (state) => state.mapView.currentMapDetail
   );
-
+  const project_id = useSelector((state) => state.project.project_id);
   useEffect(() => {
     if (current_measuring_categories) {
       setCategories(current_measuring_categories);
