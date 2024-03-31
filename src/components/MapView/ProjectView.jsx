@@ -26,6 +26,7 @@ import {
 } from "../../reducers/MapView";
 
 import { setCurrentMeasuringCategories } from "../../reducers/Client";
+import removeCheckedCategoriesLayers from "../../maputils/removeCheckedCategoriesLayers";
 
 import {
   setcurrentProject,
@@ -80,25 +81,13 @@ export default function ProjectView({ project, popUpRef }) {
   const handleMeasuringsPanelChecked = (event, project_id) => {
     const checked = event.target.checked;
     dispatch(setProjectChecked({ id: project_id, value: checked }));
-    const measuringcategories = current_measuring_categories;
-    if (measuringcategories) {
-      measuringcategories?.forEach((measuringcategory) => {
-        measuringcategory?.sub_category?.forEach((sub_category) => {
-          sub_category?.category?.forEach((cat) => {
-            if (cat.checked) {
-              if (cat.type_of_geometry) {
-                const sourceId = String(client_id) + cat.view_name + "source";
-                const layerId = String(client_id) + cat.view_name + "layer";
-                if (map) {
-                  RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
-                }
-              }
-            }
-          });
-        });
-      });
+    if (current_measuring_categories) {
+      removeCheckedCategoriesLayers(
+        current_measuring_categories,
+        client_id,
+        map
+      );
     }
-    console.log(current_tif, "current_tif");
     if (current_tif) {
       const id = current_tif.id;
       const style = map.getStyle();
