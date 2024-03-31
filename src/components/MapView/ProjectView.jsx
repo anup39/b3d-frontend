@@ -89,19 +89,14 @@ export default function ProjectView({ project, popUpRef }) {
       );
     }
     if (current_tif) {
-      const id = current_tif.id;
-      const style = map.getStyle();
-      const existingLayer = style?.layers?.find(
-        (layer) => layer.id === `${id}-layer`
-      );
-      const existingSource = style?.sources[`${id}-source`];
-      if (existingLayer) {
-        map.off("click", `${id}-layer`);
-        map.removeLayer(`${id}-layer`);
-      }
-      if (existingSource) {
-        map.removeSource(`${id}-source`);
-      }
+      console.log("current_tif", current_tif);
+      const layerId = current_tif.id + "-" + "layer";
+      const sourceId = current_tif.id + "-" + "source";
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        sourceId: sourceId,
+        layerId: layerId,
+      });
     }
     if (checked) {
       handleTifPanel();

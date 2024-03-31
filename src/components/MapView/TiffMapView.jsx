@@ -40,7 +40,7 @@ export default function TiffMapView({ tif, projectId }) {
           if (res.data.bounds) {
             const bounds = res.data.bounds;
             map.fitBounds(bounds);
-            map.addSource(`${id}-source`, {
+            map.addSource(`${id}source`, {
               type: "raster",
               tiles: [
                 `${
