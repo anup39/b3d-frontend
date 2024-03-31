@@ -26,7 +26,7 @@ import {
 } from "../../reducers/MapView";
 
 import { setCurrentMeasuringCategories } from "../../reducers/Client";
-import removeCheckedCategoriesLayers from "../../maputils/removeCheckedCategoriesLayers";
+import removeCheckedCategoriesLayersFromMap from "../../maputils/removeCheckedCategoriesLayers";
 
 import {
   setcurrentProject,
@@ -103,11 +103,11 @@ export default function ProjectView({ project, popUpRef }) {
       dispatch(settifs(tifs));
     });
   };
-  const handleMeasuringsPanelChecked = (event, project_id) => {
+  const handleMeasuringsPanelChecked = (event, project) => {
     const checked = event.target.checked;
-    dispatch(setProjectChecked({ id: project_id, value: checked }));
+    dispatch(setProjectChecked({ id: project.id, value: checked }));
     if (current_measuring_categories) {
-      removeCheckedCategoriesLayers(
+      removeCheckedCategoriesLayersFromMap(
         current_measuring_categories,
         client_id,
         map
@@ -125,9 +125,9 @@ export default function ProjectView({ project, popUpRef }) {
     if (checked) {
       handleTifPanel();
       dispatch(setshowMeasuringsPanel(true));
-      dispatch(setcurrentProject(project_id));
+      dispatch(setcurrentProject(project.id));
       dispatch(setcurrentProjectName(project.name));
-      dispatch(setShowAreaDisabled({ id: project_id, value: false }));
+      dispatch(setShowAreaDisabled({ id: project.id, value: false }));
       fetchMeasuringCategories(client_id).then((res) => {
         const measuringcategories = res;
         console.log("measuringcategories", measuringcategories);
@@ -136,20 +136,20 @@ export default function ProjectView({ project, popUpRef }) {
       // Here add Property polygon to the map by calling the api
       fetchProjectPolygonGeojsonByClientIdAndProjectId({
         client_id,
-        project_id,
+        project_id: project.id,
       }).then((res) => {
         const property_polygon_geojson = res;
         dispatch(setCurrentPropertyPolygonGeojson(property_polygon_geojson));
         if (property_polygon_geojson?.features?.length > 0) {
-          const layerId = String(client_id) + String(project_id) + "layer";
-          const sourceId = String(client_id) + String(project_id) + "source";
+          const layerId = String(client_id) + String(project.id) + "layer";
+          const sourceId = String(client_id) + String(project.id) + "source";
           AddLayerAndSourceToMap({
             map,
             layerId: layerId,
             sourceId: sourceId,
             url: `${
               import.meta.env.VITE_API_DASHBOARD_URL
-            }/project-polygon/?client=${client_id}&project=${project_id}`,
+            }/project-polygon/?client=${client_id}&project=${project.id}`,
             source_layer: sourceId,
             popUpRef: popUpRef,
             showPopup: false,
@@ -175,8 +175,8 @@ export default function ProjectView({ project, popUpRef }) {
           sourceId: String(client_id) + String(project_id) + "source",
           layerId: String(client_id) + String(project_id) + "layer",
         });
-        dispatch(setShowArea({ id: project_id, value: true }));
       }
+      dispatch(setShowArea({ id: project.id, value: true }));
     } else {
       dispatch(settifs([]));
       dispatch(setshowMeasuringsPanel(false));
@@ -189,17 +189,14 @@ export default function ProjectView({ project, popUpRef }) {
       dispatch(setshowPiechart(false));
       dispatch(setshowReport(false));
       dispatch(setshowTifPanel(false));
-      dispatch(setShowAreaDisabled({ id: project_id, value: true }));
+      dispatch(setShowAreaDisabled({ id: project.id, value: true }));
       RemoveSourceAndLayerFromMap({
         map: map,
-        sourceId: String(client_id) + String(project_id) + "source",
-        layerId: String(client_id) + String(project_id) + "layer",
+        sourceId: String(client_id) + String(project.id) + "source",
+        layerId: String(client_id) + String(project.id) + "layer",
       });
-
       // Here when the  project is un clicked make the eye button back to default
-      if (project_id) {
-        dispatch(setShowArea({ id: project_id, value: true }));
-      }
+      dispatch(setShowArea({ id: project.id, value: true }));
     }
   };
 
@@ -310,9 +307,7 @@ export default function ProjectView({ project, popUpRef }) {
 
           <Tooltip title="Show Measurings">
             <Checkbox
-              onChange={(event) =>
-                handleMeasuringsPanelChecked(event, project.id)
-              }
+              onChange={(event) => handleMeasuringsPanelChecked(event, project)}
               size="small"
               {...label}
               // defaultChecked={false}
