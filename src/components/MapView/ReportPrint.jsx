@@ -137,6 +137,7 @@ export default function ReportPrint() {
       });
 
       if (current_tif) {
+        console.log("In reprot");
         const id = current_tif.id;
         axios
           .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)

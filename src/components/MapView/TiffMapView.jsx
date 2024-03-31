@@ -21,26 +21,32 @@ const Img = styled("img")({
   maxHeight: "100%",
   borderRadius: 5,
 });
+import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-export default function TiffMapView({ tif, projectId }) {
+export default function TiffMapView({ projectId }) {
   const dispatch = useDispatch();
   const project_id = useSelector((state) => state.project.project_id);
+  const tifs = useSelector((state) => state.tifs.tifs);
+  const current_tif = useSelector(
+    (state) => state.mapView.currentMapDetail.current_tif
+  );
 
-  const handleTifChecked = (event, tif_id) => {
+  const handleTifChecked = (event, tif_id, tif) => {
     const checked = event.target.checked;
     const id = tif_id;
     const map = window.map_global;
     dispatch(setTifChecked({ tif_id, checked }));
     if (checked) {
+      dispatch(setcurrentTif(tif));
       axios
         .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
         .then((res) => {
           if (res.data.bounds) {
             const bounds = res.data.bounds;
             map.fitBounds(bounds);
-            map.addSource(`${id}source`, {
+            map.addSource(`${id}-source`, {
               type: "raster",
               tiles: [
                 `${
@@ -66,7 +72,6 @@ export default function TiffMapView({ tif, projectId }) {
 
             // dispatch(addSelectedTifId(tif_id));
           }
-          dispatch(setcurrentTif(tif));
         })
         .catch(() => {});
     } else {
@@ -88,85 +93,108 @@ export default function TiffMapView({ tif, projectId }) {
   };
 
   useEffect(() => {
-    if (tif.checked) {
+    if (current_tif) {
       const map = window.map_global;
-      axios
-        .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${tif.id}`)
-        .then((res) => {
-          if (res.data.bounds) {
-            const bounds = res.data.bounds;
-            map.fitBounds(bounds);
-            map.addSource(`${tif.id}-source`, {
-              type: "raster",
-              tiles: [
-                `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
-                  tif.id
-                }/{z}/{x}/{y}.png`,
-              ],
-              tileSize: 512,
-            });
-
-            map.addLayer({
-              id: `${tif.id}-layer`,
-              type: "raster",
-              source: `${tif.id}-source`,
-              minzoom: 0,
-              maxzoom: 24,
-            });
-            console.log(map, "map after raster adding");
-            map.moveLayer(`${tif.id}-layer`, "Continent labels");
-            console.log(
-              map,
-              "map after raster adding and movign the layer before draw"
-            );
-
-            // dispatch(addSelectedTifId(tif_id));
-          }
-          dispatch(setcurrentTif(tif));
-        })
-        .catch(() => {});
+      console.log("current_tif", current_tif);
+      const layerId = `${current_tif.id}-layer`;
+      const sourceId = `${current_tif.id}-source`;
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        layerId: layerId,
+        sourceId: sourceId,
+      });
     }
-  }, []);
+
+    if (tifs.length > 0) {
+      console.log("tifs", tifs);
+      tifs.map((tif) => {
+        if (tif.checked) {
+          dispatch(setcurrentTif(tif));
+          const map = window.map_global;
+          axios
+            .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${tif.id}`)
+            .then((res) => {
+              if (res.data.bounds) {
+                const bounds = res.data.bounds;
+                map.fitBounds(bounds);
+                map.addSource(`${tif.id}-source`, {
+                  type: "raster",
+                  tiles: [
+                    `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
+                      tif.id
+                    }/{z}/{x}/{y}.png`,
+                  ],
+                  tileSize: 512,
+                });
+
+                map.addLayer({
+                  id: `${tif.id}-layer`,
+                  type: "raster",
+                  source: `${tif.id}-source`,
+                  minzoom: 0,
+                  maxzoom: 24,
+                });
+                console.log(map, "map after raster adding");
+                map.moveLayer(`${tif.id}-layer`, "Continent labels");
+                console.log(
+                  map,
+                  "map after raster adding and movign the layer before draw"
+                );
+
+                // dispatch(addSelectedTifId(tif_id));
+                console.log(map, "map");
+              }
+            })
+            .catch(() => {});
+        }
+      });
+    }
+  }, [tifs, dispatch, current_tif]);
 
   return (
-    <Box>
-      <ListItemButton
-        key={tif.id}
-        sx={{
-          pl: 4,
-          "&:hover": {
-            backgroundColor: "#F1F7FF",
-          },
-          fontSize: 6,
-        }}
-      >
-        <ListItemIcon sx={{ margin: 0, padding: 0, minWidth: "40px" }}>
-          <ButtonBase sx={{ width: 30, height: 30 }}>
-            <Img alt="complex" src={tif.screenshot_image} />
-          </ButtonBase>
-        </ListItemIcon>
-        <ListItemText
-          secondary={tif.name.slice(0, 10)}
-          secondaryTypographyProps={{ fontSize: 13 }}
-        />
-        <Checkbox
-          // checked={project_id && tif.checked}
-          checked={tif.checked}
-          onChange={(event) => handleTifChecked(event, tif.id)}
-          size="small"
-          {...label}
-          // defaultChecked={false}
-          sx={{
-            color: pink[600],
-            "&.Mui-checked": {
-              color: pink[600],
-            },
-          }}
-          disabled={project_id === projectId ? false : true}
-        />
-        {project_id === projectId ? <MoreonMap tif={tif} /> : null}
-      </ListItemButton>
-    </Box>
+    <>
+      {tifs.length > 0
+        ? tifs.map((tif) => (
+            <Box key={tif.id}>
+              <ListItemButton
+                sx={{
+                  pl: 4,
+                  "&:hover": {
+                    backgroundColor: "#F1F7FF",
+                  },
+                  fontSize: 6,
+                }}
+              >
+                <ListItemIcon sx={{ margin: 0, padding: 0, minWidth: "40px" }}>
+                  <ButtonBase sx={{ width: 30, height: 30 }}>
+                    <Img alt="complex" src={tif.screenshot_image} />
+                  </ButtonBase>
+                </ListItemIcon>
+                <ListItemText
+                  secondary={tif.name.slice(0, 10)}
+                  secondaryTypographyProps={{ fontSize: 13 }}
+                />
+                <Checkbox
+                  // checked={project_id && tif.checked}
+                  checked={tif.checked}
+                  onChange={(event) => handleTifChecked(event, tif.id, tif)}
+                  size="small"
+                  {...label}
+                  // defaultChecked={false}
+                  sx={{
+                    color: pink[600],
+                    "&.Mui-checked": {
+                      color: pink[600],
+                    },
+                  }}
+                  disabled={project_id === projectId ? false : true}
+                />
+                {project_id === projectId ? <MoreonMap tif={tif} /> : null}
+              </ListItemButton>
+            </Box>
+          ))
+        : null}
+    </>
   );
 }
 

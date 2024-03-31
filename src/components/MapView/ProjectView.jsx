@@ -88,16 +88,6 @@ export default function ProjectView({ project, popUpRef }) {
         map
       );
     }
-    if (current_tif) {
-      console.log("current_tif", current_tif);
-      const layerId = current_tif.id + "-" + "layer";
-      const sourceId = current_tif.id + "-" + "source";
-      RemoveSourceAndLayerFromMap({
-        map: map,
-        sourceId: sourceId,
-        layerId: layerId,
-      });
-    }
     if (checked) {
       handleTifPanel();
       dispatch(setshowMeasuringsPanel(true));
@@ -154,6 +144,7 @@ export default function ProjectView({ project, popUpRef }) {
         dispatch(setShowArea({ id: project_id, value: true }));
       }
     } else {
+      dispatch(settifs([]));
       dispatch(setshowMeasuringsPanel(false));
       // dispatch(removeSelectedProjectId(id));
       dispatch(setcurrentProjectName(null));
@@ -350,11 +341,7 @@ export default function ProjectView({ project, popUpRef }) {
         </ListItemButton>
         <Collapse in={project.openProperties} timeout="auto" unmountOnExit>
           <List sx={{ fontSize: 2 }} component="div" disablePadding>
-            {tifs && tifs.length > 0
-              ? tifs.map((tif) => (
-                  <TiffMapView key={tif.id} tif={tif} projectId={project.id} />
-                ))
-              : null}
+            <TiffMapView projectId={project.id} />
           </List>
         </Collapse>
       </ListItem>
