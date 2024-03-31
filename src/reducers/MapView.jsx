@@ -17,7 +17,6 @@ const initialState = {
     display_type: "2D",
     current_property_polygon_geojson: null,
     current_tif: null,
-    current_measuring_categories: null,
     selected_tif: null,
     current_band_information: {
       band_red: {
@@ -88,11 +87,6 @@ export const MapView = createSlice({
     setSelectedTif: (state, action) => {
       const tif_data = action.payload;
       state.currentMapDetail.selected_tif = tif_data;
-    },
-    setCurrentMeasuringCategories: (state, action) => {
-      const current_measuring_categories = action.payload;
-      state.currentMapDetail.current_measuring_categories =
-        current_measuring_categories;
     },
     setCurrentBandCheckedInformation: (state, action) => {
       const { checked, band } = action.payload;
@@ -200,7 +194,6 @@ export const {
   removeSelectedProjectId,
   setcurrentTif,
   setSelectedTif,
-  setCurrentMeasuringCategories,
   setCurrentBandCheckedInformation,
   setCurrentBandColorInformation,
   resetCurrentBandInformation,

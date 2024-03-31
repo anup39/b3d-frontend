@@ -12,7 +12,7 @@ import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFrom
 import { Slider } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
-import { setCurrentMeasuringCategories } from "../../reducers/MapView";
+import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import RectangleIcon from "@mui/icons-material/Rectangle";
 import CircleIcon from "@mui/icons-material/Circle";
 import ShowChartIcon from "@mui/icons-material/ShowChart";

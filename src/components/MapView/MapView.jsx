@@ -23,11 +23,9 @@ import PropTypes from "prop-types";
 import UploadPropertyForm from "../Property/UploadPropertyForm";
 import UploadProgress from "../Property/UploadProgress";
 import { useState, useEffect, useRef } from "react";
-import {
-  setCurrentMapExtent,
-  setCurrentMeasuringCategories,
-  setcurrentTif,
-} from "../../reducers/MapView";
+import { setCurrentMapExtent, setcurrentTif } from "../../reducers/MapView";
+
+import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import { ListItem, ListItemButton, ListItemText } from "@mui/material";
 import {
   setshowMeasuringsPanel,

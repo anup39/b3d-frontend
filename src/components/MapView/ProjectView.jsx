@@ -17,7 +17,6 @@ import { pink } from "@mui/material/colors";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setshowMeasuringsPanel,
-  setCurrentMeasuringCategories,
   setcurrentTif,
   setshowTableMeasurings,
   setshowPiechart,
@@ -25,6 +24,8 @@ import {
   setshowTifPanel,
   setCurrentPropertyPolygonGeojson,
 } from "../../reducers/MapView";
+
+import { setCurrentMeasuringCategories } from "../../reducers/Client";
 
 import {
   setcurrentProject,
