@@ -14,10 +14,7 @@ const initialState = {
   showTifPanel: false,
   showMapLoader: false,
   currentMapDetail: {
-    // selected_projects_ids: [],
     display_type: "2D",
-    project_id: null,
-    current_project_name: null,
     current_property_polygon_geojson: null,
     current_tif: null,
     current_measuring_categories: null,
@@ -83,14 +80,6 @@ export const MapView = createSlice({
     },
     setshowMapLoader: (state, action) => {
       state.showMapLoader = action.payload;
-    },
-    setcurrentProjectMeasuring: (state, action) => {
-      const newId = action.payload;
-      state.currentMapDetail.project_id = newId;
-    },
-    setcurrentProjectName: (state, action) => {
-      const name = action.payload;
-      state.currentMapDetail.current_project_name = name;
     },
     setcurrentTif: (state, action) => {
       const tif_data = action.payload;
@@ -209,8 +198,6 @@ export const {
   setshowMapLoader,
   addSelectedProjectId,
   removeSelectedProjectId,
-  setcurrentProjectMeasuring,
-  setcurrentProjectName,
   setcurrentTif,
   setSelectedTif,
   setCurrentMeasuringCategories,

@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  project_id: null,
+  current_project_name: null,
   projects: [],
   originalProjects: [],
 };
@@ -9,6 +11,14 @@ export const Project = createSlice({
   name: "Project",
   initialState,
   reducers: {
+    setcurrentProjectMeasuring: (state, action) => {
+      const newId = action.payload;
+      state.currentMapDetail.project_id = newId;
+    },
+    setcurrentProjectName: (state, action) => {
+      const name = action.payload;
+      state.currentMapDetail.current_project_name = name;
+    },
     setprojects: (state, action) => {
       state.projects = action.payload;
       state.originalProjects = action.payload;
@@ -85,6 +95,8 @@ export const Project = createSlice({
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const {
+  setcurrentProject,
+  setcurrentProjectName,
   setprojects,
   setShowArea,
   setShowAreaDisabled,

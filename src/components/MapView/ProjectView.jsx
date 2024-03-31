@@ -16,9 +16,7 @@ import { Tooltip } from "@mui/material";
 import { pink } from "@mui/material/colors";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setcurrentProjectName,
   setshowMeasuringsPanel,
-  setcurrentProjectMeasuring,
   setCurrentMeasuringCategories,
   setcurrentTif,
   setshowTableMeasurings,
@@ -27,6 +25,12 @@ import {
   setshowTifPanel,
   setCurrentPropertyPolygonGeojson,
 } from "../../reducers/MapView";
+
+import {
+  setcurrentProject,
+  setcurrentProjectName,
+} from "../../reducers/Project";
+
 import Checkbox from "@mui/material/Checkbox";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
@@ -109,7 +113,7 @@ export default function ProjectView({ project, popUpRef }) {
     if (checked) {
       handleTifPanel();
       dispatch(setshowMeasuringsPanel(true));
-      dispatch(setcurrentProjectMeasuring(project_id));
+      dispatch(setcurrentProject(project_id));
       dispatch(setcurrentProjectName(project.name));
       dispatch(setShowAreaDisabled({ id: project_id, value: false }));
       // Here add Property polygon to the map by calling the api
@@ -160,7 +164,7 @@ export default function ProjectView({ project, popUpRef }) {
       dispatch(setshowMeasuringsPanel(false));
       // dispatch(removeSelectedProjectId(id));
       dispatch(setcurrentProjectName(null));
-      dispatch(setcurrentProjectMeasuring(null));
+      dispatch(setcurrentProject(null));
       dispatch(setCurrentMeasuringCategories(null));
       dispatch(setcurrentTif(null));
       dispatch(setshowTableMeasurings(false));

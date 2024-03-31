@@ -30,15 +30,18 @@ import {
 } from "../../reducers/MapView";
 import { ListItem, ListItemButton, ListItemText } from "@mui/material";
 import {
-  setcurrentProjectName,
   setshowMeasuringsPanel,
-  setcurrentProjectMeasuring,
   setshowTableMeasurings,
   setshowPiechart,
   setshowReport,
   setshowTifPanel,
   setOpenSidebar,
 } from "../../reducers/MapView";
+
+import {
+  setcurrentProject,
+  setcurrentProjectName,
+} from "../../reducers/Project";
 
 import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteProperties from "./AutoCompleteProperties";
@@ -145,13 +148,13 @@ export default function MapView() {
   //     dispatch(setshowMeasuringsPanel(true));
   //     // dispatch(addSelectedProjectId(id));
   //     dispatch(setcurrentProjectName("All"));
-  //     dispatch(setcurrentProjectMeasuring(project_id));
+  //     dispatch(setcurrentProject(project_id));
   //   } else {
   //     dispatch(setCurrentMeasuringCategories(null));
   //     dispatch(setshowMeasuringsPanel(false));
   //     // dispatch(removeSelectedProjectId(id));
   //     dispatch(setcurrentProjectName(null));
-  //     dispatch(setcurrentProjectMeasuring(null));
+  //     dispatch(setcurrentProject(null));
   //     dispatch(setCurrentMeasuringCategories(null));
   //     dispatch(setcurrentTif(null));
   //     dispatch(setshowTableMeasurings(false));
