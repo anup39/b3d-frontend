@@ -33,9 +33,7 @@ export default function Save({ popUpRef }) {
   const currentClient = useSelector(
     (state) => state.client.clientDetail.client_id
   );
-  const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.project_id
-  );
+  const currentProject = useSelector((state) => state.project.project_id);
   const id = useSelector((state) => state.drawnPolygon.id);
   const feature_id = useSelector((state) => state.drawnPolygon.feature_id);
 

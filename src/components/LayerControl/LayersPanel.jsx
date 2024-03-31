@@ -33,10 +33,10 @@ export default function LayersPanel({ map, popUpRef }) {
   const [loading, setLoading] = useState(true);
   const { mode, view_name } = useSelector((state) => state.drawnPolygon);
   const client_id = useSelector((state) => state.client.clientDetail.client_id);
-  const { project_id, current_measuring_categories } = useSelector(
+  const { current_measuring_categories } = useSelector(
     (state) => state.mapView.currentMapDetail
   );
-
+  const project_id = useSelector((state) => state.project.project_id);
   useEffect(() => {
     if (current_measuring_categories) {
       setCategories(current_measuring_categories);

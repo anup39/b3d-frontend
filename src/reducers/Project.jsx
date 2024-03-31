@@ -11,13 +11,13 @@ export const Project = createSlice({
   name: "Project",
   initialState,
   reducers: {
-    setcurrentProjectMeasuring: (state, action) => {
+    setcurrentProject: (state, action) => {
       const newId = action.payload;
-      state.currentMapDetail.project_id = newId;
+      state.project_id = newId;
     },
     setcurrentProjectName: (state, action) => {
       const name = action.payload;
-      state.currentMapDetail.current_project_name = name;
+      state.current_project_name = name;
     },
     setprojects: (state, action) => {
       state.projects = action.payload;

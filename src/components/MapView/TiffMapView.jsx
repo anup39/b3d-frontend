@@ -26,9 +26,7 @@ const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function TiffMapView({ tif, projectId }) {
   const dispatch = useDispatch();
-  const project_id = useSelector(
-    (state) => state.mapView.currentMapDetail.project_id
-  );
+  const project_id = useSelector((state) => state.project.project_id);
 
   const handleTifChecked = (event, tif_id) => {
     const checked = event.target.checked;

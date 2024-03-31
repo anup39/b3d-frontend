@@ -45,8 +45,11 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     showPiechart,
   } = useSelector((state) => state.mapView);
 
-  const { project_id, current_project_name, currentPropertyPolygonGeojson } =
-    useSelector((state) => state.mapView.currentMapDetail);
+  const { current_project_name, currentPropertyPolygonGeojson } = useSelector(
+    (state) => state.mapView.currentMapDetail
+  );
+
+  const project_id = useSelector((state) => state.project.project_id);
 
   const handleCloseMeasurings = () => {
     setExpandMeasurings(!expandMeasurings);

@@ -34,9 +34,7 @@ export default function UploadingCategories() {
   const currentClient = useSelector(
     (state) => state.client.clientDetail.client_id
   );
-  const currentProject = useSelector(
-    (state) => state.mapView.currentMapDetail.project_id
-  );
+  const currentProject = useSelector((state) => state.project.project_id);
   const currentUser = useSelector((state) => state.auth.user_id);
 
   const closeForm = () => {
@@ -63,7 +61,7 @@ export default function UploadingCategories() {
     data.append("filename", currentfile);
     data.append("type_of_file", type_of_file);
     data.append("client_id", currentClient);
-    data.append("project_id", currentProject);
+    data.append("", currentProject);
     data.append("user_id", currentUser);
     console.log(data);
     if (checkedCategories.length > 0) {
