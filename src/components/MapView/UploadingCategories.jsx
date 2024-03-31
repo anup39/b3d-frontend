@@ -32,7 +32,7 @@ export default function UploadingCategories() {
   const distinct = useSelector((state) => state.uploadMeasuring.distinct);
   const currentfile = useSelector((state) => state.uploadMeasuring.currentfile);
   const currentClient = useSelector(
-    (state) => state.mapView.clientDetail.client_id
+    (state) => state.client.clientDetail.client_id
   );
   const currentProject = useSelector(
     (state) => state.mapView.currentMapDetail.project_id

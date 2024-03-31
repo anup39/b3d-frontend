@@ -24,7 +24,7 @@ export default function ReportPrint() {
   const [map, setMap] = React.useState(null);
 
   const currentClient = useSelector(
-    (state) => state.mapView.clientDetail.client_id
+    (state) => state.client.clientDetail.client_id
   );
   const currentProject = useSelector(
     (state) => state.mapView.currentMapDetail.project_id

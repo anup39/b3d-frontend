@@ -14,9 +14,7 @@ import { useEffect, useCallback } from "react";
 
 export default function Cancel() {
   const dispatch = useDispatch();
-  const client_id = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
+  const client_id = useSelector((state) => state.client.clientDetail.client_id);
   const view_name = useSelector((state) => state.drawnPolygon.view_name);
   const mode = useSelector((state) => state.drawnPolygon.mode);
 

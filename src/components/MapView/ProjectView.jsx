@@ -26,7 +26,6 @@ import {
   setshowReport,
   setshowTifPanel,
   setCurrentPropertyPolygonGeojson,
-  resetMapView,
 } from "../../reducers/MapView";
 import Checkbox from "@mui/material/Checkbox";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
@@ -54,9 +53,7 @@ export default function ProjectView({ project, popUpRef }) {
   const { current_measuring_categories, project_id, current_tif } = useSelector(
     (state) => state.mapView.currentMapDetail
   );
-  const client_id = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
+  const client_id = useSelector((state) => state.client.clientDetail.client_id);
   const handleTifPanel = () => {
     fetchTifDataByProjectId(project.id).then((res) => {
       const tifs = res;
@@ -74,6 +71,7 @@ export default function ProjectView({ project, popUpRef }) {
     const checked = event.target.checked;
     dispatch(setProjectChecked({ id: project_id, value: checked }));
     dispatch(setCurrentMeasuringCategories(null));
+    console.log("current_measuring_categories", current_measuring_categories);
     const measuringcategories = current_measuring_categories;
     if (measuringcategories) {
       measuringcategories?.forEach((measuringcategory) => {
@@ -92,6 +90,7 @@ export default function ProjectView({ project, popUpRef }) {
         });
       });
     }
+    console.log(current_tif, "current_tif");
     if (current_tif) {
       const id = current_tif.id;
       const style = map.getStyle();

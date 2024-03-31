@@ -99,13 +99,11 @@ export default function MapView() {
   const theme = useTheme();
   const popUpRef = useRef(new maplibregl.Popup({ closeOnClick: false }));
   const projects = useSelector((state) => state.project.projects);
-  const client_id = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
+  const client_id = useSelector((state) => state.client.clientDetail.client_id);
+  const clientDetail = useSelector((state) => state.client.clientDetail);
   const {
     level,
     openSidebar,
-    clientDetail,
     showReport,
     showMap,
     showShapefileUpload,

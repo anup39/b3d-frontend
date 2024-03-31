@@ -23,9 +23,7 @@ export default function MoreonProperty({ project_id }) {
     setAnchorEl(null);
   };
 
-  const client_id = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
+  const client_id = useSelector((state) => state.client.clientDetail.client_id);
 
   const handleUploadOrthoClick = () => {
     console.log("clicked for upload");

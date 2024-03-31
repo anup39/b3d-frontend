@@ -37,9 +37,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   const dispatch = useDispatch();
   const [expandMeasurings, setExpandMeasurings] = useState(true);
   const { mode, view_name } = useSelector((state) => state.drawnPolygon);
-  const client_id = useSelector(
-    (state) => state.mapView.clientDetail.client_id
-  );
+  const client_id = useSelector((state) => state.client.clientDetail.client_id);
   const {
     showMeasuringsPanel,
     showShapefileUpload,

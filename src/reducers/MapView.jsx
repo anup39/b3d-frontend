@@ -4,7 +4,6 @@ const initialState = {
   level: "Projects",
   searchText: "",
   openSidebar: true,
-  clientDetail: { client_id: null, client_name: null, client_image: null },
   showShapefileUpload: false,
   showUploadingCategories: false,
   showReport: false,
@@ -57,9 +56,6 @@ export const MapView = createSlice({
     },
     setOpenSidebar: (state, action) => {
       state.openSidebar = action.payload;
-    },
-    setClientDetail: (state, action) => {
-      state.clientDetail = action.payload;
     },
     setshowShapefileUpload: (state, action) => {
       state.showShapefileUpload = action.payload;
@@ -169,44 +165,6 @@ export const MapView = createSlice({
       state.currentMapDetail.current_property_polygon_geojson = action.payload;
     },
 
-    resetMapView: (state) => {
-      state.showShapefileUpload = false;
-      state.showUploadingCategories = false;
-      state.showReport = false;
-      state.showMap = true;
-      state.showMeasuringsPanel = false;
-      state.showTableMeasurings = false;
-      state.showPiechart = false;
-      state.showTifPanel = false;
-      state.showMapLoader = false;
-      state.currentMapDetail = {
-        display_type: "2D",
-        project_id: null,
-        current_project_name: null,
-        current_property_polygon_geojson: null,
-        current_measuring_categories: null,
-        selected_tif: null,
-        current_band_information: {
-          band_red: {
-            checked: false,
-            color: "red",
-          },
-          band_green: {
-            checked: false,
-            color: "green",
-          },
-          band_blue: {
-            checked: false,
-            color: "blue",
-          },
-        },
-      };
-      state.tableSummationData = [];
-      state.tableSummationDataColumns = [];
-      state.printDetails = {
-        currentMapExtent: null,
-      };
-    },
     resetCurrentMapDetail: (state) => {
       state.currentMapDetail = {
         display_type: "2D",
@@ -240,7 +198,6 @@ export const {
   setLevel,
   setSearchText,
   setOpenSidebar,
-  setClientDetail,
   setshowShapefileUpload,
   setshowUploadingCategories,
   setshowReport,
@@ -265,7 +222,6 @@ export const {
   setCurrentMapExtent,
   setDisplayType,
   setCurrentPropertyPolygonGeojson,
-  resetMapView,
   resetCurrentMapDetail,
 } = MapView.actions;
 

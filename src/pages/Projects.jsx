@@ -7,7 +7,7 @@ import ProjectCard from "../components/Project/ProjectCard";
 import ProjectForm from "../components/Project/ProjectForm";
 import MapView from "../components/MapView/MapView";
 import { Box } from "@mui/material";
-import { setClientDetail } from "../reducers/MapView";
+import { setClientDetail } from "../reducers/Client";
 import {
   useGetProjectsByClientIdQuery,
   useGetClientDetailsByClientIdQuery,
