@@ -122,11 +122,14 @@ export default function ProjectView({ project, popUpRef }) {
         sourceId: sourceId,
       });
     }
+    // Every time the projected is checked or unchecked the open eye button is show
+    dispatch(setShowArea({ id: project.id, value: true }));
     if (checked) {
       handleTifPanel();
       dispatch(setshowMeasuringsPanel(true));
       dispatch(setcurrentProject(project.id));
       dispatch(setcurrentProjectName(project.name));
+      // This will make the eye button not disable when clicked on the project
       dispatch(setShowAreaDisabled({ id: project.id, value: false }));
       fetchMeasuringCategories(client_id).then((res) => {
         const measuringcategories = res;
@@ -176,11 +179,9 @@ export default function ProjectView({ project, popUpRef }) {
           layerId: String(client_id) + String(project_id) + "layer",
         });
       }
-      dispatch(setShowArea({ id: project.id, value: true }));
     } else {
       dispatch(settifs([]));
       dispatch(setshowMeasuringsPanel(false));
-      // dispatch(removeSelectedProjectId(id));
       dispatch(setcurrentProjectName(null));
       dispatch(setcurrentProject(null));
       dispatch(setCurrentMeasuringCategories(null));
@@ -195,8 +196,6 @@ export default function ProjectView({ project, popUpRef }) {
         sourceId: String(client_id) + String(project.id) + "source",
         layerId: String(client_id) + String(project.id) + "layer",
       });
-      // Here when the  project is un clicked make the eye button back to default
-      dispatch(setShowArea({ id: project.id, value: true }));
     }
   };
 
