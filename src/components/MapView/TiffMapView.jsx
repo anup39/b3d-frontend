@@ -8,11 +8,11 @@ import { styled } from "@mui/material/styles";
 import MoreonMap from "./MoreonMap";
 import PropTypes from "prop-types";
 import ButtonBase from "@mui/material/ButtonBase";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setcurrentTif } from "../../reducers/MapView";
 import { setTifChecked } from "../../reducers/Tifs";
-import { useEffect } from "react";
+import { fetchBoundingBoxByTifId } from "../../api/api";
+import AddRasterToMap from "../../maputils/AddRasterToMap";
 
 const Img = styled("img")({
   margin: "auto",
@@ -26,54 +26,42 @@ import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFrom
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function TiffMapView({ projectId }) {
+  const map = window.map_global;
   const dispatch = useDispatch();
   const project_id = useSelector((state) => state.project.project_id);
   const tifs = useSelector((state) => state.tifs.tifs);
 
   const handleTifChecked = (event, tif_id, tif) => {
     const checked = event.target.checked;
-    const id = tif_id;
-    const map = window.map_global;
     dispatch(setTifChecked({ tif_id, checked }));
     if (checked) {
       dispatch(setcurrentTif(tif));
-      axios
-        .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
-        .then((res) => {
-          if (res.data.bounds) {
-            const bounds = res.data.bounds;
-            map.fitBounds(bounds);
-            map.addSource(`${id}-source`, {
-              type: "raster",
-              tiles: [
-                `${
-                  import.meta.env.VITE_API_RASTER_URL
-                }/tile-async/${id}/{z}/{x}/{y}.png`,
-              ],
-              tileSize: 512,
-            });
+      fetchBoundingBoxByTifId(tif.id).then((res) => {
+        if (res) {
+          const bounds = res;
+          const layerId = `${tif_id}-layer`;
+          const sourceId = `${tif_id}-source`;
+          const url = `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
+            tif.id
+          }/{z}/{x}/{y}.png`;
 
-            map.addLayer({
-              id: `${id}-layer`,
-              type: "raster",
-              source: `${id}-source`,
-              minzoom: 0,
-              maxzoom: 24,
-            });
-            console.log(map, "map after raster adding");
-            map.moveLayer(`${id}-layer`, "Continent labels");
-            console.log(
-              map,
-              "map after raster adding and movign the layer before draw"
-            );
+          AddRasterToMap({
+            map: map,
+            layerId: layerId,
+            sourceId: sourceId,
+            url: url,
+            source_layer: sourceId,
+            zoomToLayer: true,
 
-            // dispatch(addSelectedTifId(tif_id));
-          }
-        })
-        .catch(() => {});
+            extent: bounds,
+            type: "raster",
+            component: "project-view",
+          });
+        }
+      });
     } else {
-      const layerId = `${id}-layer`;
-      const sourceId = `${id}-source`;
+      const layerId = `${tif_id}-layer`;
+      const sourceId = `${tif_id}-source`;
       RemoveSourceAndLayerFromMap({
         map: map,
         layerId: layerId,
