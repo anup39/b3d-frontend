@@ -72,20 +72,13 @@ export default function TiffMapView({ projectId }) {
         })
         .catch(() => {});
     } else {
-      // dispatch(removeSelectedTifId(tif_id));
-      const style = map.getStyle();
-      const existingLayer = style.layers.find(
-        (layer) => layer.id === `${id}-layer`
-      );
-      const existingSource = style.sources[`${id}-source`];
-      if (existingLayer) {
-        map.off("click", `${id}-layer`);
-        map.removeLayer(`${id}-layer`);
-        dispatch(setcurrentTif(null));
-      }
-      if (existingSource) {
-        map.removeSource(`${id}-source`);
-      }
+      const layerId = `${id}-layer`;
+      const sourceId = `${id}-source`;
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        layerId: layerId,
+        sourceId: sourceId,
+      });
     }
   };
 
@@ -113,12 +106,10 @@ export default function TiffMapView({ projectId }) {
                   secondaryTypographyProps={{ fontSize: 13 }}
                 />
                 <Checkbox
-                  // checked={project_id && tif.checked}
                   checked={tif.checked}
                   onChange={(event) => handleTifChecked(event, tif.id, tif)}
                   size="small"
                   {...label}
-                  // defaultChecked={false}
                   sx={{
                     color: pink[600],
                     "&.Mui-checked": {
