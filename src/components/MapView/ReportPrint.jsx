@@ -28,7 +28,7 @@ export default function ReportPrint() {
   );
   const currentProject = useSelector((state) => state.project.project_id);
   const current_measuring_categories = useSelector(
-    (state) => state.mapView.currentMapDetail.current_measuring_categories
+    (state) => state.client.current_measuring_categories
   );
   const current_tif = useSelector(
     (state) => state.mapView.currentMapDetail.current_tif
@@ -137,6 +137,7 @@ export default function ReportPrint() {
       });
 
       if (current_tif) {
+        console.log("In reprot");
         const id = current_tif.id;
         axios
           .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)

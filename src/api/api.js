@@ -55,9 +55,34 @@ const fetchProjectPolygonGeojsonByClientIdAndProjectId = async ({
   return response.data;
 };
 
+const fetchMeasuringCategories = async (client_id) => {
+  const response = await axios.get(
+    `${
+      import.meta.env.VITE_API_DASHBOARD_URL
+    }/map-measurings/?client=${client_id}`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+
+  return response.data;
+};
+
+const fetchBoundingBoxByTifId = async (tif_id) => {
+  const response = await axios.get(
+    `${import.meta.env.VITE_API_RASTER_URL}/bounds/${tif_id}`
+  );
+
+  return response.data.bounds;
+};
+
 export {
   fetchProjectsByClientId,
   fetchClientDetailsByClientId,
   fetchTifDataByProjectId,
   fetchProjectPolygonGeojsonByClientIdAndProjectId,
+  fetchMeasuringCategories,
+  fetchBoundingBoxByTifId,
 };

@@ -11,7 +11,6 @@ import List from "@mui/material/List";
 import TiffMapView from "./TiffMapView";
 import MoreonProperty from "./MoreonProperty";
 import PropTypes from "prop-types";
-import axios from "axios";
 import { Tooltip } from "@mui/material";
 import { pink } from "@mui/material/colors";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,6 +25,7 @@ import {
 } from "../../reducers/MapView";
 
 import { setCurrentMeasuringCategories } from "../../reducers/Client";
+import removeCheckedCategoriesLayersFromMap from "../../maputils/removeCheckedCategoriesLayers";
 
 import {
   setcurrentProject,
@@ -39,33 +39,61 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   setProjectOpenProperties,
   setProjectChecked,
-  setShowArea,
-  setShowAreaDisabled,
+  setShowEyeButton,
 } from "../../reducers/Project";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import { settifs } from "../../reducers/Tifs";
 import {
   fetchProjectPolygonGeojsonByClientIdAndProjectId,
   fetchTifDataByProjectId,
+  fetchMeasuringCategories,
+  fetchBoundingBoxByTifId,
 } from "../../api/api";
-
+import AddRasterToMap from "../../maputils/AddRasterToMap";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function ProjectView({ project, popUpRef }) {
   const map = window.map_global;
   const dispatch = useDispatch();
-  const tifs = useSelector((state) => state.tifs.tifs);
-  const { current_measuring_categories, current_tif } = useSelector(
+  const { current_tif } = useSelector(
     (state) => state.mapView.currentMapDetail
+  );
+  const current_measuring_categories = useSelector(
+    (state) => state.client.current_measuring_categories
   );
   const client_id = useSelector((state) => state.client.clientDetail.client_id);
   const project_id = useSelector((state) => state.project.project_id);
+
   const handleTifPanel = () => {
     fetchTifDataByProjectId(project.id).then((res) => {
       const tifs = res;
       tifs.map((tif, index) => {
         if (index === 0) {
           tif.checked = true;
+          dispatch(setcurrentTif(tif));
+          fetchBoundingBoxByTifId(tif.id).then((res) => {
+            if (res) {
+              const bounds = res;
+              const layerId = `${tif.id}-layer`;
+              const sourceId = `${tif.id}-source`;
+              const url = `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
+                tif.id
+              }/{z}/{x}/{y}.png`;
+
+              AddRasterToMap({
+                map: map,
+                layerId: layerId,
+                sourceId: sourceId,
+                url: url,
+                source_layer: sourceId,
+                zoomToLayer: true,
+
+                extent: bounds,
+                type: "raster",
+                component: "project-view",
+              });
+            }
+          });
         } else {
           tif.checked = false;
         }
@@ -73,68 +101,55 @@ export default function ProjectView({ project, popUpRef }) {
       dispatch(settifs(tifs));
     });
   };
-  const handleMeasuringsPanelChecked = (event, project_id) => {
+  const handleMeasuringsPanelChecked = (event, project) => {
     const checked = event.target.checked;
-    dispatch(setProjectChecked({ id: project_id, value: checked }));
-    dispatch(setCurrentMeasuringCategories(null));
-    console.log("current_measuring_categories", current_measuring_categories);
-    const measuringcategories = current_measuring_categories;
-    if (measuringcategories) {
-      measuringcategories?.forEach((measuringcategory) => {
-        measuringcategory?.sub_category?.forEach((sub_category) => {
-          sub_category?.category?.forEach((cat) => {
-            if (cat.checked) {
-              if (cat.type_of_geometry) {
-                const sourceId = String(client_id) + cat.view_name + "source";
-                const layerId = String(client_id) + cat.view_name + "layer";
-                if (map) {
-                  RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
-                }
-              }
-            }
-          });
-        });
+    dispatch(setProjectChecked({ id: project.id, value: checked }));
+    if (current_measuring_categories) {
+      removeCheckedCategoriesLayersFromMap(
+        current_measuring_categories,
+        client_id,
+        map
+      );
+    }
+    if (current_tif) {
+      const layerId = `${current_tif.id}-layer`;
+      const sourceId = `${current_tif.id}-source`;
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        layerId: layerId,
+        sourceId: sourceId,
       });
     }
-    console.log(current_tif, "current_tif");
-    if (current_tif) {
-      const id = current_tif.id;
-      const style = map.getStyle();
-      const existingLayer = style?.layers?.find(
-        (layer) => layer.id === `${id}-layer`
-      );
-      const existingSource = style?.sources[`${id}-source`];
-      if (existingLayer) {
-        map.off("click", `${id}-layer`);
-        map.removeLayer(`${id}-layer`);
-      }
-      if (existingSource) {
-        map.removeSource(`${id}-source`);
-      }
-    }
+    // Every time the projected is checked or unchecked the open eye button is show
+    dispatch(setShowEyeButton({ id: project.id, value: true }));
     if (checked) {
       handleTifPanel();
       dispatch(setshowMeasuringsPanel(true));
-      dispatch(setcurrentProject(project_id));
+      dispatch(setcurrentProject(project.id));
       dispatch(setcurrentProjectName(project.name));
-      dispatch(setShowAreaDisabled({ id: project_id, value: false }));
+      // This will make the eye button not disable when clicked on the project
+      fetchMeasuringCategories(client_id).then((res) => {
+        const measuringcategories = res;
+        console.log("measuringcategories", measuringcategories);
+        dispatch(setCurrentMeasuringCategories(measuringcategories));
+      });
       // Here add Property polygon to the map by calling the api
       fetchProjectPolygonGeojsonByClientIdAndProjectId({
         client_id,
-        project_id,
+        project_id: project.id,
       }).then((res) => {
         const property_polygon_geojson = res;
         dispatch(setCurrentPropertyPolygonGeojson(property_polygon_geojson));
         if (property_polygon_geojson?.features?.length > 0) {
-          const layerId = String(client_id) + String(project_id) + "layer";
-          const sourceId = String(client_id) + String(project_id) + "source";
+          const layerId = String(client_id) + String(project.id) + "layer";
+          const sourceId = String(client_id) + String(project.id) + "source";
           AddLayerAndSourceToMap({
             map,
             layerId: layerId,
             sourceId: sourceId,
             url: `${
               import.meta.env.VITE_API_DASHBOARD_URL
-            }/project-polygon/?client=${client_id}&project=${project_id}`,
+            }/project-polygon/?client=${client_id}&project=${project.id}`,
             source_layer: sourceId,
             popUpRef: popUpRef,
             showPopup: false,
@@ -160,11 +175,10 @@ export default function ProjectView({ project, popUpRef }) {
           sourceId: String(client_id) + String(project_id) + "source",
           layerId: String(client_id) + String(project_id) + "layer",
         });
-        dispatch(setShowArea({ id: project_id, value: true }));
       }
     } else {
+      dispatch(settifs([]));
       dispatch(setshowMeasuringsPanel(false));
-      // dispatch(removeSelectedProjectId(id));
       dispatch(setcurrentProjectName(null));
       dispatch(setcurrentProject(null));
       dispatch(setCurrentMeasuringCategories(null));
@@ -173,22 +187,16 @@ export default function ProjectView({ project, popUpRef }) {
       dispatch(setshowPiechart(false));
       dispatch(setshowReport(false));
       dispatch(setshowTifPanel(false));
-      dispatch(setShowAreaDisabled({ id: project_id, value: true }));
       RemoveSourceAndLayerFromMap({
         map: map,
-        sourceId: String(client_id) + String(project_id) + "source",
-        layerId: String(client_id) + String(project_id) + "layer",
+        sourceId: String(client_id) + String(project.id) + "source",
+        layerId: String(client_id) + String(project.id) + "layer",
       });
-
-      // Here when the  project is un clicked make the eye button back to default
-      if (project_id) {
-        dispatch(setShowArea({ id: project_id, value: true }));
-      }
     }
   };
 
   const handleEyeButton = () => {
-    dispatch(setShowArea({ id: project.id, value: false }));
+    dispatch(setShowEyeButton({ id: project.id, value: false }));
     // Here remove the property polygon to map the Map
     const map = window.map_global;
     const project_id = project.id;
@@ -200,7 +208,7 @@ export default function ProjectView({ project, popUpRef }) {
   };
 
   const handleHideButton = () => {
-    dispatch(setShowArea({ id: project.id, value: true }));
+    dispatch(setShowEyeButton({ id: project.id, value: true }));
 
     // Here add the property polygon to map the Map
     const map = window.map_global;
@@ -294,15 +302,9 @@ export default function ProjectView({ project, popUpRef }) {
 
           <Tooltip title="Show Measurings">
             <Checkbox
-              onChange={(event) =>
-                handleMeasuringsPanelChecked(event, project.id)
-              }
+              onChange={(event) => handleMeasuringsPanelChecked(event, project)}
               size="small"
               {...label}
-              // defaultChecked={false}
-              // checked={
-              //   project_id === project.id ? true : false
-              // }
               checked={project.checked}
               sx={{
                 color: pink[600],
@@ -313,7 +315,7 @@ export default function ProjectView({ project, popUpRef }) {
             />
           </Tooltip>
 
-          {project.show_area ? (
+          {project.show_eye_button ? (
             <IconButton
               onClick={handleEyeButton}
               disabled={project_id === project.id ? false : true}
@@ -359,11 +361,7 @@ export default function ProjectView({ project, popUpRef }) {
         </ListItemButton>
         <Collapse in={project.openProperties} timeout="auto" unmountOnExit>
           <List sx={{ fontSize: 2 }} component="div" disablePadding>
-            {tifs && tifs.length > 0
-              ? tifs.map((tif) => (
-                  <TiffMapView key={tif.id} tif={tif} projectId={project.id} />
-                ))
-              : null}
+            <TiffMapView projectId={project.id} />
           </List>
         </Collapse>
       </ListItem>

@@ -25,9 +25,13 @@ export default function Map({ popUpRef }) {
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
   const client_id = useSelector((state) => state.client.clientDetail.client_id);
-  const { current_measuring_categories, current_tif } = useSelector(
+  const { current_tif } = useSelector(
     (state) => state.mapView.currentMapDetail
   );
+  const current_measuring_categories = useSelector(
+    (state) => state.client.current_measuring_categories
+  );
+
   const project_id = useSelector((state) => state.project.project_id);
 
   const currentMapExtent = useSelector(

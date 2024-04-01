@@ -8,11 +8,11 @@ import { styled } from "@mui/material/styles";
 import MoreonMap from "./MoreonMap";
 import PropTypes from "prop-types";
 import ButtonBase from "@mui/material/ButtonBase";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setcurrentTif } from "../../reducers/MapView";
 import { setTifChecked } from "../../reducers/Tifs";
-import { useEffect } from "react";
+import { fetchBoundingBoxByTifId } from "../../api/api";
+import AddRasterToMap from "../../maputils/AddRasterToMap";
 
 const Img = styled("img")({
   margin: "auto",
@@ -21,152 +21,109 @@ const Img = styled("img")({
   maxHeight: "100%",
   borderRadius: 5,
 });
+import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-export default function TiffMapView({ tif, projectId }) {
+export default function TiffMapView({ projectId }) {
+  const map = window.map_global;
   const dispatch = useDispatch();
   const project_id = useSelector((state) => state.project.project_id);
+  const tifs = useSelector((state) => state.tifs.tifs);
+  const { current_tif } = useSelector(
+    (state) => state.mapView.currentMapDetail
+  );
 
-  const handleTifChecked = (event, tif_id) => {
+  const handleTifChecked = (event, tif_id, tif) => {
     const checked = event.target.checked;
-    const id = tif_id;
-    const map = window.map_global;
     dispatch(setTifChecked({ tif_id, checked }));
+    if (current_tif) {
+      const layerId = `${current_tif.id}-layer`;
+      const sourceId = `${current_tif.id}-source`;
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        layerId: layerId,
+        sourceId: sourceId,
+      });
+    }
     if (checked) {
-      axios
-        .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
-        .then((res) => {
-          if (res.data.bounds) {
-            const bounds = res.data.bounds;
-            map.fitBounds(bounds);
-            map.addSource(`${id}-source`, {
-              type: "raster",
-              tiles: [
-                `${
-                  import.meta.env.VITE_API_RASTER_URL
-                }/tile-async/${id}/{z}/{x}/{y}.png`,
-              ],
-              tileSize: 512,
-            });
+      dispatch(setcurrentTif(tif));
+      fetchBoundingBoxByTifId(tif.id).then((res) => {
+        if (res) {
+          const bounds = res;
+          const layerId = `${tif_id}-layer`;
+          const sourceId = `${tif_id}-source`;
+          const url = `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
+            tif.id
+          }/{z}/{x}/{y}.png`;
 
-            map.addLayer({
-              id: `${id}-layer`,
-              type: "raster",
-              source: `${id}-source`,
-              minzoom: 0,
-              maxzoom: 24,
-            });
-            console.log(map, "map after raster adding");
-            map.moveLayer(`${id}-layer`, "Continent labels");
-            console.log(
-              map,
-              "map after raster adding and movign the layer before draw"
-            );
-
-            // dispatch(addSelectedTifId(tif_id));
-          }
-          dispatch(setcurrentTif(tif));
-        })
-        .catch(() => {});
+          AddRasterToMap({
+            map: map,
+            layerId: layerId,
+            sourceId: sourceId,
+            url: url,
+            source_layer: sourceId,
+            zoomToLayer: true,
+            extent: bounds,
+            type: "raster",
+            component: "project-view",
+          });
+        }
+      });
     } else {
-      // dispatch(removeSelectedTifId(tif_id));
-      const style = map.getStyle();
-      const existingLayer = style.layers.find(
-        (layer) => layer.id === `${id}-layer`
-      );
-      const existingSource = style.sources[`${id}-source`];
-      if (existingLayer) {
-        map.off("click", `${id}-layer`);
-        map.removeLayer(`${id}-layer`);
-        dispatch(setcurrentTif(null));
-      }
-      if (existingSource) {
-        map.removeSource(`${id}-source`);
-      }
+      dispatch(setcurrentTif(null));
+      const layerId = `${tif_id}-layer`;
+      const sourceId = `${tif_id}-source`;
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        layerId: layerId,
+        sourceId: sourceId,
+      });
     }
   };
 
-  useEffect(() => {
-    if (tif.checked) {
-      const map = window.map_global;
-      axios
-        .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${tif.id}`)
-        .then((res) => {
-          if (res.data.bounds) {
-            const bounds = res.data.bounds;
-            map.fitBounds(bounds);
-            map.addSource(`${tif.id}-source`, {
-              type: "raster",
-              tiles: [
-                `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
-                  tif.id
-                }/{z}/{x}/{y}.png`,
-              ],
-              tileSize: 512,
-            });
-
-            map.addLayer({
-              id: `${tif.id}-layer`,
-              type: "raster",
-              source: `${tif.id}-source`,
-              minzoom: 0,
-              maxzoom: 24,
-            });
-            console.log(map, "map after raster adding");
-            map.moveLayer(`${tif.id}-layer`, "Continent labels");
-            console.log(
-              map,
-              "map after raster adding and movign the layer before draw"
-            );
-
-            // dispatch(addSelectedTifId(tif_id));
-          }
-          dispatch(setcurrentTif(tif));
-        })
-        .catch(() => {});
-    }
-  }, []);
-
   return (
-    <Box>
-      <ListItemButton
-        key={tif.id}
-        sx={{
-          pl: 4,
-          "&:hover": {
-            backgroundColor: "#F1F7FF",
-          },
-          fontSize: 6,
-        }}
-      >
-        <ListItemIcon sx={{ margin: 0, padding: 0, minWidth: "40px" }}>
-          <ButtonBase sx={{ width: 30, height: 30 }}>
-            <Img alt="complex" src={tif.screenshot_image} />
-          </ButtonBase>
-        </ListItemIcon>
-        <ListItemText
-          secondary={tif.name.slice(0, 10)}
-          secondaryTypographyProps={{ fontSize: 13 }}
-        />
-        <Checkbox
-          // checked={project_id && tif.checked}
-          checked={tif.checked}
-          onChange={(event) => handleTifChecked(event, tif.id)}
-          size="small"
-          {...label}
-          // defaultChecked={false}
-          sx={{
-            color: pink[600],
-            "&.Mui-checked": {
-              color: pink[600],
-            },
-          }}
-          disabled={project_id === projectId ? false : true}
-        />
-        {project_id === projectId ? <MoreonMap tif={tif} /> : null}
-      </ListItemButton>
-    </Box>
+    <>
+      {tifs.length > 0
+        ? tifs.map((tif) => (
+            <Box key={tif.id}>
+              <ListItemButton
+                sx={{
+                  pl: 4,
+                  "&:hover": {
+                    backgroundColor: "#F1F7FF",
+                  },
+                  fontSize: 6,
+                }}
+              >
+                <ListItemIcon sx={{ margin: 0, padding: 0, minWidth: "40px" }}>
+                  <ButtonBase sx={{ width: 30, height: 30 }}>
+                    <Img alt="complex" src={tif.screenshot_image} />
+                  </ButtonBase>
+                </ListItemIcon>
+                <ListItemText
+                  secondary={tif.name.slice(0, 10)}
+                  secondaryTypographyProps={{ fontSize: 13 }}
+                />
+                <Checkbox
+                  checked={tif.checked}
+                  onChange={(event) => handleTifChecked(event, tif.id, tif)}
+                  size="small"
+                  {...label}
+                  sx={{
+                    color: pink[600],
+                    "&.Mui-checked": {
+                      color: pink[600],
+                    },
+                  }}
+                  disabled={project_id === projectId ? false : true}
+                />
+                {project_id === projectId ? <MoreonMap tif={tif} /> : null}
+              </ListItemButton>
+            </Box>
+          ))
+        : null}
+    </>
   );
 }
 

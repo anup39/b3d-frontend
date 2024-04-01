@@ -33,31 +33,17 @@ export default function LayersPanel({ map, popUpRef }) {
   const [loading, setLoading] = useState(true);
   const { mode, view_name } = useSelector((state) => state.drawnPolygon);
   const client_id = useSelector((state) => state.client.clientDetail.client_id);
-  const { current_measuring_categories } = useSelector(
-    (state) => state.mapView.currentMapDetail
+  const current_measuring_categories = useSelector(
+    (state) => state.client.current_measuring_categories
   );
   const project_id = useSelector((state) => state.project.project_id);
-  useEffect(() => {
-    if (current_measuring_categories) {
-      setCategories(current_measuring_categories);
-      setLoading(false);
-    } else {
-      axios
-        .get(
-          `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/map-measurings/?client=${client_id}`
-        )
-        .then((res) => {
-          dispatch(setCurrentMeasuringCategories(res.data));
-          setLoading(false);
-        });
-    }
-  }, [client_id, dispatch, current_measuring_categories]);
 
   useEffect(() => {
-    const deepCopy = JSON.parse(JSON.stringify(current_measuring_categories));
-    setCategories(deepCopy);
+    if (current_measuring_categories) {
+      const deepCopy = JSON.parse(JSON.stringify(current_measuring_categories));
+      setCategories(deepCopy);
+      setLoading(false);
+    }
   }, [current_measuring_categories]);
 
   const handleChangesd = (event, sdIndex) => {
