@@ -52,7 +52,6 @@ export default function TiffMapView({ projectId }) {
             url: url,
             source_layer: sourceId,
             zoomToLayer: true,
-
             extent: bounds,
             type: "raster",
             component: "project-view",
@@ -60,6 +59,7 @@ export default function TiffMapView({ projectId }) {
         }
       });
     } else {
+      dispatch(setcurrentTif(null));
       const layerId = `${tif_id}-layer`;
       const sourceId = `${tif_id}-source`;
       RemoveSourceAndLayerFromMap({
