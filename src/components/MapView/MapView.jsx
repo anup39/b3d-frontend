@@ -19,12 +19,12 @@ import UploadingCategories from "./UploadingCategories";
 import ReportPrint from "./ReportPrint";
 import ProjectView from "./ProjectView";
 import { useDispatch, useSelector } from "react-redux";
-import PropTypes from "prop-types";
 import UploadPropertyForm from "../Property/UploadPropertyForm";
 import UploadProgress from "../Property/UploadProgress";
-import { useState, useEffect, useRef } from "react";
-import { setCurrentMapExtent, setcurrentTif } from "../../reducers/MapView";
-import axios from "axios";
+import { useRef } from "react";
+import { setcurrentTif } from "../../reducers/MapView";
+import { settifs } from "../../reducers/Tifs";
+import removeCheckedCategoriesLayersFromMap from "../../maputils/removeCheckedCategoriesLayers";
 
 import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import { ListItem, ListItemButton, ListItemText } from "@mui/material";
@@ -40,12 +40,14 @@ import {
 import {
   setcurrentProject,
   setcurrentProjectName,
+  setProjectChecked,
 } from "../../reducers/Project";
 
 import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteProperties from "./AutoCompleteProperties";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import maplibregl from "maplibre-gl";
+import { fetchMeasuringCategories } from "../../api/api";
 
 const drawerWidth = 240;
 
@@ -96,6 +98,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MapView() {
+  const map = window.map_global;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -137,66 +140,55 @@ export default function MapView() {
     navigate(`/projects/${client_id}/List`);
   };
 
-  // This is the logic or function for All measurements clicked
-  // const handleMeasuringsPanelChecked = (event, project_id) => {
-  //   console.log("All measurements clicked");
-  //   const checked = event.target.checked;
-  //   if (checked) {
-  //     dispatch(setCurrentMeasuringCategories(null));
-  //     dispatch(setshowMeasuringsPanel(true));
-  //     // dispatch(addSelectedProjectId(id));
-  //     dispatch(setcurrentProjectName("All"));
-  //     dispatch(setcurrentProject(project_id));
-  //   } else {
-  //     dispatch(setCurrentMeasuringCategories(null));
-  //     dispatch(setshowMeasuringsPanel(false));
-  //     // dispatch(removeSelectedProjectId(id));
-  //     dispatch(setcurrentProjectName(null));
-  //     dispatch(setcurrentProject(null));
-  //     dispatch(setCurrentMeasuringCategories(null));
-  //     dispatch(setcurrentTif(null));
-  //     dispatch(setshowTableMeasurings(false));
-  //     dispatch(setshowPiechart(false));
-  //     dispatch(setshowReport(false));
-  //     dispatch(setshowTifPanel(false));
-
-  //     const map = window.map_global;
-
-  //     const measuringcategories = current_measuring_categories;
-  //     if (measuringcategories) {
-  //       measuringcategories?.forEach((measuringcategory) => {
-  //         measuringcategory?.sub_category?.forEach((sub_category) => {
-  //           sub_category?.category?.forEach((cat) => {
-  //             if (cat.checked) {
-  //               if (cat.type_of_geometry) {
-  //                 const sourceId = String(client_id) + cat.view_name + "source";
-  //                 const layerId = String(client_id) + cat.view_name + "layer";
-  //                 if (map) {
-  //                   RemoveSourceAndLayerFromMap({ map, sourceId, layerId });
-  //                 }
-  //               }
-  //             }
-  //           });
-  //         });
-  //       });
-  //     }
-  //     if (current_tif) {
-  //       const id = current_tif.id;
-  //       const style = map.getStyle();
-  //       const existingLayer = style?.layers?.find(
-  //         (layer) => layer.id === `${id}-layer`
-  //       );
-  //       const existingSource = style?.sources[`${id}-source`];
-  //       if (existingLayer) {
-  //         map.off("click", `${id}-layer`);
-  //         map.removeLayer(`${id}-layer`);
-  //       }
-  //       if (existingSource) {
-  //         map.removeSource(`${id}-source`);
-  //       }
-  //     }
-  //   }
-  // };
+  const handleMeasuringsPanelChecked = (event, projectid) => {
+    const checked = event.target.checked;
+    if (current_measuring_categories) {
+      removeCheckedCategoriesLayersFromMap(
+        current_measuring_categories,
+        client_id,
+        map
+      );
+    }
+    if (current_tif) {
+      const layerId = `${current_tif.id}-layer`;
+      const sourceId = `${current_tif.id}-source`;
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        layerId: layerId,
+        sourceId: sourceId,
+      });
+    }
+    if (checked) {
+      dispatch(setshowMeasuringsPanel(true));
+      dispatch(setcurrentProject(projectid));
+      dispatch(setcurrentProjectName(project_id));
+      // This will make the eye button not disable when clicked on the project
+      fetchMeasuringCategories(client_id).then((res) => {
+        const measuringcategories = res;
+        dispatch(setCurrentMeasuringCategories(measuringcategories));
+      });
+      // Here also removed the property polygon which is previosuly in the map
+      if (project_id) {
+        RemoveSourceAndLayerFromMap({
+          map: map,
+          sourceId: String(client_id) + String(project_id) + "source",
+          layerId: String(client_id) + String(project_id) + "layer",
+        });
+        dispatch(setProjectChecked({ id: project_id, value: false }));
+      }
+    } else {
+      dispatch(settifs([]));
+      dispatch(setshowMeasuringsPanel(false));
+      dispatch(setcurrentProjectName(null));
+      dispatch(setcurrentProject(null));
+      dispatch(setCurrentMeasuringCategories(null));
+      dispatch(setcurrentTif(null));
+      dispatch(setshowTableMeasurings(false));
+      dispatch(setshowPiechart(false));
+      dispatch(setshowReport(false));
+      dispatch(setshowTifPanel(false));
+    }
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -210,7 +202,6 @@ export default function MapView() {
       <CssBaseline />
       <Drawer variant="permanent" open={openSidebar}>
         {/* Top part */}
-
         <Box
           sx={{
             display: "flex",
@@ -275,8 +266,6 @@ export default function MapView() {
         <Divider sx={{ mt: 0.1 }} />
 
         <List>
-          {/* Properties */}
-
           {level === "Projects" && openSidebar ? (
             <ListItem disablePadding sx={{ display: "block", fontSize: 14 }}>
               <ListItemButton
@@ -290,24 +279,17 @@ export default function MapView() {
                 }}
               >
                 {/* #Ui for all the measurements */}
-                <ListItemText
-                  secondary={"All Measurements"}
-                  // sx={{ opacity: openSidebar ? 1 : 0, ml: 0.7 }}
-                  // secondaryTypographyProps={{ fontSize: 12 }}
-                />
+                <ListItemText secondary={"All Measurements"} />
 
                 <Tooltip title="Show All Measurings">
                   <Checkbox
-                    // onChange={(event) =>
-                    //   handleMeasuringsPanelChecked(event, "All")
-                    // }
-                    // size="small"
-                    // {...label}
-                    // defaultChecked={false}
+                    onChange={(event) =>
+                      handleMeasuringsPanelChecked(event, "All")
+                    }
+                    size="small"
                     checked={project_id === "All" ? true : false}
                     sx={{
                       display: openSidebar ? "block" : "none",
-                      // mr: 5,
                       color: pink[600],
                       "&.Mui-checked": {
                         color: pink[600],
@@ -322,7 +304,6 @@ export default function MapView() {
           {level === "Projects" ? <Divider /> : null}
 
           {/* Search functionality for the properties  */}
-
           {level === "Projects" && openSidebar ? (
             <AutoCompleteProperties />
           ) : null}
