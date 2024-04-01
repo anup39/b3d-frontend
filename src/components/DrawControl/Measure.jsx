@@ -4,6 +4,7 @@ import * as turf from "@turf/turf";
 import "./measure.css";
 import maplibregl from "maplibre-gl";
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 const geojson = {
   type: "FeatureCollection",
@@ -22,21 +23,13 @@ const linestring = {
 function handleMeasureEvent(e) {
   const popup_custom = document.getElementById("popup-custom");
   if (popup_custom) {
-    // popup_custom.style.display = "none";
     popup_custom.remove();
   }
   const map = window.map_global;
   const features = map.queryRenderedFeatures(e.point, {
     layers: ["measure-points"],
   });
-
-  // Remove the linestring from the group
-  // so we can redraw it based on the points collection.
   if (geojson.features.length > 1) geojson.features.pop();
-
-  // Clear the distance container to populate it with a new value.
-
-  // If a feature was clicked, remove it from the map.
   if (features.length) {
     const id = features[0].properties.id;
     geojson.features = geojson.features.filter(
@@ -64,10 +57,7 @@ function handleMeasureEvent(e) {
 
     geojson.features.push(linestring);
 
-    // Populate the distanceContainer with total distance
     const distance = turf.length(linestring);
-
-    // console.log(map, "map");
 
     new maplibregl.Popup()
       .setLngLat(e.lngLat)
@@ -172,4 +162,6 @@ export default function Measure({ popUpRef }) {
   );
 }
 
-// Path: src/components/DrawControl/Measure.jsx
+Measure.propTypes = {
+  popUpRef: PropTypes.object,
+};
