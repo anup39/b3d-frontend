@@ -24,6 +24,7 @@ import {
 } from "../../reducers/DrawnGeometry";
 import all_categories from "./measurings_categories_sample";
 import handleCategoriesChange from "../../maputils/handleCategoriesCheckedOrUnchecked";
+import setGeometryOpacity from "../../maputils/handleGeometryOpacity";
 
 export default function LayersPanel({ map, popUpRef }) {
   const dispatch = useDispatch();
@@ -205,20 +206,10 @@ export default function LayersPanel({ map, popUpRef }) {
   };
 
   const handleChangeSlider = (event, value, cat) => {
-    const layerId = String(client_id) + cat.view_name + "layer";
-
     const style = map.getStyle();
+    const layerId = String(client_id) + cat.view_name + "layer";
     const existingLayer = style.layers.find((layer) => layer.id === layerId);
-
-    if (existingLayer) {
-      if (cat.type_of_geometry === "Polygon") {
-        map.setPaintProperty(layerId, "fill-opacity", parseFloat(value));
-      } else if (cat.type_of_geometry === "LineString") {
-        map.setPaintProperty(layerId, "line-opacity", parseFloat(value));
-      } else {
-        map.setPaintProperty(layerId, "circle-opacity", parseFloat(value));
-      }
-    }
+    setGeometryOpacity(existingLayer, cat, map, layerId, value);
   };
 
   const handleZoomToLayer = (event, cat) => {
