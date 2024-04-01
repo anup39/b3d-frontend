@@ -305,10 +305,6 @@ export default function ProjectView({ project, popUpRef }) {
               onChange={(event) => handleMeasuringsPanelChecked(event, project)}
               size="small"
               {...label}
-              // defaultChecked={false}
-              // checked={
-              //   project_id === project.id ? true : false
-              // }
               checked={project.checked}
               sx={{
                 color: pink[600],

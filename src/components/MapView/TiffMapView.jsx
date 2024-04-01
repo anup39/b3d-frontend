@@ -30,10 +30,22 @@ export default function TiffMapView({ projectId }) {
   const dispatch = useDispatch();
   const project_id = useSelector((state) => state.project.project_id);
   const tifs = useSelector((state) => state.tifs.tifs);
+  const { current_tif } = useSelector(
+    (state) => state.mapView.currentMapDetail
+  );
 
   const handleTifChecked = (event, tif_id, tif) => {
     const checked = event.target.checked;
     dispatch(setTifChecked({ tif_id, checked }));
+    if (current_tif) {
+      const layerId = `${current_tif.id}-layer`;
+      const sourceId = `${current_tif.id}-source`;
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        layerId: layerId,
+        sourceId: sourceId,
+      });
+    }
     if (checked) {
       dispatch(setcurrentTif(tif));
       fetchBoundingBoxByTifId(tif.id).then((res) => {
