@@ -159,9 +159,10 @@ export default function MapView() {
       });
     }
     if (checked) {
+      // Here i need to add the raster layer to Map like handleMapTif in ProjectView
       dispatch(setshowMeasuringsPanel(true));
       dispatch(setcurrentProject(projectid));
-      dispatch(setcurrentProjectName(project_id));
+      dispatch(setcurrentProjectName(projectid));
       // This will make the eye button not disable when clicked on the project
       fetchMeasuringCategories(client_id).then((res) => {
         const measuringcategories = res;
