@@ -11,7 +11,6 @@ import List from "@mui/material/List";
 import TiffMapView from "./TiffMapView";
 import MoreonProperty from "./MoreonProperty";
 import PropTypes from "prop-types";
-import axios from "axios";
 import { Tooltip } from "@mui/material";
 import { pink } from "@mui/material/colors";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,8 +39,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   setProjectOpenProperties,
   setProjectChecked,
-  setShowArea,
-  setShowAreaDisabled,
+  setShowEyeButton,
 } from "../../reducers/Project";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import { settifs } from "../../reducers/Tifs";
@@ -123,14 +121,13 @@ export default function ProjectView({ project, popUpRef }) {
       });
     }
     // Every time the projected is checked or unchecked the open eye button is show
-    dispatch(setShowArea({ id: project.id, value: true }));
+    dispatch(setShowEyeButton({ id: project.id, value: true }));
     if (checked) {
       handleTifPanel();
       dispatch(setshowMeasuringsPanel(true));
       dispatch(setcurrentProject(project.id));
       dispatch(setcurrentProjectName(project.name));
       // This will make the eye button not disable when clicked on the project
-      dispatch(setShowAreaDisabled({ id: project.id, value: false }));
       fetchMeasuringCategories(client_id).then((res) => {
         const measuringcategories = res;
         console.log("measuringcategories", measuringcategories);
@@ -190,7 +187,6 @@ export default function ProjectView({ project, popUpRef }) {
       dispatch(setshowPiechart(false));
       dispatch(setshowReport(false));
       dispatch(setshowTifPanel(false));
-      dispatch(setShowAreaDisabled({ id: project.id, value: true }));
       RemoveSourceAndLayerFromMap({
         map: map,
         sourceId: String(client_id) + String(project.id) + "source",
@@ -200,7 +196,7 @@ export default function ProjectView({ project, popUpRef }) {
   };
 
   const handleEyeButton = () => {
-    dispatch(setShowArea({ id: project.id, value: false }));
+    dispatch(setShowEyeButton({ id: project.id, value: false }));
     // Here remove the property polygon to map the Map
     const map = window.map_global;
     const project_id = project.id;
@@ -212,7 +208,7 @@ export default function ProjectView({ project, popUpRef }) {
   };
 
   const handleHideButton = () => {
-    dispatch(setShowArea({ id: project.id, value: true }));
+    dispatch(setShowEyeButton({ id: project.id, value: true }));
 
     // Here add the property polygon to map the Map
     const map = window.map_global;
@@ -323,7 +319,7 @@ export default function ProjectView({ project, popUpRef }) {
             />
           </Tooltip>
 
-          {project.show_area ? (
+          {project.show_eye_button ? (
             <IconButton
               onClick={handleEyeButton}
               disabled={project_id === project.id ? false : true}

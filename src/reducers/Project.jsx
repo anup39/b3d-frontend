@@ -23,23 +23,14 @@ export const Project = createSlice({
       state.projects = action.payload;
       state.originalProjects = action.payload;
     },
-    setShowArea: (state, action) => {
+    setShowEyeButton: (state, action) => {
       const { id, value } = action.payload;
       const project = state.projects.find((project) => project.id === id);
-      project.show_area = value;
+      project.show_eye_button = value;
       const originalProject = state.originalProjects.find(
         (project) => project.id === id
       );
-      originalProject.show_area = value;
-    },
-    setShowAreaDisabled: (state, action) => {
-      const { id, value } = action.payload;
-      const project = state.projects.find((project) => project.id === id);
-      project.show_area_disabled = value;
-      const originalProject = state.originalProjects.find(
-        (project) => project.id === id
-      );
-      originalProject.show_area_disabled = value;
+      originalProject.show_eye_button = value;
     },
     setProjectChecked: (state, action) => {
       const { id, value } = action.payload;
@@ -98,8 +89,7 @@ export const {
   setcurrentProject,
   setcurrentProjectName,
   setprojects,
-  setShowArea,
-  setShowAreaDisabled,
+  setShowEyeButton,
   setProjectChecked,
   setProjectOpenProperties,
   filterProjects,
