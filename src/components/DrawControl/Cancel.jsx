@@ -38,29 +38,8 @@ export default function Cancel() {
       dispatch(setFeatureId(null));
       dispatch(setComponent(null));
     }
-  }, [client_id, dispatch, mode, view_name]); // Add any dependencies of handleCancelDraw here
+  }, [client_id, dispatch, mode, view_name]);
 
-  // const handleCancelDraw = () => {
-  //   if (window.map_global) {
-  //     const draw = window.map_global.draw;
-
-  //     if (mode === "Edit") {
-  //       const layerId = String(client_id) + view_name + "layer";
-  //       window.map_global.setFilter(layerId, null);
-  //       console.log(window.map_global, "map global");
-  //     }
-  //     draw.deleteAll();
-  //     draw.changeMode("simple_select");
-  //     console.log(window.map_global, "map global");
-  //     dispatch(setWKTGeometry(null));
-  //     dispatch(setTypeOfGeometry(null));
-  //     dispatch(setId(null));
-  //     dispatch(setViewName(null));
-  //     dispatch(setMode(null));
-  //     dispatch(setFeatureId(null));
-  //     dispatch(setComponent(null));
-  //   }
-  // };
   useEffect(() => {
     const map = window.map_global;
     if (map) {
