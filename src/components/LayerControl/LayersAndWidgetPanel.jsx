@@ -45,9 +45,10 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     showPiechart,
   } = useSelector((state) => state.mapView);
 
-  const { currentPropertyPolygonGeojson } = useSelector(
-    (state) => state.mapView.currentMapDetail
+  const currentPropertyPolygonGeojson = useSelector(
+    (state) => state.mapView.currentMapDetail.current_property_polygon_geojson
   );
+  console.log(currentPropertyPolygonGeojson, "currentPropertyPolygonGeojson");
 
   const { project_id, current_project_name } = useSelector(
     (state) => state.project
