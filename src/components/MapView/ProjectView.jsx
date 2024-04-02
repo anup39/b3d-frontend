@@ -50,6 +50,8 @@ import {
   fetchBoundingBoxByTifId,
 } from "../../api/api";
 import AddRasterToMap from "../../maputils/AddRasterToMap";
+import { fetchTifDataByClientId } from "../../api/api";
+
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function ProjectView({ project, popUpRef }) {
@@ -120,6 +122,19 @@ export default function ProjectView({ project, popUpRef }) {
         sourceId: sourceId,
       });
     }
+    // Here also remove the tifs which was added from all measuremets
+    // Here also remove the tif from the map which was added
+    fetchTifDataByClientId(client_id).then((res) => {
+      const tifs = res;
+      tifs.map((tif) => {
+        console.log(tif);
+        RemoveSourceAndLayerFromMap({
+          map: map,
+          layerId: `${tif.id}-layer`,
+          sourceId: `${tif.id}-source`,
+        });
+      });
+    });
     // Every time the projected is checked or unchecked the open eye button is show
     dispatch(setShowEyeButton({ id: project.id, value: true }));
     if (checked) {

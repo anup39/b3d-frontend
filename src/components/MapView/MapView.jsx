@@ -203,6 +203,18 @@ export default function MapView() {
         dispatch(setProjectChecked({ id: project_id, value: false }));
       }
     } else {
+      // Here also remove the tif from the map which was added
+      fetchTifDataByClientId(client_id).then((res) => {
+        const tifs = res;
+        tifs.map((tif) => {
+          console.log(tif);
+          RemoveSourceAndLayerFromMap({
+            map: map,
+            layerId: `${tif.id}-layer`,
+            sourceId: `${tif.id}-source`,
+          });
+        });
+      });
       dispatch(setshowMeasuringsPanel(false));
       dispatch(setcurrentProjectName(null));
       dispatch(setcurrentProject(null));
