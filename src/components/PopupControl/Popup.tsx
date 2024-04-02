@@ -350,76 +350,81 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
         <div>
           <div>{propertyElements}</div>
           <br></br>
-          <div style={{ display: "flex" }}>
-            <Autocomplete
-              size="small"
-              disablePortal
-              id="autocomplete-category"
-              options={options}
-              getOptionLabel={(option) => option.name}
-              sx={{ width: 200 }}
-              value={value}
-              onChange={(event: any, newValue: string | null) => {
-                setValue(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  sx={{ fontFamily: "Roboto", fontSize: "5px" }}
-                  label="Category"
-                  // value={properties.name}
+
+          {project_id !== "All" ? (
+            <>
+              <div style={{ display: "flex" }}>
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  id="autocomplete-category"
+                  options={options}
+                  getOptionLabel={(option) => option.name}
+                  sx={{ width: 200 }}
+                  value={value}
+                  onChange={(event: any, newValue: string | null) => {
+                    setValue(newValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      sx={{ fontFamily: "Roboto", fontSize: "5px" }}
+                      label="Category"
+                      // value={properties.name}
+                    />
+                  )}
                 />
-              )}
-            />
 
-            {loading ? (
-              <CircularProgress sx={{ p: 1 }} size={40} />
-            ) : (
-              <Tooltip title="Save Category">
-                <IconButton onClick={handleSaveCategory}>
-                  <CheckCircleIcon
-                    sx={{
-                      backgroundColor: "white",
-                      color: "#D51B60",
-                      "&:hover": {
-                        backgroundColor: "black",
-                      },
-                    }}
-                  />
-                </IconButton>
-              </Tooltip>
-            )}
-          </div>
+                {loading ? (
+                  <CircularProgress sx={{ p: 1 }} size={40} />
+                ) : (
+                  <Tooltip title="Save Category">
+                    <IconButton onClick={handleSaveCategory}>
+                      <CheckCircleIcon
+                        sx={{
+                          backgroundColor: "white",
+                          color: "#D51B60",
+                          "&:hover": {
+                            backgroundColor: "black",
+                          },
+                        }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </div>
 
-          <div style={{ display: "flex", gap: 15, marginTop: 10 }}>
-            <Button
-              size="small"
-              sx={{
-                backgroundColor: "#D51B60",
-                color: "white",
-                "&:hover": {
-                  backgroundColor: "black",
-                },
-              }}
-              onClick={() => handleDeleteCategory(properties, feature_id)}
-            >
-              Delete
-            </Button>
-            <Button
-              size="small"
-              sx={{
-                backgroundColor: "#D51B60",
-                color: "white",
+              <div style={{ display: "flex", gap: 15, marginTop: 10 }}>
+                <Button
+                  size="small"
+                  sx={{
+                    backgroundColor: "#D51B60",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "black",
+                    },
+                  }}
+                  onClick={() => handleDeleteCategory(properties, feature_id)}
+                >
+                  Delete
+                </Button>
+                <Button
+                  size="small"
+                  sx={{
+                    backgroundColor: "#D51B60",
+                    color: "white",
 
-                "&:hover": {
-                  backgroundColor: "black",
-                },
-              }}
-              onClick={() => handleEditCategory()}
-            >
-              Edit
-            </Button>
-          </div>
+                    "&:hover": {
+                      backgroundColor: "black",
+                    },
+                  }}
+                  onClick={() => handleEditCategory()}
+                >
+                  Edit
+                </Button>
+              </div>
+            </>
+          ) : null}
         </div>
       ) : null}
     </>

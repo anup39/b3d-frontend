@@ -3,6 +3,7 @@ import MuiAlert from "@mui/material/Alert";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setshowToast } from "../../reducers/DisplaySettings";
+import PropTypes from "prop-types";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -20,9 +21,12 @@ export default function Toast() {
     dispatch(setshowToast(false));
   };
 
+  const vertical = "top";
+  const horizontal = "center";
+
   return (
     <Snackbar
-      anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      anchorOrigin={{ vertical: vertical, horizontal: horizontal }}
       open={showToast}
       autoHideDuration={5000}
       onClose={handleToastClose}
@@ -33,3 +37,9 @@ export default function Toast() {
     </Snackbar>
   );
 }
+
+// Path: src/components/Common/Loader.jsx
+Toast.propTypes = {
+  vertical: PropTypes.string,
+  horizontal: PropTypes.string,
+};

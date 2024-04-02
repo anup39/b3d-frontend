@@ -47,7 +47,13 @@ import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteProperties from "./AutoCompleteProperties";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import maplibregl from "maplibre-gl";
-import { fetchMeasuringCategories } from "../../api/api";
+import {
+  fetchMeasuringCategories,
+  fetchTifDataByClientId,
+} from "../../api/api";
+import AddRasterToMap from "../../maputils/AddRasterToMap";
+import { fetchProjectPolygonGeojsonByClientIdAndProjectId } from "../../api/api";
+import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 
 const drawerWidth = 240;
 
@@ -141,6 +147,11 @@ export default function MapView() {
   };
 
   const handleMeasuringsPanelChecked = (event, projectid) => {
+    // Remove popup from map
+    const popups = document.getElementsByClassName("maplibregl-popup");
+    if (popups.length) {
+      popups[0].remove();
+    }
     const checked = event.target.checked;
     if (current_measuring_categories) {
       removeCheckedCategoriesLayersFromMap(
@@ -158,14 +169,70 @@ export default function MapView() {
         sourceId: sourceId,
       });
     }
+    dispatch(settifs([]));
     if (checked) {
+      // Here i need to add the raster layer to Map like handleMapTif in ProjectView
+      fetchTifDataByClientId(client_id).then((res) => {
+        const tifs = res;
+        tifs.map((tif) => {
+          console.log(tif);
+          AddRasterToMap({
+            map: map,
+            layerId: `${tif.id}-layer`,
+            sourceId: `${tif.id}-source`,
+            source_layer: `${tif.id}-source`,
+            url: `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
+              tif.id
+            }/{z}/{x}/{y}.png`,
+            extent: [],
+            zoomToLayer: false,
+            type: "raster",
+            component: "MapView",
+          });
+        });
+      });
+
       dispatch(setshowMeasuringsPanel(true));
       dispatch(setcurrentProject(projectid));
-      dispatch(setcurrentProjectName(project_id));
+      dispatch(setcurrentProjectName(projectid));
       // This will make the eye button not disable when clicked on the project
       fetchMeasuringCategories(client_id).then((res) => {
         const measuringcategories = res;
         dispatch(setCurrentMeasuringCategories(measuringcategories));
+      });
+      // Here add Property polygon to the map by calling the api
+      fetchProjectPolygonGeojsonByClientIdAndProjectId({
+        client_id,
+        project_id: "",
+      }).then((res) => {
+        const property_polygon_geojson = res;
+        if (property_polygon_geojson?.features?.length > 0) {
+          const layerId = String(client_id) + String("All") + "layer";
+          const sourceId = String(client_id) + String("All") + "source";
+          AddLayerAndSourceToMap({
+            map,
+            layerId: layerId,
+            sourceId: sourceId,
+            url: `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/project-polygon/?client=${client_id}&project=${""}`,
+            source_layer: sourceId,
+            popUpRef: popUpRef,
+            showPopup: false,
+            style: {
+              fill_color: "red",
+              fill_opacity: 0.5,
+              stroke_color: "red",
+              stroke_width: 2,
+            },
+            zoomToLayer: false,
+            extent: [],
+            geomType: "geojson",
+            fillType: "line",
+            trace: false,
+            component: "project-view",
+          });
+        }
       });
       // Here also removed the property polygon which is previosuly in the map
       if (project_id) {
@@ -177,7 +244,18 @@ export default function MapView() {
         dispatch(setProjectChecked({ id: project_id, value: false }));
       }
     } else {
-      dispatch(settifs([]));
+      // Here also remove the tif from the map which was added
+      fetchTifDataByClientId(client_id).then((res) => {
+        const tifs = res;
+        tifs.map((tif) => {
+          console.log(tif);
+          RemoveSourceAndLayerFromMap({
+            map: map,
+            layerId: `${tif.id}-layer`,
+            sourceId: `${tif.id}-source`,
+          });
+        });
+      });
       dispatch(setshowMeasuringsPanel(false));
       dispatch(setcurrentProjectName(null));
       dispatch(setcurrentProject(null));
@@ -187,6 +265,12 @@ export default function MapView() {
       dispatch(setshowPiechart(false));
       dispatch(setshowReport(false));
       dispatch(setshowTifPanel(false));
+      // Remove all the property layer
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        sourceId: String(client_id) + String("All") + "source",
+        layerId: String(client_id) + String("All") + "layer",
+      });
     }
   };
 
@@ -279,9 +363,9 @@ export default function MapView() {
                 }}
               >
                 {/* #Ui for all the measurements */}
-                <ListItemText secondary={"All Measurements"} />
+                <ListItemText secondary={"All Properties"} />
 
-                <Tooltip title="Show All Measurings">
+                <Tooltip title="Show All Properties">
                   <Checkbox
                     onChange={(event) =>
                       handleMeasuringsPanelChecked(event, "All")

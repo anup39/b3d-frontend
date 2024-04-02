@@ -23,6 +23,7 @@ import {
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import PropTypes from "prop-types";
 import { useEffect, useCallback } from "react";
+import { setShowKeyInfo } from "../../reducers/DrawnGeometry";
 
 export default function Save({ popUpRef }) {
   const dispatch = useDispatch();
@@ -688,6 +689,7 @@ export default function Save({ popUpRef }) {
         console.log(e.key);
         if (e.key === "Enter") {
           handleSave();
+          dispatch(setShowKeyInfo(false));
         }
       };
       window.addEventListener("keydown", keyDownHandler);
@@ -695,7 +697,7 @@ export default function Save({ popUpRef }) {
         window.removeEventListener("keydown", keyDownHandler);
       };
     }
-  }, [handleSave]);
+  }, [handleSave, dispatch]);
 
   return (
     <div>

@@ -50,6 +50,8 @@ import {
   fetchBoundingBoxByTifId,
 } from "../../api/api";
 import AddRasterToMap from "../../maputils/AddRasterToMap";
+import { fetchTifDataByClientId } from "../../api/api";
+
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function ProjectView({ project, popUpRef }) {
@@ -102,6 +104,11 @@ export default function ProjectView({ project, popUpRef }) {
     });
   };
   const handleMeasuringsPanelChecked = (event, project) => {
+    // Remove popup from map
+    const popups = document.getElementsByClassName("maplibregl-popup");
+    if (popups.length) {
+      popups[0].remove();
+    }
     const checked = event.target.checked;
     dispatch(setProjectChecked({ id: project.id, value: checked }));
     if (current_measuring_categories) {
@@ -120,9 +127,22 @@ export default function ProjectView({ project, popUpRef }) {
         sourceId: sourceId,
       });
     }
+    // Here also remove the tifs which was added from all measuremets
+    // Here also remove the tif from the map which was added
     // Every time the projected is checked or unchecked the open eye button is show
     dispatch(setShowEyeButton({ id: project.id, value: true }));
     if (checked) {
+      fetchTifDataByClientId(client_id).then((res) => {
+        const tifs = res;
+        tifs.map((tif) => {
+          console.log(tif);
+          RemoveSourceAndLayerFromMap({
+            map: map,
+            layerId: `${tif.id}-layer`,
+            sourceId: `${tif.id}-source`,
+          });
+        });
+      });
       handleTifPanel();
       dispatch(setshowMeasuringsPanel(true));
       dispatch(setcurrentProject(project.id));
@@ -168,7 +188,7 @@ export default function ProjectView({ project, popUpRef }) {
           });
         }
       });
-      // Here also removed the property polygon which is previosuly in the map
+      // Here also removed the property polygon which is previosuly in the map also all the property add because for all the property "All" is used
       if (project_id) {
         RemoveSourceAndLayerFromMap({
           map: map,
@@ -320,7 +340,7 @@ export default function ProjectView({ project, popUpRef }) {
               onClick={handleEyeButton}
               disabled={project_id === project.id ? false : true}
             >
-              <Tooltip title="Show Area">
+              <Tooltip title="Show Property Polygon">
                 <RemoveRedEyeIcon sx={{ fontSize: 14 }} />
               </Tooltip>
             </IconButton>

@@ -5,10 +5,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { PropTypes } from "prop-types";
-import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
-import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import { Slider } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -26,17 +23,19 @@ import {
   setComponent,
 } from "../../reducers/DrawnGeometry";
 import all_categories from "./measurings_categories_sample";
+import handleCategoriesChange from "../../maputils/handleCategoriesCheckedOrUnchecked";
+import setGeometryOpacity from "../../maputils/handleGeometryOpacity";
 
 export default function LayersPanel({ map, popUpRef }) {
   const dispatch = useDispatch();
   const [categories, setCategories] = useState(all_categories);
   const [loading, setLoading] = useState(true);
-  const { mode, view_name } = useSelector((state) => state.drawnPolygon);
   const client_id = useSelector((state) => state.client.clientDetail.client_id);
+  const project_id = useSelector((state) => state.project.project_id);
+  const { mode, view_name } = useSelector((state) => state.drawnPolygon);
   const current_measuring_categories = useSelector(
     (state) => state.client.current_measuring_categories
   );
-  const project_id = useSelector((state) => state.project.project_id);
 
   useEffect(() => {
     if (current_measuring_categories) {
@@ -55,81 +54,14 @@ export default function LayersPanel({ map, popUpRef }) {
       sub.indeterminate = false;
       sub.category.forEach((cat) => {
         cat.checked = event.target.checked;
-        if (event.target.checked) {
-          if (cat.type_of_geometry) {
-            const sourceId = String(client_id) + cat.view_name + "source";
-            const layerId = String(client_id) + cat.view_name + "layer";
-            RemoveSourceAndLayerFromMap({
-              map: map,
-              layerId: layerId,
-              sourceId: sourceId,
-            });
-
-            axios
-              .get(
-                `${
-                  import.meta.env.VITE_API_DASHBOARD_URL
-                }/category-style/?category=${cat.id}`
-              )
-              .then((response) => {
-                const categoryStyle = response.data[0];
-                let url = null;
-                let fillType = null;
-                if (cat.type_of_geometry === "Point") {
-                  url = `${
-                    import.meta.env.VITE_API_DASHBOARD_URL
-                  }/category-point-geojson/?client=${client_id}&project=${
-                    project_id === "All" ? "" : project_id
-                  }&category=${cat.id}`;
-                  fillType = "circle";
-                }
-                if (cat.type_of_geometry === "LineString") {
-                  url = `${
-                    import.meta.env.VITE_API_DASHBOARD_URL
-                  }/category-linestring-geojson/?client=${client_id}&project=${
-                    project_id === "All" ? "" : project_id
-                  }&category=${cat.id}`;
-                  fillType = "line";
-                }
-                if (cat.type_of_geometry === "Polygon") {
-                  url = `${
-                    import.meta.env.VITE_API_DASHBOARD_URL
-                  }/category-polygon-geojson/?client=${client_id}&project=${
-                    project_id === "All" ? "" : project_id
-                  }&category=${cat.id}`;
-                  fillType = "fill";
-                }
-                AddLayerAndSourceToMap({
-                  map: map,
-                  layerId: layerId,
-                  sourceId: sourceId,
-                  url: url,
-                  source_layer: sourceId,
-                  popUpRef: popUpRef,
-                  showPopup: true,
-                  style: {
-                    fill_color: categoryStyle.fill,
-                    fill_opacity: categoryStyle.fill_opacity,
-                    stroke_color: categoryStyle.stroke,
-                  },
-                  zoomToLayer: false,
-                  extent: [],
-                  geomType: "geojson",
-                  fillType: fillType,
-                  trace: false,
-                  component: "map",
-                });
-              });
-          }
-        } else {
-          const sourceId = String(client_id) + cat.view_name + "source";
-          const layerId = String(client_id) + cat.view_name + "layer";
-          RemoveSourceAndLayerFromMap({
-            map: map,
-            layerId: layerId,
-            sourceId: sourceId,
-          });
-        }
+        handleCategoriesChange(
+          event,
+          cat,
+          client_id,
+          project_id,
+          map,
+          popUpRef
+        );
       });
     });
     setCategories(updatedCategories);
@@ -150,81 +82,14 @@ export default function LayersPanel({ map, popUpRef }) {
         console.log(cat, "category clicked in sub");
         if (cat.type_of_geometry) {
           cat.checked = event.target.checked;
-          if (event.target.checked) {
-            if (cat.type_of_geometry) {
-              const sourceId = String(client_id) + cat.view_name + "source";
-              const layerId = String(client_id) + cat.view_name + "layer";
-              RemoveSourceAndLayerFromMap({
-                map: map,
-                layerId: layerId,
-                sourceId: sourceId,
-              });
-
-              axios
-                .get(
-                  `${
-                    import.meta.env.VITE_API_DASHBOARD_URL
-                  }/category-style/?category=${cat.id}`
-                )
-                .then((response) => {
-                  const categoryStyle = response.data[0];
-                  let url = null;
-                  let fillType = null;
-                  if (cat.type_of_geometry === "Point") {
-                    url = `${
-                      import.meta.env.VITE_API_DASHBOARD_URL
-                    }/category-point-geojson/?client=${client_id}&project=${
-                      project_id === "All" ? "" : project_id
-                    }&category=${cat.id}`;
-                    fillType = "circle";
-                  }
-                  if (cat.type_of_geometry === "LineString") {
-                    url = `${
-                      import.meta.env.VITE_API_DASHBOARD_URL
-                    }/category-linestring-geojson/?client=${client_id}&project=${
-                      project_id === "All" ? "" : project_id
-                    }&category=${cat.id}`;
-                    fillType = "line";
-                  }
-                  if (cat.type_of_geometry === "Polygon") {
-                    url = `${
-                      import.meta.env.VITE_API_DASHBOARD_URL
-                    }/category-polygon-geojson/?client=${client_id}&project=${
-                      project_id === "All" ? "" : project_id
-                    }&category=${cat.id}`;
-                    fillType = "fill";
-                  }
-                  AddLayerAndSourceToMap({
-                    map: map,
-                    layerId: layerId,
-                    sourceId: sourceId,
-                    url: url,
-                    source_layer: sourceId,
-                    popUpRef: popUpRef,
-                    showPopup: true,
-                    style: {
-                      fill_color: categoryStyle.fill,
-                      fill_opacity: categoryStyle.fill_opacity,
-                      stroke_color: categoryStyle.stroke,
-                    },
-                    zoomToLayer: false,
-                    extent: [],
-                    geomType: "geojson",
-                    fillType: fillType,
-                    trace: false,
-                    component: "map",
-                  });
-                });
-            }
-          } else {
-            const sourceId = String(client_id) + cat.view_name + "source";
-            const layerId = String(client_id) + cat.view_name + "layer";
-            RemoveSourceAndLayerFromMap({
-              map: map,
-              layerId: layerId,
-              sourceId: sourceId,
-            });
-          }
+          handleCategoriesChange(
+            event,
+            cat,
+            client_id,
+            project_id,
+            map,
+            popUpRef
+          );
         }
       }
     );
@@ -262,81 +127,7 @@ export default function LayersPanel({ map, popUpRef }) {
     const cat =
       updatedCategories[sdIndex].sub_category[subIndex].category[catIndex];
     cat.checked = event.target.checked;
-    if (event.target.checked) {
-      if (cat.type_of_geometry) {
-        const sourceId = String(client_id) + cat.view_name + "source";
-        const layerId = String(client_id) + cat.view_name + "layer";
-        RemoveSourceAndLayerFromMap({
-          map: map,
-          layerId: layerId,
-          sourceId: sourceId,
-        });
-
-        axios
-          .get(
-            `${
-              import.meta.env.VITE_API_DASHBOARD_URL
-            }/category-style/?category=${cat.id}`
-          )
-          .then((response) => {
-            const categoryStyle = response.data[0];
-            let url = null;
-            let fillType = null;
-            if (cat.type_of_geometry === "Point") {
-              url = `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/category-point-geojson/?client=${client_id}&project=${
-                project_id === "All" ? "" : project_id
-              }&category=${cat.id}`;
-              fillType = "circle";
-            }
-            if (cat.type_of_geometry === "LineString") {
-              url = `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/category-linestring-geojson/?client=${client_id}&project=${
-                project_id === "All" ? "" : project_id
-              }&category=${cat.id}`;
-              fillType = "line";
-            }
-            if (cat.type_of_geometry === "Polygon") {
-              url = `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/category-polygon-geojson/?client=${client_id}&project=${
-                project_id === "All" ? "" : project_id
-              }&category=${cat.id}`;
-              fillType = "fill";
-            }
-            AddLayerAndSourceToMap({
-              map: map,
-              layerId: layerId,
-              sourceId: sourceId,
-              url: url,
-              source_layer: sourceId,
-              popUpRef: popUpRef,
-              showPopup: true,
-              style: {
-                fill_color: categoryStyle.fill,
-                fill_opacity: categoryStyle.fill_opacity,
-                stroke_color: categoryStyle.stroke,
-              },
-              zoomToLayer: false,
-              extent: [],
-              geomType: "geojson",
-              fillType: fillType,
-              trace: false,
-              component: "map",
-            });
-          });
-      }
-    } else {
-      const sourceId = String(client_id) + cat.view_name + "source";
-      const layerId = String(client_id) + cat.view_name + "layer";
-      RemoveSourceAndLayerFromMap({
-        map: map,
-        layerId: layerId,
-        sourceId: sourceId,
-      });
-    }
+    handleCategoriesChange(event, cat, client_id, project_id, map, popUpRef);
 
     let allCategoriesChecked = true;
     let someCategoriesChecked = false;
@@ -415,20 +206,10 @@ export default function LayersPanel({ map, popUpRef }) {
   };
 
   const handleChangeSlider = (event, value, cat) => {
-    const layerId = String(client_id) + cat.view_name + "layer";
-
     const style = map.getStyle();
+    const layerId = String(client_id) + cat.view_name + "layer";
     const existingLayer = style.layers.find((layer) => layer.id === layerId);
-
-    if (existingLayer) {
-      if (cat.type_of_geometry === "Polygon") {
-        map.setPaintProperty(layerId, "fill-opacity", parseFloat(value));
-      } else if (cat.type_of_geometry === "LineString") {
-        map.setPaintProperty(layerId, "line-opacity", parseFloat(value));
-      } else {
-        map.setPaintProperty(layerId, "circle-opacity", parseFloat(value));
-      }
-    }
+    setGeometryOpacity(existingLayer, cat, map, layerId, value);
   };
 
   const handleZoomToLayer = (event, cat) => {
@@ -633,44 +414,45 @@ export default function LayersPanel({ map, popUpRef }) {
                       />
 
                       {/* <ModeIcon /> */}
-
-                      {cat.type_of_geometry === "LineString" ? (
-                        <Tooltip title="Draw LineString">
-                          <ShowChartIcon
-                            onClick={(event) => handleDraw(event, cat)}
-                            sx={{
-                              marginRight: "10px",
-                              backgroundColor: "#FFFFF",
-                              color: cat.fill_color,
-                              "&:hover": { cursor: "pointer" },
-                            }}
-                          />
-                        </Tooltip>
-                      ) : cat.type_of_geometry === "Polygon" ? (
-                        <Tooltip title="Draw Polygon">
-                          <RectangleIcon
-                            onClick={(event) => handleDraw(event, cat)}
-                            sx={{
-                              marginRight: "10px",
-                              backgroundColor: "#FFFFF",
-                              color: cat.fill_color,
-                              "&:hover": { cursor: "pointer" },
-                            }}
-                          />
-                        </Tooltip>
-                      ) : (
-                        <Tooltip title="Draw Point">
-                          <CircleIcon
-                            onClick={(event) => handleDraw(event, cat)}
-                            sx={{
-                              marginRight: "10px",
-                              backgroundColor: "#FFFFF",
-                              color: cat.fill_color,
-                              "&:hover": { cursor: "pointer" },
-                            }}
-                          />
-                        </Tooltip>
-                      )}
+                      {project_id !== "All" ? (
+                        cat.type_of_geometry === "LineString" ? (
+                          <Tooltip title="Draw LineString">
+                            <ShowChartIcon
+                              onClick={(event) => handleDraw(event, cat)}
+                              sx={{
+                                marginRight: "10px",
+                                backgroundColor: "#FFFFF",
+                                color: cat.fill_color,
+                                "&:hover": { cursor: "pointer" },
+                              }}
+                            />
+                          </Tooltip>
+                        ) : cat.type_of_geometry === "Polygon" ? (
+                          <Tooltip title="Draw Polygon">
+                            <RectangleIcon
+                              onClick={(event) => handleDraw(event, cat)}
+                              sx={{
+                                marginRight: "10px",
+                                backgroundColor: "#FFFFF",
+                                color: cat.fill_color,
+                                "&:hover": { cursor: "pointer" },
+                              }}
+                            />
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title="Draw Point">
+                            <CircleIcon
+                              onClick={(event) => handleDraw(event, cat)}
+                              sx={{
+                                marginRight: "10px",
+                                backgroundColor: "#FFFFF",
+                                color: cat.fill_color,
+                                "&:hover": { cursor: "pointer" },
+                              }}
+                            />
+                          </Tooltip>
+                        )
+                      ) : null}
 
                       <Tooltip title="Zoom to Layer">
                         <ZoomInIcon
