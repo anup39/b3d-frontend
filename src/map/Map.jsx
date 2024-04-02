@@ -19,6 +19,10 @@ import { Button } from "@mui/material";
 import { setCurrentMapExtent, setDisplayType } from "../reducers/MapView";
 import { setWKTGeometry, setTypeOfGeometry } from "../reducers/DrawnGeometry";
 import MeasureControl from "../components/DrawControl/MeasureControl";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import { setShowKeyInfo } from "../reducers/DrawnGeometry";
 
 export default function Map({ popUpRef }) {
   const dispatch = useDispatch();
@@ -37,6 +41,11 @@ export default function Map({ popUpRef }) {
   const currentMapExtent = useSelector(
     (state) => state.mapView.printDetails.currentMapExtent
   );
+  const show_key_info = useSelector(
+    (state) => state.drawnPolygon.show_key_info
+  );
+
+  console.log(show_key_info, "show key info from map");
 
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -206,6 +215,7 @@ export default function Map({ popUpRef }) {
         map.addControl(draw);
         map.draw = draw;
         map.on("draw.create", function (event) {
+          dispatch(setShowKeyInfo(true));
           console.log(map, "map when drawing");
           const feature = event.features;
           const geometry = feature[0].geometry;
@@ -239,6 +249,7 @@ export default function Map({ popUpRef }) {
           }
         });
         map.on("draw.update", function updateFunctionProject(event) {
+          dispatch(setShowKeyInfo(true));
           console.log("draw update event listner from map");
           // const draw = map.draw;
           console.log(draw, "draw update from layer control panel");
@@ -305,12 +316,12 @@ export default function Map({ popUpRef }) {
     <>
       <div ref={mapContainer} id="map" className="map">
         <Button
-          onClick={() => {
-            dispatch(setDisplayType("3D"));
-            const map = window.map_global;
-            const bounds = map.getBounds();
-            dispatch(setCurrentMapExtent(bounds.toArray()));
-          }}
+          // onClick={() => {
+          //   dispatch(setDisplayType("3D"));
+          //   const map = window.map_global;
+          //   const bounds = map.getBounds();
+          //   dispatch(setCurrentMapExtent(bounds.toArray()));
+          // }}
           sx={{
             position: "absolute",
             top: "12px",
@@ -325,6 +336,25 @@ export default function Map({ popUpRef }) {
         >
           3D
         </Button>
+
+        {show_key_info ? (
+          <Card
+            sx={{
+              position: "absolute",
+              top: "11px",
+              right: "120px",
+              zIndex: 99999,
+            }}
+          >
+            <Typography sx={{ m: 1 }} variant="body2" component="p">
+              Press
+              <span style={{ color: "#D51B60" }}> Enter </span> to Save drawing
+              and
+              <span style={{ color: "#D51B60" }}> Esc </span>
+              to cancel
+            </Typography>
+          </Card>
+        ) : null}
       </div>
     </>
   );

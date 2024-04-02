@@ -11,6 +11,7 @@ import {
 } from "../../reducers/DrawnGeometry";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useCallback } from "react";
+import { setShowKeyInfo } from "../../reducers/DrawnGeometry";
 
 export default function Cancel() {
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ export default function Cancel() {
         console.log(e.key);
         if (e.key === "Escape") {
           handleCancelDraw();
+          dispatch(setShowKeyInfo(false));
         }
       };
       window.addEventListener("keydown", keyDownHandler);
@@ -54,7 +56,7 @@ export default function Cancel() {
         window.removeEventListener("keydown", keyDownHandler);
       };
     }
-  }, [handleCancelDraw]);
+  }, [handleCancelDraw, dispatch]);
 
   return (
     <div>

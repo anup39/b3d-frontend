@@ -363,9 +363,9 @@ export default function MapView() {
                 }}
               >
                 {/* #Ui for all the measurements */}
-                <ListItemText secondary={"All Measurements"} />
+                <ListItemText secondary={"All Properties"} />
 
-                <Tooltip title="Show All Measurings">
+                <Tooltip title="Show All Properties">
                   <Checkbox
                     onChange={(event) =>
                       handleMeasuringsPanelChecked(event, "All")
