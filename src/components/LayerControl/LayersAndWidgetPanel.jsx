@@ -235,17 +235,22 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
               >
                 Report
               </span>
-              <Tooltip title="Import">
-                <BackupIcon
-                  onClick={handleImportShapefile}
-                  sx={{
-                    "&:hover": { cursor: "pointer" },
-                    mt: 1,
-                    mr: 1,
-                    color: "#d61b60",
-                  }}
-                />
-              </Tooltip>
+
+              {/* Import Shapefile Button */}
+              {project_id !== "All" ? (
+                <Tooltip title="Import">
+                  <BackupIcon
+                    onClick={handleImportShapefile}
+                    sx={{
+                      "&:hover": { cursor: "pointer" },
+                      mt: 1,
+                      mr: 1,
+                      color: "#d61b60",
+                    }}
+                  />
+                </Tooltip>
+              ) : null}
+
               <Tooltip title="Table">
                 <TableChartIcon
                   onClick={handleMeasuringsTable}
@@ -269,84 +274,95 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                 />
               </Tooltip>
 
-              <IconButton
-                disabled={
-                  currentPropertyPolygonGeojson?.features?.length > 0
-                    ? true
-                    : false
-                }
-                onClick={handleDrawPolygon}
-              >
-                <Tooltip
-                  title={
-                    currentPropertyPolygonGeojson?.features?.length > 0
-                      ? "Already drawn polygon exists. Please delete it first."
-                      : "Draw Polygon"
-                  }
-                >
-                  <RectangleIcon
-                    sx={{
-                      "&:hover": { cursor: "pointer" },
-                      mt: 1,
-                      mr: 1,
-                      color:
-                        currentPropertyPolygonGeojson?.features?.length > 0
-                          ? false
-                          : "#d61b60",
-                    }}
-                  />
-                </Tooltip>
-              </IconButton>
-
-              <Box>
+              {/* Draw Polygon Button */}
+              {project_id !== "All" ? (
                 <IconButton
                   disabled={
                     currentPropertyPolygonGeojson?.features?.length > 0
-                      ? false
-                      : true
+                      ? true
+                      : false
                   }
-                  onClick={handleEditPolygon}
+                  onClick={handleDrawPolygon}
                 >
-                  <Tooltip title="Edit Poygon">
-                    <EditIcon
-                      sx={{
-                        "&:hover": { cursor: "pointer" },
-                        mt: 1,
-                        mr: 1,
-
-                        color:
-                          currentPropertyPolygonGeojson?.features?.length > 0
-                            ? "#d61b60"
-                            : false,
-                      }}
-                    />
-                  </Tooltip>
-                </IconButton>
-              </Box>
-              <Box>
-                <IconButton
-                  disabled={
-                    currentPropertyPolygonGeojson?.features?.length > 0
-                      ? false
-                      : true
-                  }
-                  onClick={handleDeletePolygon}
-                >
-                  <Tooltip title="Delete Poygon">
-                    <DeleteIcon
+                  <Tooltip
+                    title={
+                      currentPropertyPolygonGeojson?.features?.length > 0
+                        ? "Already drawn polygon exists. Please delete it first."
+                        : "Draw Polygon"
+                    }
+                  >
+                    <RectangleIcon
                       sx={{
                         "&:hover": { cursor: "pointer" },
                         mt: 1,
                         mr: 1,
                         color:
                           currentPropertyPolygonGeojson?.features?.length > 0
-                            ? "#d61b60"
-                            : false,
+                            ? false
+                            : "#d61b60",
                       }}
                     />
                   </Tooltip>
                 </IconButton>
-              </Box>
+              ) : null}
+
+              {/* Edit Polygon Button */}
+              {project_id !== "All" ? (
+                <Box>
+                  <IconButton
+                    disabled={
+                      currentPropertyPolygonGeojson?.features?.length > 0
+                        ? false
+                        : true
+                    }
+                    onClick={handleEditPolygon}
+                  >
+                    <Tooltip title="Edit Poygon">
+                      <EditIcon
+                        sx={{
+                          "&:hover": { cursor: "pointer" },
+                          mt: 1,
+                          mr: 1,
+
+                          color:
+                            currentPropertyPolygonGeojson?.features?.length > 0
+                              ? "#d61b60"
+                              : false,
+                        }}
+                      />
+                    </Tooltip>
+                  </IconButton>
+                </Box>
+              ) : null}
+
+              {/* Delete Polygon Button */}
+
+              {project_id !== "All" ? (
+                <Box>
+                  <IconButton
+                    disabled={
+                      currentPropertyPolygonGeojson?.features?.length > 0
+                        ? false
+                        : true
+                    }
+                    onClick={handleDeletePolygon}
+                  >
+                    <Tooltip title="Delete Poygon">
+                      <DeleteIcon
+                        sx={{
+                          "&:hover": { cursor: "pointer" },
+                          mt: 1,
+                          mr: 1,
+                          color:
+                            currentPropertyPolygonGeojson?.features?.length > 0
+                              ? "#d61b60"
+                              : false,
+                        }}
+                      />
+                    </Tooltip>
+                  </IconButton>
+                </Box>
+              ) : null}
             </Box>
 
             {expandMeasurings ? (

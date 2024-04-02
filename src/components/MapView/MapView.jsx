@@ -52,6 +52,8 @@ import {
   fetchTifDataByClientId,
 } from "../../api/api";
 import AddRasterToMap from "../../maputils/AddRasterToMap";
+import { fetchProjectPolygonGeojsonByClientIdAndProjectId } from "../../api/api";
+import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 
 const drawerWidth = 240;
 
@@ -193,6 +195,40 @@ export default function MapView() {
         const measuringcategories = res;
         dispatch(setCurrentMeasuringCategories(measuringcategories));
       });
+      // Here add Property polygon to the map by calling the api
+      fetchProjectPolygonGeojsonByClientIdAndProjectId({
+        client_id,
+        project_id: "",
+      }).then((res) => {
+        const property_polygon_geojson = res;
+        if (property_polygon_geojson?.features?.length > 0) {
+          const layerId = String(client_id) + String("All") + "layer";
+          const sourceId = String(client_id) + String("All") + "source";
+          AddLayerAndSourceToMap({
+            map,
+            layerId: layerId,
+            sourceId: sourceId,
+            url: `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/project-polygon/?client=${client_id}&project=${""}`,
+            source_layer: sourceId,
+            popUpRef: popUpRef,
+            showPopup: false,
+            style: {
+              fill_color: "red",
+              fill_opacity: 0.5,
+              stroke_color: "red",
+              stroke_width: 2,
+            },
+            zoomToLayer: false,
+            extent: [],
+            geomType: "geojson",
+            fillType: "line",
+            trace: false,
+            component: "project-view",
+          });
+        }
+      });
       // Here also removed the property polygon which is previosuly in the map
       if (project_id) {
         RemoveSourceAndLayerFromMap({
@@ -224,6 +260,12 @@ export default function MapView() {
       dispatch(setshowPiechart(false));
       dispatch(setshowReport(false));
       dispatch(setshowTifPanel(false));
+      // Remove all the property layer
+      RemoveSourceAndLayerFromMap({
+        map: map,
+        sourceId: String(client_id) + String("All") + "source",
+        layerId: String(client_id) + String("All") + "layer",
+      });
     }
   };
 

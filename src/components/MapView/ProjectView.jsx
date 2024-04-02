@@ -183,7 +183,7 @@ export default function ProjectView({ project, popUpRef }) {
           });
         }
       });
-      // Here also removed the property polygon which is previosuly in the map
+      // Here also removed the property polygon which is previosuly in the map also all the property add because for all the property "All" is used
       if (project_id) {
         RemoveSourceAndLayerFromMap({
           map: map,
