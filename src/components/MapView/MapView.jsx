@@ -147,6 +147,11 @@ export default function MapView() {
   };
 
   const handleMeasuringsPanelChecked = (event, projectid) => {
+    // Remove popup from map
+    const popups = document.getElementsByClassName("maplibregl-popup");
+    if (popups.length) {
+      popups[0].remove();
+    }
     const checked = event.target.checked;
     if (current_measuring_categories) {
       removeCheckedCategoriesLayersFromMap(

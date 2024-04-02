@@ -104,6 +104,11 @@ export default function ProjectView({ project, popUpRef }) {
     });
   };
   const handleMeasuringsPanelChecked = (event, project) => {
+    // Remove popup from map
+    const popups = document.getElementsByClassName("maplibregl-popup");
+    if (popups.length) {
+      popups[0].remove();
+    }
     const checked = event.target.checked;
     dispatch(setProjectChecked({ id: project.id, value: checked }));
     if (current_measuring_categories) {
@@ -335,7 +340,7 @@ export default function ProjectView({ project, popUpRef }) {
               onClick={handleEyeButton}
               disabled={project_id === project.id ? false : true}
             >
-              <Tooltip title="Show Area">
+              <Tooltip title="Show Property Polygon">
                 <RemoveRedEyeIcon sx={{ fontSize: 14 }} />
               </Tooltip>
             </IconButton>

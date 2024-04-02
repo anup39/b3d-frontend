@@ -288,7 +288,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                     title={
                       currentPropertyPolygonGeojson?.features?.length > 0
                         ? "Already drawn polygon exists. Please delete it first."
-                        : "Draw Polygon"
+                        : "Draw Property Polygon"
                     }
                   >
                     <RectangleIcon
@@ -317,7 +317,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                     }
                     onClick={handleEditPolygon}
                   >
-                    <Tooltip title="Edit Poygon">
+                    <Tooltip title="Edit Property Poygon">
                       <EditIcon
                         sx={{
                           "&:hover": { cursor: "pointer" },
@@ -347,7 +347,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                     }
                     onClick={handleDeletePolygon}
                   >
-                    <Tooltip title="Delete Poygon">
+                    <Tooltip title="Delete Property Poygon">
                       <DeleteIcon
                         sx={{
                           "&:hover": { cursor: "pointer" },
