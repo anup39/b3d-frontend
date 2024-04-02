@@ -47,7 +47,11 @@ import Checkbox from "@mui/material/Checkbox";
 import AutoCompleteProperties from "./AutoCompleteProperties";
 import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFromMap";
 import maplibregl from "maplibre-gl";
-import { fetchMeasuringCategories } from "../../api/api";
+import {
+  fetchMeasuringCategories,
+  fetchTifDataByClientId,
+} from "../../api/api";
+import AddRasterToMap from "../../maputils/AddRasterToMap";
 
 const drawerWidth = 240;
 
@@ -158,8 +162,29 @@ export default function MapView() {
         sourceId: sourceId,
       });
     }
+    dispatch(settifs([]));
     if (checked) {
       // Here i need to add the raster layer to Map like handleMapTif in ProjectView
+      fetchTifDataByClientId(client_id).then((res) => {
+        const tifs = res;
+        tifs.map((tif) => {
+          console.log(tif);
+          AddRasterToMap({
+            map: map,
+            layerId: `${tif.id}-layer`,
+            sourceId: `${tif.id}-source`,
+            source_layer: `${tif.id}-source`,
+            url: `${import.meta.env.VITE_API_RASTER_URL}/tile-async/${
+              tif.id
+            }/{z}/{x}/{y}.png`,
+            extent: [],
+            zoomToLayer: false,
+            type: "raster",
+            component: "MapView",
+          });
+        });
+      });
+
       dispatch(setshowMeasuringsPanel(true));
       dispatch(setcurrentProject(projectid));
       dispatch(setcurrentProjectName(projectid));
@@ -178,7 +203,6 @@ export default function MapView() {
         dispatch(setProjectChecked({ id: project_id, value: false }));
       }
     } else {
-      dispatch(settifs([]));
       dispatch(setshowMeasuringsPanel(false));
       dispatch(setcurrentProjectName(null));
       dispatch(setcurrentProject(null));
