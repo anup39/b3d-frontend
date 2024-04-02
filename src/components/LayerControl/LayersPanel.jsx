@@ -414,44 +414,45 @@ export default function LayersPanel({ map, popUpRef }) {
                       />
 
                       {/* <ModeIcon /> */}
-
-                      {cat.type_of_geometry === "LineString" ? (
-                        <Tooltip title="Draw LineString">
-                          <ShowChartIcon
-                            onClick={(event) => handleDraw(event, cat)}
-                            sx={{
-                              marginRight: "10px",
-                              backgroundColor: "#FFFFF",
-                              color: cat.fill_color,
-                              "&:hover": { cursor: "pointer" },
-                            }}
-                          />
-                        </Tooltip>
-                      ) : cat.type_of_geometry === "Polygon" ? (
-                        <Tooltip title="Draw Polygon">
-                          <RectangleIcon
-                            onClick={(event) => handleDraw(event, cat)}
-                            sx={{
-                              marginRight: "10px",
-                              backgroundColor: "#FFFFF",
-                              color: cat.fill_color,
-                              "&:hover": { cursor: "pointer" },
-                            }}
-                          />
-                        </Tooltip>
-                      ) : (
-                        <Tooltip title="Draw Point">
-                          <CircleIcon
-                            onClick={(event) => handleDraw(event, cat)}
-                            sx={{
-                              marginRight: "10px",
-                              backgroundColor: "#FFFFF",
-                              color: cat.fill_color,
-                              "&:hover": { cursor: "pointer" },
-                            }}
-                          />
-                        </Tooltip>
-                      )}
+                      {project_id !== "All" ? (
+                        cat.type_of_geometry === "LineString" ? (
+                          <Tooltip title="Draw LineString">
+                            <ShowChartIcon
+                              onClick={(event) => handleDraw(event, cat)}
+                              sx={{
+                                marginRight: "10px",
+                                backgroundColor: "#FFFFF",
+                                color: cat.fill_color,
+                                "&:hover": { cursor: "pointer" },
+                              }}
+                            />
+                          </Tooltip>
+                        ) : cat.type_of_geometry === "Polygon" ? (
+                          <Tooltip title="Draw Polygon">
+                            <RectangleIcon
+                              onClick={(event) => handleDraw(event, cat)}
+                              sx={{
+                                marginRight: "10px",
+                                backgroundColor: "#FFFFF",
+                                color: cat.fill_color,
+                                "&:hover": { cursor: "pointer" },
+                              }}
+                            />
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title="Draw Point">
+                            <CircleIcon
+                              onClick={(event) => handleDraw(event, cat)}
+                              sx={{
+                                marginRight: "10px",
+                                backgroundColor: "#FFFFF",
+                                color: cat.fill_color,
+                                "&:hover": { cursor: "pointer" },
+                              }}
+                            />
+                          </Tooltip>
+                        )
+                      ) : null}
 
                       <Tooltip title="Zoom to Layer">
                         <ZoomInIcon
