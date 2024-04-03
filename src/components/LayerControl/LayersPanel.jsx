@@ -10,7 +10,8 @@ import { Slider } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
 import { setCurrentMeasuringCategories } from "../../reducers/Client";
-import RectangleIcon from "@mui/icons-material/Rectangle";
+// import RectangleIcon from "@mui/icons-material/Rectangle";
+import PentagonIcon from "@mui/icons-material/Pentagon";
 import CircleIcon from "@mui/icons-material/Circle";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import {
@@ -429,7 +430,8 @@ export default function LayersPanel({ map, popUpRef }) {
                           </Tooltip>
                         ) : cat.type_of_geometry === "Polygon" ? (
                           <Tooltip title="Draw Polygon">
-                            <RectangleIcon
+                            <PentagonIcon
+                              size="small"
                               onClick={(event) => handleDraw(event, cat)}
                               sx={{
                                 marginRight: "10px",
