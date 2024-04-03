@@ -291,19 +291,30 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                 marginLeft: "10px",
               }}
             >
-              <SummarizeIcon
-                onClick={handleShowReport}
-                sx={{
-                  "&:hover": { cursor: "pointer" },
-                  mt: 1,
-                  color: "#d61b60",
-                }}
-              />
-              <span
-                style={{ marginTop: "10px", padding: 2, marginRight: "10px" }}
-              >
-                Report
-              </span>
+              {/* Report Button */}
+
+              {project_id !== "All" ? (
+                <>
+                  {" "}
+                  <SummarizeIcon
+                    onClick={handleShowReport}
+                    sx={{
+                      "&:hover": { cursor: "pointer" },
+                      mt: 1,
+                      color: "#d61b60",
+                    }}
+                  />
+                  <span
+                    style={{
+                      marginTop: "10px",
+                      padding: 2,
+                      marginRight: "10px",
+                    }}
+                  >
+                    Report
+                  </span>
+                </>
+              ) : null}
 
               {/* Import Shapefile Button */}
               {project_id !== "All" ? (
@@ -319,29 +330,35 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                   />
                 </Tooltip>
               ) : null}
+              {/* Table Button */}
+              {project_id !== "All" ? (
+                <Tooltip title="Table">
+                  <TableChartIcon
+                    onClick={handleMeasuringsTable}
+                    sx={{
+                      "&:hover": { cursor: "pointer" },
+                      mt: 1,
+                      mr: 1,
+                      color: "#d61b60",
+                    }}
+                  />
+                </Tooltip>
+              ) : null}
 
-              <Tooltip title="Table">
-                <TableChartIcon
-                  onClick={handleMeasuringsTable}
-                  sx={{
-                    "&:hover": { cursor: "pointer" },
-                    mt: 1,
-                    mr: 1,
-                    color: "#d61b60",
-                  }}
-                />
-              </Tooltip>
-              <Tooltip title="Pie Chart">
-                <PieChartIcon
-                  onClick={handlePieChart}
-                  sx={{
-                    "&:hover": { cursor: "pointer" },
-                    mt: 1,
-                    mr: 1,
-                    color: "#d61b60",
-                  }}
-                />
-              </Tooltip>
+              {/* Pie Chart Button */}
+              {project_id !== "All" ? (
+                <Tooltip title="Pie Chart">
+                  <PieChartIcon
+                    onClick={handlePieChart}
+                    sx={{
+                      "&:hover": { cursor: "pointer" },
+                      mt: 1,
+                      mr: 1,
+                      color: "#d61b60",
+                    }}
+                  />
+                </Tooltip>
+              ) : null}
 
               {/* Draw Polygon Button */}
               {project_id !== "All" ? (

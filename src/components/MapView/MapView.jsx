@@ -147,6 +147,9 @@ export default function MapView() {
   };
 
   const handleMeasuringsPanelChecked = (event, projectid) => {
+    // make the pie chart and table to false
+    dispatch(setshowTableMeasurings(false));
+    dispatch(setshowPiechart(false));
     // Remove popup from map
     const popups = document.getElementsByClassName("maplibregl-popup");
     if (popups.length) {
