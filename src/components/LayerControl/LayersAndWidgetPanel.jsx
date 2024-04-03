@@ -58,7 +58,6 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   const currentPropertyPolygonGeojson = useSelector(
     (state) => state.mapView.currentMapDetail.current_property_polygon_geojson
   );
-  console.log(currentPropertyPolygonGeojson, "currentPropertyPolygonGeojson");
 
   const { project_id, current_project_name } = useSelector(
     (state) => state.project
@@ -197,10 +196,8 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
 
   const handleDeletePolygon = () => {
     const property_id = currentPropertyPolygonGeojson?.features[0]?.id;
-    console.log("delete polygon");
     deletePropertyPolygonByPolygonId(property_id)
-      .then((res) => {
-        console.log(res, "res");
+      .then(() => {
         dispatch(settoastType("success"));
         dispatch(setshowToast(true));
         dispatch(settoastMessage("Property Polygon Deleted Successfully"));

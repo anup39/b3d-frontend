@@ -82,7 +82,6 @@ export default function LayersPanel({ map, popUpRef }) {
     updatedCategories[sdIndex].sub_category[subIndex].category.forEach(
       (cat) => {
         cat.checked = event.target.checked;
-        console.log(cat, "category clicked in sub");
         if (cat.type_of_geometry) {
           cat.checked = event.target.checked;
           handleCategoriesChange(
@@ -216,14 +215,12 @@ export default function LayersPanel({ map, popUpRef }) {
   };
 
   const handleZoomToLayer = (event, cat) => {
-    console.log(cat);
     calculateCategoryBoundingBox({
       type_of_geometry: cat.type_of_geometry,
       client_id: client_id,
       project_id: project_id,
       category_id: cat.id,
     }).then((data) => {
-      console.log(data);
       const bbox = turf.bbox(data);
       map.fitBounds(
         [
