@@ -26,7 +26,7 @@ import {
 import all_categories from "./measurings_categories_sample";
 import handleCategoriesChange from "../../maputils/handleCategoriesCheckedOrUnchecked";
 import setGeometryOpacity from "../../maputils/handleGeometryOpacity";
-import { calculateCategoryBoundingBox } from "../../api/api";
+import { fetchGeojsonByCategoryId } from "../../api/api";
 import * as turf from "@turf/turf";
 
 export default function LayersPanel({ map, popUpRef }) {
@@ -215,7 +215,7 @@ export default function LayersPanel({ map, popUpRef }) {
   };
 
   const handleZoomToLayer = (event, cat) => {
-    calculateCategoryBoundingBox({
+    fetchGeojsonByCategoryId({
       type_of_geometry: cat.type_of_geometry,
       client_id: client_id,
       project_id: project_id,

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import { useDispatch } from "react-redux";
 import { setshowPiechart } from "../../reducers/MapView";
+import { IconButton } from "@mui/material";
 
 export default function PieChartComp() {
   const dispatch = useDispatch();
@@ -25,8 +26,8 @@ export default function PieChartComp() {
                 "&:hover": { cursor: "pointer" },
               }}
             />
-            <PieChartNew />
           </Tooltip>
+          <PieChartNew />
         </>
       ) : null}
     </>

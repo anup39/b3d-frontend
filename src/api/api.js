@@ -104,7 +104,7 @@ const deletePropertyPolygonByPolygonId = async (polygon_id) => {
   return response.data;
 };
 
-const calculateCategoryBoundingBox = async ({
+const fetchGeojsonByCategoryId = async ({
   type_of_geometry,
   client_id,
   project_id,
@@ -166,5 +166,5 @@ export {
   fetchBoundingBoxByTifId,
   fetchTifDataByClientId,
   deletePropertyPolygonByPolygonId,
-  calculateCategoryBoundingBox,
+  fetchGeojsonByCategoryId,
 };
