@@ -231,33 +231,39 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
           className="maplibregl-ctrl-layer-control"
           style={{ display: "flex", flexDirection: "column" }}
         >
-          <Box>
+          <Box
+            sx={{
+              position: "fixed",
+              backgroundColor: "white",
+              borderRadius: 2,
+            }}
+          >
+            <Typography
+              sx={{
+                backgroundColor: "white",
+                fontWeight: "bold",
+                marginTop: 1,
+                marginBottom: 0,
+                paddingTop: 0,
+                fontSize: "14px",
+                color: "#027FFE",
+                marginLeft: "10px",
+              }}
+            >
+              Measurings :{" "}
+              <span style={{ color: "#757575", marginRight: "20px" }}>
+                {current_project_name ? current_project_name : null}
+              </span>
+            </Typography>
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
+                justifyContent: "flex-start",
                 zIndex: 99999,
+                marginLeft: "10px",
               }}
             >
-              <Typography
-                sx={{
-                  backgroundColor: "white",
-                  fontWeight: "bold",
-                  marginTop: 1,
-                  marginBottom: 0,
-                  paddingTop: 0,
-                  marginLeft: 2,
-                  fontSize: "14px",
-                  color: "#027FFE",
-                }}
-              >
-                Measurings :{" "}
-                <span style={{ color: "#757575", marginRight: "20px" }}>
-                  {current_project_name ? current_project_name : null}
-                </span>
-              </Typography>
-
               <SummarizeIcon
                 onClick={handleShowReport}
                 sx={{
