@@ -118,7 +118,7 @@ export default function TiffMapView({ projectId }) {
                   }}
                   disabled={project_id === projectId ? false : true}
                 />
-                {project_id === projectId ? <MoreonMap tif={tif} /> : null}
+                {/* {project_id === projectId ? <MoreonMap tif={tif} /> : null} */}
               </ListItemButton>
             </Box>
           ))
