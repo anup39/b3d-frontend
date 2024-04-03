@@ -94,7 +94,7 @@ const fetchTifDataByClientId = async (client_id) => {
 
 const deletePropertyPolygonByPolygonId = async (polygon_id) => {
   const response = await axios.delete(
-    `${import.meta.env.VITE_API_DASHBOARD_URL}/property-polygon/${polygon_id}/`,
+    `${import.meta.env.VITE_API_DASHBOARD_URL}/project-polygon/${polygon_id}/`,
     {
       headers: {
         Authorization: "Token " + localStorage.getItem("token"),

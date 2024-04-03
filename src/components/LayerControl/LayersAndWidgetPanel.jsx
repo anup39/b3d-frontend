@@ -196,8 +196,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   };
 
   const handleDeletePolygon = () => {
-    const property_id =
-      currentPropertyPolygonGeojson?.features[0]?.properties.id;
+    const property_id = currentPropertyPolygonGeojson?.features[0]?.id;
     console.log("delete polygon");
     deletePropertyPolygonByPolygonId(property_id)
       .then((res) => {
@@ -206,7 +205,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
         dispatch(setshowToast(true));
         dispatch(settoastMessage("Property Polygon Deleted Successfully"));
         map
-          .getSource("property_polygon")
+          .getSource(String(client_id) + String(project_id) + "source")
           .setData(
             `${
               import.meta.env.VITE_API_DASHBOARD_URL
