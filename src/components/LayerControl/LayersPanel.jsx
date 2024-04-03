@@ -26,6 +26,8 @@ import {
 import all_categories from "./measurings_categories_sample";
 import handleCategoriesChange from "../../maputils/handleCategoriesCheckedOrUnchecked";
 import setGeometryOpacity from "../../maputils/handleGeometryOpacity";
+import { calculateCategoryBoundingBox } from "../../api/api";
+import * as turf from "@turf/turf";
 
 export default function LayersPanel({ map, popUpRef }) {
   const dispatch = useDispatch();
@@ -214,7 +216,25 @@ export default function LayersPanel({ map, popUpRef }) {
   };
 
   const handleZoomToLayer = (event, cat) => {
-    map.fitBounds(cat.extent.extent);
+    console.log(cat);
+    calculateCategoryBoundingBox({
+      type_of_geometry: cat.type_of_geometry,
+      client_id: client_id,
+      project_id: project_id,
+      category_id: cat.id,
+    }).then((data) => {
+      console.log(data);
+      const bbox = turf.bbox(data);
+      map.fitBounds(
+        [
+          [bbox[0], bbox[1]],
+          [bbox[2], bbox[3]],
+        ],
+        {
+          padding: 20,
+        }
+      );
+    });
   };
 
   const handleDraw = (event, cat) => {

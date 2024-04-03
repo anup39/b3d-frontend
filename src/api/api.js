@@ -104,6 +104,59 @@ const deletePropertyPolygonByPolygonId = async (polygon_id) => {
   return response.data;
 };
 
+const calculateCategoryBoundingBox = async ({
+  type_of_geometry,
+  client_id,
+  project_id,
+  category_id,
+}) => {
+  if (type_of_geometry === "Polygon") {
+    const response = await axios.get(
+      `${
+        import.meta.env.VITE_API_DASHBOARD_URL
+      }/category-polygon-geojson/?client=${client_id}&project=${
+        project_id === "All" ? "" : project_id
+      }&category=${category_id}`,
+      {
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"),
+        },
+      }
+    );
+    return response.data;
+  }
+  if (type_of_geometry === "LineString") {
+    const response = await axios.get(
+      `${
+        import.meta.env.VITE_API_DASHBOARD_URL
+      }/category-linestring-geojson/?client=${client_id}&project=${
+        project_id === "All" ? "" : project_id
+      }&category=${category_id}`,
+      {
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"),
+        },
+      }
+    );
+    return response.data;
+  }
+  if (type_of_geometry === "Point") {
+    const response = await axios.get(
+      `${
+        import.meta.env.VITE_API_DASHBOARD_URL
+      }/category-point-geojson/?client=${client_id}&project=${
+        project_id === "All" ? "" : project_id
+      }&category=${category_id}`,
+      {
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"),
+        },
+      }
+    );
+    return response.data;
+  }
+};
+
 export {
   fetchProjectsByClientId,
   fetchClientDetailsByClientId,
@@ -113,4 +166,5 @@ export {
   fetchBoundingBoxByTifId,
   fetchTifDataByClientId,
   deletePropertyPolygonByPolygonId,
+  calculateCategoryBoundingBox,
 };
