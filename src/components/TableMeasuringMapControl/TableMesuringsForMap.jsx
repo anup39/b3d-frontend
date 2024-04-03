@@ -1,15 +1,21 @@
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import { useSelector } from "react-redux";
-import RectangleIcon from "@mui/icons-material/Rectangle";
+import { useSelector, useDispatch } from "react-redux";
 import CircleIcon from "@mui/icons-material/Circle";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
+import Pentagon from "@mui/icons-material/Pentagon";
+import PropTypes from "prop-types";
+import { setshowTableMeasurings } from "../../reducers/MapView";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
 
 const renderCell = (params) => {
   const { color, type_of_geometry } = params.value;
   let icon;
   if (type_of_geometry === "Polygon") {
-    icon = <RectangleIcon sx={{ color: color }} />;
+    icon = <Pentagon sx={{ color: color }} />;
   } else if (type_of_geometry === "Point") {
     icon = <CircleIcon sx={{ color: color }} />;
   } else {
@@ -20,151 +26,114 @@ const renderCell = (params) => {
 };
 
 const columns = [
-  // {
-  //   field: "id",
-  //   headerName: "id",
-  //   width: 80,
-  //   type: "number",
-  //   editable: false,
-  // },
   {
     field: "symbol",
-    headerName: "symbol",
+    headerName: "Symbol",
     type: "string",
-    width: 80,
+    width: 150,
     renderCell: renderCell,
   },
+
   {
-    field: "view_name",
-    headerName: "category",
+    field: "name",
     type: "string",
-    width: 290,
-  },
-  {
-    field: "description",
-    type: "string",
-    width: 170,
+    width: 200,
     editable: false,
-    headerName: "description",
+    headerName: "Category",
   },
   {
-    field: "count",
+    field: "value",
     type: "number",
-    width: 100,
+    width: 150,
     editable: false,
-    headerName: "count",
-  },
-  {
-    field: "area",
-    type: "number",
-    width: 50,
-    editable: false,
-    headerName: "area",
-  },
-  {
-    field: "length",
-    type: "number",
-    width: 130,
-    editable: false,
-    headerName: "length",
+    headerName: "Area",
   },
 ];
 
-const rows = [
-  {
-    id: 1,
-    view_name: "Grass Green Short",
-    description: "Grass measurings",
-    area: 45,
-    length: 56,
-    symbol: { color: "red", type_of_geometry: "Polygon" },
-  },
-  {
-    id: 2,
-    view_name: "Grass Green Short",
-    description: "Grass measurings",
-    area: 45,
-    length: 56,
-    symbol: { color: "red", type_of_geometry: "Polygon" },
-  },
-  {
-    id: 3,
-    view_name: "Grass Green Short",
-    description: "Grass measurings",
-    area: 40,
-    length: 560,
-    symbol: { color: "green", type_of_geometry: "LineString" },
-  },
-  {
-    id: 4,
-    view_name: "Grass Green Short",
-    description: "Grass measurings",
-    area: 450,
-    length: 560,
-    symbol: { color: "blue", type_of_geometry: "Point" },
-  },
-  {
-    id: 5,
-    view_name: "Grass Green Short",
-    description: "Grass measurings",
-    area: 450,
-    length: 560,
-    symbol: { color: "blue", type_of_geometry: "Point" },
-  },
-  {
-    id: 6,
-    view_name: "Grass Green Short",
-    description: "Grass measurings",
-    area: 450,
-    length: 560,
-    symbol: { color: "yellow", type_of_geometry: "Point" },
-  },
-  {
-    id: 7,
-    view_name: "Grass Green Short",
-    description: "Grass measurings",
-    area: 450,
-    length: 560,
-    symbol: "red",
-  },
-];
-
-export default function TableMeasuringsForMap({ width, checkboxSelection }) {
+export default function TableMeasuringsForMap({ width }) {
+  const [height, setHeight] = useState(260);
+  const dispatch = useDispatch();
   const showTableMeasurings = useSelector(
     (state) => state.mapView.showTableMeasurings
   );
 
   const rows = useSelector((state) => state.mapView.tableSummationData);
+  useEffect(() => {
+    if (rows.length > 0) {
+      if (rows.length < 4) {
+        const height = 52 * (rows.length + 1);
+        setHeight(height);
+      } else {
+        setHeight(260);
+      }
+    }
+  }, [rows]);
 
   return (
     <>
       {showTableMeasurings && columns ? (
-        <Box
-          sx={{
-            height: 260,
-            width: width,
-            bottom: 5,
-            right: 5,
-            backgroundColor: "white",
-          }}
-        >
-          <DataGrid
-            hideFooter={true}
-            rows={rows}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
-                },
-              },
+        <>
+          <Box
+            sx={{
+              padding: 1,
+              minHeight: "60px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
-            pageSizeOptions={[5]}
-            checkboxSelection={checkboxSelection}
-            disableRowSelectionOnClick
-          />
-        </Box>
+          >
+            <Typography
+              sx={{ padding: 0.5, color: "#2B8AFF", fontWeight: 600 }}
+            >
+              Table represents area in meter square(m²)
+            </Typography>
+            <Tooltip placement="top-end" title="Close Pie Chart">
+              <HighlightOffIcon
+                onClick={() => {
+                  dispatch(setshowTableMeasurings(false));
+                }}
+                sx={{
+                  float: "right",
+                  color: "#E91E62",
+                  "&:hover": { cursor: "pointer" },
+                  mt: 0.5,
+                }}
+              />
+            </Tooltip>
+          </Box>
+          <Box
+            sx={{
+              height: height,
+              width: width,
+              bottom: 5,
+              right: 5,
+              backgroundColor: "white",
+            }}
+          >
+            <DataGrid
+              hideFooter={true}
+              rows={rows}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[5]}
+              // checkboxSelection={checkboxSelection}
+              disableRowSelectionOnClick
+            />
+          </Box>
+        </>
       ) : null}
     </>
   );
 }
+
+// Path: src/components/TableMeasuringMapControl/TableMesuringsForMap.jsx
+
+TableMeasuringsForMap.propTypes = {
+  width: PropTypes.number,
+};

@@ -292,6 +292,8 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                       marginTop: "10px",
                       padding: 2,
                       marginRight: "10px",
+                      color: "#027FFE",
+                      fontWeight: "bold",
                     }}
                   >
                     Report

@@ -44,16 +44,16 @@
 /* For table css */
 
 .MuiDataGrid-columnHeader {
-  background-color:#D51B60;
+  background-color: #EBEBEB;
 }
 .MuiDataGrid-columnHeaderTitle {
-  color: white;
+  color: #027FFE ;
   /* line-height: 17.07px; */
 }
 
 .MuiDataGrid-columnHeader--sortable{
   color: white;
-  background-color: #D51B60;
+  background-color: white;
 }
 
 

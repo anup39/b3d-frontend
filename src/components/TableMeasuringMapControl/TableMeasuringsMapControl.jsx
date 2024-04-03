@@ -11,7 +11,7 @@ export default class TableMeasuringsForMapControl {
     this._container.className = "maplibregl-ctrl maplibregl-ctrl-group";
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        <TableMeasuringsForMap width={820} />
+        <TableMeasuringsForMap width={550} />
       </Provider>
     );
 
