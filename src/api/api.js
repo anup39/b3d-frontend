@@ -92,6 +92,18 @@ const fetchTifDataByClientId = async (client_id) => {
   return response.data;
 };
 
+const deletePropertyPolygonByPolygonId = async (polygon_id) => {
+  const response = await axios.delete(
+    `${import.meta.env.VITE_API_DASHBOARD_URL}/property-polygon/${polygon_id}/`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+  return response.data;
+};
+
 export {
   fetchProjectsByClientId,
   fetchClientDetailsByClientId,
@@ -100,4 +112,5 @@ export {
   fetchMeasuringCategories,
   fetchBoundingBoxByTifId,
   fetchTifDataByClientId,
+  deletePropertyPolygonByPolygonId,
 };

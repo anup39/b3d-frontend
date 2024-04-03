@@ -18,6 +18,7 @@ import {
   setshowPiechart,
   setTableSummationData,
   setCurrentMapExtent,
+  setCurrentPropertyPolygonGeojson,
 } from "../../reducers/MapView";
 import {
   setId,
@@ -32,6 +33,15 @@ import RectangleIcon from "@mui/icons-material/Rectangle";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import {
+  deletePropertyPolygonByPolygonId,
+  fetchProjectPolygonGeojsonByClientIdAndProjectId,
+} from "../../api/api";
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../../reducers/DisplaySettings";
 
 export default function LayersAndWidgetControl({ map, popUpRef }) {
   const dispatch = useDispatch();
@@ -186,7 +196,34 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   };
 
   const handleDeletePolygon = () => {
+    const property_id =
+      currentPropertyPolygonGeojson?.features[0]?.properties.id;
     console.log("delete polygon");
+    deletePropertyPolygonByPolygonId(property_id)
+      .then((res) => {
+        console.log(res, "res");
+        dispatch(settoastType("success"));
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Property Polygon Deleted Successfully"));
+        map
+          .getSource("property_polygon")
+          .setData(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/project-polygon/?client=${client_id}&project=${project_id}`
+          );
+        fetchProjectPolygonGeojsonByClientIdAndProjectId({
+          client_id,
+          project_id,
+        }).then((res) => {
+          dispatch(setCurrentPropertyPolygonGeojson(res));
+        });
+      })
+      .catch(() => {
+        dispatch(settoastType("error"));
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Error Deleting Property Polygon"));
+      });
   };
   return (
     <>
