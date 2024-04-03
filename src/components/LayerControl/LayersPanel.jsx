@@ -270,9 +270,11 @@ export default function LayersPanel({ map, popUpRef }) {
   return (
     <div
       style={{
-        maxHeight: "80vh",
-        minWidth: "19vw",
+        maxHeight: "60vh",
+        minWidth: "27vw",
         margin: "10px",
+        overflowY: "scroll",
+        backgroundColor: "white",
       }}
     >
       {!loading ? (
@@ -290,8 +292,8 @@ export default function LayersPanel({ map, popUpRef }) {
                   sx={{
                     transform: sd.expand ? "rotate(360deg)" : "rotate(-90deg)",
                     fontSize: "20px",
-                    backgroundColor: "#FFFFFF",
-                    color: "black",
+                    backgroundColor: "white",
+                    color: "#D51B60",
                     marginRight: "4px",
                     padding: "2px",
                     "&:hover": {
@@ -338,12 +340,12 @@ export default function LayersPanel({ map, popUpRef }) {
                         ? "rotate(360deg)"
                         : "rotate(-90deg)",
                       fontSize: "20px",
-                      backgroundColor: "#FFFFFF",
-                      color: "black",
+                      backgroundColor: "white",
+                      color: "#D51B60",
                       marginRight: "4px",
                       padding: "2px",
                       "&:hover": {
-                        // backgroundColor: "#9C27B0",
+                        backgroundColor: "#F5F5F5",
                         cursor: "pointer",
                       },
                     }}
@@ -386,7 +388,7 @@ export default function LayersPanel({ map, popUpRef }) {
                       sx={{
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "space-between",
+                        justifyContent: "space-evenly",
                       }}
                     >
                       <FormControlLabel

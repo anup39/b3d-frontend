@@ -229,7 +229,11 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
       {showMeasuringsPanel ? (
         <div
           className="maplibregl-ctrl-layer-control"
-          style={{ display: "flex", flexDirection: "column" }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "white",
+          }}
         >
           <Box
             sx={{
