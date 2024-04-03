@@ -417,7 +417,7 @@ export default function LayersPanel({ map, popUpRef }) {
                       {/* <ModeIcon /> */}
                       {project_id !== "All" ? (
                         cat.type_of_geometry === "LineString" ? (
-                          <Tooltip title="Draw LineString">
+                          <Tooltip title={"Draw" + " " + cat.name}>
                             <ShowChartIcon
                               onClick={(event) => handleDraw(event, cat)}
                               sx={{
@@ -429,7 +429,7 @@ export default function LayersPanel({ map, popUpRef }) {
                             />
                           </Tooltip>
                         ) : cat.type_of_geometry === "Polygon" ? (
-                          <Tooltip title="Draw Polygon">
+                          <Tooltip title={"Draw" + " " + cat.name}>
                             <PentagonIcon
                               size="small"
                               onClick={(event) => handleDraw(event, cat)}
@@ -442,7 +442,7 @@ export default function LayersPanel({ map, popUpRef }) {
                             />
                           </Tooltip>
                         ) : (
-                          <Tooltip title="Draw Point">
+                          <Tooltip title={"Draw" + " " + cat.name}>
                             <CircleIcon
                               onClick={(event) => handleDraw(event, cat)}
                               sx={{
