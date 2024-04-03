@@ -157,6 +157,21 @@ const fetchGeojsonByCategoryId = async ({
   }
 };
 
+const fetchMeasuringTableSummation = async ({ client_id, project_id }) => {
+  const response = await axios.get(
+    `${
+      import.meta.env.VITE_API_DASHBOARD_URL
+    }/measuring-table-summation/?client=${client_id}&project=${project_id}`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export {
   fetchProjectsByClientId,
   fetchClientDetailsByClientId,
@@ -167,4 +182,5 @@ export {
   fetchTifDataByClientId,
   deletePropertyPolygonByPolygonId,
   fetchGeojsonByCategoryId,
+  fetchMeasuringTableSummation,
 };
