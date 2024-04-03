@@ -23,6 +23,7 @@
     "@mui/icons-material": "^5.14.0",
     "@mui/lab": "^5.0.0-alpha.161",
     "@mui/material": "^5.15.5",
+    "@mui/x-charts": "^7.1.0",
     "@mui/x-data-grid": "^6.18.6",
     "@mui/x-date-pickers": "^6.19.0",
     "@react-three/drei": "^9.92.6",
