@@ -268,8 +268,8 @@ export default function LayersPanel({ map, popUpRef }) {
     <div
       style={{
         maxHeight: "50vh",
-        minWidth: "25vw",
-        maxWidth: "35vw",
+        minWidth: "400px",
+        maxWidth: "650px",
         margin: "10px",
         overflowY: "scroll",
         backgroundColor: "white",
