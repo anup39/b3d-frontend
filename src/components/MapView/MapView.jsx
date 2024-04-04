@@ -25,6 +25,7 @@ import { useRef } from "react";
 import { setcurrentTif } from "../../reducers/MapView";
 import { settifs } from "../../reducers/Tifs";
 import removeCheckedCategoriesLayersFromMap from "../../maputils/removeCheckedCategoriesLayers";
+import ReportActualPage from "./ReportActualPage";
 
 import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import { ListItem, ListItemButton, ListItemText } from "@mui/material";
@@ -414,6 +415,8 @@ export default function MapView() {
           </Box>
         </>
       ) : null}
+
+      {/* {showReport ? <ReportActualPage /> : null} */}
 
       {showReport ? <ReportPrint /> : null}
     </Box>

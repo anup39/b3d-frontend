@@ -185,19 +185,7 @@ export default function ReportPrint() {
     dispatch(setshowReport(false));
   };
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        padding: 10,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        zIndex: 9999,
-        overflow: "auto",
-      }}
-    >
+    <div className="report_print">
       <Grid
         container
         justifyContent="center"
@@ -246,7 +234,7 @@ export default function ReportPrint() {
                 </Box> */}
               </Box>
 
-              <div className="print-only">
+              <div>
                 <Box
                   sx={{
                     display: "flex",
@@ -284,18 +272,9 @@ export default function ReportPrint() {
                     </Typography>
                   </Box>
                 </Box>
-                <Box>
-                  <div
-                    // style={{
-                    //   borderRadius: "8px",
-                    //   width: "500px",
-                    //   height: "400px",
-                    // }}
-                    ref={mapContainerReport}
-                    // id="page"
-                    className="page"
-                  ></div>
-                </Box>
+                {/* <Box> */}
+                <div ref={mapContainerReport} className="page_map"></div>
+                {/* </Box> */}
 
                 <Box sx={{ ml: "0%" }}>
                   <PieChartComp showCloseButton={false} />

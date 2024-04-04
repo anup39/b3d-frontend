@@ -65,22 +65,3 @@
   background-color: #e9ffe7 !important;
 } */
 
-.page {
-  border-radius: 8px;
-  width: 500px;
-  height: 400px;
-}
-
-@page {
-  size: A4;
-  margin: 0;
-
-  
-}
-
-@media print {
-  .page {
-    width: 700mm !important;
-    height: 297mm !important;
-  }
-}

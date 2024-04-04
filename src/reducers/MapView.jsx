@@ -62,6 +62,9 @@ export const MapView = createSlice({
     setshowReport: (state, action) => {
       state.showReport = action.payload;
     },
+    setshowActualReportPage: (state, action) => {
+      state.showActualReportPage = action.payload;
+    },
     setshowMap: (state, action) => {
       state.showMap = action.payload;
     },
