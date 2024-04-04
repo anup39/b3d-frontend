@@ -46,11 +46,15 @@ const columns = [
     type: "number",
     width: 150,
     editable: false,
-    headerName: "Area",
+    headerName: "Area (m²)",
   },
 ];
 
-export default function TableMeasuringsForMap({ width }) {
+export default function TableMeasuringsForMap({
+  width,
+  showCloseButton,
+  marginLeftOfTitle,
+}) {
   const [height, setHeight] = useState(260);
   const dispatch = useDispatch();
   const showTableMeasurings = useSelector(
@@ -83,23 +87,31 @@ export default function TableMeasuringsForMap({ width }) {
             }}
           >
             <Typography
-              sx={{ padding: 0.5, color: "#2B8AFF", fontWeight: 600 }}
+              sx={{
+                padding: 0,
+                color: "#2B8AFF",
+                fontWeight: 600,
+                ml: `${marginLeftOfTitle}`,
+              }}
             >
               Table represents area in meter square(m²)
             </Typography>
-            <Tooltip placement="top-end" title="Close Pie Chart">
-              <HighlightOffIcon
-                onClick={() => {
-                  dispatch(setshowTableMeasurings(false));
-                }}
-                sx={{
-                  float: "right",
-                  color: "#E91E62",
-                  "&:hover": { cursor: "pointer" },
-                  mt: 0.5,
-                }}
-              />
-            </Tooltip>
+
+            {showCloseButton ? (
+              <Tooltip placement="top-end" title="Close Pie Chart">
+                <HighlightOffIcon
+                  onClick={() => {
+                    dispatch(setshowTableMeasurings(false));
+                  }}
+                  sx={{
+                    float: "right",
+                    color: "#E91E62",
+                    "&:hover": { cursor: "pointer" },
+                    mt: 0.5,
+                  }}
+                />
+              </Tooltip>
+            ) : null}
           </Box>
           <Box
             sx={{
@@ -136,4 +148,6 @@ export default function TableMeasuringsForMap({ width }) {
 
 TableMeasuringsForMap.propTypes = {
   width: PropTypes.number,
+  showCloseButton: PropTypes.bool,
+  marginLeftOfTitle: PropTypes.number,
 };

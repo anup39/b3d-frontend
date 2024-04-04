@@ -59,218 +59,260 @@ export default function ReportPrint() {
     };
   }, []);
 
-  useEffect(() => {
-    if (map && currentMapExtent) {
-      console.log(currentMapExtent);
-      map.on("load", () => {
-        map.fitBounds(currentMapExtent);
-      });
+  // useEffect(() => {
+  //   if (map && currentMapExtent) {
+  //     console.log(currentMapExtent);
+  //     map.on("load", () => {
+  //       map.fitBounds(currentMapExtent);
+  //     });
 
-      const measuringcategories = current_measuring_categories;
-      measuringcategories?.forEach((measuringcategory) => {
-        measuringcategory.sub_category.forEach((sub_category) => {
-          sub_category.category.forEach((cat) => {
-            if (cat.checked) {
-              if (cat.type_of_geometry) {
-                const sourceId =
-                  String(currentClient) + cat.view_name + "source";
-                const layerId = String(currentClient) + cat.view_name + "layer";
-                axios
-                  .get(
-                    `${
-                      import.meta.env.VITE_API_DASHBOARD_URL
-                    }/category-style/?category=${cat.id}`
-                  )
-                  .then((response) => {
-                    const categoryStyle = response.data[0];
-                    let url = null;
-                    let fillType = null;
-                    if (cat.type_of_geometry === "Point") {
-                      url = `${
-                        import.meta.env.VITE_API_DASHBOARD_URL
-                      }/category-point-geojson/?project=${currentProject}&category=${
-                        cat.id
-                      }`;
-                      fillType = "circle";
-                    }
-                    if (cat.type_of_geometry === "LineString") {
-                      url = `${
-                        import.meta.env.VITE_API_DASHBOARD_URL
-                      }/category-linestring-geojson/?project=${currentProject}&category=${
-                        cat.id
-                      }`;
-                      fillType = "line";
-                    }
-                    if (cat.type_of_geometry === "Polygon") {
-                      url = `${
-                        import.meta.env.VITE_API_DASHBOARD_URL
-                      }/category-polygon-geojson/?project=${currentProject}&category=${
-                        cat.id
-                      }`;
-                      fillType = "fill";
-                    }
-                    AddLayerAndSourceToMap({
-                      map: map,
-                      layerId: layerId,
-                      sourceId: sourceId,
-                      url: url,
-                      source_layer: sourceId,
-                      popUpRef: null,
-                      showPopup: false,
-                      style: {
-                        fill_color: categoryStyle.fill,
-                        fill_opacity: categoryStyle.fill_opacity,
-                        stroke_color: categoryStyle.stroke,
-                      },
-                      zoomToLayer: false,
-                      extent: [],
-                      geomType: "geojson",
-                      fillType: fillType,
-                      trace: false,
-                      component: "map",
-                    });
-                  });
-              }
-            }
-          });
-        });
-      });
+  //     const measuringcategories = current_measuring_categories;
+  //     measuringcategories?.forEach((measuringcategory) => {
+  //       measuringcategory.sub_category.forEach((sub_category) => {
+  //         sub_category.category.forEach((cat) => {
+  //           if (cat.checked) {
+  //             if (cat.type_of_geometry) {
+  //               const sourceId =
+  //                 String(currentClient) + cat.view_name + "source";
+  //               const layerId = String(currentClient) + cat.view_name + "layer";
+  //               axios
+  //                 .get(
+  //                   `${
+  //                     import.meta.env.VITE_API_DASHBOARD_URL
+  //                   }/category-style/?category=${cat.id}`
+  //                 )
+  //                 .then((response) => {
+  //                   const categoryStyle = response.data[0];
+  //                   let url = null;
+  //                   let fillType = null;
+  //                   if (cat.type_of_geometry === "Point") {
+  //                     url = `${
+  //                       import.meta.env.VITE_API_DASHBOARD_URL
+  //                     }/category-point-geojson/?project=${currentProject}&category=${
+  //                       cat.id
+  //                     }`;
+  //                     fillType = "circle";
+  //                   }
+  //                   if (cat.type_of_geometry === "LineString") {
+  //                     url = `${
+  //                       import.meta.env.VITE_API_DASHBOARD_URL
+  //                     }/category-linestring-geojson/?project=${currentProject}&category=${
+  //                       cat.id
+  //                     }`;
+  //                     fillType = "line";
+  //                   }
+  //                   if (cat.type_of_geometry === "Polygon") {
+  //                     url = `${
+  //                       import.meta.env.VITE_API_DASHBOARD_URL
+  //                     }/category-polygon-geojson/?project=${currentProject}&category=${
+  //                       cat.id
+  //                     }`;
+  //                     fillType = "fill";
+  //                   }
+  //                   AddLayerAndSourceToMap({
+  //                     map: map,
+  //                     layerId: layerId,
+  //                     sourceId: sourceId,
+  //                     url: url,
+  //                     source_layer: sourceId,
+  //                     popUpRef: null,
+  //                     showPopup: false,
+  //                     style: {
+  //                       fill_color: categoryStyle.fill,
+  //                       fill_opacity: categoryStyle.fill_opacity,
+  //                       stroke_color: categoryStyle.stroke,
+  //                     },
+  //                     zoomToLayer: false,
+  //                     extent: [],
+  //                     geomType: "geojson",
+  //                     fillType: fillType,
+  //                     trace: false,
+  //                     component: "map",
+  //                   });
+  //                 });
+  //             }
+  //           }
+  //         });
+  //       });
+  //     });
 
-      if (current_tif) {
-        console.log("In reprot");
-        const id = current_tif.id;
-        axios
-          .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
-          .then((res) => {
-            if (res.data.bounds) {
-              map.addSource(`${id}-source`, {
-                type: "raster",
-                tiles: [
-                  `${
-                    import.meta.env.VITE_API_RASTER_URL
-                  }/tile-async/${id}/{z}/{x}/{y}.png`,
-                ],
-                tileSize: 512,
-              });
+  //     if (current_tif) {
+  //       console.log("In reprot");
+  //       const id = current_tif.id;
+  //       axios
+  //         .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
+  //         .then((res) => {
+  //           if (res.data.bounds) {
+  //             map.addSource(`${id}-source`, {
+  //               type: "raster",
+  //               tiles: [
+  //                 `${
+  //                   import.meta.env.VITE_API_RASTER_URL
+  //                 }/tile-async/${id}/{z}/{x}/{y}.png`,
+  //               ],
+  //               tileSize: 512,
+  //             });
 
-              map.addLayer({
-                id: `${id}-layer`,
-                type: "raster",
-                source: `${id}-source`,
-                minzoom: 0,
-                maxzoom: 24,
-              });
-            }
-          })
-          .catch(() => {});
-      }
-    }
-  }, [
-    currentMapExtent,
-    map,
-    currentClient,
-    currentProject,
-    current_measuring_categories,
-    current_tif,
-  ]);
+  //             map.addLayer({
+  //               id: `${id}-layer`,
+  //               type: "raster",
+  //               source: `${id}-source`,
+  //               minzoom: 0,
+  //               maxzoom: 24,
+  //             });
+  //           }
+  //         })
+  //         .catch(() => {});
+  //     }
+  //   }
+  // }, [
+  //   currentMapExtent,
+  //   map,
+  //   currentClient,
+  //   currentProject,
+  //   current_measuring_categories,
+  //   current_tif,
+  // ]);
 
   const handlePrint = () => {
     window.print();
   };
 
   const handleMap = () => {
-    dispatch(setshowPiechart(false));
-    dispatch(setshowTableMeasurings(false));
-    dispatch(setshowMap(true));
+    // dispatch(setshowPiechart(false));
+    // dispatch(setshowTableMeasurings(false));
+    // dispatch(setshowMap(true));
     dispatch(setshowReport(false));
   };
   return (
-    <>
-      {/* <Appbar /> */}
-      <Grid item>
-        <Box sx={{ ml: "10%", mt: 3 }}>
-          <Button onClick={handleMap} variant="contained" color="primary">
-            Map
-          </Button>
-        </Box>
-      </Grid>
-      <Grid item>
-        <Box sx={{ ml: "30%", mt: 3 }}>
-          <Button onClick={handlePrint} variant="contained" color="primary">
-            Print
-          </Button>
-        </Box>
-      </Grid>
-
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        padding: 10,
+        width: "100%",
+        height: "100%",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        zIndex: 9999,
+        overflow: "auto",
+      }}
+    >
       <Grid
         container
         justifyContent="center"
         // alignItems="center"
-        style={{ minHeight: "100vh" }}
+        style={{
+          minHeight: "100vh",
+          position: "absolute",
+          // backgroundColor: "transparent",
+          // backgroundColor: "rgba(255, 255, 255, 1)",
+        }}
       >
         <Grid item>
           <Box>
-            <div className="print-only">
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  mt: 5,
-                  justifyContent: "space-between",
-                }}
-              >
-                <Box sx={{ mb: 2 }}>
-                  <Typography sx={{ color: "#666666" }}>
-                    Measurings for Map nov
-                  </Typography>
-                  <Typography sx={{ color: "#666666" }}>
-                    Date : 2023-01-45
-                  </Typography>
-                </Box>
-                <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-                  <AdbIcon sx={{ mr: 1 }} />
-                  <Typography
-                    variant="h6"
-                    noWrap
-                    component="a"
-                    href="/"
-                    sx={{
-                      mr: 2,
-                      display: { xs: "none", md: "flex" },
-                      fontFamily: "monospace",
-                      fontWeight: 700,
-                      letterSpacing: ".3rem",
-                      color: "#027FFE",
-                      textDecoration: "none",
-                    }}
+            <div
+              style={{
+                backgroundColor: "white",
+                padding: "20px",
+                borderRadius: "10px",
+                // width: "900px",
+                // height: "800px",
+              }}
+            >
+              <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                <Box>
+                  <Button
+                    onClick={handlePrint}
+                    variant="contained"
+                    sx={{ backgroundColor: "#E91E62", color: "white" }}
                   >
-                    B3D
-                  </Typography>
+                    Print
+                  </Button>
                 </Box>
-              </Box>
-              <Box>
-                <div
-                  style={{
-                    borderRadius: "8px",
-                    width: "820px",
-                    height: "834px",
-                  }}
-                  ref={mapContainerReport}
-                  id="map"
-                  className="map"
-                ></div>
+                <Box>
+                  <Button
+                    onClick={handleMap}
+                    variant="contained"
+                    sx={{ backgroundColor: "#E91E62", color: "white" }}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+                {/* <Box>
+                  <Typography>
+                    Scroll down to see the chart and table
+                  </Typography>
+                </Box> */}
               </Box>
 
-              <Box sx={{ mt: 5 }}>
-                <TableMeasuringsForMap width={820} />
-              </Box>
-              <Box sx={{ ml: "40%" }}>
-                <PieChartComp />
-              </Box>
+              <div className="print-only">
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mt: 5,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box sx={{ mb: 2 }}>
+                    <Typography sx={{ color: "#666666" }}>
+                      Measurings for Map nov
+                    </Typography>
+                    <Typography sx={{ color: "#666666" }}>
+                      Date : 2023-01-45
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+                    <AdbIcon sx={{ mr: 1 }} />
+                    <Typography
+                      variant="h6"
+                      noWrap
+                      component="a"
+                      href="/"
+                      sx={{
+                        mr: 2,
+                        display: { xs: "none", md: "flex" },
+                        fontFamily: "monospace",
+                        fontWeight: 700,
+                        letterSpacing: ".3rem",
+                        color: "#027FFE",
+                        textDecoration: "none",
+                      }}
+                    >
+                      B3D
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box>
+                  <div
+                    // style={{
+                    //   borderRadius: "8px",
+                    //   width: "500px",
+                    //   height: "400px",
+                    // }}
+                    ref={mapContainerReport}
+                    // id="page"
+                    className="page"
+                  ></div>
+                </Box>
+
+                <Box sx={{ ml: "0%" }}>
+                  <PieChartComp showCloseButton={false} />
+                </Box>
+                <Box sx={{ mt: 5 }}>
+                  <TableMeasuringsForMap
+                    width={500}
+                    showCloseButton={false}
+                    marginLeftOfTitle={"0%"}
+                    // className="tablemeasurings"
+                  />
+                </Box>
+              </div>
             </div>
           </Box>
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 }

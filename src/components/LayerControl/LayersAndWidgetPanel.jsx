@@ -77,24 +77,12 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
 
   const handleShowReport = () => {
     if (client_id && project_id) {
-      axios
-        .get(
-          `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/measuring-table-summation/?client=${client_id}&project=${project_id}`
-        )
-        .then((res) => {
-          if (res.data.rows.length > 0) {
-            dispatch(setTableSummationData(res.data.rows));
-          } else {
-            dispatch(setTableSummationData([]));
-          }
-        });
+      fetchTableSummationData(client_id, project_id, dispatch);
     }
     dispatch(setshowTableMeasurings(!showTableMeasurings));
     dispatch(setshowPiechart(!showPiechart));
     dispatch(setshowReport(true));
-    dispatch(setshowMap(false));
+    // dispatch(setshowMap(false));
 
     const map = window.map_global;
     const bounds = map.getBounds();

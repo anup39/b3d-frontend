@@ -10,7 +10,7 @@ export default class PieChartControl {
     this._container.className = "maplibregl-ctrl maplibregl-ctrl-group";
     ReactDOM.createRoot(this._container).render(
       <Provider store={store}>
-        <PieChartComp />
+        <PieChartComp showCloseButton={true} />
       </Provider>
     );
 
