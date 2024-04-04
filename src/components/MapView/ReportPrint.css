@@ -8,6 +8,12 @@
   background-color:white;
   z-index: 9999;
   overflow: auto;
+  border: 'red';
+}
+
+.main_section{
+  display: flex;
+
 }
 
 .page_map{
@@ -17,6 +23,11 @@
   /* overflow: hidden; */
   padding: 0px;
 }
+
+.report_buttons{
+ 
+  margin-right: 20px;
+ }
 
 @media print {
  .report_print {
@@ -34,7 +45,7 @@
       
  .page_map{
   display: block;
-  width: 500px;
+  width: 600px;
   height: 300px;
  }
 

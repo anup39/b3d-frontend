@@ -186,30 +186,13 @@ export default function ReportPrint() {
     dispatch(setshowReport(false));
     dispatch(setshowSidebarContent(true));
   };
+
   return (
     <div className="report_print">
-      <Grid
-        container
-        justifyContent="center"
-        // alignItems="center"
-        style={{
-          minHeight: "100vh",
-          position: "absolute",
-          // backgroundColor: "transparent",
-          // backgroundColor: "rgba(255, 255, 255, 1)",
-        }}
-      >
+      <Grid>
         <Grid item>
           <Box>
-            <div
-              style={{
-                backgroundColor: "white",
-                padding: "20px",
-                borderRadius: "10px",
-                // width: "900px",
-                // height: "800px",
-              }}
-            >
+            <div className="main_section">
               <div className="report_buttons">
                 <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
                   <Box>
@@ -230,23 +213,11 @@ export default function ReportPrint() {
                       Cancel
                     </Button>
                   </Box>
-                  {/* <Box>
-                  <Typography>
-                    Scroll down to see the chart and table
-                  </Typography>
-                </Box> */}
                 </Box>
               </div>
 
               <div>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    mt: 5,
-                    justifyContent: "space-between",
-                  }}
-                >
+                <div style={{ display: "flex" }}>
                   <Box sx={{ mb: 2 }}>
                     <Typography sx={{ color: "#666666" }}>
                       Measurings for Map nov
@@ -255,27 +226,7 @@ export default function ReportPrint() {
                       Date : 2023-01-45
                     </Typography>
                   </Box>
-                  <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-                    <AdbIcon sx={{ mr: 1 }} />
-                    <Typography
-                      variant="h6"
-                      noWrap
-                      component="a"
-                      href="/"
-                      sx={{
-                        mr: 2,
-                        display: { xs: "none", md: "flex" },
-                        fontFamily: "monospace",
-                        fontWeight: 700,
-                        letterSpacing: ".3rem",
-                        color: "#027FFE",
-                        textDecoration: "none",
-                      }}
-                    >
-                      B3D
-                    </Typography>
-                  </Box>
-                </Box>
+                </div>
                 {/* <Box> */}
                 <div ref={mapContainerReport} className="page_map"></div>
                 {/* </Box> */}
@@ -285,7 +236,7 @@ export default function ReportPrint() {
                 </Box>
                 <Box sx={{ mt: 5 }}>
                   <TableMeasuringsForMap
-                    width={500}
+                    width={600}
                     showCloseButton={false}
                     marginLeftOfTitle={"0%"}
                     // className="tablemeasurings"
