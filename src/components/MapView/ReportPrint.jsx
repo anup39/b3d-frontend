@@ -12,6 +12,7 @@ import {
   setshowMap,
   setshowPiechart,
   setshowTableMeasurings,
+  setshowSidebarContent,
 } from "../../reducers/MapView";
 import PieChartComp from "../PieChartControl/PieChartComp";
 import { useSelector } from "react-redux";
@@ -183,6 +184,7 @@ export default function ReportPrint() {
     // dispatch(setshowTableMeasurings(false));
     // dispatch(setshowMap(true));
     dispatch(setshowReport(false));
+    dispatch(setshowSidebarContent(true));
   };
   return (
     <div className="report_print">
@@ -208,31 +210,33 @@ export default function ReportPrint() {
                 // height: "800px",
               }}
             >
-              <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                <Box>
-                  <Button
-                    onClick={handlePrint}
-                    variant="contained"
-                    sx={{ backgroundColor: "#E91E62", color: "white" }}
-                  >
-                    Print
-                  </Button>
-                </Box>
-                <Box>
-                  <Button
-                    onClick={handleMap}
-                    variant="contained"
-                    sx={{ backgroundColor: "#E91E62", color: "white" }}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-                {/* <Box>
+              <div className="report_buttons">
+                <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                  <Box>
+                    <Button
+                      onClick={handlePrint}
+                      variant="contained"
+                      sx={{ backgroundColor: "#E91E62", color: "white" }}
+                    >
+                      Print
+                    </Button>
+                  </Box>
+                  <Box>
+                    <Button
+                      onClick={handleMap}
+                      variant="contained"
+                      sx={{ backgroundColor: "#E91E62", color: "white" }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                  {/* <Box>
                   <Typography>
                     Scroll down to see the chart and table
                   </Typography>
                 </Box> */}
-              </Box>
+                </Box>
+              </div>
 
               <div>
                 <Box
