@@ -19,6 +19,7 @@ import {
   setTableSummationData,
   setCurrentMapExtent,
   setCurrentPropertyPolygonGeojson,
+  setOpenSidebar,
 } from "../../reducers/MapView";
 import {
   setId,
@@ -57,6 +58,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     showShapefileUpload,
     showTableMeasurings,
     showPiechart,
+    showReport,
   } = useSelector((state) => state.mapView);
 
   const currentPropertyPolygonGeojson = useSelector(
@@ -79,9 +81,9 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     if (client_id && project_id) {
       fetchTableSummationData(client_id, project_id, dispatch);
     }
-    dispatch(setshowTableMeasurings(!showTableMeasurings));
-    dispatch(setshowPiechart(!showPiechart));
-    dispatch(setshowReport(true));
+    dispatch(setshowTableMeasurings(true));
+    dispatch(setshowPiechart(true));
+    dispatch(setshowReport(!showReport));
     // dispatch(setshowMap(false));
 
     const map = window.map_global;

@@ -1,14 +1,34 @@
+.report_print {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  overflow: auto;
+}
+
+.page_map{
+  border-radius: 8px;
+  width: 500px;
+  height: 400px;
+  /* overflow: hidden; */
+  padding: 0px;
+
+
+}
+
 @media print {
-    body * {
-      visibility: hidden;
-    }
-    .print-only,
-    .print-only * {
-      visibility: visible;
-    }
-    .print-only {
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-  }
+ .report_print {
+  display: block;
+  position:static;
+ }
+      
+ .page_map{
+  display: block;
+  width: 500px;
+  height: 300px;
+ }
+}
