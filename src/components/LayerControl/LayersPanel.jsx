@@ -26,6 +26,8 @@ import {
 import all_categories from "./measurings_categories_sample";
 import handleCategoriesChange from "../../maputils/handleCategoriesCheckedOrUnchecked";
 import setGeometryOpacity from "../../maputils/handleGeometryOpacity";
+import { fetchGeojsonByCategoryId } from "../../api/api";
+import * as turf from "@turf/turf";
 
 export default function LayersPanel({ map, popUpRef }) {
   const dispatch = useDispatch();
@@ -80,7 +82,6 @@ export default function LayersPanel({ map, popUpRef }) {
     updatedCategories[sdIndex].sub_category[subIndex].category.forEach(
       (cat) => {
         cat.checked = event.target.checked;
-        console.log(cat, "category clicked in sub");
         if (cat.type_of_geometry) {
           cat.checked = event.target.checked;
           handleCategoriesChange(
@@ -214,7 +215,23 @@ export default function LayersPanel({ map, popUpRef }) {
   };
 
   const handleZoomToLayer = (event, cat) => {
-    map.fitBounds(cat.extent.extent);
+    fetchGeojsonByCategoryId({
+      type_of_geometry: cat.type_of_geometry,
+      client_id: client_id,
+      project_id: project_id,
+      category_id: cat.id,
+    }).then((data) => {
+      const bbox = turf.bbox(data);
+      map.fitBounds(
+        [
+          [bbox[0], bbox[1]],
+          [bbox[2], bbox[3]],
+        ],
+        {
+          padding: 20,
+        }
+      );
+    });
   };
 
   const handleDraw = (event, cat) => {
@@ -250,9 +267,12 @@ export default function LayersPanel({ map, popUpRef }) {
   return (
     <div
       style={{
-        maxHeight: "80vh",
-        minWidth: "19vw",
+        maxHeight: "50vh",
+        minWidth: "400px",
+        maxWidth: "650px",
         margin: "10px",
+        overflowY: "scroll",
+        backgroundColor: "white",
       }}
     >
       {!loading ? (
@@ -270,8 +290,8 @@ export default function LayersPanel({ map, popUpRef }) {
                   sx={{
                     transform: sd.expand ? "rotate(360deg)" : "rotate(-90deg)",
                     fontSize: "20px",
-                    backgroundColor: "#FFFFFF",
-                    color: "black",
+                    backgroundColor: "white",
+                    color: "#D51B60",
                     marginRight: "4px",
                     padding: "2px",
                     "&:hover": {
@@ -318,12 +338,12 @@ export default function LayersPanel({ map, popUpRef }) {
                         ? "rotate(360deg)"
                         : "rotate(-90deg)",
                       fontSize: "20px",
-                      backgroundColor: "#FFFFFF",
-                      color: "black",
+                      backgroundColor: "white",
+                      color: "#D51B60",
                       marginRight: "4px",
                       padding: "2px",
                       "&:hover": {
-                        // backgroundColor: "#9C27B0",
+                        backgroundColor: "#F5F5F5",
                         cursor: "pointer",
                       },
                     }}
@@ -366,7 +386,7 @@ export default function LayersPanel({ map, popUpRef }) {
                       sx={{
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "space-between",
+                        justifyContent: "space-evenly",
                       }}
                     >
                       <FormControlLabel
@@ -417,7 +437,7 @@ export default function LayersPanel({ map, popUpRef }) {
                       {/* <ModeIcon /> */}
                       {project_id !== "All" ? (
                         cat.type_of_geometry === "LineString" ? (
-                          <Tooltip title="Draw LineString">
+                          <Tooltip title={"Draw" + " " + cat.name}>
                             <ShowChartIcon
                               onClick={(event) => handleDraw(event, cat)}
                               sx={{
@@ -429,7 +449,7 @@ export default function LayersPanel({ map, popUpRef }) {
                             />
                           </Tooltip>
                         ) : cat.type_of_geometry === "Polygon" ? (
-                          <Tooltip title="Draw Polygon">
+                          <Tooltip title={"Draw" + " " + cat.name}>
                             <PentagonIcon
                               size="small"
                               onClick={(event) => handleDraw(event, cat)}
@@ -442,7 +462,7 @@ export default function LayersPanel({ map, popUpRef }) {
                             />
                           </Tooltip>
                         ) : (
-                          <Tooltip title="Draw Point">
+                          <Tooltip title={"Draw" + " " + cat.name}>
                             <CircleIcon
                               onClick={(event) => handleDraw(event, cat)}
                               sx={{

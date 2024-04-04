@@ -100,6 +100,12 @@ export default function Save({ popUpRef }) {
                       String(currentClient) + String(currentProject) + "layer";
                     const sourceId =
                       String(currentClient) + String(currentProject) + "source";
+
+                    // If there is already a layer remove it
+                    if (map.getLayer(layerId) && map.getSource(sourceId)) {
+                      map.removeLayer(layerId);
+                      map.removeSource(sourceId);
+                    }
                     AddLayerAndSourceToMap({
                       map,
                       layerId: layerId,

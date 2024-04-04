@@ -44,16 +44,16 @@
 /* For table css */
 
 .MuiDataGrid-columnHeader {
-  background-color:#D51B60;
+  background-color: #EBEBEB;
 }
 .MuiDataGrid-columnHeaderTitle {
-  color: white;
+  color: #027FFE ;
   /* line-height: 17.07px; */
 }
 
 .MuiDataGrid-columnHeader--sortable{
   color: white;
-  background-color: #D51B60;
+  background-color: white;
 }
 
 
@@ -64,3 +64,23 @@
 /* .MuiDataGrid-root .MuiDataGrid-row.Mui-selected {
   background-color: #e9ffe7 !important;
 } */
+
+.page {
+  border-radius: 8px;
+  width: 500px;
+  height: 400px;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+
+  
+}
+
+@media print {
+  .page {
+    width: 700mm !important;
+    height: 297mm !important;
+  }
+}

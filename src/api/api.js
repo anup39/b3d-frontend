@@ -92,6 +92,86 @@ const fetchTifDataByClientId = async (client_id) => {
   return response.data;
 };
 
+const deletePropertyPolygonByPolygonId = async (polygon_id) => {
+  const response = await axios.delete(
+    `${import.meta.env.VITE_API_DASHBOARD_URL}/project-polygon/${polygon_id}/`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+  return response.data;
+};
+
+const fetchGeojsonByCategoryId = async ({
+  type_of_geometry,
+  client_id,
+  project_id,
+  category_id,
+}) => {
+  if (type_of_geometry === "Polygon") {
+    const response = await axios.get(
+      `${
+        import.meta.env.VITE_API_DASHBOARD_URL
+      }/category-polygon-geojson/?client=${client_id}&project=${
+        project_id === "All" ? "" : project_id
+      }&category=${category_id}`,
+      {
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"),
+        },
+      }
+    );
+    return response.data;
+  }
+  if (type_of_geometry === "LineString") {
+    const response = await axios.get(
+      `${
+        import.meta.env.VITE_API_DASHBOARD_URL
+      }/category-linestring-geojson/?client=${client_id}&project=${
+        project_id === "All" ? "" : project_id
+      }&category=${category_id}`,
+      {
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"),
+        },
+      }
+    );
+    return response.data;
+  }
+  if (type_of_geometry === "Point") {
+    const response = await axios.get(
+      `${
+        import.meta.env.VITE_API_DASHBOARD_URL
+      }/category-point-geojson/?client=${client_id}&project=${
+        project_id === "All" ? "" : project_id
+      }&category=${category_id}`,
+      {
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"),
+        },
+      }
+    );
+    return response.data;
+  }
+};
+
+const fetchMeasuringTableSummation = async ({ client_id, project_id }) => {
+  const response = await axios.get(
+    `${
+      import.meta.env.VITE_API_DASHBOARD_URL
+    }/measuring-table-summation/?client=${client_id}&project=${project_id}`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export {
   fetchProjectsByClientId,
   fetchClientDetailsByClientId,
@@ -100,4 +180,7 @@ export {
   fetchMeasuringCategories,
   fetchBoundingBoxByTifId,
   fetchTifDataByClientId,
+  deletePropertyPolygonByPolygonId,
+  fetchGeojsonByCategoryId,
+  fetchMeasuringTableSummation,
 };

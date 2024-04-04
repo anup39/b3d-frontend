@@ -18,6 +18,7 @@ import {
   setshowPiechart,
   setTableSummationData,
   setCurrentMapExtent,
+  setCurrentPropertyPolygonGeojson,
 } from "../../reducers/MapView";
 import {
   setId,
@@ -32,6 +33,19 @@ import RectangleIcon from "@mui/icons-material/Rectangle";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import {
+  deletePropertyPolygonByPolygonId,
+  fetchGeojsonByCategoryId,
+  fetchProjectPolygonGeojsonByClientIdAndProjectId,
+  fetchMeasuringTableSummation,
+} from "../../api/api";
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../../reducers/DisplaySettings";
+import * as turf from "@turf/turf";
+import { round } from "lodash";
 
 export default function LayersAndWidgetControl({ map, popUpRef }) {
   const dispatch = useDispatch();
@@ -48,7 +62,6 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   const currentPropertyPolygonGeojson = useSelector(
     (state) => state.mapView.currentMapDetail.current_property_polygon_geojson
   );
-  console.log(currentPropertyPolygonGeojson, "currentPropertyPolygonGeojson");
 
   const { project_id, current_project_name } = useSelector(
     (state) => state.project
@@ -64,64 +77,57 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
 
   const handleShowReport = () => {
     if (client_id && project_id) {
-      axios
-        .get(
-          `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/measuring-table-summation/?client=${client_id}&project=${project_id}`
-        )
-        .then((res) => {
-          if (res.data.rows.length > 0) {
-            dispatch(setTableSummationData(res.data.rows));
-          } else {
-            dispatch(setTableSummationData([]));
-          }
-        });
+      fetchTableSummationData(client_id, project_id, dispatch);
     }
     dispatch(setshowTableMeasurings(!showTableMeasurings));
     dispatch(setshowPiechart(!showPiechart));
     dispatch(setshowReport(true));
-    dispatch(setshowMap(false));
+    // dispatch(setshowMap(false));
 
     const map = window.map_global;
     const bounds = map.getBounds();
     dispatch(setCurrentMapExtent(bounds.toArray()));
   };
 
+  function fetchTableSummationData(client_id, project_id, dispatch) {
+    fetchMeasuringTableSummation({ client_id, project_id }).then((res) => {
+      if (res.rows.length > 0) {
+        const data_copy = JSON.stringify(
+          res.rows.filter((item) => item.type_of_geometry === "Polygon")
+        );
+        const new_data = JSON.parse(data_copy);
+        const newDataPromises = new_data.map((item) => {
+          return fetchGeojsonByCategoryId({
+            client_id,
+            category_id: item.id,
+            project_id,
+            type_of_geometry: item.type_of_geometry,
+          }).then((res) => {
+            const area = turf.area(res);
+            const newItem = { ...item, value: round(area, 2) };
+            return newItem;
+          });
+        });
+        Promise.all(newDataPromises).then((finalArray) => {
+          const filteredArray = finalArray.filter((item) => item.value !== 0);
+          dispatch(setTableSummationData(filteredArray));
+        });
+      } else {
+        dispatch(setTableSummationData([]));
+      }
+    });
+  }
+
   const handleMeasuringsTable = () => {
     if (client_id && project_id) {
-      axios
-        .get(
-          `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/measuring-table-summation/?client=${client_id}&project=${project_id}`
-        )
-        .then((res) => {
-          if (res.data.rows.length > 0) {
-            dispatch(setTableSummationData(res.data.rows));
-          } else {
-            dispatch(setTableSummationData([]));
-          }
-        });
+      fetchTableSummationData(client_id, project_id, dispatch);
     }
     dispatch(setshowTableMeasurings(!showTableMeasurings));
   };
 
   const handlePieChart = () => {
     if (client_id && project_id) {
-      axios
-        .get(
-          `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/measuring-table-summation/?client=${client_id}&project=${project_id}`
-        )
-        .then((res) => {
-          if (res.data.rows.length > 0) {
-            dispatch(setTableSummationData(res.data.rows));
-          } else {
-            dispatch(setTableSummationData([]));
-          }
-        });
+      fetchTableSummationData(client_id, project_id, dispatch);
     }
     dispatch(setshowPiechart(!showPiechart));
   };
@@ -186,55 +192,102 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   };
 
   const handleDeletePolygon = () => {
-    console.log("delete polygon");
+    const property_id = currentPropertyPolygonGeojson?.features[0]?.id;
+    deletePropertyPolygonByPolygonId(property_id)
+      .then(() => {
+        dispatch(settoastType("success"));
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Property Polygon Deleted Successfully"));
+        map
+          .getSource(String(client_id) + String(project_id) + "source")
+          .setData(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/project-polygon/?client=${client_id}&project=${project_id}`
+          );
+        fetchProjectPolygonGeojsonByClientIdAndProjectId({
+          client_id,
+          project_id,
+        }).then((res) => {
+          dispatch(setCurrentPropertyPolygonGeojson(res));
+        });
+      })
+      .catch(() => {
+        dispatch(settoastType("error"));
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Error Deleting Property Polygon"));
+      });
   };
   return (
     <>
       {showMeasuringsPanel ? (
         <div
           className="maplibregl-ctrl-layer-control"
-          style={{ display: "flex", flexDirection: "column" }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "white",
+          }}
         >
-          <Box>
+          <Box
+            sx={{
+              position: "fixed",
+              backgroundColor: "white",
+              borderRadius: 2,
+            }}
+          >
+            <Typography
+              sx={{
+                backgroundColor: "white",
+                fontWeight: "bold",
+                marginTop: 1,
+                marginBottom: 0,
+                paddingTop: 0,
+                fontSize: "14px",
+                color: "#027FFE",
+                marginLeft: "10px",
+              }}
+            >
+              Measurings :{" "}
+              <span style={{ color: "#757575", marginRight: "20px" }}>
+                {current_project_name ? current_project_name : null}
+              </span>
+            </Typography>
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
+                justifyContent: "flex-start",
                 zIndex: 99999,
+                marginLeft: "10px",
               }}
             >
-              <Typography
-                sx={{
-                  backgroundColor: "white",
-                  fontWeight: "bold",
-                  marginTop: 1,
-                  marginBottom: 0,
-                  paddingTop: 0,
-                  marginLeft: 2,
-                  fontSize: "14px",
-                  color: "#027FFE",
-                }}
-              >
-                Measurings :{" "}
-                <span style={{ color: "#757575", marginRight: "20px" }}>
-                  {current_project_name ? current_project_name : null}
-                </span>
-              </Typography>
+              {/* Report Button */}
 
-              <SummarizeIcon
-                onClick={handleShowReport}
-                sx={{
-                  "&:hover": { cursor: "pointer" },
-                  mt: 1,
-                  color: "#d61b60",
-                }}
-              />
-              <span
-                style={{ marginTop: "10px", padding: 2, marginRight: "10px" }}
-              >
-                Report
-              </span>
+              {project_id !== "All" ? (
+                <>
+                  {" "}
+                  <SummarizeIcon
+                    onClick={handleShowReport}
+                    sx={{
+                      "&:hover": { cursor: "pointer" },
+                      mt: 1,
+                      color: "#d61b60",
+                    }}
+                  />
+                  <span
+                    style={{
+                      marginTop: "10px",
+                      padding: 2,
+                      marginRight: "10px",
+                      color: "#027FFE",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Report
+                  </span>
+                </>
+              ) : null}
 
               {/* Import Shapefile Button */}
               {project_id !== "All" ? (
@@ -250,29 +303,35 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                   />
                 </Tooltip>
               ) : null}
+              {/* Table Button */}
+              {project_id !== "All" ? (
+                <Tooltip title="Table">
+                  <TableChartIcon
+                    onClick={handleMeasuringsTable}
+                    sx={{
+                      "&:hover": { cursor: "pointer" },
+                      mt: 1,
+                      mr: 1,
+                      color: "#d61b60",
+                    }}
+                  />
+                </Tooltip>
+              ) : null}
 
-              <Tooltip title="Table">
-                <TableChartIcon
-                  onClick={handleMeasuringsTable}
-                  sx={{
-                    "&:hover": { cursor: "pointer" },
-                    mt: 1,
-                    mr: 1,
-                    color: "#d61b60",
-                  }}
-                />
-              </Tooltip>
-              <Tooltip title="Pie Chart">
-                <PieChartIcon
-                  onClick={handlePieChart}
-                  sx={{
-                    "&:hover": { cursor: "pointer" },
-                    mt: 1,
-                    mr: 1,
-                    color: "#d61b60",
-                  }}
-                />
-              </Tooltip>
+              {/* Pie Chart Button */}
+              {project_id !== "All" ? (
+                <Tooltip title="Pie Chart">
+                  <PieChartIcon
+                    onClick={handlePieChart}
+                    sx={{
+                      "&:hover": { cursor: "pointer" },
+                      mt: 1,
+                      mr: 1,
+                      color: "#d61b60",
+                    }}
+                  />
+                </Tooltip>
+              ) : null}
 
               {/* Draw Polygon Button */}
               {project_id !== "All" ? (

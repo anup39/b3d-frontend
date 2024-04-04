@@ -326,7 +326,7 @@ export default function Map({ popUpRef }) {
             position: "absolute",
             top: "12px",
             right: "50px",
-            zIndex: 99999,
+            zIndex: 9999,
             backgroundColor: "white",
             "&:hover": {
               backgroundColor: "white",

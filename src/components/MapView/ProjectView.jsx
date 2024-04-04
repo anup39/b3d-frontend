@@ -104,6 +104,9 @@ export default function ProjectView({ project, popUpRef }) {
     });
   };
   const handleMeasuringsPanelChecked = (event, project) => {
+    // Remove table and PieChart
+    dispatch(setshowTableMeasurings(false));
+    dispatch(setshowPiechart(false));
     // Remove popup from map
     const popups = document.getElementsByClassName("maplibregl-popup");
     if (popups.length) {
