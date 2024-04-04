@@ -216,7 +216,7 @@ export default function ReportPrint() {
                 </Box>
               </div>
 
-              <div>
+              <div className="report_main">
                 <div style={{ display: "flex" }}>
                   <Box sx={{ mb: 2 }}>
                     <Typography sx={{ color: "#666666" }}>
@@ -236,7 +236,7 @@ export default function ReportPrint() {
                 </Box>
                 <Box sx={{ mt: 5 }}>
                   <TableMeasuringsForMap
-                    width={600}
+                    width={700}
                     showCloseButton={false}
                     marginLeftOfTitle={"0%"}
                     // className="tablemeasurings"
