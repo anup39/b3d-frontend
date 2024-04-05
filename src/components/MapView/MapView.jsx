@@ -428,8 +428,6 @@ export default function MapView() {
         </>
       ) : null}
 
-      {/* {showReport ? <ReportActualPage /> : null} */}
-
       {showReport ? <ReportPrint popUpRef={popUpRef} /> : null}
     </Box>
   );
