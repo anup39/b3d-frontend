@@ -18,8 +18,9 @@ import PieChartComp from "../PieChartControl/PieChartComp";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
+import MapSection from "./MapSection";
 
-export default function ReportPrint() {
+export default function ReportPrint({ popUpRef }) {
   const dispatch = useDispatch();
   const mapContainerReport = useRef(null);
   const [map, setMap] = React.useState(null);
@@ -228,7 +229,8 @@ export default function ReportPrint() {
                   </Box>
                 </div>
                 {/* <Box> */}
-                <div ref={mapContainerReport} className="page_map"></div>
+                {/* <div ref={mapContainerReport} className="page_map"></div> */}
+                <MapSection popUpRef={popUpRef} />
                 {/* </Box> */}
 
                 <Box sx={{ ml: "0%" }}>
