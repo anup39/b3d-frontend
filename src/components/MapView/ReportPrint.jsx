@@ -18,7 +18,7 @@ import PieChartComp from "../PieChartControl/PieChartComp";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
-import MapSection from "./MapSection";
+import Map from "../../map/Map";
 
 export default function ReportPrint({ popUpRef }) {
   const dispatch = useDispatch();
@@ -45,14 +45,21 @@ export default function ReportPrint({ popUpRef }) {
       style: `https://api.maptiler.com/maps/satellite/style.json?key=${
         import.meta.env.VITE_MAPTILER_TOKEN
       }`,
-      center: [103.8574, 2.2739],
-      zoom: 10,
+      center: [11.326301469413806, 55.39925417342158],
+      zoom: 16,
       attributionControl: false,
     });
 
-    map.addControl(new maplibregl.NavigationControl(), "top-right");
+    // map.addControl(new maplibregl.NavigationControl(), "top-right");
 
-    window.map_report = map;
+    if (window.map_global) {
+      map.on("load", () => {
+        map.setStyle(window.map_global.getStyle());
+      });
+
+      // console.log(map, "map");
+      // console.log(window.map_global.getStyle(), "global map");
+    }
 
     setMap(map);
 
@@ -229,8 +236,11 @@ export default function ReportPrint({ popUpRef }) {
                   </Box>
                 </div>
                 {/* <Box> */}
-                {/* <div ref={mapContainerReport} className="page_map"></div> */}
-                <MapSection popUpRef={popUpRef} />
+                <div ref={mapContainerReport} className="page_map"></div>
+                {/* <div className="page_map"> */}
+                {/* <Map popUpRef={popUpRef} /> */}
+                {/* </div> */}
+
                 {/* </Box> */}
 
                 <Box sx={{ ml: "0%" }}>
