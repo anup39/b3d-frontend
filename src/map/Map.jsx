@@ -25,6 +25,7 @@ import Typography from "@mui/material/Typography";
 import { setShowKeyInfo } from "../reducers/DrawnGeometry";
 
 export default function Map({ popUpRef }) {
+  console.log("here");
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();

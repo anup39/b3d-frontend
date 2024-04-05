@@ -4,6 +4,7 @@ const initialState = {
   level: "Projects",
   searchText: "",
   openSidebar: true,
+  showSidebarContent: true,
   showShapefileUpload: false,
   showUploadingCategories: false,
   showReport: false,
@@ -52,6 +53,9 @@ export const MapView = createSlice({
     },
     setOpenSidebar: (state, action) => {
       state.openSidebar = action.payload;
+    },
+    setshowSidebarContent: (state, action) => {
+      state.showSidebarContent = action.payload;
     },
     setshowShapefileUpload: (state, action) => {
       state.showShapefileUpload = action.payload;
@@ -184,6 +188,7 @@ export const {
   setLevel,
   setSearchText,
   setOpenSidebar,
+  setshowSidebarContent,
   setshowShapefileUpload,
   setshowUploadingCategories,
   setshowReport,

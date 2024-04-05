@@ -20,6 +20,7 @@ import {
   setCurrentMapExtent,
   setCurrentPropertyPolygonGeojson,
   setOpenSidebar,
+  setshowSidebarContent,
 } from "../../reducers/MapView";
 import {
   setId,
@@ -84,6 +85,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     dispatch(setshowTableMeasurings(true));
     dispatch(setshowPiechart(true));
     dispatch(setshowReport(!showReport));
+    dispatch(setshowSidebarContent(false));
     // dispatch(setshowMap(false));
 
     const map = window.map_global;

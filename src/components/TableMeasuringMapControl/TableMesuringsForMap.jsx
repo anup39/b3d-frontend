@@ -54,6 +54,7 @@ export default function TableMeasuringsForMap({
   width,
   showCloseButton,
   marginLeftOfTitle,
+  mode,
 }) {
   const [height, setHeight] = useState(260);
   const dispatch = useDispatch();
@@ -64,14 +65,14 @@ export default function TableMeasuringsForMap({
   const rows = useSelector((state) => state.mapView.tableSummationData);
   useEffect(() => {
     if (rows.length > 0) {
-      if (rows.length < 4) {
+      if (rows.length < 4 || mode === "print") {
         const height = 52 * (rows.length + 1);
         setHeight(height);
       } else {
         setHeight(260);
       }
     }
-  }, [rows]);
+  }, [rows, mode]);
 
   return (
     <>

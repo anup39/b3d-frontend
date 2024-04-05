@@ -22,10 +22,10 @@ import { useDispatch, useSelector } from "react-redux";
 import UploadPropertyForm from "../Property/UploadPropertyForm";
 import UploadProgress from "../Property/UploadProgress";
 import { useRef } from "react";
-import { setcurrentTif } from "../../reducers/MapView";
+import { setcurrentTif, setshowSidebarContent } from "../../reducers/MapView";
 import { settifs } from "../../reducers/Tifs";
 import removeCheckedCategoriesLayersFromMap from "../../maputils/removeCheckedCategoriesLayers";
-import ReportActualPage from "./ReportActualPage";
+// import ReportActualPage from "./ReportActualPage";
 
 import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import { ListItem, ListItemButton, ListItemText } from "@mui/material";
@@ -116,6 +116,7 @@ export default function MapView() {
   const {
     level,
     openSidebar,
+    showSidebarContent,
     showReport,
     showMap,
     showShapefileUpload,
@@ -287,126 +288,137 @@ export default function MapView() {
       {showTifUpload ? <UploadPropertyForm /> : null}
       {showProgressFormOpen ? <UploadProgress /> : null}
 
-      <CssBaseline />
-      <Drawer variant="permanent" open={openSidebar}>
-        {/* Top part */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Box
-            sx={{
-              display: { md: openSidebar ? "flex" : "none", sm: "none" },
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ bgcolor: pink[500], width: 25, height: 25, ml: 1 }}>
-              {clientDetail ? clientDetail.client_image : ""}
-            </Avatar>
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
+      {showSidebarContent ? (
+        <>
+          <CssBaseline />
+          <Drawer variant="permanent" open={openSidebar}>
+            {/* Top part */}
+            <Box
               sx={{
-                ml: 2,
-                fontWeight: 700,
-                color: "#027FFE",
-                textDecoration: "none",
-                fontSize: 12,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
               }}
             >
-              {/* Add a client Name here  */}
-              {clientDetail ? clientDetail.client_name : ""}
-            </Typography>
-            <Tooltip title="List View">
-              <ListIcon
-                onClick={handleListView}
+              <Box
                 sx={{
-                  display: {
-                    xs: "none",
-                    md: "flex",
-                    "&:hover": { cursor: "pointer" },
-                  },
-                  ml: 3,
-                }}
-              ></ListIcon>
-            </Tooltip>
-          </Box>
-
-          <DrawerHeader>
-            <IconButton
-              sx={{
-                transform: openSidebar ? "rotate(360deg)" : "rotate(180deg)",
-              }}
-              onClick={handleDrawerClose}
-            >
-              {theme.direction === "rtl" ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
-        </Box>
-        <Divider sx={{ mt: 0.1 }} />
-
-        <List>
-          {level === "Projects" && openSidebar ? (
-            <ListItem disablePadding sx={{ display: "block", fontSize: 14 }}>
-              <ListItemButton
-                sx={{
-                  // minHeight: 48,
-                  justifyContent: openSidebar ? "initial" : "center",
-                  py: 0,
-                  "&:hover": {
-                    backgroundColor: "#F1F7FF",
-                  },
+                  display: { md: openSidebar ? "flex" : "none", sm: "none" },
+                  alignItems: "center",
                 }}
               >
-                {/* #Ui for all the measurements */}
-                <ListItemText secondary={"All Properties"} />
-
-                <Tooltip title="Show All Properties">
-                  <Checkbox
-                    onChange={(event) =>
-                      handleMeasuringsPanelChecked(event, "All")
-                    }
-                    size="small"
-                    checked={project_id === "All" ? true : false}
+                <Avatar
+                  sx={{ bgcolor: pink[500], width: 25, height: 25, ml: 1 }}
+                >
+                  {clientDetail ? clientDetail.client_image : ""}
+                </Avatar>
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="a"
+                  sx={{
+                    ml: 2,
+                    fontWeight: 700,
+                    color: "#027FFE",
+                    textDecoration: "none",
+                    fontSize: 12,
+                  }}
+                >
+                  {/* Add a client Name here  */}
+                  {clientDetail ? clientDetail.client_name : ""}
+                </Typography>
+                <Tooltip title="List View">
+                  <ListIcon
+                    onClick={handleListView}
                     sx={{
-                      display: openSidebar ? "block" : "none",
-                      color: pink[600],
-                      "&.Mui-checked": {
-                        color: pink[600],
+                      display: {
+                        xs: "none",
+                        md: "flex",
+                        "&:hover": { cursor: "pointer" },
+                      },
+                      ml: 3,
+                    }}
+                  ></ListIcon>
+                </Tooltip>
+              </Box>
+
+              <DrawerHeader>
+                <IconButton
+                  sx={{
+                    transform: openSidebar
+                      ? "rotate(360deg)"
+                      : "rotate(180deg)",
+                  }}
+                  onClick={handleDrawerClose}
+                >
+                  {theme.direction === "rtl" ? (
+                    <ChevronRightIcon />
+                  ) : (
+                    <ChevronLeftIcon />
+                  )}
+                </IconButton>
+              </DrawerHeader>
+            </Box>
+            <Divider sx={{ mt: 0.1 }} />
+
+            <List>
+              {level === "Projects" && openSidebar ? (
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block", fontSize: 14 }}
+                >
+                  <ListItemButton
+                    sx={{
+                      // minHeight: 48,
+                      justifyContent: openSidebar ? "initial" : "center",
+                      py: 0,
+                      "&:hover": {
+                        backgroundColor: "#F1F7FF",
                       },
                     }}
-                  />
-                </Tooltip>
-              </ListItemButton>
-            </ListItem>
-          ) : null}
+                  >
+                    {/* #Ui for all the measurements */}
+                    <ListItemText secondary={"All Properties"} />
 
-          {level === "Projects" ? <Divider /> : null}
+                    <Tooltip title="Show All Properties">
+                      <Checkbox
+                        onChange={(event) =>
+                          handleMeasuringsPanelChecked(event, "All")
+                        }
+                        size="small"
+                        checked={project_id === "All" ? true : false}
+                        sx={{
+                          display: openSidebar ? "block" : "none",
+                          color: pink[600],
+                          "&.Mui-checked": {
+                            color: pink[600],
+                          },
+                        }}
+                      />
+                    </Tooltip>
+                  </ListItemButton>
+                </ListItem>
+              ) : null}
 
-          {/* Search functionality for the properties  */}
-          {level === "Projects" && openSidebar ? (
-            <AutoCompleteProperties />
-          ) : null}
+              {level === "Projects" ? <Divider /> : null}
 
-          {projects && openSidebar
-            ? projects.map((project) => (
-                <ProjectView
-                  key={project.id}
-                  project={project}
-                  popUpRef={popUpRef}
-                />
-              ))
-            : null}
-        </List>
-      </Drawer>
+              {/* Search functionality for the properties  */}
+              {level === "Projects" && openSidebar ? (
+                <AutoCompleteProperties />
+              ) : null}
+
+              {projects && openSidebar
+                ? projects.map((project) => (
+                    <ProjectView
+                      key={project.id}
+                      project={project}
+                      popUpRef={popUpRef}
+                    />
+                  ))
+                : null}
+            </List>
+          </Drawer>
+        </>
+      ) : null}
 
       {showMap ? (
         <>
@@ -416,9 +428,7 @@ export default function MapView() {
         </>
       ) : null}
 
-      {/* {showReport ? <ReportActualPage /> : null} */}
-
-      {showReport ? <ReportPrint /> : null}
+      {showReport ? <ReportPrint popUpRef={popUpRef} /> : null}
     </Box>
   );
 }
