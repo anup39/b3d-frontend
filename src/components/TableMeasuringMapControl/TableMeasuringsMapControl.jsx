@@ -15,6 +15,7 @@ export default class TableMeasuringsForMapControl {
           width={550}
           showCloseButton={true}
           marginLeftOfTitle={"0%"}
+          mode={"map"}
         />
       </Provider>
     );

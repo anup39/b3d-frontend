@@ -1,44 +1,119 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { Typography, Grid, Button } from "@mui/material";
-import AdbIcon from "@mui/icons-material/Adb";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import maplibregl from "maplibre-gl";
 import TableMeasuringsForMap from "../TableMeasuringMapControl/TableMesuringsForMap";
 import "./ReportPrint.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  setshowReport,
-  setshowMap,
   setshowPiechart,
-  setshowTableMeasurings,
+  setshowReport,
   setshowSidebarContent,
+  setshowTableMeasurings,
 } from "../../reducers/MapView";
 import PieChartComp from "../PieChartControl/PieChartComp";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
-import Map from "../../map/Map";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
-export default function ReportPrint({ popUpRef }) {
+export default function ReportPrint() {
   const dispatch = useDispatch();
   const mapContainerReport = useRef(null);
   const [map, setMap] = React.useState(null);
+  const [paperSize, setPaperSize] = useState("A4");
 
-  const currentClient = useSelector(
-    (state) => state.client.clientDetail.client_id
-  );
-  const currentProject = useSelector((state) => state.project.project_id);
-  const current_measuring_categories = useSelector(
-    (state) => state.client.current_measuring_categories
-  );
-  const current_tif = useSelector(
-    (state) => state.mapView.currentMapDetail.current_tif
-  );
-  const currentMapExtent = useSelector(
-    (state) => state.mapView.printDetails.currentMapExtent
+  const handleChange = (event) => {
+    setPaperSize(event.target.value);
+  };
+
+  const current_project_name = useSelector(
+    (state) => state.project.current_project_name
   );
 
+  const getWidth = () => {
+    switch (paperSize) {
+      case "A4":
+        return "21cm";
+      case "A3":
+        return "29.7cm";
+      case "A2":
+        return "42cm";
+      case "A1":
+        return "59.4cm";
+      default:
+        return "21cm"; // Default to A4
+    }
+  };
+
+  const getHeight = () => {
+    switch (paperSize) {
+      case "A4":
+        return `${29.7 / 2}cm`;
+      case "A3":
+        return `${42 / 2}cm`;
+      case "A2":
+        return `${59.4 / 2}cm`;
+      case "A1":
+        return `${84.1 / 2}cm`;
+      default:
+        return `${29.7 / 2}`; // Default to A4
+    }
+  };
+
+  useEffect(() => {
+    const setPageSize = (width, height) => {
+      // Remove the old style element if it exists
+      const oldStyle = document.getElementById("dynamicPageSize");
+      if (oldStyle) oldStyle.remove();
+
+      // Create a new style element
+      const style = document.createElement("style");
+      style.id = "dynamicPageSize";
+
+      // Set the content of the style element
+      style.textContent = `
+        @media print {
+          @page {
+            size: ${width}cm ${height}cm;
+            margin: 0;
+          }
+          .report_buttons{
+            display: none;
+           }
+          .report_print{
+            box-shadow: none;
+
+          }
+        }
+      `;
+
+      // Insert the style element into the document
+      document.head.appendChild(style);
+    };
+
+    // Set the page size based on the paperSize state
+    switch (paperSize) {
+      case "A5":
+        setPageSize(14.8, 21.0);
+        break;
+      case "A4":
+        setPageSize(21.0, 29.7);
+        break;
+      case "A3":
+        setPageSize(29.7, 42.0);
+        break;
+      case "A2":
+        setPageSize(42.0, 59.4);
+        break;
+      case "A1":
+        setPageSize(59.4, 84.1);
+        break;
+      default:
+        setPageSize(21.0, 29.7); // Default to A4
+    }
+  }, [paperSize]);
   useEffect(() => {
     const map = new maplibregl.Map({
       container: mapContainerReport.current,
@@ -49,160 +124,54 @@ export default function ReportPrint({ popUpRef }) {
       zoom: 16,
       attributionControl: false,
     });
-
-    // map.addControl(new maplibregl.NavigationControl(), "top-right");
-
     if (window.map_global) {
       map.on("load", () => {
         map.setStyle(window.map_global.getStyle());
+        map.fitBounds(window.map_global.getBounds());
       });
-
-      // console.log(map, "map");
-      // console.log(window.map_global.getStyle(), "global map");
     }
-
     setMap(map);
-
     return () => {
       map.remove();
     };
   }, []);
-
-  // useEffect(() => {
-  //   if (map && currentMapExtent) {
-  //     console.log(currentMapExtent);
-  //     map.on("load", () => {
-  //       map.fitBounds(currentMapExtent);
-  //     });
-
-  //     const measuringcategories = current_measuring_categories;
-  //     measuringcategories?.forEach((measuringcategory) => {
-  //       measuringcategory.sub_category.forEach((sub_category) => {
-  //         sub_category.category.forEach((cat) => {
-  //           if (cat.checked) {
-  //             if (cat.type_of_geometry) {
-  //               const sourceId =
-  //                 String(currentClient) + cat.view_name + "source";
-  //               const layerId = String(currentClient) + cat.view_name + "layer";
-  //               axios
-  //                 .get(
-  //                   `${
-  //                     import.meta.env.VITE_API_DASHBOARD_URL
-  //                   }/category-style/?category=${cat.id}`
-  //                 )
-  //                 .then((response) => {
-  //                   const categoryStyle = response.data[0];
-  //                   let url = null;
-  //                   let fillType = null;
-  //                   if (cat.type_of_geometry === "Point") {
-  //                     url = `${
-  //                       import.meta.env.VITE_API_DASHBOARD_URL
-  //                     }/category-point-geojson/?project=${currentProject}&category=${
-  //                       cat.id
-  //                     }`;
-  //                     fillType = "circle";
-  //                   }
-  //                   if (cat.type_of_geometry === "LineString") {
-  //                     url = `${
-  //                       import.meta.env.VITE_API_DASHBOARD_URL
-  //                     }/category-linestring-geojson/?project=${currentProject}&category=${
-  //                       cat.id
-  //                     }`;
-  //                     fillType = "line";
-  //                   }
-  //                   if (cat.type_of_geometry === "Polygon") {
-  //                     url = `${
-  //                       import.meta.env.VITE_API_DASHBOARD_URL
-  //                     }/category-polygon-geojson/?project=${currentProject}&category=${
-  //                       cat.id
-  //                     }`;
-  //                     fillType = "fill";
-  //                   }
-  //                   AddLayerAndSourceToMap({
-  //                     map: map,
-  //                     layerId: layerId,
-  //                     sourceId: sourceId,
-  //                     url: url,
-  //                     source_layer: sourceId,
-  //                     popUpRef: null,
-  //                     showPopup: false,
-  //                     style: {
-  //                       fill_color: categoryStyle.fill,
-  //                       fill_opacity: categoryStyle.fill_opacity,
-  //                       stroke_color: categoryStyle.stroke,
-  //                     },
-  //                     zoomToLayer: false,
-  //                     extent: [],
-  //                     geomType: "geojson",
-  //                     fillType: fillType,
-  //                     trace: false,
-  //                     component: "map",
-  //                   });
-  //                 });
-  //             }
-  //           }
-  //         });
-  //       });
-  //     });
-
-  //     if (current_tif) {
-  //       console.log("In reprot");
-  //       const id = current_tif.id;
-  //       axios
-  //         .get(`${import.meta.env.VITE_API_RASTER_URL}/bounds/${id}`)
-  //         .then((res) => {
-  //           if (res.data.bounds) {
-  //             map.addSource(`${id}-source`, {
-  //               type: "raster",
-  //               tiles: [
-  //                 `${
-  //                   import.meta.env.VITE_API_RASTER_URL
-  //                 }/tile-async/${id}/{z}/{x}/{y}.png`,
-  //               ],
-  //               tileSize: 512,
-  //             });
-
-  //             map.addLayer({
-  //               id: `${id}-layer`,
-  //               type: "raster",
-  //               source: `${id}-source`,
-  //               minzoom: 0,
-  //               maxzoom: 24,
-  //             });
-  //           }
-  //         })
-  //         .catch(() => {});
-  //     }
-  //   }
-  // }, [
-  //   currentMapExtent,
-  //   map,
-  //   currentClient,
-  //   currentProject,
-  //   current_measuring_categories,
-  //   current_tif,
-  // ]);
 
   const handlePrint = () => {
     window.print();
   };
 
   const handleMap = () => {
-    // dispatch(setshowPiechart(false));
-    // dispatch(setshowTableMeasurings(false));
-    // dispatch(setshowMap(true));
     dispatch(setshowReport(false));
     dispatch(setshowSidebarContent(true));
+    dispatch(setshowPiechart(false));
+    dispatch(setshowTableMeasurings(false));
   };
 
   return (
-    <div className="report_print">
+    <div
+      style={{
+        position: "static",
+        width: "100%",
+        height: "100%",
+      }}
+    >
       <Grid>
         <Grid item>
           <Box>
-            <div className="main_section">
+            <div
+              style={{
+                display: "flex",
+              }}
+            >
               <div className="report_buttons">
-                <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    alignItems: "center",
+                    marginTop: 1,
+                  }}
+                >
                   <Box>
                     <Button
                       onClick={handlePrint}
@@ -221,38 +190,59 @@ export default function ReportPrint({ popUpRef }) {
                       Cancel
                     </Button>
                   </Box>
+                  <Box sx={{ minWidth: 10, zIndex: 9999 }}>
+                    <Typography>Paper Size:</Typography>
+                    <select value={paperSize} onChange={handleChange}>
+                      <option value="A5">A5</option>
+                      <option value="A4">A4</option>
+                      <option value="A3">A3</option>
+                      {/* <option value="A2">A2</option>
+                    <option value="A1">A1</option> */}
+                    </select>
+                  </Box>
                 </Box>
               </div>
 
-              <div className="report_main">
+              <div className="report_print">
                 <div style={{ display: "flex" }}>
                   <Box sx={{ mb: 2 }}>
                     <Typography sx={{ color: "#666666" }}>
-                      Measurings for Map nov
+                      Project Name : {current_project_name}
                     </Typography>
                     <Typography sx={{ color: "#666666" }}>
-                      Date : 2023-01-45
+                      Date : {new Date().toLocaleDateString()}
                     </Typography>
                   </Box>
                 </div>
-                {/* <Box> */}
-                <div ref={mapContainerReport} className="page_map"></div>
-                {/* <div className="page_map"> */}
-                {/* <Map popUpRef={popUpRef} /> */}
-                {/* </div> */}
-
-                {/* </Box> */}
-
+                <div
+                  style={{
+                    width: getWidth(),
+                    height: getHeight(),
+                    border: "1px solid #000",
+                    borderRadius: "10px",
+                    marginBottom: "20px",
+                  }}
+                  ref={mapContainerReport}
+                ></div>
                 <Box sx={{ ml: "0%" }}>
                   <PieChartComp showCloseButton={false} />
                 </Box>
                 <Box sx={{ mt: 5 }}>
-                  <TableMeasuringsForMap
-                    width={700}
-                    showCloseButton={false}
-                    marginLeftOfTitle={"0%"}
-                    // className="tablemeasurings"
-                  />
+                  <div
+                    style={{
+                      pageBreakBefore:
+                        paperSize === "A4" || paperSize === "A5"
+                          ? "always"
+                          : "auto",
+                    }}
+                  >
+                    <TableMeasuringsForMap
+                      width={getWidth()}
+                      showCloseButton={false}
+                      marginLeftOfTitle={"0%"}
+                      mode={"print"}
+                    />
+                  </div>
                 </Box>
               </div>
             </div>
