@@ -21,10 +21,9 @@ import {
 } from "../../reducers/UploadMeasuring";
 import axios from "axios";
 
-export default function ShapefileForm({}) {
+export default function ShapefileForm() {
   const dispatch = useDispatch();
   const mapContainerShapefile = useRef();
-  //   const [isFormOpen, setIsFormOpen] = useState(true);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [projection, setProjection] = useState("");
   const [fileName, setFileName] = useState("");
@@ -32,12 +31,14 @@ export default function ShapefileForm({}) {
   const [image, setImage] = useState();
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const current_project_name = useSelector(
+    (state) => state.project.current_project_name
+  );
 
   const layers = useSelector((state) => state.uploadMeasuring.layers);
   const currentfile = useSelector((state) => state.uploadMeasuring.currentfile);
 
   const closeForm = () => {
-    // setIsFormOpen(false);
     dispatch(setshowShapefileUpload(false));
     dispatch(setLayers([]));
     dispatch(setCurrentFile(null));
@@ -158,7 +159,9 @@ export default function ShapefileForm({}) {
         >
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography>Measuring for: Map Nov</Typography>
+              <Typography>
+                Upload Measurings for : {current_project_name}
+              </Typography>
             </Grid>
             <Grid item xs={12}>
               <InputShapefileUpload
