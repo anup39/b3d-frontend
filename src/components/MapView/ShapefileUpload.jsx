@@ -25,10 +25,8 @@ export default function ShapefileForm() {
   const dispatch = useDispatch();
   const mapContainerShapefile = useRef();
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [projection, setProjection] = useState("");
   const [fileName, setFileName] = useState("");
   const [filesize, setFilesize] = useState("");
-  const [image, setImage] = useState();
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const current_project_name = useSelector(
@@ -43,19 +41,13 @@ export default function ShapefileForm() {
     dispatch(setLayers([]));
     dispatch(setCurrentFile(null));
     setUploadedFile(null);
-    setProjection("");
     setFileName("");
     setFilesize("");
-    setImage();
     setLoaded(false);
   };
 
   const handleFileUpload = (file) => {
     setUploadedFile(file);
-  };
-
-  const onProjection = (value) => {
-    setProjection(value);
   };
 
   const onFileName = (value) => {
@@ -68,10 +60,6 @@ export default function ShapefileForm() {
 
   const onDoneLoaded = (value) => {
     setLoaded(value);
-  };
-
-  const onImage = (value) => {
-    setImage(value);
   };
 
   const handleCreateProperty = (event) => {
@@ -109,6 +97,11 @@ export default function ShapefileForm() {
       zoom: 15,
       attributionControl: false,
     });
+
+    if (map) {
+      window.mapshapefile = map;
+    }
+
     map.addControl(new FullscreenControl());
     return () => {
       map.remove();
@@ -163,17 +156,12 @@ export default function ShapefileForm() {
             </Grid>
             <Grid item xs={12}>
               <InputShapefileUpload
-                mapref={mapContainerShapefile}
                 fileName={fileName}
                 filesize={filesize}
-                projection={projection}
                 onFileUpload={handleFileUpload}
-                onProjection={onProjection}
                 onDoneLoaded={onDoneLoaded}
-                onImage={onImage}
                 onFileName={onFileName}
                 onSetFilesize={onSetFilesize}
-                image={image}
                 loaded={loaded}
               />
               <Grid item>

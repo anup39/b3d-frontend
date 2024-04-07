@@ -71,42 +71,34 @@ function getRandomHexColor() {
 
 export default function InputShapefileUpload({
   onFileUpload,
-  onProjection,
   onFileName,
   onSetFilesize,
   onDoneLoaded,
-  onImage,
-  projection,
   fileName,
   filesize,
 }) {
-  const fileInputRef = useRef();
   const dispatch = useDispatch();
+  const fileInputRef = useRef();
 
   const handleFileChange = async (e) => {
+    const map = window.mapshapefile;
     dispatch(setLayers([]));
     dispatch(setCurrentFile(null));
-    const map = window.mapshapefile;
     removeLayersAndSources(map);
     onDoneLoaded(false);
-    onImage();
     RemoveSourceAndLayerFromMap({
-      map: window.mapshapefile,
+      map: map,
       layerId: "geojson-layer",
       sourceId: "geojson-source",
     });
     const file = e.target.files[0];
-    console.log(file, "file");
-
     onFileUpload(file);
     onDoneLoaded(true);
     onFileName(file.name);
     const file_size = bytesToMB(file.size);
     onSetFilesize(file_size + " " + "MB");
-    onProjection(`EPSG:${4326}`);
     dispatch(setshowMapLoader(true));
     const fileextension = file.name.split(".").pop();
-    console.log(fileextension, "fileextension");
     let type_of_file = "Geojson";
     if (fileextension === "zip") {
       type_of_file = "Shapefile";
@@ -197,7 +189,9 @@ export default function InputShapefileUpload({
       .catch(() => {
         dispatch(setshowMapLoader(false));
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Failed to upload file"));
+        dispatch(
+          settoastMessage("Failed to upload file.Please upload a valid file")
+        );
         dispatch(settoastType("error"));
       });
   };
@@ -206,11 +200,7 @@ export default function InputShapefileUpload({
     <div>
       <Grid item xs={12}>
         <Typography variant="body2" gutterBottom>
-          <b>Supported EPSG</b> : 4326, 3578
-        </Typography>
-        <p style={{ color: "red" }}>Contact for other projections.</p>
-        <Typography variant="body2" gutterBottom>
-          <b>Acceptable Files</b> : .zip , .geojson
+          <b>Acceptable Files</b> : .json,.geojson ,.zip
         </Typography>
       </Grid>
       <Button
@@ -221,7 +211,7 @@ export default function InputShapefileUpload({
         Upload Shapefile or Geojson File
         <VisuallyHiddenInput
           type="file"
-          accept=".zip , .json,.shp"
+          accept=".geojson, .json , .zip"
           ref={fileInputRef}
           onChange={handleFileChange}
           required
@@ -236,9 +226,6 @@ export default function InputShapefileUpload({
             <Typography variant="body2" gutterBottom>
               <b>FileSize</b> : {filesize}
             </Typography>
-            <Typography variant="body2" gutterBottom>
-              <b>Projection</b>: {projection}
-            </Typography>
           </div>
         </div>
       </Grid>
@@ -250,12 +237,9 @@ InputShapefileUpload.propTypes = {
   onFileUpload: PropTypes.func,
   onProjection: PropTypes.func,
   onFileName: PropTypes.func,
-  onDoneLoaded: PropTypes.func,
-  onImage: PropTypes.func,
   onSetFilesize: PropTypes.func,
+  onDoneLoaded: PropTypes.func,
   projection: PropTypes.string,
   fileName: PropTypes.string,
   filesize: PropTypes.string,
-  image: PropTypes.string,
-  loaded: PropTypes.bool,
 };
