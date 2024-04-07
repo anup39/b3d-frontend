@@ -21,40 +21,33 @@ import {
 } from "../../reducers/UploadMeasuring";
 import axios from "axios";
 
-export default function ShapefileForm({}) {
+export default function ShapefileForm() {
   const dispatch = useDispatch();
   const mapContainerShapefile = useRef();
-  //   const [isFormOpen, setIsFormOpen] = useState(true);
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [projection, setProjection] = useState("");
   const [fileName, setFileName] = useState("");
   const [filesize, setFilesize] = useState("");
-  const [image, setImage] = useState();
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const current_project_name = useSelector(
+    (state) => state.project.current_project_name
+  );
 
   const layers = useSelector((state) => state.uploadMeasuring.layers);
   const currentfile = useSelector((state) => state.uploadMeasuring.currentfile);
 
   const closeForm = () => {
-    // setIsFormOpen(false);
     dispatch(setshowShapefileUpload(false));
     dispatch(setLayers([]));
     dispatch(setCurrentFile(null));
     setUploadedFile(null);
-    setProjection("");
     setFileName("");
     setFilesize("");
-    setImage();
     setLoaded(false);
   };
 
   const handleFileUpload = (file) => {
     setUploadedFile(file);
-  };
-
-  const onProjection = (value) => {
-    setProjection(value);
   };
 
   const onFileName = (value) => {
@@ -67,10 +60,6 @@ export default function ShapefileForm({}) {
 
   const onDoneLoaded = (value) => {
     setLoaded(value);
-  };
-
-  const onImage = (value) => {
-    setImage(value);
   };
 
   const handleCreateProperty = (event) => {
@@ -104,13 +93,16 @@ export default function ShapefileForm({}) {
       style: `https://api.maptiler.com/maps/satellite/style.json?key=${
         import.meta.env.VITE_MAPTILER_TOKEN
       }`,
-      center: [103.8574, 2.2739],
-      zoom: 10,
+      center: [11.326301469413806, 55.39925417342158],
+      zoom: 15,
       attributionControl: false,
     });
-    map.addControl(new FullscreenControl());
-    window.mapshapefile = map;
 
+    if (map) {
+      window.mapshapefile = map;
+    }
+
+    map.addControl(new FullscreenControl());
     return () => {
       map.remove();
     };
@@ -158,21 +150,18 @@ export default function ShapefileForm({}) {
         >
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography>Measuring for: Map Nov</Typography>
+              <Typography>
+                Upload Measurings for : {current_project_name}
+              </Typography>
             </Grid>
             <Grid item xs={12}>
               <InputShapefileUpload
-                mapref={mapContainerShapefile}
                 fileName={fileName}
                 filesize={filesize}
-                projection={projection}
                 onFileUpload={handleFileUpload}
-                onProjection={onProjection}
                 onDoneLoaded={onDoneLoaded}
-                onImage={onImage}
                 onFileName={onFileName}
                 onSetFilesize={onSetFilesize}
-                image={image}
                 loaded={loaded}
               />
               <Grid item>
@@ -258,15 +247,8 @@ export default function ShapefileForm({}) {
           </Grid>
         </form>
       </div>
-      {/* )} */}
     </>
   );
 }
 
-ShapefileForm.propTypes = {
-  client_id: PropTypes.string,
-  project_id: PropTypes.string,
-  onProgressForm: PropTypes.func,
-  onProgressValue: PropTypes.func,
-  onSetRasters: PropTypes.func,
-};
+ShapefileForm.propTypes = {};

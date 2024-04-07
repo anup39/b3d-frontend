@@ -3,6 +3,7 @@ const epsgDefinitions = {
   4326: "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
   25832:
     "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+  25833: "+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs",
 };
 
 export default epsgDefinitions;
