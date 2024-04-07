@@ -105,13 +105,11 @@ export default function ShapefileForm() {
       style: `https://api.maptiler.com/maps/satellite/style.json?key=${
         import.meta.env.VITE_MAPTILER_TOKEN
       }`,
-      center: [103.8574, 2.2739],
-      zoom: 10,
+      center: [11.326301469413806, 55.39925417342158],
+      zoom: 15,
       attributionControl: false,
     });
     map.addControl(new FullscreenControl());
-    window.mapshapefile = map;
-
     return () => {
       map.remove();
     };
@@ -261,15 +259,8 @@ export default function ShapefileForm() {
           </Grid>
         </form>
       </div>
-      {/* )} */}
     </>
   );
 }
 
-ShapefileForm.propTypes = {
-  client_id: PropTypes.string,
-  project_id: PropTypes.string,
-  onProgressForm: PropTypes.func,
-  onProgressValue: PropTypes.func,
-  onSetRasters: PropTypes.func,
-};
+ShapefileForm.propTypes = {};
