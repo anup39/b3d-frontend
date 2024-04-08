@@ -133,7 +133,8 @@ export default function UploadingCategories() {
           width: "100%",
           height: "100%",
           background: "rgba(0, 0, 0, 0.5)",
-          zIndex: 9999,
+          zIndex: 99999,
+          borderRadius: "10px",
         }}
       >
         <form
@@ -147,6 +148,7 @@ export default function UploadingCategories() {
             background: "#fff",
             padding: "20px",
             zIndex: 10000,
+            borderRadius: "10px",
           }}
         >
           <Grid container spacing={2}>
@@ -160,7 +162,7 @@ export default function UploadingCategories() {
               >
                 {" "}
                 <Typography sx={{ padding: 2 }}>
-                  Select or Modify the matched categories for :
+                  Select/Modify the matched categories for :
                 </Typography>
                 <Typography sx={{ color: "#093F7F" }}>
                   {current_project_name}.
@@ -204,6 +206,7 @@ export default function UploadingCategories() {
                             key={index}
                             size="small"
                             // defaultChecked
+                            checked={layer.checked}
                             sx={{
                               "&:hover": { backgroundColor: "transparent" },
                             }}

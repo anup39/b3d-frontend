@@ -39,7 +39,8 @@ export default function AutoCompleteMap({ category, layer }) {
   return (
     <Autocomplete
       disablePortal
-      id="combo-box-demo"
+      disableClearable
+      id="autocomplete-upload-category"
       options={options}
       getOptionLabel={(option) => option.name}
       sx={{ width: 400, fontFamily: "Roboto", fontSize: "7px" }}
@@ -49,14 +50,21 @@ export default function AutoCompleteMap({ category, layer }) {
           {...params}
           sx={{ fontFamily: "Roboto", fontSize: "7px" }}
           // required
-          label={category}
+          // label={"Not Detected"}
           variant="outlined"
           // value={inputValue}
           // onChange={(event) => setInputValue(event.target.value)}
+          placeholder="Not Detected"
         />
       )}
       onChange={(event, newValue) => {
         setValue(newValue);
+        dispatch(
+          changeDistinctMatchedCategory({
+            id: layer.id,
+            selected_category: newValue.id,
+          })
+        );
         // if (newValue) {
         //   setInputValue(
         //     newValue.full_name + " " + `(${newValue.type_of_geometry})`
