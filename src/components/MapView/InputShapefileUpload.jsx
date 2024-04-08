@@ -82,6 +82,7 @@ export default function InputShapefileUpload({
     dispatch(setCurrentFile(null));
     removeLayersAndSources(map);
     setLoaded(false);
+    setError("");
     RemoveSourceAndLayerFromMap({
       map: map,
       layerId: "geojson-layer",
