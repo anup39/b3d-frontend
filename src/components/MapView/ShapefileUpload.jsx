@@ -38,15 +38,33 @@ export default function ShapefileForm() {
   const currentfile = useSelector((state) => state.uploadMeasuring.currentfile);
 
   const closeForm = () => {
-    dispatch(setshowShapefileUpload(false));
-    dispatch(setLayers([]));
-    dispatch(setCurrentFile(null));
-    setUploadedFile(null);
-    setFileName("");
-    setFilesize("");
-    setLoaded(true);
-    setLoading(false);
-    setError("");
+    axios
+      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/delete-geojson/`, {
+        filename: currentfile,
+      })
+      .then(() => {
+        dispatch(setshowShapefileUpload(false));
+        dispatch(setLayers([]));
+        dispatch(setCurrentFile(null));
+        setUploadedFile(null);
+        setFileName("");
+        setFilesize("");
+        setLoaded(true);
+        setLoading(false);
+        setError("");
+      })
+      .catch((error) => {
+        console.log(error, "error");
+        dispatch(setshowShapefileUpload(false));
+        dispatch(setLayers([]));
+        dispatch(setCurrentFile(null));
+        setUploadedFile(null);
+        setFileName("");
+        setFilesize("");
+        setLoaded(true);
+        setLoading(false);
+        setError("");
+      });
   };
 
   const handleCreateProperty = (event) => {
