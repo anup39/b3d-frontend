@@ -188,7 +188,9 @@ export default function UploadingCategories() {
                             }}
                           />
                         }
-                        label={layer.name + `(${layer.type_of_geometry})`}
+                        label={
+                          layer.cleaned_name + `(${layer.type_of_geometry})`
+                        }
                         sx={{ margin: 0, padding: 0 }}
                       />
                     </FormGroup>
