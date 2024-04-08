@@ -29,6 +29,7 @@ export default function ShapefileForm() {
   const [filesize, setFilesize] = useState("");
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const current_project_name = useSelector(
     (state) => state.project.current_project_name
   );
@@ -43,23 +44,9 @@ export default function ShapefileForm() {
     setUploadedFile(null);
     setFileName("");
     setFilesize("");
-    setLoaded(false);
-  };
-
-  const handleFileUpload = (file) => {
-    setUploadedFile(file);
-  };
-
-  const onFileName = (value) => {
-    setFileName(value);
-  };
-
-  const onSetFilesize = (value) => {
-    setFilesize(value);
-  };
-
-  const onDoneLoaded = (value) => {
-    setLoaded(value);
+    setLoaded(true);
+    setLoading(false);
+    setError("");
   };
 
   const handleCreateProperty = (event) => {
@@ -132,7 +119,7 @@ export default function ShapefileForm() {
           width: "100%",
           height: "100%",
           background: "rgba(0, 0, 0, 0.5)",
-          zIndex: 9999,
+          zIndex: 99999,
         }}
       >
         <form
@@ -145,7 +132,7 @@ export default function ShapefileForm() {
             width: "500px",
             background: "#fff",
             padding: "20px",
-            zIndex: 10000,
+            zIndex: 99999,
           }}
         >
           <Grid container spacing={2}>
@@ -155,14 +142,25 @@ export default function ShapefileForm() {
               </Typography>
             </Grid>
             <Grid item xs={12}>
+              <Typography
+                sx={{
+                  color: "red",
+                }}
+              >
+                {error ? error : null}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
               <InputShapefileUpload
                 fileName={fileName}
                 filesize={filesize}
-                onFileUpload={handleFileUpload}
-                onDoneLoaded={onDoneLoaded}
-                onFileName={onFileName}
-                onSetFilesize={onSetFilesize}
                 loaded={loaded}
+                setUploadedFile={setUploadedFile}
+                setFileName={setFileName}
+                setFilesize={setFilesize}
+                setLoaded={setLoaded}
+                setLoading={setLoading}
+                setError={setError}
               />
               <Grid item>
                 <div
