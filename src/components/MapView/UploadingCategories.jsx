@@ -38,11 +38,26 @@ export default function UploadingCategories() {
   const currentUser = useSelector((state) => state.auth.user_id);
 
   const closeForm = () => {
-    dispatch(setshowShapefileUpload(false));
-    dispatch(setLayers([]));
-    dispatch(setCurrentFile(null));
-    dispatch(setdistinct([]));
-    dispatch(setshowUploadingCategories(false));
+    axios
+      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/delete-geojson/`, {
+        filename: currentfile,
+      })
+      .then(() => {
+        dispatch(setshowShapefileUpload(false));
+        dispatch(setLayers([]));
+        dispatch(setCurrentFile(null));
+
+        dispatch(setshowUploadingCategories(false));
+        dispatch(setdistinct([]));
+      })
+      .catch((error) => {
+        console.log(error, "error");
+        dispatch(setshowShapefileUpload(false));
+        dispatch(setLayers([]));
+        dispatch(setCurrentFile(null));
+        dispatch(setshowUploadingCategories(false));
+        dispatch(setdistinct([]));
+      });
   };
 
   const handleCreateProperty = (event) => {

@@ -36,6 +36,7 @@ export default function ShapefileForm() {
 
   const layers = useSelector((state) => state.uploadMeasuring.layers);
   const currentfile = useSelector((state) => state.uploadMeasuring.currentfile);
+  const client_id = useSelector((state) => state.client.clientDetail.client_id);
 
   const closeForm = () => {
     axios
@@ -83,7 +84,7 @@ export default function ShapefileForm() {
       .get(
         `${
           import.meta.env.VITE_API_DASHBOARD_URL
-        }/upload-categories/?type_of_file=${type_of_file}&filename=${currentfile}`
+        }/upload-categories/?type_of_file=${type_of_file}&filename=${currentfile}&client_id=${client_id}`
       )
       .then((response) => {
         console.log(response.data, "response.data");
