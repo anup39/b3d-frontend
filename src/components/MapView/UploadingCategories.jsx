@@ -36,6 +36,9 @@ export default function UploadingCategories() {
   );
   const currentProject = useSelector((state) => state.project.project_id);
   const currentUser = useSelector((state) => state.auth.user_id);
+  const current_project_name = useSelector(
+    (state) => state.project.current_project_name
+  );
 
   const closeForm = () => {
     axios
@@ -148,10 +151,27 @@ export default function UploadingCategories() {
         >
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography sx={{ padding: 2 }}>
-                Select the Matched categories Measuring for Map Nov from the
-                available classes from file{" "}
-              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                }}
+              >
+                {" "}
+                <Typography sx={{ padding: 2 }}>
+                  Select or Modify the matched categories for :
+                </Typography>
+                <Typography sx={{ color: "#093F7F" }}>
+                  {current_project_name}.
+                </Typography>
+              </Box>
+              <Box sx={{ marginLeft: 2 }}>
+                <Typography sx={{ color: "red" }}>
+                  Note : Here we use AI model to clean the data and detect the
+                  categories.
+                </Typography>
+              </Box>
             </Grid>
             <Grid item xs={12} sx={{ maxHeight: "400px", overflow: "scroll" }}>
               {distinct &&
@@ -160,9 +180,10 @@ export default function UploadingCategories() {
                     key={index}
                     sx={{
                       display: "flex",
-                      gap: 4,
-                      marginBottom: 3,
+                      // gap: 4,
+                      marginBottom: 1,
                       alignItems: "center",
+                      justifyContent: "space-between",
                     }}
                   >
                     <FormGroup sx={{ margin: 0, padding: 0 }}>
@@ -188,19 +209,28 @@ export default function UploadingCategories() {
                             }}
                           />
                         }
-                        label={
-                          layer.cleaned_name + `(${layer.type_of_geometry})`
-                        }
+                        label={layer.cleaned_name}
                         sx={{ margin: 0, padding: 0 }}
                       />
                     </FormGroup>
-                    <ArrowForwardIosIcon />
-                    <AutoCompleteMap
-                      key={index}
-                      // onItemSelected={(id) => setSelectedCategoryId(id)}
-                      category={"category"}
-                      layer={layer}
-                    />
+
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: 8,
+                      }}
+                    >
+                      <ArrowForwardIosIcon />
+
+                      <AutoCompleteMap
+                        key={index}
+                        // onItemSelected={(id) => setSelectedCategoryId(id)}
+                        category={"category"}
+                        layer={layer}
+                      />
+                    </Box>
                   </Box>
                 ))}
             </Grid>
