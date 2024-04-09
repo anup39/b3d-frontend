@@ -177,64 +177,70 @@ export default function UploadingCategories() {
             </Grid>
             <Grid item xs={12} sx={{ maxHeight: "400px", overflow: "scroll" }}>
               {distinct &&
-                distinct.map((layer, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      display: "flex",
-                      // gap: 4,
-                      marginBottom: 1,
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <FormGroup sx={{ margin: 0, padding: 0 }}>
-                      <FormControlLabel
+                distinct.map((type_of_geometry, main_index) => (
+                  <div key={main_index}>
+                    {type_of_geometry.map((layer, index) => (
+                      <Box
                         key={index}
-                        slotProps={{
-                          typography: {
-                            fontSize: 15,
-                            color: "#6A6D70",
-                            fontWeight: 900,
-                          },
+                        sx={{
+                          display: "flex",
+                          // gap: 4,
+                          marginBottom: 1,
+                          alignItems: "center",
+                          justifyContent: "space-between",
                         }}
-                        control={
-                          <Checkbox
-                            onChange={(event) =>
-                              handleLayerChange(event, layer)
-                            }
+                      >
+                        <FormGroup sx={{ margin: 0, padding: 0 }}>
+                          <FormControlLabel
                             key={index}
-                            size="small"
-                            // defaultChecked
-                            checked={layer.checked}
-                            sx={{
-                              "&:hover": { backgroundColor: "transparent" },
+                            slotProps={{
+                              typography: {
+                                fontSize: 15,
+                                color: "#6A6D70",
+                                fontWeight: 900,
+                              },
                             }}
+                            control={
+                              <Checkbox
+                                onChange={(event) =>
+                                  handleLayerChange(event, layer)
+                                }
+                                key={index}
+                                size="small"
+                                // defaultChecked
+                                checked={layer.checked}
+                                sx={{
+                                  "&:hover": { backgroundColor: "transparent" },
+                                }}
+                              />
+                            }
+                            label={layer.cleaned_name}
+                            sx={{ margin: 0, padding: 0 }}
                           />
-                        }
-                        label={layer.cleaned_name}
-                        sx={{ margin: 0, padding: 0 }}
-                      />
-                    </FormGroup>
+                        </FormGroup>
 
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        gap: 8,
-                      }}
-                    >
-                      <ArrowForwardIosIcon />
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            gap: 8,
+                          }}
+                        >
+                          <ArrowForwardIosIcon />
 
-                      <AutoCompleteMap
-                        key={index}
-                        // onItemSelected={(id) => setSelectedCategoryId(id)}
-                        category={"category"}
-                        layer={layer}
-                      />
-                    </Box>
-                  </Box>
+                          <AutoCompleteMap
+                            key={index}
+                            // onItemSelected={(id) => setSelectedCategoryId(id)}
+                            index={index}
+                            category={"category"}
+                            main_index={main_index}
+                            layer={layer}
+                          />
+                        </Box>
+                      </Box>
+                    ))}
+                  </div>
                 ))}
             </Grid>
             <Grid item xs={12}>

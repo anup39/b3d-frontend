@@ -90,7 +90,15 @@ export default function ShapefileForm() {
       )
       .then((response) => {
         console.log(response.data, "response.data");
-        dispatch(setdistinct(response.data.distinct));
+        console.log(response.data.distinct, "response.data.distinct");
+        let distinct = response.data.distinct;
+        const filtered = distinct.map((subArray) =>
+          subArray.map((item) => ({
+            ...item,
+            checked: item.matched_category !== null,
+          }))
+        );
+        dispatch(setdistinct(filtered));
         dispatch(setshowMapLoader(false));
       });
   };
