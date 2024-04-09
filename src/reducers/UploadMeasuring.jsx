@@ -27,10 +27,11 @@ export const UploadMeasuring = createSlice({
       }
     },
     changeDistinctMatchedCategory: (state, action) => {
-      const { id, selected_category } = action.payload;
+      const { id, selected_category, matched_category } = action.payload;
       const distinctItem = state.distinct.find((item) => item.id === id);
       if (distinctItem) {
         distinctItem.category_id = selected_category;
+        distinctItem.matched_category = matched_category;
       }
     },
   },

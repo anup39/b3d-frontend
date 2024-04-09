@@ -63,6 +63,7 @@ export default function AutoCompleteMap({ category, layer }) {
           changeDistinctMatchedCategory({
             id: layer.id,
             selected_category: newValue.id,
+            matched_category: newValue.name,
           })
         );
         // if (newValue) {

@@ -79,11 +79,11 @@ export default function UploadingCategories() {
     data.append("filename", currentfile);
     data.append("type_of_file", type_of_file);
     data.append("client_id", currentClient);
-    data.append("", currentProject);
+    data.append("project_id", currentProject);
     data.append("user_id", currentUser);
     console.log(data);
     if (checkedCategories.length > 0) {
-      closeForm();
+      // closeForm();
       dispatch(setshowMapLoader(true));
       // dispatch(setshowProgressFormOpen(true));
       axios
