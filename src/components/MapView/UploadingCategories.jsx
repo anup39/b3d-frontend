@@ -65,7 +65,9 @@ export default function UploadingCategories() {
 
   const handleCreateProperty = (event) => {
     event.preventDefault();
-    const checkedCategories = distinct.filter((item) => item.checked);
+    const checkedCategories = distinct.filter((subArray) => {
+      return subArray.filter((item) => item.checked).length > 0;
+    });
     console.log(checkedCategories);
     const fileextension = currentfile.split(".").pop();
     let type_of_file = "Geojson";
