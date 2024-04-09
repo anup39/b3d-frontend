@@ -118,9 +118,13 @@ export default function UploadingCategories() {
     }
   };
 
-  const handleLayerChange = (event, layer) => {
+  const handleLayerChange = (event, main_index, index) => {
     dispatch(
-      changeDistinctChecked({ id: layer.id, checked: event.target.checked })
+      changeDistinctChecked({
+        main_index: main_index,
+        index: index,
+        checked: event.target.checked,
+      })
     );
   };
   return (
@@ -203,7 +207,7 @@ export default function UploadingCategories() {
                             control={
                               <Checkbox
                                 onChange={(event) =>
-                                  handleLayerChange(event, layer)
+                                  handleLayerChange(event, main_index, index)
                                 }
                                 key={index}
                                 size="small"
