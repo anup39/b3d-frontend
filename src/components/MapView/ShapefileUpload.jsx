@@ -29,37 +29,45 @@ export default function ShapefileForm() {
   const [filesize, setFilesize] = useState("");
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const current_project_name = useSelector(
     (state) => state.project.current_project_name
   );
 
   const layers = useSelector((state) => state.uploadMeasuring.layers);
   const currentfile = useSelector((state) => state.uploadMeasuring.currentfile);
+  const client_id = useSelector((state) => state.client.clientDetail.client_id);
+  const project_id = useSelector((state) => state.project.project_id);
+  const user_id = useSelector((state) => state.auth.user_id);
 
   const closeForm = () => {
-    dispatch(setshowShapefileUpload(false));
-    dispatch(setLayers([]));
-    dispatch(setCurrentFile(null));
-    setUploadedFile(null);
-    setFileName("");
-    setFilesize("");
-    setLoaded(false);
-  };
-
-  const handleFileUpload = (file) => {
-    setUploadedFile(file);
-  };
-
-  const onFileName = (value) => {
-    setFileName(value);
-  };
-
-  const onSetFilesize = (value) => {
-    setFilesize(value);
-  };
-
-  const onDoneLoaded = (value) => {
-    setLoaded(value);
+    axios
+      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/delete-geojson/`, {
+        filename: currentfile,
+      })
+      .then(() => {
+        dispatch(setshowShapefileUpload(false));
+        dispatch(setLayers([]));
+        dispatch(setCurrentFile(null));
+        setUploadedFile(null);
+        setFileName("");
+        setFilesize("");
+        setLoaded(true);
+        setLoading(false);
+        setError("");
+      })
+      .catch((error) => {
+        console.log(error, "error");
+        dispatch(setshowShapefileUpload(false));
+        dispatch(setLayers([]));
+        dispatch(setCurrentFile(null));
+        setUploadedFile(null);
+        setFileName("");
+        setFilesize("");
+        setLoaded(true);
+        setLoading(false);
+        setError("");
+      });
   };
 
   const handleCreateProperty = (event) => {
@@ -78,11 +86,19 @@ export default function ShapefileForm() {
       .get(
         `${
           import.meta.env.VITE_API_DASHBOARD_URL
-        }/upload-categories/?type_of_file=${type_of_file}&filename=${currentfile}`
+        }/upload-categories/?type_of_file=${type_of_file}&filename=${currentfile}&client_id=${client_id}&project_id=${project_id}&user_id=${user_id}`
       )
       .then((response) => {
         console.log(response.data, "response.data");
-        dispatch(setdistinct(response.data.distinct));
+        console.log(response.data.distinct, "response.data.distinct");
+        let distinct = response.data.distinct;
+        const filtered = distinct.map((subArray) =>
+          subArray.map((item) => ({
+            ...item,
+            checked: item.matched_category !== null,
+          }))
+        );
+        dispatch(setdistinct(filtered));
         dispatch(setshowMapLoader(false));
       });
   };
@@ -132,7 +148,7 @@ export default function ShapefileForm() {
           width: "100%",
           height: "100%",
           background: "rgba(0, 0, 0, 0.5)",
-          zIndex: 9999,
+          zIndex: 99999,
         }}
       >
         <form
@@ -145,7 +161,7 @@ export default function ShapefileForm() {
             width: "500px",
             background: "#fff",
             padding: "20px",
-            zIndex: 10000,
+            zIndex: 99999,
           }}
         >
           <Grid container spacing={2}>
@@ -155,14 +171,25 @@ export default function ShapefileForm() {
               </Typography>
             </Grid>
             <Grid item xs={12}>
+              <Typography
+                sx={{
+                  color: "red",
+                }}
+              >
+                {error ? error : null}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
               <InputShapefileUpload
                 fileName={fileName}
                 filesize={filesize}
-                onFileUpload={handleFileUpload}
-                onDoneLoaded={onDoneLoaded}
-                onFileName={onFileName}
-                onSetFilesize={onSetFilesize}
                 loaded={loaded}
+                setUploadedFile={setUploadedFile}
+                setFileName={setFileName}
+                setFilesize={setFilesize}
+                setLoaded={setLoaded}
+                setLoading={setLoading}
+                setError={setError}
               />
               <Grid item>
                 <div

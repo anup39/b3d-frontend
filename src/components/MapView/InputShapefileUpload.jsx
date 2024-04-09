@@ -10,11 +10,6 @@ import { setshowMapLoader } from "../../reducers/MapView";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setCurrentFile, setLayers } from "../../reducers/UploadMeasuring";
-import {
-  setshowToast,
-  settoastMessage,
-  settoastType,
-} from "../../reducers/DisplaySettings";
 
 function getPopupHTML(properties) {
   let html = "";
@@ -70,12 +65,13 @@ function getRandomHexColor() {
 }
 
 export default function InputShapefileUpload({
-  onFileUpload,
-  onFileName,
-  onSetFilesize,
-  onDoneLoaded,
   fileName,
   filesize,
+  setError,
+  setLoaded,
+  setUploadedFile,
+  setFileName,
+  setFilesize,
 }) {
   const dispatch = useDispatch();
   const fileInputRef = useRef();
@@ -85,18 +81,19 @@ export default function InputShapefileUpload({
     dispatch(setLayers([]));
     dispatch(setCurrentFile(null));
     removeLayersAndSources(map);
-    onDoneLoaded(false);
+    setLoaded(false);
+    setError("");
     RemoveSourceAndLayerFromMap({
       map: map,
       layerId: "geojson-layer",
       sourceId: "geojson-source",
     });
     const file = e.target.files[0];
-    onFileUpload(file);
-    onDoneLoaded(true);
-    onFileName(file.name);
+    setUploadedFile(file);
+    setLoaded(true);
+    setFileName(file.name);
     const file_size = bytesToMB(file.size);
-    onSetFilesize(file_size + " " + "MB");
+    setFilesize(file_size + " " + "MB");
     dispatch(setshowMapLoader(true));
     const fileextension = file.name.split(".").pop();
     let type_of_file = "Geojson";
@@ -187,12 +184,17 @@ export default function InputShapefileUpload({
         });
       })
       .catch(() => {
+        setError("Failed to upload file.Please upload a valid file");
+        setLoaded(false);
+        dispatch(setLayers([]));
+        dispatch(setCurrentFile(null));
+        removeLayersAndSources(map);
+        setLoaded(false);
+        setUploadedFile(null);
+        setFileName("");
+        setFilesize("");
         dispatch(setshowMapLoader(false));
-        dispatch(setshowToast(true));
-        dispatch(
-          settoastMessage("Failed to upload file.Please upload a valid file")
-        );
-        dispatch(settoastType("error"));
+        // setLoading(false);
       });
   };
 
@@ -234,12 +236,11 @@ export default function InputShapefileUpload({
 }
 
 InputShapefileUpload.propTypes = {
-  onFileUpload: PropTypes.func,
-  onProjection: PropTypes.func,
-  onFileName: PropTypes.func,
-  onSetFilesize: PropTypes.func,
-  onDoneLoaded: PropTypes.func,
-  projection: PropTypes.string,
   fileName: PropTypes.string,
   filesize: PropTypes.string,
+  setError: PropTypes.func,
+  setLoaded: PropTypes.func,
+  setUploadedFile: PropTypes.func,
+  setFileName: PropTypes.func,
+  setFilesize: PropTypes.func,
 };

@@ -20,17 +20,27 @@ export const UploadMeasuring = createSlice({
       state.distinct = action.payload;
     },
     changeDistinctChecked: (state, action) => {
-      const { id, checked } = action.payload;
-      const distinctItem = state.distinct.find((item) => item.id === id);
+      const { main_index, index, checked } = action.payload;
+      const distinctItem = state.distinct.find((item, i) => {
+        if (i === main_index) {
+          return item;
+        }
+      });
+
       if (distinctItem) {
-        distinctItem.checked = checked;
+        distinctItem[index].checked = checked;
       }
     },
     changeDistinctMatchedCategory: (state, action) => {
-      const { id, matched_category } = action.payload;
-      const distinctItem = state.distinct.find((item) => item.id === id);
+      const { index, main_index, selected_category } = action.payload;
+      const distinctItem = state.distinct.find((item, i) => {
+        if (i === main_index) {
+          return item;
+        }
+      });
+
       if (distinctItem) {
-        distinctItem.matched_category = matched_category;
+        distinctItem[index].matched_category = selected_category;
       }
     },
   },

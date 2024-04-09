@@ -36,18 +36,38 @@ export default function UploadingCategories() {
   );
   const currentProject = useSelector((state) => state.project.project_id);
   const currentUser = useSelector((state) => state.auth.user_id);
+  const current_project_name = useSelector(
+    (state) => state.project.current_project_name
+  );
 
   const closeForm = () => {
-    dispatch(setshowShapefileUpload(false));
-    dispatch(setLayers([]));
-    dispatch(setCurrentFile(null));
-    dispatch(setdistinct([]));
-    dispatch(setshowUploadingCategories(false));
+    axios
+      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/delete-geojson/`, {
+        filename: currentfile,
+      })
+      .then(() => {
+        dispatch(setshowShapefileUpload(false));
+        dispatch(setLayers([]));
+        dispatch(setCurrentFile(null));
+
+        dispatch(setshowUploadingCategories(false));
+        dispatch(setdistinct([]));
+      })
+      .catch((error) => {
+        console.log(error, "error");
+        dispatch(setshowShapefileUpload(false));
+        dispatch(setLayers([]));
+        dispatch(setCurrentFile(null));
+        dispatch(setshowUploadingCategories(false));
+        dispatch(setdistinct([]));
+      });
   };
 
   const handleCreateProperty = (event) => {
     event.preventDefault();
-    const checkedCategories = distinct.filter((item) => item.checked);
+    const checkedCategories = distinct.filter((subArray) => {
+      return subArray.filter((item) => item.checked).length > 0;
+    });
     console.log(checkedCategories);
     const fileextension = currentfile.split(".").pop();
     let type_of_file = "Geojson";
@@ -61,11 +81,11 @@ export default function UploadingCategories() {
     data.append("filename", currentfile);
     data.append("type_of_file", type_of_file);
     data.append("client_id", currentClient);
-    data.append("", currentProject);
+    data.append("project_id", currentProject);
     data.append("user_id", currentUser);
     console.log(data);
     if (checkedCategories.length > 0) {
-      closeForm();
+      // closeForm();
       dispatch(setshowMapLoader(true));
       // dispatch(setshowProgressFormOpen(true));
       axios
@@ -100,9 +120,13 @@ export default function UploadingCategories() {
     }
   };
 
-  const handleLayerChange = (event, layer) => {
+  const handleLayerChange = (event, main_index, index) => {
     dispatch(
-      changeDistinctChecked({ id: layer.id, checked: event.target.checked })
+      changeDistinctChecked({
+        main_index: main_index,
+        index: index,
+        checked: event.target.checked,
+      })
     );
   };
   return (
@@ -115,7 +139,8 @@ export default function UploadingCategories() {
           width: "100%",
           height: "100%",
           background: "rgba(0, 0, 0, 0.5)",
-          zIndex: 9999,
+          zIndex: 99999,
+          borderRadius: "10px",
         }}
       >
         <form
@@ -129,62 +154,99 @@ export default function UploadingCategories() {
             background: "#fff",
             padding: "20px",
             zIndex: 10000,
+            borderRadius: "10px",
           }}
         >
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography sx={{ padding: 2 }}>
-                Select the Matched categories Measuring for Map Nov from the
-                available classes from file{" "}
-              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                }}
+              >
+                {" "}
+                <Typography sx={{ padding: 2 }}>
+                  Select/Modify the matched categories for :
+                </Typography>
+                <Typography sx={{ color: "#093F7F" }}>
+                  {current_project_name}.
+                </Typography>
+              </Box>
+              <Box sx={{ marginLeft: 2 }}>
+                <Typography sx={{ color: "red" }}>
+                  Note : Here we use AI model to clean the data and detect the
+                  categories.
+                </Typography>
+              </Box>
             </Grid>
             <Grid item xs={12} sx={{ maxHeight: "400px", overflow: "scroll" }}>
               {distinct &&
-                distinct.map((layer, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      display: "flex",
-                      gap: 4,
-                      marginBottom: 3,
-                      alignItems: "center",
-                    }}
-                  >
-                    <FormGroup sx={{ margin: 0, padding: 0 }}>
-                      <FormControlLabel
+                distinct.map((type_of_geometry, main_index) => (
+                  <div key={main_index}>
+                    {type_of_geometry.map((layer, index) => (
+                      <Box
                         key={index}
-                        slotProps={{
-                          typography: {
-                            fontSize: 15,
-                            color: "#6A6D70",
-                            fontWeight: 900,
-                          },
+                        sx={{
+                          display: "flex",
+                          // gap: 4,
+                          marginBottom: 1,
+                          alignItems: "center",
+                          justifyContent: "space-between",
                         }}
-                        control={
-                          <Checkbox
-                            onChange={(event) =>
-                              handleLayerChange(event, layer)
-                            }
+                      >
+                        <FormGroup sx={{ margin: 0, padding: 0 }}>
+                          <FormControlLabel
                             key={index}
-                            size="small"
-                            // defaultChecked
-                            sx={{
-                              "&:hover": { backgroundColor: "transparent" },
+                            slotProps={{
+                              typography: {
+                                fontSize: 15,
+                                color: "#6A6D70",
+                                fontWeight: 900,
+                              },
                             }}
+                            control={
+                              <Checkbox
+                                onChange={(event) =>
+                                  handleLayerChange(event, main_index, index)
+                                }
+                                key={index}
+                                size="small"
+                                // defaultChecked
+                                checked={layer.checked}
+                                sx={{
+                                  "&:hover": { backgroundColor: "transparent" },
+                                }}
+                              />
+                            }
+                            label={layer.cleaned_name}
+                            sx={{ margin: 0, padding: 0 }}
                           />
-                        }
-                        label={layer.name + `(${layer.type_of_geometry})`}
-                        sx={{ margin: 0, padding: 0 }}
-                      />
-                    </FormGroup>
-                    <ArrowForwardIosIcon />
-                    <AutoCompleteMap
-                      key={index}
-                      // onItemSelected={(id) => setSelectedCategoryId(id)}
-                      category={"category"}
-                      layer={layer}
-                    />
-                  </Box>
+                        </FormGroup>
+
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            gap: 8,
+                          }}
+                        >
+                          <ArrowForwardIosIcon />
+
+                          <AutoCompleteMap
+                            key={index}
+                            // onItemSelected={(id) => setSelectedCategoryId(id)}
+                            index={index}
+                            category={"category"}
+                            main_index={main_index}
+                            layer={layer}
+                          />
+                        </Box>
+                      </Box>
+                    ))}
+                  </div>
                 ))}
             </Grid>
             <Grid item xs={12}>
