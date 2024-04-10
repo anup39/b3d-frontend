@@ -34,7 +34,7 @@ export default function MeasuringUploadStatus() {
         });
       };
 
-      const interval = setInterval(fetchData, 1000);
+      const interval = setInterval(fetchData, 2000);
       return () => {
         clearInterval(interval);
       };

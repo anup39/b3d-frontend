@@ -108,7 +108,7 @@ export default function MeasuringUploadPanel({ measuringsUploads }) {
                           variant="body2"
                           color="text.secondary"
                         >
-                          Filesize: {file_size} MB
+                          Filesize: {(file_size / 1048576).toFixed(2)} MB
                         </Typography>
                         <Typography
                           sx={{ display: "inline" }}
