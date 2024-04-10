@@ -14,7 +14,15 @@ import LinearProgressLabel from "../Property/LinearProgressLabel";
 
 export default function MeasuringUploadPanel({ measuringsUploads }) {
   return (
-    <>
+    <List
+      dense
+      sx={{
+        maxWidth: 500,
+        minWidth: 355,
+        maxHeight: 500,
+        overflow: "scroll",
+      }}
+    >
       {measuringsUploads.length > 0 ? (
         measuringsUploads.map(
           ({
@@ -22,63 +30,89 @@ export default function MeasuringUploadPanel({ measuringsUploads }) {
             task_id,
             name,
             file_name,
+            total_features,
             progress,
             status,
             file_size,
             projection,
           }) => (
-            <Box key={id}>
-              <List
-                sx={{
-                  width: "100%",
-                  maxWidth: 360,
-                  bgcolor: "background.paper",
-                }}
-              >
-                <ListItem alignItems="flex-start">
-                  <ListItemAvatar>
-                    <FileOpenIcon></FileOpenIcon>
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{
-                      color: "#027FFE",
-                      //   boxShadow: "0 0 2px 0 #027FFE",
-                      paddingLeft: 1,
-                      paddingRight: 1,
-                      borderRadius: 1,
-                    }}
-                    primary={name}
-                    secondary={
-                      <React.Fragment>
-                        <Box sx={{ display: "flex", flexDirection: "column" }}>
-                          <Typography
-                            sx={{ display: "inline" }}
-                            component="span"
-                            variant="body2"
-                            color="text.secondary"
-                          >
-                            Status: {status}
-                          </Typography>
-                          <LinearProgressLabel
-                            value={progress}
-                          ></LinearProgressLabel>
+            <ListItem key={id} alignItems="flex-start">
+              <ListItemAvatar>
+                <FileOpenIcon
+                  sx={{
+                    color: "#757575",
+                  }}
+                ></FileOpenIcon>
+              </ListItemAvatar>
 
-                          <Typography
-                            sx={{ display: "inline" }}
-                            component="span"
-                            variant="body2"
-                            color="text.secondary"
-                          >
-                            Filename: {file_name}
-                          </Typography>
-                        </Box>
-                      </React.Fragment>
-                    }
-                  />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-              </List>
-            </Box>
+              <ListItemText
+                sx={{
+                  color: "#027FFE",
+                  paddingLeft: 1,
+                  paddingRight: 1,
+                  borderRadius: 1,
+                }}
+                primary={name}
+                secondary={
+                  <React.Fragment>
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <Typography
+                        sx={{ display: "inline" }}
+                        component="span"
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        Total Features: {total_features}
+                      </Typography>
+                      <Typography
+                        sx={{ display: "inline" }}
+                        component="span"
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        Status: {status}
+                      </Typography>
+                      <LinearProgressLabel
+                        value={progress}
+                      ></LinearProgressLabel>
+
+                      <Typography
+                        sx={{ display: "inline" }}
+                        component="span"
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        Filename: {file_name}
+                      </Typography>
+                      <Typography
+                        sx={{ display: "inline" }}
+                        component="span"
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        Filesize: {file_size} MB
+                      </Typography>
+                      <Typography
+                        sx={{ display: "inline" }}
+                        component="span"
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        Projection: {projection}
+                      </Typography>
+                      <Typography
+                        sx={{ display: "inline", fontSize: "9px" }}
+                        component="span"
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        Task ID: {task_id}
+                      </Typography>
+                    </Box>
+                  </React.Fragment>
+                }
+              />
+            </ListItem>
           )
         )
       ) : (
@@ -86,7 +120,7 @@ export default function MeasuringUploadPanel({ measuringsUploads }) {
           <Typography>No measuring data uploading.</Typography>
         </Box>
       )}
-    </>
+    </List>
   );
 }
 
