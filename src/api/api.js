@@ -172,6 +172,22 @@ const fetchMeasuringTableSummation = async ({ client_id, project_id }) => {
   return response.data;
 };
 
+const fetchMeasuringsUploadStatus = async ({ client_id, project_id }) => {
+  console.log(client_id, project_id);
+  const response = await axios.get(
+    `${
+      import.meta.env.VITE_API_DASHBOARD_URL
+    }/measuring-file-upload/?client=${client_id}&project=${project_id}`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export {
   fetchProjectsByClientId,
   fetchClientDetailsByClientId,
@@ -183,4 +199,5 @@ export {
   deletePropertyPolygonByPolygonId,
   fetchGeojsonByCategoryId,
   fetchMeasuringTableSummation,
+  fetchMeasuringsUploadStatus,
 };
