@@ -312,7 +312,7 @@ export default function Map({ popUpRef }) {
       map.addControl(new maplibregl.ScaleControl(), "bottom-left");
       const measuring_upload_status_control =
         new MeasuringUploadStatusControl();
-      map.addControl(measuring_upload_status_control, "bottom-right");
+      map.addControl(measuring_upload_status_control, "top-right");
       // const popup_control = new PopupControl();
       // map.addControl(popup_control, "bottom-left");
     }
