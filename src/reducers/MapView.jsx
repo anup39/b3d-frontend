@@ -14,7 +14,7 @@ const initialState = {
   showPiechart: false,
   // For measurings uploading panel
   showMeasuringFileUploadPanel: false,
-  measuringsUploadingCount: 4,
+  measuringsUploadingCount: 0,
 
   showTifPanel: false,
   showMapLoader: false,
