@@ -9,6 +9,7 @@ import AutoCompleteMap from "../MapView/AutoCompleteMap";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  setShowMeasuringFileUploadPanel,
   setshowMapLoader,
   setshowShapefileUpload,
   setshowUploadingCategories,
@@ -103,8 +104,15 @@ export default function UploadingCategories() {
           // dispatch(setProgress(0));
           dispatch(setshowMapLoader(false));
           dispatch(setshowToast(true));
-          dispatch(settoastMessage("Successfully Created Categories"));
+          dispatch(
+            settoastMessage(
+              "Successfully uploading categories. See the panel for more info"
+            )
+          );
           dispatch(settoastType("success"));
+          dispatch(setshowUploadingCategories(false));
+          dispatch(setShowMeasuringFileUploadPanel(true));
+
           // setTimeout(() => {
           //   window.location.reload();
           // }, 2000);
@@ -113,7 +121,7 @@ export default function UploadingCategories() {
           // dispatch(setshowProgressFormOpen(false));
           dispatch(setshowMapLoader(false));
           dispatch(setshowToast(true));
-          dispatch(settoastMessage("Failed Created Categories"));
+          dispatch(settoastMessage("Failed to upload the categories"));
           dispatch(settoastType("error"));
           console.error("Error fetching data:", error);
         });
