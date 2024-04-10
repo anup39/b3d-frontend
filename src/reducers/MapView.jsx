@@ -12,6 +12,7 @@ const initialState = {
   showMeasuringsPanel: false,
   showTableMeasurings: false,
   showPiechart: false,
+  showMeasuringFileUploadPanel: false,
   showTifPanel: false,
   showMapLoader: false,
   currentMapDetail: {
@@ -180,6 +181,10 @@ export const MapView = createSlice({
         },
       };
     },
+
+    setShowMeasuringFileUploadPanel: (state, action) => {
+      state.showMeasuringFileUploadPanel = action.payload;
+    },
   },
 });
 
@@ -211,6 +216,7 @@ export const {
   setDisplayType,
   setCurrentPropertyPolygonGeojson,
   resetCurrentMapDetail,
+  setShowMeasuringFileUploadPanel,
 } = MapView.actions;
 
 export default MapView.reducer;
