@@ -9,6 +9,7 @@ import AutoCompleteMap from "../MapView/AutoCompleteMap";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  setShowMeasuringFileUploadPanel,
   setshowMapLoader,
   setshowShapefileUpload,
   setshowUploadingCategories,
@@ -65,10 +66,10 @@ export default function UploadingCategories() {
 
   const handleCreateProperty = (event) => {
     event.preventDefault();
-    const checkedCategories = distinct.filter((subArray) => {
-      return subArray.filter((item) => item.checked).length > 0;
-    });
-    console.log(checkedCategories);
+    // const checkedCategories = distinct.filter((subArray) => {
+    //   return subArray.filter((item) => item.checked).length > 0;
+    // });
+    console.log(distinct);
     const fileextension = currentfile.split(".").pop();
     let type_of_file = "Geojson";
     if (fileextension === "zip") {
@@ -77,14 +78,14 @@ export default function UploadingCategories() {
       type_of_file = "Geojson";
     }
     const data = new FormData();
-    data.append("result", JSON.stringify(checkedCategories));
+    data.append("result", JSON.stringify(distinct));
     data.append("filename", currentfile);
     data.append("type_of_file", type_of_file);
     data.append("client_id", currentClient);
     data.append("project_id", currentProject);
     data.append("user_id", currentUser);
     console.log(data);
-    if (checkedCategories.length > 0) {
+    if (distinct.length > 0) {
       // closeForm();
       dispatch(setshowMapLoader(true));
       // dispatch(setshowProgressFormOpen(true));
@@ -103,17 +104,24 @@ export default function UploadingCategories() {
           // dispatch(setProgress(0));
           dispatch(setshowMapLoader(false));
           dispatch(setshowToast(true));
-          dispatch(settoastMessage("Successfully Created Categories"));
+          dispatch(
+            settoastMessage(
+              "Successfully uploading categories. See the panel for more info"
+            )
+          );
           dispatch(settoastType("success"));
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
+          dispatch(setshowUploadingCategories(false));
+          dispatch(setShowMeasuringFileUploadPanel(true));
+
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 2000);
         })
         .catch((error) => {
           // dispatch(setshowProgressFormOpen(false));
           dispatch(setshowMapLoader(false));
           dispatch(setshowToast(true));
-          dispatch(settoastMessage("Failed Created Categories"));
+          dispatch(settoastMessage("Failed to upload the categories"));
           dispatch(settoastType("error"));
           console.error("Error fetching data:", error);
         });

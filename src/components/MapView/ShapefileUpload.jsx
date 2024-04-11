@@ -72,7 +72,6 @@ export default function ShapefileForm() {
 
   const handleCreateProperty = (event) => {
     event.preventDefault();
-    dispatch(setshowUploadingCategories(true));
     dispatch(setshowShapefileUpload(false));
     const fileextension = currentfile.split(".").pop();
     let type_of_file = "Geojson";
@@ -100,6 +99,7 @@ export default function ShapefileForm() {
         );
         dispatch(setdistinct(filtered));
         dispatch(setshowMapLoader(false));
+        dispatch(setshowUploadingCategories(true));
       });
   };
 

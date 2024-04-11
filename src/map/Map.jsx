@@ -23,6 +23,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { setShowKeyInfo } from "../reducers/DrawnGeometry";
+import MeasuringUploadStatusControl from "../components/MeasuringUploadStatusControl/MeasuringUploadStatusControl";
 
 export default function Map({ popUpRef }) {
   console.log("here");
@@ -308,6 +309,10 @@ export default function Map({ popUpRef }) {
       const measure_control = new MeasureControl();
       map.addControl(measure_control, "top-right");
       measure_control.updateMeasureControl(popUpRef);
+      map.addControl(new maplibregl.ScaleControl(), "bottom-left");
+      const measuring_upload_status_control =
+        new MeasuringUploadStatusControl();
+      map.addControl(measuring_upload_status_control, "top-right");
       // const popup_control = new PopupControl();
       // map.addControl(popup_control, "bottom-left");
     }
