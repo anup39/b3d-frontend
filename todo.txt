@@ -45,3 +45,6 @@ November 17 TODO:
 I need to fic the shapefile table
 Testing for the user authentication and the roles
 New methods for the current time and the caluculation of the time
+
+
+Authentication and Authorization
