@@ -53,3 +53,5 @@ Things to consider the section
 Adding the content for the user
 Adding the content for the user
 Adding the content for the user
+New section added for the purpose of the user
+Delete the user and the role
