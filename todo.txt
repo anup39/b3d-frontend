@@ -48,3 +48,11 @@ New methods for the current time and the caluculation of the time
 
 
 Authentication and Authorization
+Adding the content again for the purpose of the user
+Things to consider the section
+Adding the content for the user
+Adding the content for the user
+Adding the content for the user
+New section added for the purpose of the user
+Delete the user and the role
+Delete the user and the role
