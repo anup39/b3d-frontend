@@ -48,3 +48,5 @@ New methods for the current time and the caluculation of the time
 
 
 Authentication and Authorization
+Adding the content again for the purpose of the user
+Things to consider the section
