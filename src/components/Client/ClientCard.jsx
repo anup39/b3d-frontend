@@ -71,7 +71,7 @@ export default function ClientCard({ id, name, description }) {
         setproperties(res.data);
       });
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?client=${id}`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?client=${id}`)
       .then((res) => {
         setusers(res.data);
       });
