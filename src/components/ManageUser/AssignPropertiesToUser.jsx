@@ -66,38 +66,6 @@ export default function AssignPropertiesToUser({ client_id }) {
             <Grid item xs={12}>
               <TransferListProject client_id={client_id} />
             </Grid>
-
-            <Grid item xs={12}>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "blue",
-                  }}
-                  onClick={() => {
-                    dispatch(setshowAssignPropertiesPopup(false));
-                  }}
-                >
-                  Save
-                </Button>
-                <Button
-                  sx={{
-                    backgroundColor: "red",
-                  }}
-                  variant="contained"
-                  onClick={() => {
-                    dispatch(setshowAssignPropertiesPopup(false));
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Box>
-            </Grid>
           </Grid>
         </form>
       </div>

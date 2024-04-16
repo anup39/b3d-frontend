@@ -13,7 +13,8 @@ import { fetchProjectsByClientId } from "../../api/api";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchRoleByUserId } from "../../api/api";
-
+import Box from "@mui/material/Box";
+import { setshowAssignPropertiesPopup } from "../../reducers/DisplaySettings";
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
 }
@@ -27,10 +28,12 @@ function union(a, b) {
 }
 
 export default function TransferListProject({ client_id }) {
-  console.log(client_id, "client_id");
+  const dispatch = useDispatch();
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([]);
   const [right, setRight] = React.useState([]);
+  const [initialLeft, setInitialLeft] = React.useState([]);
+  const [initialRight, setInitialRight] = React.useState([]);
 
   const assignProperitesUser = useSelector(
     (state) => state.users.assignProperitesUser
@@ -137,7 +140,19 @@ export default function TransferListProject({ client_id }) {
   );
 
   const handleSave = () => {
-    console.log(right, "right");
+    if (
+      JSON.stringify(left) !== JSON.stringify(initialLeft) ||
+      JSON.stringify(right) !== JSON.stringify(initialRight)
+    ) {
+      // Save the changes
+      console.log("Left or right items have changed. Saving changes...");
+      // Update the initial state of the left and right lists
+      setInitialLeft(left);
+      setInitialRight(right);
+    } else {
+      console.log("Left or right items have not changed. No changes to save.");
+      dispatch(setshowAssignPropertiesPopup(false));
+    }
   };
 
   React.useEffect(() => {
@@ -146,6 +161,7 @@ export default function TransferListProject({ client_id }) {
         const projectSelected = res[0].project;
         console.log(projectSelected, "projectSelected");
         setRight(projectSelected);
+        setInitialRight(projectSelected);
         fetchProjectsByClientId(client_id).then((res) => {
           const allProjects = res;
           const filteredProjects = allProjects.filter(
@@ -155,6 +171,7 @@ export default function TransferListProject({ client_id }) {
               )
           );
           setLeft(filteredProjects);
+          setInitialLeft(filteredProjects);
         });
       });
     }
@@ -188,29 +205,37 @@ export default function TransferListProject({ client_id }) {
         </Grid>
       </Grid>
       <Grid item>{customList("Chosen", right)}</Grid>
-      <Button
-        variant="contained"
-        sx={{
-          backgroundColor: "blue",
-        }}
-        onClick={() => {
-          handleSave();
-          // dispatch(setshowAssignPropertiesPopup(false));
-        }}
-      >
-        Save
-      </Button>
-      <Button
-        sx={{
-          backgroundColor: "red",
-        }}
-        variant="contained"
-        onClick={() => {
-          // dispatch(setshowAssignPropertiesPopup(false));
-        }}
-      >
-        Cancel
-      </Button>
+      <Grid item xs={12}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "blue",
+            }}
+            onClick={() => {
+              handleSave();
+            }}
+          >
+            Save
+          </Button>
+          <Button
+            sx={{
+              backgroundColor: "red",
+            }}
+            variant="contained"
+            onClick={() => {
+              dispatch(setshowAssignPropertiesPopup(false));
+            }}
+          >
+            Cancel
+          </Button>
+        </Box>
+      </Grid>
     </Grid>
   );
 }
