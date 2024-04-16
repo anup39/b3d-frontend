@@ -53,13 +53,12 @@ export default function Login() {
         dispatch(settoastType("success"));
         axios
           .get(
-            `${
-              import.meta.env.VITE_API_DASHBOARD_URL
-            }/user-role/?user=${user_id}`
+            `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?user=${user_id}`
           )
           .then((res) => {
-            dispatch(setRole(res.data.role_name));
-            localStorage.setItem("role_name", username);
+            console.log(res.data, "roles");
+            dispatch(setRole(res.data[0]));
+            localStorage.setItem("role", username);
           });
         setLoading(false);
         navigate("/dashboard");

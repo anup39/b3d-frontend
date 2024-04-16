@@ -57,7 +57,7 @@ export default function ManageUsers() {
                 id={user.id}
                 username={user.username}
                 email={user.email}
-                role={user.role_name}
+                role={user.role}
                 last_login={user.last_login}
                 date_joined={user.date_joined}
                 client_id={client_id}
