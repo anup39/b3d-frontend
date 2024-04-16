@@ -200,6 +200,19 @@ const fetchRoleByUserId = async (user_id) => {
   return response.data;
 };
 
+const updateRoleByUserId = async ({ role_id, data }) => {
+  const response = await axios.patch(
+    `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/${role_id}/`,
+    data,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+  return response.data;
+};
+
 export {
   fetchProjectsByClientId,
   fetchClientDetailsByClientId,
@@ -213,4 +226,5 @@ export {
   fetchMeasuringTableSummation,
   fetchMeasuringsUploadStatus,
   fetchRoleByUserId,
+  updateRoleByUserId,
 };
