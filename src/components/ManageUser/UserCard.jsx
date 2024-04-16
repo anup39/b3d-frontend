@@ -23,6 +23,7 @@ export default function UserCard({
   onOpenForm,
   client_id,
 }) {
+  console.log("user card");
   const dispatch = useDispatch();
   const username_current = useSelector((state) => state.auth.username);
 

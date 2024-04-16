@@ -11,14 +11,14 @@ import AsignRoleForm from "../components/ManageUser/AsignRoleForm";
 export default function ManageUsers() {
   const dispatch = useDispatch();
   const { client_id } = useParams();
-  const user_id = useSelector((state) => state.auth.user_id);
+  const [user_id, setUserId] = useState(null);
   const [openForm, setOpenFrom] = useState(false);
 
   const users = useSelector((state) => state.users.users);
 
-  // const onUserId = (value) => {
-  //   setUserId(value);
-  // };
+  const onUserId = (value) => {
+    setUserId(value);
+  };
 
   const onOpenForm = (value) => {
     setOpenFrom(value);
@@ -49,15 +49,15 @@ export default function ManageUsers() {
         {users
           ? users.map((user) => (
               <UserCard
-                // onUserId={onUserId}
+                onUserId={onUserId}
                 onOpenForm={onOpenForm}
                 key={user.id}
                 id={user.id}
-                username={user.username}
+                username={user.user_name}
                 email={user.email}
-                role={user.role}
-                last_login={user.last_login}
-                date_joined={user.date_joined}
+                role={user.group_name}
+                last_login={user.created_at}
+                date_joined={user.created_at}
                 client_id={client_id}
               />
             ))
