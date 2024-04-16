@@ -11,14 +11,14 @@ import AsignRoleForm from "../components/ManageUser/AsignRoleForm";
 export default function ManageUsers() {
   const dispatch = useDispatch();
   const { client_id } = useParams();
-  const [userid, setUserId] = useState();
+  const user_id = useSelector((state) => state.auth.user_id);
   const [openForm, setOpenFrom] = useState(false);
 
   const users = useSelector((state) => state.users.users);
 
-  const onUserId = (value) => {
-    setUserId(value);
-  };
+  // const onUserId = (value) => {
+  //   setUserId(value);
+  // };
 
   const onOpenForm = (value) => {
     setOpenFrom(value);
@@ -26,22 +26,19 @@ export default function ManageUsers() {
 
   useEffect(() => {
     axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/user-role/?client=${client_id}`
-      )
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?user=${user_id}`)
       .then((res) => {
         dispatch(setUsers(res.data));
         // setUsers(res.data);
+        console.log(res.data);
       });
-  }, [client_id, dispatch]);
+  }, [user_id, dispatch]);
 
   return (
     <>
       <AppBar></AppBar>
       <AsignRoleForm
-        user_id={userid}
+        user_id={user_id}
         openForm={openForm}
         onOpenForm={onOpenForm}
       />
@@ -51,7 +48,7 @@ export default function ManageUsers() {
         {users
           ? users.map((user) => (
               <UserCard
-                onUserId={onUserId}
+                // onUserId={onUserId}
                 onOpenForm={onOpenForm}
                 key={user.id}
                 id={user.id}
