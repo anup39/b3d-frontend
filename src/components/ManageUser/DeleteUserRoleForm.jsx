@@ -5,7 +5,7 @@ import { setUsers } from "../../reducers/Users";
 import PropTypes from "prop-types";
 
 import axios from "axios";
-export default function DeleteUserRoleForm(client_id) {
+export default function DeleteUserRoleForm({ client_id }) {
   const dispatch = useDispatch();
   const showDeleteUserRolePopup = useSelector(
     (state) => state.displaySettings.showDeleteUserRolePopup
@@ -97,5 +97,5 @@ export default function DeleteUserRoleForm(client_id) {
 }
 
 DeleteUserRoleForm.propTypes = {
-  client_id: PropTypes.number.isRequired,
+  client_id: PropTypes.string.isRequired,
 };
