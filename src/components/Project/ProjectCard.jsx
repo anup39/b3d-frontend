@@ -63,7 +63,7 @@ export default function ProjectCard({
         setproperties(res.data);
       });
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?project=${id}`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?project=${id}`)
       .then((res) => {
         setusers(res.data);
       });
