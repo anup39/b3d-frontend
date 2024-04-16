@@ -29,25 +29,8 @@ function union(a, b) {
 export default function TransferListProject({ client_id }) {
   console.log(client_id, "client_id");
   const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState([
-    { id: 1, name: "test" },
-    { id: 2, name: "new test" },
-    { id: 3, name: "test 3" },
-  ]);
-  const [right, setRight] = React.useState([
-    {
-      id: 4,
-      name: "test 4",
-    },
-    {
-      id: 5,
-      name: "test 5",
-    },
-    {
-      id: 6,
-      name: "test 6",
-    },
-  ]);
+  const [left, setLeft] = React.useState([]);
+  const [right, setRight] = React.useState([]);
 
   const assignProperitesUser = useSelector(
     (state) => state.users.assignProperitesUser
@@ -158,16 +141,23 @@ export default function TransferListProject({ client_id }) {
   };
 
   React.useEffect(() => {
-    if (assignProperitesUser) {
+    if (assignProperitesUser && client_id) {
       fetchRoleByUserId(assignProperitesUser.user).then((res) => {
-        console.log(res[0].project, "res selected");
+        const projectSelected = res[0].project;
+        console.log(projectSelected, "projectSelected");
+        setRight(projectSelected);
+        fetchProjectsByClientId(client_id).then((res) => {
+          const allProjects = res;
+          const filteredProjects = allProjects.filter(
+            (project) =>
+              !projectSelected.some(
+                (selectedProject) => selectedProject.id === project.id
+              )
+          );
+          setLeft(filteredProjects);
+        });
       });
     }
-    if (!client_id) return;
-    fetchProjectsByClientId(client_id).then((res) => {
-      console.log(res, "res all");
-      setLeft(res);
-    });
   }, [client_id, assignProperitesUser]);
 
   return (
