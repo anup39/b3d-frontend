@@ -127,14 +127,14 @@ export default function ClientCard({ id, name, description }) {
                   />
                 </Tooltip>
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <Tooltip title="Delete Client">
                   <DeleteIcon
                     onClick={handleDeleteClient}
                     sx={{ "&:hover": { cursor: "pointer" } }}
                   />
                 </Tooltip>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Grid>
           <Grid item xs>
