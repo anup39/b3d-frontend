@@ -13,10 +13,17 @@ import {
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
 
-export default function AsignRoleForm({ openForm, user_id, onOpenForm }) {
+export default function AsignRoleForm({
+  openForm,
+  user_id,
+  user_name,
+  onOpenForm,
+}) {
   const dispatch = useDispatch();
   const [selectedUserRole, setSelectedUserRole] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  console.log(user_id, "user_id");
 
   const handleCreateUserRole = (event) => {
     event.preventDefault();
@@ -25,12 +32,12 @@ export default function AsignRoleForm({ openForm, user_id, onOpenForm }) {
       role: selectedUserRole,
     };
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?id=${user_id}`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?id=${user_id}`)
       .then((res) => {
         const role_id = res.data[0].id;
         axios
           .put(
-            `${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/${role_id}/`,
+            `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/${role_id}/`,
             data
           )
           .then(() => {
@@ -90,7 +97,7 @@ export default function AsignRoleForm({ openForm, user_id, onOpenForm }) {
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
-                  value={user_id}
+                  value={user_name}
                   required
                   fullWidth
                   disabled

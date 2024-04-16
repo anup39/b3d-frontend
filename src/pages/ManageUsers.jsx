@@ -12,12 +12,17 @@ export default function ManageUsers() {
   const dispatch = useDispatch();
   const { client_id } = useParams();
   const [user_id, setUserId] = useState(null);
+  const [user_name, setUserName] = useState(null);
   const [openForm, setOpenFrom] = useState(false);
 
   const users = useSelector((state) => state.users.users);
 
   const onUserId = (value) => {
     setUserId(value);
+  };
+
+  const onUserName = (value) => {
+    setUserName(value);
   };
 
   const onOpenForm = (value) => {
@@ -40,6 +45,7 @@ export default function ManageUsers() {
       <AppBar></AppBar>
       <AsignRoleForm
         user_id={user_id}
+        user_name={user_name}
         openForm={openForm}
         onOpenForm={onOpenForm}
       />
@@ -50,6 +56,7 @@ export default function ManageUsers() {
           ? users.map((user) => (
               <UserCard
                 onUserId={onUserId}
+                onUserName={onUserName}
                 onOpenForm={onOpenForm}
                 key={user.id}
                 id={user.id}
@@ -59,6 +66,7 @@ export default function ManageUsers() {
                 last_login={user.created_at}
                 date_joined={user.created_at}
                 client_id={client_id}
+                user={user.user}
               />
             ))
           : null}

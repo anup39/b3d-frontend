@@ -21,14 +21,17 @@ export default function UserCard({
   date_joined,
   onUserId,
   onOpenForm,
+  onUserName,
   client_id,
+  user,
 }) {
   console.log("user card");
   const dispatch = useDispatch();
   const username_current = useSelector((state) => state.auth.username);
 
   const handleAssignRole = () => {
-    onUserId(id);
+    onUserId(user);
+    onUserName(username);
     onOpenForm(true);
   };
 
@@ -124,5 +127,7 @@ UserCard.propTypes = {
   date_joined: PropTypes.string,
   onUserId: PropTypes.func,
   onOpenForm: PropTypes.func,
+  onUserName: PropTypes.func,
   client_id: PropTypes.string,
+  user: PropTypes.string,
 };
