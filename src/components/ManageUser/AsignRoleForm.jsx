@@ -4,7 +4,6 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import AutoCompleteCustom from "../StandardCategory/AutoCompleteCustom";
 import PropTypes from "prop-types";
 import {
   settoastType,
@@ -12,6 +11,7 @@ import {
   setshowToast,
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
+import AutoCompleteRole from "./AutoCompleteRole";
 
 export default function AsignRoleForm({
   openForm,
@@ -24,6 +24,7 @@ export default function AsignRoleForm({
   const [loading, setLoading] = useState(false);
 
   console.log(user_id, "user_id");
+  console.log(selectedUserRole, "selectedUserRole");
 
   const handleCreateUserRole = (event) => {
     event.preventDefault();
@@ -104,9 +105,8 @@ export default function AsignRoleForm({
                 />
               </Grid>
               <Grid item xs={12}>
-                <AutoCompleteCustom
+                <AutoCompleteRole
                   onItemSelected={(id) => setSelectedUserRole(id)}
-                  category={"roles"}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -143,4 +143,5 @@ AsignRoleForm.propTypes = {
   user_id: PropTypes.number,
   openForm: PropTypes.bool,
   onOpenForm: PropTypes.func,
+  user_name: PropTypes.string,
 };
