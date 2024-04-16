@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Typography, Button } from "@mui/material";
 import { setshowDeleteUserRolePopup } from "../../reducers/DisplaySettings";
-import { setUsers } from "../../reducers/Users";
+import { setDeleteUserRoleId, setUsers } from "../../reducers/Users";
 import PropTypes from "prop-types";
 
 import axios from "axios";
@@ -28,6 +28,7 @@ export default function DeleteUserRoleForm({ client_id }) {
           )
           .then((res) => {
             dispatch(setUsers(res.data));
+            dispatch(setDeleteUserRoleId(null));
           })
           .catch((err) => console.log(err));
       })

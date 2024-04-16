@@ -3,11 +3,18 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import { setshowDeleteUserRolePopup } from "../../reducers/DisplaySettings";
+import {
+  setshowDeleteUserRolePopup,
+  setshowAssignPropertiesPopup,
+} from "../../reducers/DisplaySettings";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Tooltip } from "@mui/material";
-import { setDeleteUserRoleId } from "../../reducers/Users";
+import {
+  setDeleteUserRoleId,
+  setAssignProperitesUser,
+} from "../../reducers/Users";
+import ApartmentIcon from "@mui/icons-material/Apartment";
 
 export default function UserCard({
   id,
@@ -33,6 +40,11 @@ export default function UserCard({
   const handleDeleteUserRole = () => {
     dispatch(setshowDeleteUserRolePopup(true));
     dispatch(setDeleteUserRoleId(id));
+  };
+
+  const handleAssignProperties = () => {
+    dispatch(setshowAssignPropertiesPopup(true));
+    dispatch(setAssignProperitesUser(username));
   };
 
   return (
@@ -82,6 +94,14 @@ export default function UserCard({
                         <Tooltip title="Delete Client">
                           <DeleteIcon
                             onClick={handleDeleteUserRole}
+                            sx={{ "&:hover": { cursor: "pointer" } }}
+                          />
+                        </Tooltip>
+                      </Grid>
+                      <Grid item>
+                        <Tooltip title="Assign Properties to user">
+                          <ApartmentIcon
+                            onClick={handleAssignProperties}
                             sx={{ "&:hover": { cursor: "pointer" } }}
                           />
                         </Tooltip>

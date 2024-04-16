@@ -8,6 +8,7 @@ import UserCard from "../components/ManageUser/UserCard";
 import UserForm from "../components/ManageUser/UserForm";
 import AsignRoleForm from "../components/ManageUser/AsignRoleForm";
 import DeleteUserRoleForm from "../components/ManageUser/DeleteUserRoleForm";
+import AssignPropertiesToUser from "../components/ManageUser/AssignPropertiesToUser";
 
 export default function ManageUsers() {
   const dispatch = useDispatch();
@@ -17,6 +18,9 @@ export default function ManageUsers() {
   const [openForm, setOpenFrom] = useState(false);
 
   const users = useSelector((state) => state.users.users);
+  const showAssignPropertiesPopup = useSelector(
+    (state) => state.displaySettings.showAssignPropertiesPopup
+  );
 
   const onUserId = (value) => {
     setUserId(value);
@@ -52,6 +56,10 @@ export default function ManageUsers() {
         onOpenForm={onOpenForm}
       />
       <DeleteUserRoleForm client_id={client_id} />
+
+      {showAssignPropertiesPopup ? (
+        <AssignPropertiesToUser client_id={client_id} />
+      ) : null}
 
       <UserForm client_id={client_id} />
       <div>
