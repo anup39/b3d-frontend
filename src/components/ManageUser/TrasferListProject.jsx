@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchRoleByUserId } from "../../api/api";
 import Box from "@mui/material/Box";
 import { setshowAssignPropertiesPopup } from "../../reducers/DisplaySettings";
+import { CircularProgress } from "@mui/material";
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
 }
@@ -34,6 +35,7 @@ export default function TransferListProject({ client_id }) {
   const [right, setRight] = React.useState([]);
   const [initialLeft, setInitialLeft] = React.useState([]);
   const [initialRight, setInitialRight] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
 
   const assignProperitesUser = useSelector(
     (state) => state.users.assignProperitesUser
@@ -213,15 +215,13 @@ export default function TransferListProject({ client_id }) {
           }}
         >
           <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "blue",
-            }}
             onClick={() => {
               handleSave();
             }}
+            variant={loading ? "outlined" : "contained"}
           >
-            Save
+            {loading ? null : "Save"}
+            {loading ? <CircularProgress /> : null}
           </Button>
           <Button
             sx={{
