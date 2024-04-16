@@ -11,9 +11,6 @@ const initialState = {
   showGeomFormPopup: "none",
   showErrorPopup: false,
   errorMessage: "There is an error",
-  showDeleteUserPopup: false,
-  deleteUserPopupMessage: "Are you sure you want to delete this user?",
-  deleteUserRoleId: null,
   showTifUpload: false,
   showUploadInspection: false,
   showInspectionType: true,
@@ -53,15 +50,6 @@ export const DisplaySettings = createSlice({
     },
     seterrorMessage: (state, action) => {
       state.errorMessage = action.payload;
-    },
-    setshowDeleteUserPopup: (state, action) => {
-      state.showDeleteUserPopup = action.payload;
-    },
-    setdeleteUserPopupMessage: (state, action) => {
-      state.deleteUserPopupMessage = action.payload;
-    },
-    setdeleteUserRoleId: (state, action) => {
-      state.deleteUserRoleId = action.payload;
     },
     setshowTifUpload: (state, action) => {
       state.showTifUpload = action.payload;
