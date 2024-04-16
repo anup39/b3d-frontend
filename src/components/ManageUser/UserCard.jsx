@@ -62,7 +62,8 @@ export default function UserCard({
                     <b>Role</b> : {role}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    <b>Date Joined</b> : {date_joined}
+                    <b>Date Joined</b> :{" "}
+                    {new Date(date_joined).toLocaleDateString()}
                   </Typography>
                 </Grid>
                 <Grid item xs container direction="row" spacing={2}>
