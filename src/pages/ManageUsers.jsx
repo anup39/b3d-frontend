@@ -7,6 +7,7 @@ import AppBar from "../components/Common/AppBar";
 import UserCard from "../components/ManageUser/UserCard";
 import UserForm from "../components/ManageUser/UserForm";
 import AsignRoleForm from "../components/ManageUser/AsignRoleForm";
+import DeleteUserRoleForm from "../components/ManageUser/DeleteUserRoleForm";
 
 export default function ManageUsers() {
   const dispatch = useDispatch();
@@ -36,7 +37,7 @@ export default function ManageUsers() {
       )
       .then((res) => {
         dispatch(setUsers(res.data));
-        console.log(res.data);
+        // console.log(res.data);
       });
   }, [client_id, dispatch]);
 
@@ -44,11 +45,13 @@ export default function ManageUsers() {
     <>
       <AppBar></AppBar>
       <AsignRoleForm
+        client_id={client_id}
         user_id={user_id}
         user_name={user_name}
         openForm={openForm}
         onOpenForm={onOpenForm}
       />
+      <DeleteUserRoleForm client_id={client_id} />
 
       <UserForm client_id={client_id} />
       <div>

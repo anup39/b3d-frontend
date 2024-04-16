@@ -12,8 +12,10 @@ import {
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
 import AutoCompleteRole from "./AutoCompleteRole";
+import { setUsers } from "../../reducers/Users";
 
 export default function AsignRoleForm({
+  client_id,
   openForm,
   user_id,
   user_name,
@@ -23,31 +25,39 @@ export default function AsignRoleForm({
   const [selectedUserRole, setSelectedUserRole] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  console.log(user_id, "user_id");
-  console.log(selectedUserRole, "selectedUserRole");
-
   const handleCreateUserRole = (event) => {
     event.preventDefault();
     setLoading(true);
     const data = {
-      role: selectedUserRole,
+      group: selectedUserRole,
     };
     axios
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?id=${user_id}`)
       .then((res) => {
         const role_id = res.data[0].id;
+        console.log(role_id, "role_id");
         axios
-          .put(
+          .patch(
             `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/${role_id}/`,
             data
           )
           .then(() => {
-            window.location.reload(true);
+            // window.location.reload(true);
             setLoading(false);
             dispatch(setshowToast(true));
             dispatch(settoastMessage("Successfully Created User Role"));
             dispatch(settoastType("success"));
             closeForm();
+            axios
+              .get(
+                `${
+                  import.meta.env.VITE_API_DASHBOARD_URL
+                }/roles/?client=${client_id}`
+              )
+              .then((res) => {
+                dispatch(setUsers(res.data));
+              })
+              .catch((err) => console.log(err));
           })
           .catch(() => {
             setLoading(false);
@@ -144,4 +154,5 @@ AsignRoleForm.propTypes = {
   openForm: PropTypes.bool,
   onOpenForm: PropTypes.func,
   user_name: PropTypes.string,
+  client_id: PropTypes.string,
 };

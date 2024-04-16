@@ -3,15 +3,11 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setdeleteUserRoleId,
-  setdeleteUserPopupMessage,
-  setshowDeleteUserPopup,
-} from "../../reducers/DisplaySettings";
+import { setshowDeleteUserRolePopup } from "../../reducers/DisplaySettings";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Tooltip } from "@mui/material";
-import { setClientId } from "../../reducers/Users";
+import { setDeleteUserRoleId } from "../../reducers/Users";
 
 export default function UserCard({
   id,
@@ -22,7 +18,6 @@ export default function UserCard({
   onUserId,
   onOpenForm,
   onUserName,
-  client_id,
   user,
 }) {
   console.log("user card");
@@ -35,16 +30,9 @@ export default function UserCard({
     onOpenForm(true);
   };
 
-  const handleDeleteUser = () => {
-    dispatch(setdeleteUserRoleId(id));
-    dispatch(
-      setdeleteUserPopupMessage(
-        `Are you sure you want to delete user ${username} ?`
-      )
-    );
-    dispatch(setshowDeleteUserPopup(true));
-    console.log("here setting the client id to the state ");
-    dispatch(setClientId(client_id));
+  const handleDeleteUserRole = () => {
+    dispatch(setshowDeleteUserRolePopup(true));
+    dispatch(setDeleteUserRoleId(id));
   };
 
   return (
@@ -92,7 +80,7 @@ export default function UserCard({
                       <Grid item>
                         <Tooltip title="Delete Client">
                           <DeleteIcon
-                            onClick={handleDeleteUser}
+                            onClick={handleDeleteUserRole}
                             sx={{ "&:hover": { cursor: "pointer" } }}
                           />
                         </Tooltip>
@@ -123,11 +111,9 @@ UserCard.propTypes = {
   username: PropTypes.string,
   email: PropTypes.string,
   role: PropTypes.string,
-  last_login: PropTypes.string,
   date_joined: PropTypes.string,
   onUserId: PropTypes.func,
   onOpenForm: PropTypes.func,
   onUserName: PropTypes.func,
-  client_id: PropTypes.string,
-  user: PropTypes.string,
+  user: PropTypes.number,
 };

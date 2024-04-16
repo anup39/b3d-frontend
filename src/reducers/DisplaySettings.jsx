@@ -17,6 +17,7 @@ const initialState = {
   showTifUpload: false,
   showUploadInspection: false,
   showInspectionType: true,
+  showDeleteUserRolePopup: false,
 };
 
 export const DisplaySettings = createSlice({
@@ -71,6 +72,9 @@ export const DisplaySettings = createSlice({
     setshowInspectionType: (state, action) => {
       state.showInspectionType = action.payload;
     },
+    setshowDeleteUserRolePopup: (state, action) => {
+      state.showDeleteUserRolePopup = action.payload;
+    },
   },
 });
 
@@ -92,6 +96,7 @@ export const {
   setshowTifUpload,
   setshowUploadInspection,
   setshowInspectionType,
+  setshowDeleteUserRolePopup,
 } = DisplaySettings.actions;
 
 export default DisplaySettings.reducer;
