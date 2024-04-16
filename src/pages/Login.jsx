@@ -58,7 +58,7 @@ export default function Login() {
           .then((res) => {
             console.log(res.data, "roles");
             dispatch(setRole(res.data[0]));
-            localStorage.setItem("role", username);
+            localStorage.setItem("role", JSON.stringify(res.data[0]));
           });
         setLoading(false);
         navigate("/dashboard");
