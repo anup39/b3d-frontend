@@ -30,14 +30,14 @@ export default function UserForm({ client_id }) {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-roles/`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/groups/`)
       .then((res) => {
         setRoles(res.data);
       })
       .then(() => {});
   }, []);
 
-  const handleCreateClient = (event) => {
+  const handleCreateUser = (event) => {
     // TODO : Here handle the error since username and email  are checked in backend
     event.preventDefault();
     setLoading(true);
@@ -48,14 +48,14 @@ export default function UserForm({ client_id }) {
         const user_data = res.data;
         const user_role_data = {
           user: user_data.id,
-          role: inputValue.id,
+          group: inputValue.id,
           created_by: user_id,
           is_display: true,
           client: client_id,
         };
         axios
           .post(
-            `${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/`,
+            `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/`,
             user_role_data
           )
           .then(() => {
@@ -68,7 +68,7 @@ export default function UserForm({ client_id }) {
               .get(
                 `${
                   import.meta.env.VITE_API_DASHBOARD_URL
-                }/user-role/?client=${client_id}`
+                }/roles/?client=${client_id}`
               )
               .then((res) => {
                 dispatch(setUsers(res.data));
@@ -125,7 +125,7 @@ export default function UserForm({ client_id }) {
           }}
         >
           <form
-            onSubmit={handleCreateClient}
+            onSubmit={handleCreateUser}
             style={{
               position: "absolute",
               top: "50%",
