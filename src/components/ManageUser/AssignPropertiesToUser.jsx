@@ -10,8 +10,9 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { setshowAssignPropertiesPopup } from "../../reducers/DisplaySettings";
 import TransferListProject from "./TrasferListProject";
+import PropTypes from "prop-types";
 
-export default function AssignPropertiesToUser() {
+export default function AssignPropertiesToUser({ client_id }) {
   const dispatch = useDispatch();
   const assignProperitesUser = useSelector(
     (state) => state.users.assignProperitesUser
@@ -58,12 +59,12 @@ export default function AssignPropertiesToUser() {
                     color: "blue",
                   }}
                 >
-                  {assignProperitesUser ? assignProperitesUser : null}
+                  {assignProperitesUser ? assignProperitesUser.username : null}
                 </Typography>
               </Box>
             </Grid>
             <Grid item xs={12}>
-              <TransferListProject />
+              <TransferListProject client_id={client_id} />
             </Grid>
 
             <Grid item xs={12}>
@@ -103,3 +104,7 @@ export default function AssignPropertiesToUser() {
     </>
   );
 }
+
+AssignPropertiesToUser.propTypes = {
+  client_id: PropTypes.string,
+};

@@ -188,6 +188,18 @@ const fetchMeasuringsUploadStatus = async ({ client_id, project_id }) => {
   return response.data;
 };
 
+const fetchRoleByUserId = async (user_id) => {
+  const response = await axios.get(
+    `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?user=${user_id}`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+  return response.data;
+};
+
 export {
   fetchProjectsByClientId,
   fetchClientDetailsByClientId,
@@ -200,4 +212,5 @@ export {
   fetchGeojsonByCategoryId,
   fetchMeasuringTableSummation,
   fetchMeasuringsUploadStatus,
+  fetchRoleByUserId,
 };

@@ -9,6 +9,10 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import { fetchProjectsByClientId } from "../../api/api";
+import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchRoleByUserId } from "../../api/api";
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -22,10 +26,32 @@ function union(a, b) {
   return [...a, ...not(b, a)];
 }
 
-export default function TransferListProject() {
+export default function TransferListProject({ client_id }) {
+  console.log(client_id, "client_id");
   const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState([0, 1, 2, 3]);
-  const [right, setRight] = React.useState([4, 5, 6, 7, 8, 10]);
+  const [left, setLeft] = React.useState([
+    { id: 1, name: "test" },
+    { id: 2, name: "new test" },
+    { id: 3, name: "test 3" },
+  ]);
+  const [right, setRight] = React.useState([
+    {
+      id: 4,
+      name: "test 4",
+    },
+    {
+      id: 5,
+      name: "test 5",
+    },
+    {
+      id: 6,
+      name: "test 6",
+    },
+  ]);
+
+  const assignProperitesUser = useSelector(
+    (state) => state.users.assignProperitesUser
+  );
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
@@ -105,7 +131,7 @@ export default function TransferListProject() {
 
           return (
             <ListItemButton
-              key={value}
+              key={value.id}
               role="listitem"
               onClick={handleToggle(value)}
             >
@@ -119,13 +145,30 @@ export default function TransferListProject() {
                   }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`List item ${value + 1}`} />
+              <ListItemText id={labelId} primary={`${value.name}`} />
             </ListItemButton>
           );
         })}
       </List>
     </Card>
   );
+
+  const handleSave = () => {
+    console.log(right, "right");
+  };
+
+  React.useEffect(() => {
+    if (assignProperitesUser) {
+      fetchRoleByUserId(assignProperitesUser.user).then((res) => {
+        console.log(res[0].project, "res selected");
+      });
+    }
+    if (!client_id) return;
+    fetchProjectsByClientId(client_id).then((res) => {
+      console.log(res, "res all");
+      setLeft(res);
+    });
+  }, [client_id, assignProperitesUser]);
 
   return (
     <Grid container spacing={2} justifyContent="center" alignItems="center">
@@ -155,6 +198,33 @@ export default function TransferListProject() {
         </Grid>
       </Grid>
       <Grid item>{customList("Chosen", right)}</Grid>
+      <Button
+        variant="contained"
+        sx={{
+          backgroundColor: "blue",
+        }}
+        onClick={() => {
+          handleSave();
+          // dispatch(setshowAssignPropertiesPopup(false));
+        }}
+      >
+        Save
+      </Button>
+      <Button
+        sx={{
+          backgroundColor: "red",
+        }}
+        variant="contained"
+        onClick={() => {
+          // dispatch(setshowAssignPropertiesPopup(false));
+        }}
+      >
+        Cancel
+      </Button>
     </Grid>
   );
 }
+
+TransferListProject.propTypes = {
+  client_id: PropTypes.string.isRequired,
+};
