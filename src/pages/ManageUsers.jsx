@@ -26,13 +26,14 @@ export default function ManageUsers() {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?user=${user_id}`)
+      .get(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?client=${client_id}`
+      )
       .then((res) => {
         dispatch(setUsers(res.data));
-        // setUsers(res.data);
         console.log(res.data);
       });
-  }, [user_id, dispatch]);
+  }, [client_id, dispatch]);
 
   return (
     <>
