@@ -16,6 +16,7 @@ import { fetchRoleByUserId } from "../../api/api";
 import Box from "@mui/material/Box";
 import { setshowAssignPropertiesPopup } from "../../reducers/DisplaySettings";
 import { CircularProgress } from "@mui/material";
+import { updateRoleById } from "../../api/api";
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
 }
@@ -149,8 +150,15 @@ export default function TransferListProject({ client_id }) {
       // Save the changes
       console.log("Left or right items have changed. Saving changes...");
       // Update the initial state of the left and right lists
-      setInitialLeft(left);
-      setInitialRight(right);
+      console.log(right, "right");
+      const ids = right.map((project) => project.id);
+      console.log(ids, "ids");
+      const data = { project: 25 };
+      updateRoleById({ id: assignProperitesUser.role_id, data: data }).then(
+        (res) => {
+          console.log(res, "res");
+        }
+      );
     } else {
       console.log("Left or right items have not changed. No changes to save.");
       dispatch(setshowAssignPropertiesPopup(false));

@@ -44,7 +44,9 @@ export default function UserCard({
 
   const handleAssignProperties = () => {
     dispatch(setshowAssignPropertiesPopup(true));
-    dispatch(setAssignProperitesUser({ user: user, username: username }));
+    dispatch(
+      setAssignProperitesUser({ user: user, username: username, role_id: id })
+    );
   };
 
   return (
