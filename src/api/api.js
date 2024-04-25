@@ -190,7 +190,9 @@ const fetchMeasuringsUploadStatus = async ({ client_id, project_id }) => {
 
 const fetchRoleByUserId = async (user_id) => {
   const response = await axios.get(
-    `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?user=${user_id}`,
+    `${
+      import.meta.env.VITE_API_DASHBOARD_URL
+    }/roles-for-projects/?user=${user_id}`,
     {
       headers: {
         Authorization: "Token " + localStorage.getItem("token"),
@@ -200,9 +202,9 @@ const fetchRoleByUserId = async (user_id) => {
   return response.data;
 };
 
-const updateRoleByUserId = async ({ role_id, data }) => {
-  const response = await axios.patch(
-    `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/${role_id}/`,
+const updateRoleById = async ({ id, data }) => {
+  const response = await axios.put(
+    `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/${id}/`,
     data,
     {
       headers: {
@@ -226,5 +228,5 @@ export {
   fetchMeasuringTableSummation,
   fetchMeasuringsUploadStatus,
   fetchRoleByUserId,
-  updateRoleByUserId,
+  updateRoleById,
 };
