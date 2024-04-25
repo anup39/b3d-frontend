@@ -63,7 +63,7 @@ export default function ProjectCard({
         setproperties(res.data);
       });
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?project=${id}`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?project=${id}`)
       .then((res) => {
         setusers(res.data);
       });
@@ -139,7 +139,7 @@ export default function ProjectCard({
           </Grid>
           <Grid item xs>
             <Typography variant="body2" color="text.secondary">
-              Total Maps/Ortho: {properties.length}
+              Total Maps: {properties.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Total Users: {users.length}
@@ -155,7 +155,7 @@ export default function ProjectCard({
                 navigate(`/properties/${client_id}/${id}/List`);
               }}
             >
-              Manage Maps/Ortho
+              Manage Maps
             </Button>
           </Grid>
         </Grid>

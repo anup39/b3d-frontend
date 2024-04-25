@@ -4,14 +4,17 @@ import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  setdeleteUserRoleId,
-  setdeleteUserPopupMessage,
-  setshowDeleteUserPopup,
+  setshowDeleteUserRolePopup,
+  setshowAssignPropertiesPopup,
 } from "../../reducers/DisplaySettings";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Tooltip } from "@mui/material";
-import { setClientId } from "../../reducers/Users";
+import {
+  setDeleteUserRoleId,
+  setAssignProperitesUser,
+} from "../../reducers/Users";
+import ApartmentIcon from "@mui/icons-material/Apartment";
 
 export default function UserCard({
   id,
@@ -21,26 +24,27 @@ export default function UserCard({
   date_joined,
   onUserId,
   onOpenForm,
-  client_id,
+  onUserName,
+  user,
 }) {
+  console.log("user card");
   const dispatch = useDispatch();
   const username_current = useSelector((state) => state.auth.username);
 
   const handleAssignRole = () => {
-    onUserId(id);
+    onUserId(user);
+    onUserName(username);
     onOpenForm(true);
   };
 
-  const handleDeleteUser = () => {
-    dispatch(setdeleteUserRoleId(id));
-    dispatch(
-      setdeleteUserPopupMessage(
-        `Are you sure you want to delete user ${username} ?`
-      )
-    );
-    dispatch(setshowDeleteUserPopup(true));
-    console.log("here setting the client id to the state ");
-    dispatch(setClientId(client_id));
+  const handleDeleteUserRole = () => {
+    dispatch(setshowDeleteUserRolePopup(true));
+    dispatch(setDeleteUserRoleId(id));
+  };
+
+  const handleAssignProperties = () => {
+    dispatch(setshowAssignPropertiesPopup(true));
+    dispatch(setAssignProperitesUser({ user: user, username: username }));
   };
 
   return (
@@ -70,7 +74,8 @@ export default function UserCard({
                     <b>Role</b> : {role}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    <b>Date Joined</b> : {date_joined}
+                    <b>Date Joined</b> :{" "}
+                    {new Date(date_joined).toLocaleDateString()}
                   </Typography>
                 </Grid>
                 <Grid item xs container direction="row" spacing={2}>
@@ -88,7 +93,15 @@ export default function UserCard({
                       <Grid item>
                         <Tooltip title="Delete Client">
                           <DeleteIcon
-                            onClick={handleDeleteUser}
+                            onClick={handleDeleteUserRole}
+                            sx={{ "&:hover": { cursor: "pointer" } }}
+                          />
+                        </Tooltip>
+                      </Grid>
+                      <Grid item>
+                        <Tooltip title="Assign Properties to user">
+                          <ApartmentIcon
+                            onClick={handleAssignProperties}
                             sx={{ "&:hover": { cursor: "pointer" } }}
                           />
                         </Tooltip>
@@ -119,9 +132,9 @@ UserCard.propTypes = {
   username: PropTypes.string,
   email: PropTypes.string,
   role: PropTypes.string,
-  last_login: PropTypes.string,
   date_joined: PropTypes.string,
   onUserId: PropTypes.func,
   onOpenForm: PropTypes.func,
-  client_id: PropTypes.string,
+  onUserName: PropTypes.func,
+  user: PropTypes.number,
 };

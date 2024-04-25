@@ -25,14 +25,14 @@ export default function ClientForm() {
   const user_id = useSelector((state) => state.auth.user_id);
   const [roles, setRoles] = useState([]);
 
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-roles/`)
-      .then((res) => {
-        setRoles(res.data);
-      })
-      .then(() => {});
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-roles/`)
+  //     .then((res) => {
+  //       setRoles(res.data);
+  //     })
+  //     .then(() => {});
+  // }, []);
 
   const handleCreateClient = (event) => {
     // TODO : Here handle the error since username and email  are checked in backend

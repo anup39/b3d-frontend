@@ -4,7 +4,7 @@ const initialState = {
   token: localStorage.getItem("token"),
   user_id: localStorage.getItem("user_id"),
   username: localStorage.getItem("username"),
-  role_name: localStorage.getItem("role_name"),
+  role: JSON.parse(localStorage.getItem("role")),
 };
 
 export const Auth = createSlice({
@@ -21,7 +21,7 @@ export const Auth = createSlice({
       state.username = action.payload;
     },
     setRole: (state, action) => {
-      state.role_name = action.payload;
+      state.role = action.payload;
     },
   },
 });

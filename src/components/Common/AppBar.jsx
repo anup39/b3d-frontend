@@ -31,7 +31,11 @@ function Appbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const username = useSelector((state) => state.auth.username);
+  const { username } = useSelector((state) => state.auth);
+
+  const role = useSelector((state) => state.auth.role);
+
+  console.log(role);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -186,7 +190,7 @@ function Appbar() {
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography>{username}</Typography>
             <Typography>
-              <b>Role:</b> {username}
+              <b>Role:</b> {role?.group_name}
             </Typography>
           </Box>
 

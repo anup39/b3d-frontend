@@ -71,7 +71,7 @@ export default function ClientCard({ id, name, description }) {
         setproperties(res.data);
       });
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?client=${id}`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?client=${id}`)
       .then((res) => {
         setusers(res.data);
       });
@@ -127,14 +127,14 @@ export default function ClientCard({ id, name, description }) {
                   />
                 </Tooltip>
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <Tooltip title="Delete Client">
                   <DeleteIcon
                     onClick={handleDeleteClient}
                     sx={{ "&:hover": { cursor: "pointer" } }}
                   />
                 </Tooltip>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Grid>
           <Grid item xs>

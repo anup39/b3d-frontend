@@ -4,7 +4,6 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import AutoCompleteCustom from "../StandardCategory/AutoCompleteCustom";
 import PropTypes from "prop-types";
 import {
   settoastType,
@@ -12,8 +11,16 @@ import {
   setshowToast,
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
+import AutoCompleteRole from "./AutoCompleteRole";
+import { setUsers } from "../../reducers/Users";
 
-export default function AsignRoleForm({ openForm, user_id, onOpenForm }) {
+export default function AsignRoleForm({
+  client_id,
+  openForm,
+  user_id,
+  user_name,
+  onOpenForm,
+}) {
   const dispatch = useDispatch();
   const [selectedUserRole, setSelectedUserRole] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -22,24 +29,35 @@ export default function AsignRoleForm({ openForm, user_id, onOpenForm }) {
     event.preventDefault();
     setLoading(true);
     const data = {
-      role: selectedUserRole,
+      group: selectedUserRole,
     };
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/?id=${user_id}`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?id=${user_id}`)
       .then((res) => {
         const role_id = res.data[0].id;
+        console.log(role_id, "role_id");
         axios
-          .put(
-            `${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/${role_id}/`,
+          .patch(
+            `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/${role_id}/`,
             data
           )
           .then(() => {
-            window.location.reload(true);
+            // window.location.reload(true);
             setLoading(false);
             dispatch(setshowToast(true));
             dispatch(settoastMessage("Successfully Created User Role"));
             dispatch(settoastType("success"));
             closeForm();
+            axios
+              .get(
+                `${
+                  import.meta.env.VITE_API_DASHBOARD_URL
+                }/roles/?client=${client_id}`
+              )
+              .then((res) => {
+                dispatch(setUsers(res.data));
+              })
+              .catch((err) => console.log(err));
           })
           .catch(() => {
             setLoading(false);
@@ -90,16 +108,15 @@ export default function AsignRoleForm({ openForm, user_id, onOpenForm }) {
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
-                  value={user_id}
+                  value={user_name}
                   required
                   fullWidth
                   disabled
                 />
               </Grid>
               <Grid item xs={12}>
-                <AutoCompleteCustom
+                <AutoCompleteRole
                   onItemSelected={(id) => setSelectedUserRole(id)}
-                  category={"roles"}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -136,4 +153,6 @@ AsignRoleForm.propTypes = {
   user_id: PropTypes.number,
   openForm: PropTypes.bool,
   onOpenForm: PropTypes.func,
+  user_name: PropTypes.string,
+  client_id: PropTypes.string,
 };
