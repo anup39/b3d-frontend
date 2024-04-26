@@ -45,19 +45,16 @@ export default function ClientForm() {
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, data_)
       .then((res) => {
         const client_data = res.data;
-        const client_admin = roles.find((item) => item.name === "client admin");
-        const user_role_data = {
+        const role_data = {
+          name: client_data.name,
           user: client_data.user,
-          role: client_admin.id,
+          client: client_data.id,
+          group: 2,
           created_by: user_id,
           is_display: true,
-          client: client_data.id,
         };
         axios
-          .post(
-            `${import.meta.env.VITE_API_DASHBOARD_URL}/user-role/`,
-            user_role_data
-          )
+          .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/`, role_data)
           .then(() => {
             setLoading(false);
             dispatch(setshowToast(true));
