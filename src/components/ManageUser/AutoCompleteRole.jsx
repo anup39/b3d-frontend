@@ -12,7 +12,10 @@ export default function AutoCompleteRole({ onItemSelected }) {
     axios
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/groups/`)
       .then((response) => {
-        setOptions(response.data);
+        const filtered_group = response.data.filter(
+          (group) => group.name !== "admin"
+        );
+        setOptions(filtered_group);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
