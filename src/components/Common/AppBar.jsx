@@ -16,13 +16,16 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, setUserId, setUserName } from "../../reducers/Auth";
 
-const pages = [
+const pagesSuperAdmin = [
   "Clients",
   "Classification",
   "InspectionType",
   "About",
   "Contact",
 ];
+
+const pagesAdmin = ["Clients", "About", "Contact"];
+
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Appbar() {
@@ -34,8 +37,7 @@ function Appbar() {
   const { username } = useSelector((state) => state.auth);
 
   const role = useSelector((state) => state.auth.role);
-
-  console.log(role);
+  const group_name = useSelector((state) => state.auth.role.group_name);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -141,13 +143,21 @@ function Appbar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ color: "#027FFE" }} textAlign="center">
-                    {page}
-                  </Typography>
-                </MenuItem>
-              ))}
+              {group_name === "super_admin"
+                ? pagesSuperAdmin.map((page) => (
+                    <MenuItem key={page} onClick={handleCloseNavMenu}>
+                      <Typography sx={{ color: "#027FFE" }} textAlign="center">
+                        {page}
+                      </Typography>
+                    </MenuItem>
+                  ))
+                : pagesAdmin.map((page) => (
+                    <MenuItem key={page} onClick={handleCloseNavMenu}>
+                      <Typography sx={{ color: "#027FFE" }} textAlign="center">
+                        {page}
+                      </Typography>
+                    </MenuItem>
+                  ))}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -176,15 +186,25 @@ function Appbar() {
               color: "black",
             }}
           >
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenuButton}
-                sx={{ my: 2, color: "#027FFE", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            {group_name === "super_admin"
+              ? pagesSuperAdmin.map((page) => (
+                  <Button
+                    key={page}
+                    onClick={handleCloseNavMenuButton}
+                    sx={{ my: 2, color: "#027FFE", display: "block" }}
+                  >
+                    {page}
+                  </Button>
+                ))
+              : pagesAdmin.map((page) => (
+                  <Button
+                    key={page}
+                    onClick={handleCloseNavMenuButton}
+                    sx={{ my: 2, color: "#027FFE", display: "block" }}
+                  >
+                    {page}
+                  </Button>
+                ))}
           </Box>
 
           <Box sx={{ display: "flex", flexDirection: "column" }}>
