@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setprojects } from "../reducers/Project";
 import AppBar from "../components/Common/AppBar";
@@ -19,6 +19,10 @@ export default function Projects() {
 
   const { data: projects } = useGetProjectsByClientIdQuery(client_id);
   const { data: clientData } = useGetClientDetailsByClientIdQuery(client_id);
+  const group_name = useSelector((state) => state.auth.role.group_name);
+  const projects_ = useSelector((state) => state.auth.role.project);
+  console.log("projects_", projects_);
+  console.log("group_name", group_name);
 
   useEffect(() => {
     if (projects) {

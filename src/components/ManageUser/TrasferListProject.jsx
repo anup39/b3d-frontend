@@ -153,10 +153,13 @@ export default function TransferListProject({ client_id }) {
       console.log(right, "right");
       const ids = right.map((project) => project.id);
       console.log(ids, "ids");
-      const data = { project: 25 };
+      const data = { project: ids };
+      setLoading(true);
       updateRoleById({ id: assignProperitesUser.role_id, data: data }).then(
         (res) => {
           console.log(res, "res");
+          dispatch(setshowAssignPropertiesPopup(false));
+          setLoading(false);
         }
       );
     } else {

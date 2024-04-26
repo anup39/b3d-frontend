@@ -10,19 +10,38 @@ export default function Clients() {
   const dispatch = useDispatch();
   const clients = useSelector((state) => state.client.clients);
   // const user_id = useSelector((state) => state.auth.user_id);
+  const permissions = useSelector((state) => state.auth.role.permissions);
+  const group_name = useSelector((state) => state.auth.role.group_name);
+  const client = useSelector((state) => state.auth.role.client);
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, {})
-      .then((res) => {
-        dispatch(setclients(res.data));
-      });
-  }, [dispatch]);
+    if (group_name === "super_admin") {
+      console.log("group", group_name);
+      axios
+        .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, {})
+        .then((res) => {
+          dispatch(setclients(res.data));
+        });
+    } else {
+      client &&
+        axios
+          .get(
+            `${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${client}/`,
+            {}
+          )
+          .then((res) => {
+            dispatch(setclients([res.data]));
+          });
+    }
+  }, [dispatch, group_name, client]);
 
   return (
     <div>
       <AppBar />
-      <ClientForm />
+      {permissions && permissions.includes("add_client") ? (
+        <ClientForm />
+      ) : null}
+
       <div style={{ backgroundColor: "#F2F6F8" }}>
         {clients
           ? clients.map((client) => (
