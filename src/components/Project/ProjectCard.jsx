@@ -142,7 +142,7 @@ export default function ProjectCard({
               Total Maps: {properties.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Total Users: {users.length}
+              {/* Total Users: {users.length} */}
             </Typography>
           </Grid>
           <Grid item>

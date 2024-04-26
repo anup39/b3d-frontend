@@ -32,7 +32,10 @@ export default function UserForm({ client_id }) {
     axios
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/groups/`)
       .then((res) => {
-        setRoles(res.data);
+        const filtered_group = res.data.filter(
+          (group) => group.name !== "admin"
+        );
+        setRoles(filtered_group);
       })
       .then(() => {});
   }, []);

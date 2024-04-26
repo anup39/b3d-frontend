@@ -93,7 +93,7 @@ export default function UserCard({
                       </Grid>
 
                       <Grid item>
-                        <Tooltip title="Delete Client">
+                        <Tooltip title="Delete Role">
                           <DeleteIcon
                             onClick={handleDeleteUserRole}
                             sx={{ "&:hover": { cursor: "pointer" } }}
