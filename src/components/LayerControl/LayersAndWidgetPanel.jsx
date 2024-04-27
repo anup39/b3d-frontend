@@ -111,14 +111,25 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
         const new_data = JSON.parse(data_copy);
         console.log(new_data, "new_data");
         const newDataPromises = new_data.map(async (item) => {
+          const geometryType = item.type_of_geometry;
           return fetchGeojsonByCategoryId({
             client_id,
             category_id: item.id,
             project_id,
             type_of_geometry: item.type_of_geometry,
           }).then((res) => {
-            const area = turf.area(res);
-            const newItem = { ...item, value: round(area, 2) };
+            console.log(res);
+
+            let newItem;
+
+            if (geometryType === "Polygon") {
+              const area = turf.area(res);
+              newItem = { ...item, value: round(area, 2) };
+            } else if (geometryType === "LineString") {
+              const length = turf.length(res);
+              newItem = { ...item, value: round(length, 2) };
+            }
+
             return newItem;
           });
         });
