@@ -9,34 +9,46 @@ import MapView from "../components/MapView/MapView";
 import { Box } from "@mui/material";
 import { setClientDetail } from "../reducers/Client";
 import {
-  useGetProjectsByClientIdQuery,
-  useGetClientDetailsByClientIdQuery,
-} from "../api/projectApi";
+  fetchClientDetailsByClientId,
+  fetchProjectsByClientId,
+} from "../api/api";
 
 export default function Projects() {
   const { client_id, view } = useParams();
   const dispatch = useDispatch();
+  const projects = useSelector((state) => state.project.projects);
 
-  const { data: projects } = useGetProjectsByClientIdQuery(client_id);
-  const { data: clientData } = useGetClientDetailsByClientIdQuery(client_id);
-  const group_name = useSelector((state) => state.auth.role.group_name);
-  const projects_ = useSelector((state) => state.auth.role.project);
-  console.log("projects_", projects_);
-  console.log("group_name", group_name);
+  // const group_name = useSelector((state) => state.auth.role.group_name);
+  // const projects_ = useSelector((state) => state.auth.role.project);
+  // console.log("projects_", projects_);
+  // console.log("group_name", group_name);
+  console.log("projects", projects);
 
   useEffect(() => {
-    if (projects) {
-      dispatch(setprojects(projects));
+    if (client_id) {
+      fetchProjectsByClientId(client_id).then((res) => {
+        const updatedProjects = res.map((project) => {
+          return {
+            ...project,
+            checked: false,
+            openProperties: false,
+          };
+        });
+
+        dispatch(setprojects(updatedProjects));
+      });
+      fetchClientDetailsByClientId(client_id).then((res) => {
+        console.log(res, "res");
+        const client_detail = {
+          client_id: client_id,
+          client_name: res.name,
+          client_image: res.name.charAt(0).toUpperCase(),
+        };
+
+        dispatch(setClientDetail(client_detail));
+      });
     }
-    if (clientData) {
-      const client_detail = {
-        client_id: client_id,
-        client_name: clientData.name,
-        client_image: clientData.name.charAt(0).toUpperCase(),
-      };
-      dispatch(setClientDetail(client_detail));
-    }
-  }, [projects, clientData, dispatch, client_id]);
+  }, [dispatch, client_id]);
 
   return (
     <>

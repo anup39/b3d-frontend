@@ -20,6 +20,7 @@ export const Project = createSlice({
       state.current_project_name = name;
     },
     setprojects: (state, action) => {
+      console.log(action.payload, "payloas");
       state.projects = action.payload;
       state.originalProjects = action.payload;
     },
