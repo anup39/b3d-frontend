@@ -69,6 +69,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   const { project_id, current_project_name } = useSelector(
     (state) => state.project
   );
+  const group_name = useSelector((state) => state.auth.role.group_name);
 
   const handleCloseMeasurings = () => {
     setExpandMeasurings(!expandMeasurings);
@@ -294,7 +295,10 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
               ) : null}
 
               {/* Import Shapefile Button */}
-              {project_id !== "All" ? (
+              {(group_name === "super_admin" ||
+                group_name === "admin" ||
+                group_name === "editor") &&
+              project_id !== "All" ? (
                 <Tooltip title="Import">
                   <BackupIcon
                     onClick={handleImportShapefile}
@@ -338,7 +342,10 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
               ) : null}
 
               {/* Draw Polygon Button */}
-              {project_id !== "All" ? (
+              {(group_name === "super_admin" ||
+                group_name === "admin" ||
+                group_name === "editor") &&
+              project_id !== "All" ? (
                 <IconButton
                   disabled={
                     currentPropertyPolygonGeojson?.features?.length > 0
@@ -370,7 +377,10 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
               ) : null}
 
               {/* Edit Polygon Button */}
-              {project_id !== "All" ? (
+              {(group_name === "super_admin" ||
+                group_name === "admin" ||
+                group_name === "editor") &&
+              project_id !== "All" ? (
                 <Box>
                   <IconButton
                     disabled={
@@ -400,7 +410,8 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
 
               {/* Delete Polygon Button */}
 
-              {project_id !== "All" ? (
+              {(group_name === "super_admin" || group_name === "admin") &&
+              project_id !== "All" ? (
                 <Box>
                   <IconButton
                     disabled={
