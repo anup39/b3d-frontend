@@ -10,6 +10,7 @@ import { Box } from "@mui/material";
 import { setClientDetail } from "../reducers/Client";
 import {
   fetchClientDetailsByClientId,
+  fetchProjectsByClientIdAndIds,
   fetchProjectsByClientId,
 } from "../api/api";
 
@@ -18,14 +19,17 @@ export default function Projects() {
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.project.projects);
 
-  // const group_name = useSelector((state) => state.auth.role.group_name);
-  // const projects_ = useSelector((state) => state.auth.role.project);
-  // console.log("projects_", projects_);
-  // console.log("group_name", group_name);
-  console.log("projects", projects);
+  const group_name = useSelector((state) => state.auth.role.group_name);
+  const projects_ = useSelector((state) => state.auth.role.project);
+  console.log("projects_", projects_);
+  console.log("group_name", group_name);
+  // console.log("projects", projects);
 
   useEffect(() => {
-    if (client_id) {
+    if (
+      (group_name && group_name === "super_admin") ||
+      group_name === "admin"
+    ) {
       fetchProjectsByClientId(client_id).then((res) => {
         const updatedProjects = res.map((project) => {
           return {
@@ -37,6 +41,25 @@ export default function Projects() {
 
         dispatch(setprojects(updatedProjects));
       });
+    }
+
+    if (group_name === "editor" || group_name === "viewer") {
+      if (projects_.length > 0) {
+        fetchProjectsByClientIdAndIds(client_id, projects_).then((res) => {
+          const updatedProjects = res.map((project) => {
+            return {
+              ...project,
+              checked: false,
+              openProperties: false,
+            };
+          });
+
+          dispatch(setprojects(updatedProjects));
+        });
+      }
+    }
+
+    if (client_id) {
       fetchClientDetailsByClientId(client_id).then((res) => {
         console.log(res, "res");
         const client_detail = {
@@ -48,7 +71,7 @@ export default function Projects() {
         dispatch(setClientDetail(client_detail));
       });
     }
-  }, [dispatch, client_id]);
+  }, [dispatch, client_id, group_name, projects_]);
 
   return (
     <>

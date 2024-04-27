@@ -112,10 +112,7 @@ export default function UserCard({
                   ) : (
                     <Grid item xs>
                       <Typography variant="body2" color="text.secondary">
-                        <b>
-                          Full Access due to Role Admin. No need to assign role
-                          and project
-                        </b>
+                        <b>Owner Full Access</b>
                       </Typography>
                     </Grid>
                   )}

@@ -12,6 +12,21 @@ const fetchProjectsByClientId = async (client_id) => {
   return response.data;
 };
 
+const fetchProjectsByClientIdAndIds = async (client_id, ids) => {
+  const result = ids.join(",");
+  const response = await axios.get(
+    `${
+      import.meta.env.VITE_API_DASHBOARD_URL
+    }/projects/?client=${client_id}&id=${result}`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+  return response.data;
+};
+
 const fetchClientDetailsByClientId = async (client_id) => {
   const response = await axios.get(
     `${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${client_id}/`,
@@ -217,6 +232,7 @@ const updateRoleById = async ({ id, data }) => {
 
 export {
   fetchProjectsByClientId,
+  fetchProjectsByClientIdAndIds,
   fetchClientDetailsByClientId,
   fetchTifDataByProjectId,
   fetchProjectPolygonGeojsonByClientIdAndProjectId,
