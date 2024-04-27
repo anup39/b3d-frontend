@@ -59,6 +59,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
   const view_name = useSelector(
     (state: RootState) => state.drawnPolygon.view_name
   );
+  const group_name = useSelector((state) => state.auth.role.group_name);
 
   const propertyElements = properties
     ? Object.entries(properties).map(([key, value]) => (
@@ -351,7 +352,10 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
           <div>{propertyElements}</div>
           <br></br>
 
-          {project_id !== "All" ? (
+          {(group_name === "super_admin" ||
+            group_name === "admin" ||
+            group_name === "editor") &&
+          project_id !== "All" ? (
             <>
               <div style={{ display: "flex" }}>
                 <Autocomplete

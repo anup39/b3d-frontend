@@ -39,6 +39,7 @@ export default function LayersPanel({ map, popUpRef }) {
   const current_measuring_categories = useSelector(
     (state) => state.client.current_measuring_categories
   );
+  const group_name = useSelector((state) => state.auth.role.group_name);
 
   useEffect(() => {
     if (current_measuring_categories) {
@@ -435,7 +436,10 @@ export default function LayersPanel({ map, popUpRef }) {
                       />
 
                       {/* <ModeIcon /> */}
-                      {project_id !== "All" ? (
+                      {(group_name === "super_admin" ||
+                        group_name === "admin" ||
+                        group_name === "editor") &&
+                      project_id !== "All" ? (
                         cat.type_of_geometry === "LineString" ? (
                           <Tooltip title={"Draw" + " " + cat.name}>
                             <ShowChartIcon
