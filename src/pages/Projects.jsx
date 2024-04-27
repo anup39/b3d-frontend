@@ -84,7 +84,9 @@ export default function Projects() {
               alignItems: "center",
             }}
           >
-            <ProjectForm client_id={client_id} />
+            {group_name === "super_admin" || group_name === "admin" ? (
+              <ProjectForm client_id={client_id} />
+            ) : null}
           </Box>
 
           <div>
