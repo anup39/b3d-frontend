@@ -39,6 +39,7 @@ const initialState = {
     },
   },
   tableSummationData: [],
+  tableSummationPieData: [],
   tableSummationDataColumns: [],
   printDetails: {
     currentMapExtent: null,
@@ -146,6 +147,9 @@ export const MapView = createSlice({
     setTableSummationData: (state, action) => {
       state.tableSummationData = action.payload;
     },
+    setTableSummationPieData: (state, action) => {
+      state.tableSummationPieData = action.payload;
+    },
     setTableSummationDataColumns: (state, action) => {
       state.tableSummationDataColumns = action.payload;
     },
@@ -218,6 +222,7 @@ export const {
   setCurrentBandColorInformation,
   resetCurrentBandInformation,
   setTableSummationData,
+  setTableSummationPieData,
   setTableSummationDataColumns,
   setCurrentMapExtent,
   setDisplayType,

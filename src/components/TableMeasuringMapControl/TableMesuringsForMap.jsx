@@ -63,6 +63,7 @@ export default function TableMeasuringsForMap({
   );
 
   const rows = useSelector((state) => state.mapView.tableSummationData);
+  console.log("rows", rows);
   useEffect(() => {
     if (rows.length > 0) {
       if (rows.length < 4 || mode === "print") {

@@ -46,7 +46,7 @@ class PieCharts extends PureComponent {
 }
 
 const mapStateToProps = (state) => ({
-  rows: state.mapView.tableSummationData,
+  rows: state.mapView.tableSummationPieData,
 });
 
 export default connect(mapStateToProps)(PieCharts);

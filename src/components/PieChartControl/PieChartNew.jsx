@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Box, Typography } from "@mui/material";
 
 export default function PieChartNew() {
-  const data = useSelector((state) => state.mapView.tableSummationData);
+  const data = useSelector((state) => state.mapView.tableSummationPieData);
 
   return (
     <Box flexGrow={2}>

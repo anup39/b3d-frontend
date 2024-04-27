@@ -17,6 +17,7 @@ import {
   setshowTableMeasurings,
   setshowPiechart,
   setTableSummationData,
+  setTableSummationPieData,
   setCurrentMapExtent,
   setCurrentPropertyPolygonGeojson,
   setOpenSidebar,
@@ -40,6 +41,7 @@ import {
   fetchGeojsonByCategoryId,
   fetchProjectPolygonGeojsonByClientIdAndProjectId,
   fetchMeasuringTableSummation,
+  fetchMeasuringPieSummation,
 } from "../../api/api";
 import {
   setshowToast,
@@ -98,10 +100,17 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     fetchMeasuringTableSummation({ client_id, project_id }).then((res) => {
       if (res.rows.length > 0) {
         const data_copy = JSON.stringify(
-          res.rows.filter((item) => item.type_of_geometry === "Polygon")
+          res.rows
+          // res.rows.filter(
+          //   (item) =>
+          //     item.type_of_geometry === "Polygon" ||
+          //     item.type_of_geometry === "LineString" ||
+          //     item.type_of_geometry === "Point"
+          // )
         );
         const new_data = JSON.parse(data_copy);
-        const newDataPromises = new_data.map((item) => {
+        console.log(new_data, "new_data");
+        const newDataPromises = new_data.map(async (item) => {
           return fetchGeojsonByCategoryId({
             client_id,
             category_id: item.id,
@@ -114,11 +123,41 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
           });
         });
         Promise.all(newDataPromises).then((finalArray) => {
-          const filteredArray = finalArray.filter((item) => item.value !== 0);
-          dispatch(setTableSummationData(filteredArray));
+          // const filteredArray = finalArray.filter((item) => item.value !== 0);
+          dispatch(setTableSummationData(finalArray));
         });
       } else {
         dispatch(setTableSummationData([]));
+      }
+    });
+  }
+
+  function fetchPieSummationData(client_id, project_id, dispatch) {
+    fetchMeasuringPieSummation({ client_id, project_id }).then((res) => {
+      if (res.rows.length > 0) {
+        const data_copy = JSON.stringify(
+          res.rows.filter((item) => item.type_of_geometry === "Polygon")
+        );
+        const new_data = JSON.parse(data_copy);
+        console.log(new_data, "new_data");
+        const newDataPromises = new_data.map(async (item) => {
+          return fetchGeojsonByCategoryId({
+            client_id,
+            category_id: item.id,
+            project_id,
+            type_of_geometry: item.type_of_geometry,
+          }).then((res) => {
+            const area = turf.area(res);
+            const newItem = { ...item, value: round(area, 2) };
+            return newItem;
+          });
+        });
+        Promise.all(newDataPromises).then((finalArray) => {
+          // const filteredArray = finalArray.filter((item) => item.value !== 0);
+          dispatch(setTableSummationPieData(finalArray));
+        });
+      } else {
+        dispatch(setTableSummationPieData([]));
       }
     });
   }
@@ -132,7 +171,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
 
   const handlePieChart = () => {
     if (client_id && project_id) {
-      fetchTableSummationData(client_id, project_id, dispatch);
+      fetchPieSummationData(client_id, project_id, dispatch);
     }
     dispatch(setshowPiechart(!showPiechart));
   };
