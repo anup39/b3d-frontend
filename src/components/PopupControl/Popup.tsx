@@ -65,8 +65,6 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     ? Object.entries(properties)
         .filter(
           ([key]) =>
-            key !== "perimeter" &&
-            key !== "area" &&
             key !== "category" &&
             key !== "category_id" &&
             key !== "property" &&
