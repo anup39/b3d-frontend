@@ -48,33 +48,48 @@ export default function UserForm({ client_id }) {
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/users/`, data_)
       .then((res) => {
-        const user_data = res.data;
-        const user_role_data = {
-          user: user_data.id,
-          group: inputValue.id,
-          created_by: user_id,
-          is_display: true,
-          client: client_id,
-        };
         axios
-          .post(
-            `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/`,
-            user_role_data
+          .get(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/projects/?client=${client_id}`
           )
-          .then(() => {
-            setLoading(false);
-            dispatch(setshowToast(true));
-            dispatch(settoastMessage("Successfully Created User"));
-            dispatch(settoastType("success"));
-            closeForm();
+          .then((res_) => {
+            let projects;
+            if (res_.data.length > 0) {
+              projects = res_.data.map((project) => project.id);
+            } else {
+              projects = [];
+            }
+            const user_data = res.data;
+            const user_role_data = {
+              user: user_data.id,
+              group: inputValue.id,
+              created_by: user_id,
+              is_display: true,
+              client: client_id,
+              project: projects,
+            };
             axios
-              .get(
-                `${
-                  import.meta.env.VITE_API_DASHBOARD_URL
-                }/roles/?client=${client_id}`
+              .post(
+                `${import.meta.env.VITE_API_DASHBOARD_URL}/roles/`,
+                user_role_data
               )
-              .then((res) => {
-                dispatch(setUsers(res.data));
+              .then(() => {
+                setLoading(false);
+                dispatch(setshowToast(true));
+                dispatch(settoastMessage("Successfully Created User"));
+                dispatch(settoastType("success"));
+                closeForm();
+                axios
+                  .get(
+                    `${
+                      import.meta.env.VITE_API_DASHBOARD_URL
+                    }/roles/?client=${client_id}`
+                  )
+                  .then((res) => {
+                    dispatch(setUsers(res.data));
+                  });
               });
           });
       })
