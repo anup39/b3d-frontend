@@ -35,9 +35,9 @@ const columns = [
   },
 
   {
-    field: "view_name",
+    field: "trimmed",
     type: "string",
-    width: 100,
+    width: 170,
     editable: false,
     headerName: "Category",
   },
@@ -58,7 +58,7 @@ const columns = [
   {
     field: "count",
     type: "number",
-    width: 100,
+    width: 80,
     editable: false,
     headerName: "Count",
   },

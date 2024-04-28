@@ -112,7 +112,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
         console.log(new_data, "new_data");
         const newDataPromises = new_data.map(async (item) => {
           const geometryType = item.type_of_geometry;
-          newItem = { ...item, trimmed_name: item.view_name.split };
+          let newItem;
 
           return fetchGeojsonByCategoryId({
             client_id,
@@ -122,11 +122,17 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
           }).then((res) => {
             console.log(res);
 
-            let newItem;
-
             if (geometryType === "Polygon") {
               const area = turf.area(res);
-              newItem = { ...item, value: round(area, 2), length: 0, count: 0 };
+              newItem = {
+                ...item,
+                value: round(area, 2),
+                length: 0,
+                count: 0,
+                trimmed: `${item.view_name.split("|")[1]},${
+                  item.view_name.split("|")[2]
+                }`,
+              };
             } else if (geometryType === "LineString") {
               const length = turf.length(res);
               newItem = {
@@ -134,6 +140,9 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                 length: round(length, 2) * 1000,
                 value: 0,
                 count: 0,
+                trimmed: `${item.view_name.split("|")[1]},${
+                  item.view_name.split("|")[2]
+                }`,
               };
             } else {
               console.log(res, "point geojson");
@@ -143,6 +152,9 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                 count: numberOfFeatures,
                 value: 0,
                 length: 0,
+                trimmed: `${item.view_name.split("|")[1]},${
+                  item.view_name.split("|")[2]
+                }`,
               };
             }
 
