@@ -33,6 +33,7 @@ export default function Properties() {
     project_id,
   });
   const { data: clientData } = useGetClientDetailsByClientIdQuery(client_id);
+  const group_name = useSelector((state) => state.auth.role.group_name);
 
   useEffect(() => {
     dispatch(setClientIdProperty(client_id));
@@ -62,7 +63,11 @@ export default function Properties() {
       {view === "List" ? (
         <>
           <AppBar></AppBar>
-          <AddPropertyButton />
+          {group_name === "super_admin" ||
+          group_name === "admin" ||
+          group_name === "editor" ? (
+            <AddPropertyButton />
+          ) : null}
           {showTifUpload ? <UploadPropertyForm /> : null}
           {showProgressFormOpen ? <UploadProgress /> : null}
           <PropertyContainer project_id={project_id} />{" "}

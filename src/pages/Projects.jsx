@@ -9,34 +9,69 @@ import MapView from "../components/MapView/MapView";
 import { Box } from "@mui/material";
 import { setClientDetail } from "../reducers/Client";
 import {
-  useGetProjectsByClientIdQuery,
-  useGetClientDetailsByClientIdQuery,
-} from "../api/projectApi";
+  fetchClientDetailsByClientId,
+  fetchProjectsByClientIdAndIds,
+  fetchProjectsByClientId,
+} from "../api/api";
 
 export default function Projects() {
   const { client_id, view } = useParams();
   const dispatch = useDispatch();
+  const projects = useSelector((state) => state.project.projects);
 
-  const { data: projects } = useGetProjectsByClientIdQuery(client_id);
-  const { data: clientData } = useGetClientDetailsByClientIdQuery(client_id);
   const group_name = useSelector((state) => state.auth.role.group_name);
   const projects_ = useSelector((state) => state.auth.role.project);
   console.log("projects_", projects_);
   console.log("group_name", group_name);
+  // console.log("projects", projects);
 
   useEffect(() => {
-    if (projects) {
-      dispatch(setprojects(projects));
+    if (
+      (group_name && group_name === "super_admin") ||
+      group_name === "admin"
+    ) {
+      fetchProjectsByClientId(client_id).then((res) => {
+        const updatedProjects = res.map((project) => {
+          return {
+            ...project,
+            checked: false,
+            openProperties: false,
+          };
+        });
+
+        dispatch(setprojects(updatedProjects));
+      });
     }
-    if (clientData) {
-      const client_detail = {
-        client_id: client_id,
-        client_name: clientData.name,
-        client_image: clientData.name.charAt(0).toUpperCase(),
-      };
-      dispatch(setClientDetail(client_detail));
+
+    if (group_name === "editor" || group_name === "viewer") {
+      if (projects_.length > 0) {
+        fetchProjectsByClientIdAndIds(client_id, projects_).then((res) => {
+          const updatedProjects = res.map((project) => {
+            return {
+              ...project,
+              checked: false,
+              openProperties: false,
+            };
+          });
+
+          dispatch(setprojects(updatedProjects));
+        });
+      }
     }
-  }, [projects, clientData, dispatch, client_id]);
+
+    if (client_id) {
+      fetchClientDetailsByClientId(client_id).then((res) => {
+        console.log(res, "res");
+        const client_detail = {
+          client_id: client_id,
+          client_name: res.name,
+          client_image: res.name.charAt(0).toUpperCase(),
+        };
+
+        dispatch(setClientDetail(client_detail));
+      });
+    }
+  }, [dispatch, client_id, group_name, projects_]);
 
   return (
     <>
@@ -49,7 +84,9 @@ export default function Projects() {
               alignItems: "center",
             }}
           >
-            <ProjectForm client_id={client_id} />
+            {group_name === "super_admin" || group_name === "admin" ? (
+              <ProjectForm client_id={client_id} />
+            ) : null}
           </Box>
 
           <div>

@@ -296,17 +296,17 @@ export default function ProjectView({ project, popUpRef }) {
           <ListItemIcon
             sx={{
               minWidth: "18px",
-              mr: open ? 0 : "auto",
+              mr: open ? 2 : "auto",
               justifyContent: "space-evenly",
             }}
           >
             <LocationCityIcon />
           </ListItemIcon>
 
-          <MoreonProperty
+          {/* <MoreonProperty
             project_id={project.id}
             // onClick={() => setOpenProperties(!openProperties)}
-          />
+          /> */}
 
           <Box sx={{ minWidth: 80 }}>
             <ListItemText

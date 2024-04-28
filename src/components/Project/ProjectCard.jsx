@@ -10,6 +10,7 @@ import FolderIcon from "@mui/icons-material/Folder";
 import MapIcon from "@mui/icons-material/Map";
 import Tooltip from "@mui/material/Tooltip";
 import RoofingIcon from "@mui/icons-material/Roofing";
+import { useSelector } from "react-redux";
 
 // import {
 //   setdeleteId,
@@ -29,6 +30,7 @@ export default function ProjectCard({
   const navigate = useNavigate();
   const [properties, setproperties] = useState([]);
   const [users, setusers] = useState([]);
+  const group_name = useSelector((state) => state.auth.role.group_name);
 
   // Remaining things to do :
   // const handleViewInMap = () => {

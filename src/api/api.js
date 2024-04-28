@@ -12,6 +12,21 @@ const fetchProjectsByClientId = async (client_id) => {
   return response.data;
 };
 
+const fetchProjectsByClientIdAndIds = async (client_id, ids) => {
+  const result = ids.join(",");
+  const response = await axios.get(
+    `${
+      import.meta.env.VITE_API_DASHBOARD_URL
+    }/projects/?client=${client_id}&id=${result}`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+  return response.data;
+};
+
 const fetchClientDetailsByClientId = async (client_id) => {
   const response = await axios.get(
     `${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${client_id}/`,
@@ -172,6 +187,21 @@ const fetchMeasuringTableSummation = async ({ client_id, project_id }) => {
   return response.data;
 };
 
+const fetchMeasuringPieSummation = async ({ client_id, project_id }) => {
+  const response = await axios.get(
+    `${
+      import.meta.env.VITE_API_DASHBOARD_URL
+    }/measuring-table-pie-summation/?client=${client_id}&project=${project_id}`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+
+  return response.data;
+};
+
 const fetchMeasuringsUploadStatus = async ({ client_id, project_id }) => {
   console.log(client_id, project_id);
   const response = await axios.get(
@@ -217,6 +247,7 @@ const updateRoleById = async ({ id, data }) => {
 
 export {
   fetchProjectsByClientId,
+  fetchProjectsByClientIdAndIds,
   fetchClientDetailsByClientId,
   fetchTifDataByProjectId,
   fetchProjectPolygonGeojsonByClientIdAndProjectId,
@@ -226,6 +257,7 @@ export {
   deletePropertyPolygonByPolygonId,
   fetchGeojsonByCategoryId,
   fetchMeasuringTableSummation,
+  fetchMeasuringPieSummation,
   fetchMeasuringsUploadStatus,
   fetchRoleByUserId,
   updateRoleById,

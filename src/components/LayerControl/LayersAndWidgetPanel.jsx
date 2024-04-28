@@ -17,6 +17,7 @@ import {
   setshowTableMeasurings,
   setshowPiechart,
   setTableSummationData,
+  setTableSummationPieData,
   setCurrentMapExtent,
   setCurrentPropertyPolygonGeojson,
   setOpenSidebar,
@@ -40,6 +41,7 @@ import {
   fetchGeojsonByCategoryId,
   fetchProjectPolygonGeojsonByClientIdAndProjectId,
   fetchMeasuringTableSummation,
+  fetchMeasuringPieSummation,
 } from "../../api/api";
 import {
   setshowToast,
@@ -69,6 +71,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   const { project_id, current_project_name } = useSelector(
     (state) => state.project
   );
+  const group_name = useSelector((state) => state.auth.role.group_name);
 
   const handleCloseMeasurings = () => {
     setExpandMeasurings(!expandMeasurings);
@@ -97,10 +100,58 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     fetchMeasuringTableSummation({ client_id, project_id }).then((res) => {
       if (res.rows.length > 0) {
         const data_copy = JSON.stringify(
+          res.rows
+          // res.rows.filter(
+          //   (item) =>
+          //     item.type_of_geometry === "Polygon" ||
+          //     item.type_of_geometry === "LineString" ||
+          //     item.type_of_geometry === "Point"
+          // )
+        );
+        const new_data = JSON.parse(data_copy);
+        console.log(new_data, "new_data");
+        const newDataPromises = new_data.map(async (item) => {
+          const geometryType = item.type_of_geometry;
+          return fetchGeojsonByCategoryId({
+            client_id,
+            category_id: item.id,
+            project_id,
+            type_of_geometry: item.type_of_geometry,
+          }).then((res) => {
+            console.log(res);
+
+            let newItem;
+
+            if (geometryType === "Polygon") {
+              const area = turf.area(res);
+              newItem = { ...item, value: round(area, 2) };
+            } else if (geometryType === "LineString") {
+              const length = turf.length(res);
+              newItem = { ...item, value: round(length, 2) };
+            }
+
+            return newItem;
+          });
+        });
+        Promise.all(newDataPromises).then((finalArray) => {
+          // const filteredArray = finalArray.filter((item) => item.value !== 0);
+          dispatch(setTableSummationData(finalArray));
+        });
+      } else {
+        dispatch(setTableSummationData([]));
+      }
+    });
+  }
+
+  function fetchPieSummationData(client_id, project_id, dispatch) {
+    fetchMeasuringPieSummation({ client_id, project_id }).then((res) => {
+      if (res.rows.length > 0) {
+        const data_copy = JSON.stringify(
           res.rows.filter((item) => item.type_of_geometry === "Polygon")
         );
         const new_data = JSON.parse(data_copy);
-        const newDataPromises = new_data.map((item) => {
+        console.log(new_data, "new_data");
+        const newDataPromises = new_data.map(async (item) => {
           return fetchGeojsonByCategoryId({
             client_id,
             category_id: item.id,
@@ -113,11 +164,11 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
           });
         });
         Promise.all(newDataPromises).then((finalArray) => {
-          const filteredArray = finalArray.filter((item) => item.value !== 0);
-          dispatch(setTableSummationData(filteredArray));
+          // const filteredArray = finalArray.filter((item) => item.value !== 0);
+          dispatch(setTableSummationPieData(finalArray));
         });
       } else {
-        dispatch(setTableSummationData([]));
+        dispatch(setTableSummationPieData([]));
       }
     });
   }
@@ -131,7 +182,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
 
   const handlePieChart = () => {
     if (client_id && project_id) {
-      fetchTableSummationData(client_id, project_id, dispatch);
+      fetchPieSummationData(client_id, project_id, dispatch);
     }
     dispatch(setshowPiechart(!showPiechart));
   };
@@ -294,7 +345,10 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
               ) : null}
 
               {/* Import Shapefile Button */}
-              {project_id !== "All" ? (
+              {(group_name === "super_admin" ||
+                group_name === "admin" ||
+                group_name === "editor") &&
+              project_id !== "All" ? (
                 <Tooltip title="Import">
                   <BackupIcon
                     onClick={handleImportShapefile}
@@ -338,7 +392,10 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
               ) : null}
 
               {/* Draw Polygon Button */}
-              {project_id !== "All" ? (
+              {(group_name === "super_admin" ||
+                group_name === "admin" ||
+                group_name === "editor") &&
+              project_id !== "All" ? (
                 <IconButton
                   disabled={
                     currentPropertyPolygonGeojson?.features?.length > 0
@@ -370,7 +427,10 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
               ) : null}
 
               {/* Edit Polygon Button */}
-              {project_id !== "All" ? (
+              {(group_name === "super_admin" ||
+                group_name === "admin" ||
+                group_name === "editor") &&
+              project_id !== "All" ? (
                 <Box>
                   <IconButton
                     disabled={
@@ -400,7 +460,8 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
 
               {/* Delete Polygon Button */}
 
-              {project_id !== "All" ? (
+              {(group_name === "super_admin" || group_name === "admin") &&
+              project_id !== "All" ? (
                 <Box>
                   <IconButton
                     disabled={

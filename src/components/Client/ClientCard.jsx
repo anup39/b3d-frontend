@@ -27,6 +27,7 @@ export default function ClientCard({ id, name, description }) {
   const [users, setusers] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const group_name = useSelector((state) => state.auth.role.group_name);
 
   const projects = useSelector((state) => state.project.projects);
 
@@ -111,22 +112,27 @@ export default function ClientCard({ id, name, description }) {
                   />
                 </Tooltip>
               </Grid>
-              <Grid item>
-                <Tooltip title="Manage Class">
-                  <AppsIcon
-                    onClick={handleManageClasses}
-                    sx={{ "&:hover": { cursor: "pointer" } }}
-                  />
-                </Tooltip>
-              </Grid>
-              <Grid item>
-                <Tooltip title="Manage Users">
-                  <PeopleIcon
-                    onClick={handleManageUsers}
-                    sx={{ "&:hover": { cursor: "pointer" } }}
-                  />
-                </Tooltip>
-              </Grid>
+              {group_name === "super_admin" || group_name === "admin" ? (
+                <>
+                  <Grid item>
+                    <Tooltip title="Manage Class">
+                      <AppsIcon
+                        onClick={handleManageClasses}
+                        sx={{ "&:hover": { cursor: "pointer" } }}
+                      />
+                    </Tooltip>
+                  </Grid>
+                  <Grid item>
+                    <Tooltip title="Manage Users">
+                      <PeopleIcon
+                        onClick={handleManageUsers}
+                        sx={{ "&:hover": { cursor: "pointer" } }}
+                      />
+                    </Tooltip>
+                  </Grid>
+                </>
+              ) : null}
+
               {/* <Grid item>
                 <Tooltip title="Delete Client">
                   <DeleteIcon
