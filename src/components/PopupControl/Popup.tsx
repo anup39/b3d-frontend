@@ -62,11 +62,22 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
   const group_name = useSelector((state) => state.auth.role.group_name);
 
   const propertyElements = properties
-    ? Object.entries(properties).map(([key, value]) => (
-        <div key={key}>
-          <strong>{key}:</strong> {value}
-        </div>
-      ))
+    ? Object.entries(properties)
+        .filter(
+          ([key]) =>
+            key !== "perimeter" &&
+            key !== "area" &&
+            key !== "category" &&
+            key !== "category_id" &&
+            key !== "property" &&
+            key !== "type_of_geometry" &&
+            key !== "component"
+        ) // Exclude 'perimeter' and 'area'
+        .map(([key, value]) => (
+          <div key={key}>
+            <strong>{key}:</strong> {value}
+          </div>
+        ))
     : null;
 
   const handleDeleteCategory = (properties, feature_id) => {
