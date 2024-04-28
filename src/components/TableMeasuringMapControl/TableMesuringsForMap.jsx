@@ -30,23 +30,37 @@ const columns = [
     field: "symbol",
     headerName: "Symbol",
     type: "string",
-    width: 150,
+    width: 100,
     renderCell: renderCell,
   },
 
   {
-    field: "name",
+    field: "view_name",
     type: "string",
-    width: 200,
+    width: 100,
     editable: false,
     headerName: "Category",
   },
   {
     field: "value",
     type: "number",
-    width: 150,
+    width: 100,
     editable: false,
     headerName: "Area (m²)",
+  },
+  {
+    field: "length",
+    type: "number",
+    width: 100,
+    editable: false,
+    headerName: "Length (m)",
+  },
+  {
+    field: "count",
+    type: "number",
+    width: 100,
+    editable: false,
+    headerName: "Count",
   },
 ];
 
