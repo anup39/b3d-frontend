@@ -56,3 +56,4 @@ Adding the content for the user
 New section added for the purpose of the user
 Delete the user and the role
 Delete the user and the role
+english language is the best language
