@@ -78,7 +78,10 @@ export default function IndoorForm({ client_id }) {
         dispatch(setIndoors(res));
       });
     }
-  });
+    return () => {
+      dispatch(setIndoors([]));
+    };
+  }, [project_id, dispatch]);
 
   return (
     <>
@@ -106,6 +109,8 @@ export default function IndoorForm({ client_id }) {
               padding: "20px",
               zIndex: 10000,
               borderRadius: "10px",
+              maxHeight: 500,
+              overflow: "scroll",
             }}
           >
             <Grid container spacing={2}>

@@ -1,20 +1,34 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import {
   Box,
   Typography,
   TextField,
-  Button,
-  Icon,
   IconButton,
   Tooltip,
+  CircularProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteIndoorById, fetchIndoorsByProjectId } from "../../api/api";
+import { useSelector, useDispatch } from "react-redux";
+import { setIndoors } from "../../reducers/Project";
 
 export default function IndoorCard({ indoor }) {
   const { id, name, url } = indoor;
+  const dispatch = useDispatch();
+  const projectId = useSelector((state) => state.project.editIndoorProjectId);
+  const [loading, setLoading] = useState(false);
 
   const handleDeleteIndoor = () => {
-    console.log(id);
+    setLoading(true);
+    deleteIndoorById(id).then((res) => {
+      console.log(res, "res delete indoor");
+      fetchIndoorsByProjectId(projectId).then((res) => {
+        console.log(res, "res fetch indoors");
+        dispatch(setIndoors(res));
+        setLoading(false);
+      });
+    });
   };
   return (
     <Box
@@ -56,7 +70,15 @@ export default function IndoorCard({ indoor }) {
             aria-label="Delete Indoor"
             onClick={handleDeleteIndoor}
           >
-            <DeleteIcon />
+            {loading ? (
+              <CircularProgress
+                sx={{
+                  fontSize: 5,
+                }}
+              />
+            ) : (
+              <DeleteIcon />
+            )}
           </IconButton>
         </Tooltip>
       </Box>

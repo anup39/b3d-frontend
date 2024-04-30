@@ -283,6 +283,18 @@ const fetchIndoorsByProjectId = async (project_id) => {
   return response.data;
 };
 
+const deleteIndoorById = async (indoor_id) => {
+  const response = await axios.delete(
+    `${import.meta.env.VITE_API_DASHBOARD_URL}/indoor/${indoor_id}/`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+  return response.data;
+};
+
 export {
   fetchProjectsByClientId,
   fetchProjectsByClientIdAndIds,
@@ -302,4 +314,5 @@ export {
   updateProjectById,
   createIndoorByProjectId,
   fetchIndoorsByProjectId,
+  deleteIndoorById,
 };
