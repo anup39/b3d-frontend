@@ -22,10 +22,17 @@ import { useDispatch, useSelector } from "react-redux";
 import UploadPropertyForm from "../Property/UploadPropertyForm";
 import UploadProgress from "../Property/UploadProgress";
 import { useRef } from "react";
-import { setcurrentTif, setshowSidebarContent } from "../../reducers/MapView";
+import {
+  setcurrentTif,
+  setshowSidebarContent,
+  setTableSummationData,
+  setTableSummationPieData,
+} from "../../reducers/MapView";
 import { settifs } from "../../reducers/Tifs";
 import removeCheckedCategoriesLayersFromMap from "../../maputils/removeCheckedCategoriesLayers";
 // import ReportActualPage from "./ReportActualPage";
+import fetchTableSummationData from "../../components/LayerControl/fetchTableSummationData";
+import fetchPieSummationData from "../../components/LayerControl/fetchPieSummationData";
 
 import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import { ListItem, ListItemButton, ListItemText } from "@mui/material";
@@ -204,6 +211,10 @@ export default function MapView() {
       fetchMeasuringCategories(client_id).then((res) => {
         const measuringcategories = res;
         dispatch(setCurrentMeasuringCategories(measuringcategories));
+        if (client_id && projectid) {
+          fetchTableSummationData(client_id, projectid, dispatch);
+          fetchPieSummationData(client_id, projectid, dispatch);
+        }
       });
       // Here add Property polygon to the map by calling the api
       fetchProjectPolygonGeojsonByClientIdAndProjectId({
@@ -265,6 +276,8 @@ export default function MapView() {
       dispatch(setcurrentProjectName(null));
       dispatch(setcurrentProject(null));
       dispatch(setCurrentMeasuringCategories(null));
+      dispatch(setTableSummationData([]));
+      dispatch(setTableSummationPieData([]));
       dispatch(setcurrentTif(null));
       dispatch(setshowTableMeasurings(false));
       dispatch(setshowPiechart(false));

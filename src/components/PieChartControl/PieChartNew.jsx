@@ -3,7 +3,12 @@ import { useSelector } from "react-redux";
 import { Box, Typography } from "@mui/material";
 
 export default function PieChartNew() {
-  const data = useSelector((state) => state.mapView.tableSummationPieData);
+  const data_reducer = useSelector(
+    (state) => state.mapView.tableSummationPieData
+  );
+
+  const data = data_reducer.filter((row) => row.checked);
+  console.log(data, "rows from pie");
 
   return (
     <Box flexGrow={2}>
@@ -23,7 +28,9 @@ export default function PieChartNew() {
           height={190}
         />
       ) : (
-        <Typography sx={{ ml: 15 }}>No data found</Typography>
+        <Typography sx={{ ml: 10, mr: 10, fontSize: 12, p: 2 }}>
+          Either none of category is checked or no data available
+        </Typography>
       )}
     </Box>
   );

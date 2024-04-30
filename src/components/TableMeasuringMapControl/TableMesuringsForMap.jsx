@@ -10,6 +10,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
+import GridNoRowsOverlay from "./Norows";
 
 const renderCell = (params) => {
   const { color, type_of_geometry } = params.value;
@@ -76,8 +77,12 @@ export default function TableMeasuringsForMap({
     (state) => state.mapView.showTableMeasurings
   );
 
-  const rows = useSelector((state) => state.mapView.tableSummationData);
-  console.log("rows", rows);
+  const tableSummationData = useSelector(
+    (state) => state.mapView.tableSummationData
+  );
+
+  const rows = tableSummationData.filter((row) => row.checked);
+  console.log(rows, "rows");
   useEffect(() => {
     if (rows.length > 0) {
       if (rows.length < 4 || mode === "print") {
@@ -152,6 +157,7 @@ export default function TableMeasuringsForMap({
               pageSizeOptions={[5]}
               // checkboxSelection={checkboxSelection}
               disableRowSelectionOnClick
+              slots={{ noRowsOverlay: GridNoRowsOverlay }}
             />
           </Box>
         </>

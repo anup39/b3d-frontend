@@ -150,6 +150,26 @@ export const MapView = createSlice({
     setTableSummationPieData: (state, action) => {
       state.tableSummationPieData = action.payload;
     },
+
+    changeTableSummationData: (state, action) => {
+      if (state.tableSummationData.length === 0) return;
+      const { id, checked } = action.payload;
+      const index = state.tableSummationData.findIndex((row) => row.id === id);
+      console.log(index, "index");
+      state.tableSummationData[index].checked = checked;
+      console.log("checked from reducer ");
+    },
+
+    changePieSummationData: (state, action) => {
+      if (state.tableSummationPieData.length === 0) return;
+      const { id, checked } = action.payload;
+      const index = state.tableSummationPieData.findIndex(
+        (row) => row.id === id
+      );
+      state.tableSummationPieData[index].checked = checked;
+      console.log("checked from reducer ");
+    },
+
     setTableSummationDataColumns: (state, action) => {
       state.tableSummationDataColumns = action.payload;
     },
@@ -223,6 +243,8 @@ export const {
   resetCurrentBandInformation,
   setTableSummationData,
   setTableSummationPieData,
+  changeTableSummationData,
+  changePieSummationData,
   setTableSummationDataColumns,
   setCurrentMapExtent,
   setDisplayType,
