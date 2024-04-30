@@ -14,6 +14,8 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setEditProjectId,
   setOpenEditProjectForm,
+  setOpenIndoorForm,
+  setEditIndoorProjectId,
 } from "../../reducers/Project";
 
 // import {
@@ -89,6 +91,11 @@ export default function ProjectCard({
     dispatch(setEditProjectId(id));
   };
 
+  const handleIndoor = () => {
+    dispatch(setOpenIndoorForm(true));
+    dispatch(setEditIndoorProjectId(id));
+  };
+
   return (
     <Paper
       sx={{
@@ -150,6 +157,18 @@ export default function ProjectCard({
                     sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
                   >
                     3D URL
+                  </Button>
+                </Tooltip>
+              </Grid>
+
+              <Grid item>
+                <Tooltip title="Indoor">
+                  <Button
+                    variant="contained"
+                    onClick={handleIndoor}
+                    sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
+                  >
+                    Indoor
                   </Button>
                 </Tooltip>
               </Grid>

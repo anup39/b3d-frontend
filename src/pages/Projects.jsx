@@ -14,6 +14,7 @@ import {
   fetchProjectsByClientId,
 } from "../api/api";
 import URL3d from "../components/Project/URL3d";
+import IndoorForm from "../components/Project/IndoorForm";
 
 export default function Projects() {
   const { client_id, view } = useParams();
@@ -90,6 +91,7 @@ export default function Projects() {
                 {" "}
                 <ProjectForm client_id={client_id} />
                 <URL3d client_id={client_id} />
+                <IndoorForm client_id={client_id} />
               </>
             ) : null}
           </Box>

@@ -161,7 +161,4 @@ export default function URL3d({ client_id }) {
 
 URL3d.propTypes = {
   client_id: PropTypes.string,
-  project_id: PropTypes.string,
-  openForm: PropTypes.bool,
-  onOpenForm: PropTypes.func,
 };

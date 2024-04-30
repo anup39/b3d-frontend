@@ -8,6 +8,8 @@ const initialState = {
   originalProjects: [],
   openEditProjectForm: false,
   editProjectId: null,
+  openIndoorForm: false,
+  editIndoorProjectId: null,
 };
 
 export const Project = createSlice({
@@ -90,6 +92,13 @@ export const Project = createSlice({
     setEditProjectId: (state, action) => {
       state.editProjectId = action.payload;
     },
+
+    setOpenIndoorForm(state, action) {
+      state.openIndoorForm = action.payload;
+    },
+    setEditIndoorProjectId: (state, action) => {
+      state.editIndoorProjectId = action.payload;
+    },
   },
 });
 
@@ -104,6 +113,8 @@ export const {
   filterProjects,
   setOpenEditProjectForm,
   setEditProjectId,
+  setOpenIndoorForm,
+  setEditIndoorProjectId,
 } = Project.actions;
 
 export default Project.reducer;
