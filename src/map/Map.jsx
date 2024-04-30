@@ -19,6 +19,7 @@ import { Button } from "@mui/material";
 import {
   setCurrentMapExtent,
   setDisplayType,
+  setIndoorsInMap,
   setShowIndoorControl,
 } from "../reducers/MapView";
 import { setWKTGeometry, setTypeOfGeometry } from "../reducers/DrawnGeometry";
@@ -29,6 +30,7 @@ import Typography from "@mui/material/Typography";
 import { setShowKeyInfo } from "../reducers/DrawnGeometry";
 import MeasuringUploadStatusControl from "../components/MeasuringUploadStatusControl/MeasuringUploadStatusControl";
 import IndoorControl from "../components/IndoorControl/IndoorControl";
+import { fetchIndoorsByProjectId } from "../api/api";
 
 export default function Map({ popUpRef }) {
   console.log("here");
@@ -347,6 +349,9 @@ export default function Map({ popUpRef }) {
 
   const handleIndoor = () => {
     dispatch(setShowIndoorControl(true));
+    fetchIndoorsByProjectId(project_id).then((res) => {
+      dispatch(setIndoorsInMap(res));
+    });
   };
 
   return (

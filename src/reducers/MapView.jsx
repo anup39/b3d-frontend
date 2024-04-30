@@ -45,6 +45,7 @@ const initialState = {
     currentMapExtent: null,
   },
   showIndoorControl: false,
+  indoorsInMap: [],
 };
 
 export const MapView = createSlice({
@@ -231,6 +232,9 @@ export const MapView = createSlice({
     setShowIndoorControl: (state, action) => {
       state.showIndoorControl = action.payload;
     },
+    setIndoorsInMap: (state, action) => {
+      state.indoorsInMap = action.payload;
+    },
   },
 });
 
@@ -272,6 +276,7 @@ export const {
   setShowMeasuringFileUploadPanel,
   setMeasuringsUploadingCount,
   setShowIndoorControl,
+  setIndoorsInMap,
 } = MapView.actions;
 
 export default MapView.reducer;

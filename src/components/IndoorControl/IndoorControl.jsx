@@ -1,9 +1,17 @@
-import { Box, Typography, Button, IconButton } from "@mui/material";
+import { Box, Typography, Button, IconButton, Tooltip } from "@mui/material";
 import Cancel from "../DrawControl/Cancel";
-import { useDispatch } from "react-redux";
-import { setShowIndoorControl } from "../../reducers/MapView";
+import { useDispatch, useSelector } from "react-redux";
+import { setIndoorsInMap, setShowIndoorControl } from "../../reducers/MapView";
+import { useEffect } from "react";
 export default function IndoorControl() {
   const dispatch = useDispatch();
+  const indoorsInMap = useSelector((state) => state.mapView.indoorsInMap);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setIndoorsInMap([]));
+    };
+  }, [dispatch]);
   return (
     <Box
       sx={{
@@ -25,13 +33,18 @@ export default function IndoorControl() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginLeft: "10px",
+          ml: 1,
+          paddingLeft: "7px",
+          //   paddingRight: "5px",
+          //   backgroundColor: "#BDBDBD",
         }}
       >
         <Typography>Available Indoors</Typography>
-        <IconButton onClick={() => dispatch(setShowIndoorControl(false))}>
-          <Cancel />
-        </IconButton>
+        <Tooltip title="Close">
+          <IconButton onClick={() => dispatch(setShowIndoorControl(false))}>
+            <Cancel />
+          </IconButton>
+        </Tooltip>
       </Box>
       <Box
         sx={{
@@ -42,21 +55,43 @@ export default function IndoorControl() {
         }}
       >
         <Box>
-          <Box
-            sx={{
-              gap: 5,
-              margin: "10px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography sx={{ color: "black" }}>Floor</Typography>
-            <Button sx={{ m: 0, p: 0 }} variant="contained">
-              {" "}
-              View
-            </Button>
-          </Box>
+          <>
+            {indoorsInMap.length > 0 ? (
+              <>
+                {indoorsInMap.map((indoor) => (
+                  <Box
+                    key={indoor.id}
+                    sx={{
+                      gap: 5,
+                      margin: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Typography sx={{ color: "black", ml: 2 }}>
+                      {indoor.name}
+                    </Typography>
+                    <Button sx={{ m: 0, p: 0 }} variant="contained">
+                      {" "}
+                      View
+                    </Button>
+                  </Box>
+                ))}
+              </>
+            ) : (
+              <Typography
+                sx={{
+                  color: "black",
+                  ml: "20px",
+                  mb: 2,
+                  mt: 2,
+                }}
+              >
+                No indoors yet
+              </Typography>
+            )}
+          </>
         </Box>
       </Box>
     </Box>
