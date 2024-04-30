@@ -10,6 +10,7 @@ const initialState = {
   editProjectId: null,
   openIndoorForm: false,
   editIndoorProjectId: null,
+  indoors: [],
 };
 
 export const Project = createSlice({
@@ -99,6 +100,9 @@ export const Project = createSlice({
     setEditIndoorProjectId: (state, action) => {
       state.editIndoorProjectId = action.payload;
     },
+    setIndoors: (state, action) => {
+      state.indoors = action.payload;
+    },
   },
 });
 
@@ -115,6 +119,7 @@ export const {
   setEditProjectId,
   setOpenIndoorForm,
   setEditIndoorProjectId,
+  setIndoors,
 } = Project.actions;
 
 export default Project.reducer;

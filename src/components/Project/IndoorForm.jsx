@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import { Button, Box } from "@mui/material";
+import { Button, Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
@@ -21,6 +21,7 @@ export default function IndoorForm({ client_id }) {
   const dispatch = useDispatch();
   const openForm = useSelector((state) => state.project.openIndoorForm);
   const project_id = useSelector((state) => state.project.editIndoorProjectId);
+  const indoors = useSelector((state) => state.project.indoors);
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
 
@@ -81,7 +82,17 @@ export default function IndoorForm({ client_id }) {
               </Grid>
 
               <Grid item xs={12}>
-                <IndoorCard />
+                {indoors.length > 0 ? (
+                  <>
+                    {indoors.map((indoor) => (
+                      <IndoorCard key={indoor.id} indoor={indoor} />
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <Typography sx={{ ml: "41%" }}>No indoors yet.</Typography>
+                  </>
+                )}
               </Grid>
 
               <Grid item xs={12}>
