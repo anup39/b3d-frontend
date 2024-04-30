@@ -37,6 +37,8 @@ export default function ProjectCard({
   const [users, setusers] = useState([]);
   const group_name = useSelector((state) => state.auth.role.group_name);
 
+  console.log(url, "url in project card");
+
   // Remaining things to do :
   // const handleViewInMap = () => {
   //   navigate(`/map/project/${id}`);
@@ -117,7 +119,11 @@ export default function ProjectCard({
               <span>
                 <label>3D URL: </label>
               </span>
-              <input disabled={true} style={{ width: 500 }} value={url} />
+              {url !== "" ? (
+                <input disabled={true} style={{ width: 500 }} value={url} />
+              ) : (
+                <span>Not added yet</span>
+              )}
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>
