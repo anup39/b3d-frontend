@@ -65,6 +65,7 @@ import AddRasterToMap from "../../maputils/AddRasterToMap";
 import { fetchProjectPolygonGeojsonByClientIdAndProjectId } from "../../api/api";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import { setShowIndoorControl } from "../../reducers/MapView";
+import IndoorFrame from "./IndoorFrame";
 
 const drawerWidth = 240;
 
@@ -157,6 +158,7 @@ export default function MapView() {
   const showProgressFormOpen = useSelector(
     (state) => state.property.showProgressFormOpen
   );
+  const showIndoorFrame = useSelector((state) => state.mapView.showIndoorFrame);
 
   const handleDrawerClose = () => {
     console.log(!openSidebar);
@@ -488,6 +490,8 @@ export default function MapView() {
       ) : null}
 
       {showReport ? <ReportPrint popUpRef={popUpRef} /> : null}
+
+      {showIndoorFrame ? <IndoorFrame /> : null}
     </Box>
   );
 }

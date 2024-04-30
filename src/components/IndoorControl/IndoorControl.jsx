@@ -1,7 +1,12 @@
 import { Box, Typography, Button, IconButton, Tooltip } from "@mui/material";
 import Cancel from "../DrawControl/Cancel";
 import { useDispatch, useSelector } from "react-redux";
-import { setIndoorsInMap, setShowIndoorControl } from "../../reducers/MapView";
+import {
+  setIndoorsInMap,
+  setShowIndoorControl,
+  setCurrentIndoor,
+  setShowIndoorFrame,
+} from "../../reducers/MapView";
 import { useEffect } from "react";
 export default function IndoorControl() {
   const dispatch = useDispatch();
@@ -10,8 +15,14 @@ export default function IndoorControl() {
   useEffect(() => {
     return () => {
       dispatch(setIndoorsInMap([]));
+      dispatch(setCurrentIndoor(null));
     };
   }, [dispatch]);
+
+  const handleViewIndoor = (indoor) => () => {
+    dispatch(setCurrentIndoor(indoor));
+    dispatch(setShowIndoorFrame(true));
+  };
   return (
     <Box
       sx={{
@@ -72,7 +83,11 @@ export default function IndoorControl() {
                     <Typography sx={{ color: "black", ml: 2 }}>
                       {indoor.name}
                     </Typography>
-                    <Button sx={{ m: 0, p: 0 }} variant="contained">
+                    <Button
+                      onClick={handleViewIndoor(indoor)}
+                      sx={{ m: 0, p: 0 }}
+                      variant="contained"
+                    >
                       {" "}
                       View
                     </Button>

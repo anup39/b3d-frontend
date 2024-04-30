@@ -46,6 +46,8 @@ const initialState = {
   },
   showIndoorControl: false,
   indoorsInMap: [],
+  showIndoorFrame: false,
+  currentIndoor: null,
 };
 
 export const MapView = createSlice({
@@ -235,6 +237,12 @@ export const MapView = createSlice({
     setIndoorsInMap: (state, action) => {
       state.indoorsInMap = action.payload;
     },
+    setShowIndoorFrame: (state, action) => {
+      state.showIndoorFrame = action.payload;
+    },
+    setCurrentIndoor: (state, action) => {
+      state.currentIndoor = action.payload;
+    },
   },
 });
 
@@ -277,6 +285,8 @@ export const {
   setMeasuringsUploadingCount,
   setShowIndoorControl,
   setIndoorsInMap,
+  setShowIndoorFrame,
+  setCurrentIndoor,
 } = MapView.actions;
 
 export default MapView.reducer;
