@@ -21,7 +21,7 @@ import ProjectView from "./ProjectView";
 import { useDispatch, useSelector } from "react-redux";
 import UploadPropertyForm from "../Property/UploadPropertyForm";
 import UploadProgress from "../Property/UploadProgress";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   setcurrentTif,
   setshowSidebarContent,
@@ -33,6 +33,8 @@ import removeCheckedCategoriesLayersFromMap from "../../maputils/removeCheckedCa
 // import ReportActualPage from "./ReportActualPage";
 import fetchTableSummationData from "../../components/LayerControl/fetchTableSummationData";
 import fetchPieSummationData from "../../components/LayerControl/fetchPieSummationData";
+import fetchPieSummationReducer from "../LayerControl/fetchPieSummationReducer";
+import fetchTableSummationReducer from "../LayerControl/fetchTableSummationReducer";
 
 import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import { ListItem, ListItemButton, ListItemText } from "@mui/material";
@@ -130,11 +132,20 @@ export default function MapView() {
     showUploadingCategories,
   } = useSelector((state) => state.mapView);
 
+  console.log("mapview");
+
   const current_tif = useSelector(
     (state) => state.mapView.currentMapDetail.current_tif
   );
   const current_measuring_categories = useSelector(
     (state) => state.client.current_measuring_categories
+  );
+
+  const tableSummationData = useSelector(
+    (state) => state.mapView.tableSummationData
+  );
+  const tableSummationPieData = useSelector(
+    (state) => state.mapView.tableSummationPieData
   );
 
   const project_id = useSelector((state) => state.project.project_id);
@@ -291,6 +302,39 @@ export default function MapView() {
       });
     }
   };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      console.log("This will run every 5 seconds!");
+      if (tableSummationData.length > 0) {
+        fetchTableSummationReducer(
+          tableSummationData,
+          client_id,
+          project_id,
+          dispatch
+        );
+      }
+      if (tableSummationPieData.length > 0) {
+        fetchPieSummationReducer(
+          tableSummationPieData,
+          client_id,
+          project_id,
+          dispatch
+        );
+      }
+    }, 5000); // 5000 milliseconds = 5 seconds
+    return () => {
+      clearInterval(intervalId);
+    };
+
+    // Clear interval on component unmount
+  }, [
+    tableSummationData,
+    tableSummationPieData,
+    client_id,
+    project_id,
+    dispatch,
+  ]);
 
   return (
     <Box sx={{ display: "flex" }}>

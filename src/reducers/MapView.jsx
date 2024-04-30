@@ -169,7 +169,18 @@ export const MapView = createSlice({
       state.tableSummationPieData[index].checked = checked;
       console.log("checked from reducer ");
     },
-
+    updateTableSummationData: (state, action) => {
+      const { id, value, length, count } = action.payload;
+      return state.tableSummationData.map((item) =>
+        item.id === id ? { ...item, value, length, count } : item
+      );
+    },
+    updateTableSummationPieData: (state, action) => {
+      const { id, value } = action.payload;
+      return state.tableSummationPieData.map((item) =>
+        item.id === id ? { ...item, value } : item
+      );
+    },
     setTableSummationDataColumns: (state, action) => {
       state.tableSummationDataColumns = action.payload;
     },
@@ -245,6 +256,8 @@ export const {
   setTableSummationPieData,
   changeTableSummationData,
   changePieSummationData,
+  updateTableSummationData,
+  updateTableSummationPieData,
   setTableSummationDataColumns,
   setCurrentMapExtent,
   setDisplayType,
