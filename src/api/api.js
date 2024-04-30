@@ -245,9 +245,9 @@ const updateRoleById = async ({ id, data }) => {
   return response.data;
 };
 
-const updateProjectById = async ({ id, data }) => {
+const updateProjectById = async (project_id, data) => {
   const response = await axios.patch(
-    `${import.meta.env.VITE_API_DASHBOARD_URL}/projects/${id}/`,
+    `${import.meta.env.VITE_API_DASHBOARD_URL}/projects/${project_id}/`,
     data,
     {
       headers: {

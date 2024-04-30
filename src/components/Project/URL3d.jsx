@@ -30,13 +30,15 @@ export default function URL3d({ client_id }) {
   const projects_ = useSelector((state) => state.auth.role.project);
   const project_id = useSelector((state) => state.project.editProjectId);
 
-  const handleCreateUserRole = (event) => {
+  console.log("project_id", project_id);
+
+  const handleEditRole = (event) => {
     event.preventDefault();
     setLoading(true);
     const data = {
       url: url,
     };
-    updateProjectById({ project_id, data })
+    updateProjectById(project_id, data)
       .then((res) => {
         console.log(res, "res patch of url");
 
@@ -106,7 +108,7 @@ export default function URL3d({ client_id }) {
           }}
         >
           <form
-            onSubmit={handleCreateUserRole}
+            onSubmit={handleEditRole}
             style={{
               position: "absolute",
               top: "50%",
@@ -121,6 +123,8 @@ export default function URL3d({ client_id }) {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
+                  fullWidth
+                  required
                   placeholder="Add 3D url"
                   onChange={(e) => setUrl(e.target.value)}
                 ></TextField>

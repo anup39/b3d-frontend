@@ -2,7 +2,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -114,9 +114,10 @@ export default function ProjectCard({
               <Typography variant="body2" gutterBottom>
                 Client Name : {client_name}
               </Typography>
-              <Typography variant="body2" gutterBottom>
-                3D URL : {url}
-              </Typography>
+              <span>
+                <label>3D URL: </label>
+              </span>
+              <input disabled={true} style={{ width: 500 }} value={url} />
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>
