@@ -30,6 +30,7 @@ import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import removeCheckedCategoriesLayersFromMap from "../../maputils/removeCheckedCategoriesLayers";
 import fetchTableSummationData from "../../components/LayerControl/fetchTableSummationData";
 import fetchPieSummationData from "../../components/LayerControl/fetchPieSummationData";
+import { setShowIndoorControl } from "../../reducers/MapView";
 
 import {
   setcurrentProject,
@@ -110,6 +111,7 @@ export default function ProjectView({ project, popUpRef }) {
   const handleMeasuringsPanelChecked = (event, project) => {
     // Remove table and PieChart
     dispatch(setshowTableMeasurings(false));
+    dispatch(setShowIndoorControl(false));
     dispatch(setshowPiechart(false));
     // Remove popup from map
     const popups = document.getElementsByClassName("maplibregl-popup");

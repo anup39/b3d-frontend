@@ -1,7 +1,9 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, IconButton } from "@mui/material";
 import Cancel from "../DrawControl/Cancel";
-
+import { useDispatch } from "react-redux";
+import { setShowIndoorControl } from "../../reducers/MapView";
 export default function IndoorControl() {
+  const dispatch = useDispatch();
   return (
     <Box
       sx={{
@@ -27,7 +29,9 @@ export default function IndoorControl() {
         }}
       >
         <Typography>Available Indoors</Typography>
-        <Cancel />
+        <IconButton onClick={() => dispatch(setShowIndoorControl(false))}>
+          <Cancel />
+        </IconButton>
       </Box>
       <Box
         sx={{

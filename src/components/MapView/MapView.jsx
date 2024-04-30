@@ -64,6 +64,7 @@ import {
 import AddRasterToMap from "../../maputils/AddRasterToMap";
 import { fetchProjectPolygonGeojsonByClientIdAndProjectId } from "../../api/api";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
+import { setShowIndoorControl } from "../../reducers/MapView";
 
 const drawerWidth = 240;
 
@@ -169,6 +170,7 @@ export default function MapView() {
   const handleMeasuringsPanelChecked = (event, projectid) => {
     // make the pie chart and table to false
     dispatch(setshowTableMeasurings(false));
+    dispatch(setShowIndoorControl(false));
     dispatch(setshowPiechart(false));
     // Remove popup from map
     const popups = document.getElementsByClassName("maplibregl-popup");
