@@ -36,7 +36,7 @@ function fetchTableSummationData(client_id, project_id, dispatch) {
             const area = turf.area(res);
             newItem = {
               ...item,
-              value: round(area, 2),
+              value: area.toFixed(2),
               length: "-",
               count: "-",
               trimmed: `${item.view_name.split("|")[1]},${
@@ -47,7 +47,7 @@ function fetchTableSummationData(client_id, project_id, dispatch) {
             const length = turf.length(res) * 1000;
             newItem = {
               ...item,
-              length: round(length, 2),
+              length: length.toFixed(2),
               value: "-",
               count: "-",
               trimmed: `${item.view_name.split("|")[1]},${
