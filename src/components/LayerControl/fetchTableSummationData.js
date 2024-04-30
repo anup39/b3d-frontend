@@ -44,10 +44,10 @@ function fetchTableSummationData(client_id, project_id, dispatch) {
               }`,
             };
           } else if (geometryType === "LineString") {
-            const length = turf.length(res);
+            const length = turf.length(res) * 1000;
             newItem = {
               ...item,
-              length: round(length, 2) * 1000,
+              length: round(length, 2),
               value: "-",
               count: "-",
               trimmed: `${item.view_name.split("|")[1]},${
