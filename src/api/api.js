@@ -257,6 +257,32 @@ const updateProjectById = async (project_id, data) => {
   );
   return response.data;
 };
+
+const createIndoorByProjectId = async (data) => {
+  const response = await axios.post(
+    `${import.meta.env.VITE_API_DASHBOARD_URL}/indoor/`,
+    data,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+  return response.data;
+};
+
+const fetchIndoorsByProjectId = async (project_id) => {
+  const response = await axios.get(
+    `${import.meta.env.VITE_API_DASHBOARD_URL}/indoor/?project=${project_id}`,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+  return response.data;
+};
+
 export {
   fetchProjectsByClientId,
   fetchProjectsByClientIdAndIds,
@@ -274,4 +300,6 @@ export {
   fetchRoleByUserId,
   updateRoleById,
   updateProjectById,
+  createIndoorByProjectId,
+  fetchIndoorsByProjectId,
 };

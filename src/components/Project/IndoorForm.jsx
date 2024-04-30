@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button, Box, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import {
@@ -10,12 +10,16 @@ import {
   setshowToast,
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
-import {} from "../../api/api";
+import {
+  createIndoorByProjectId,
+  fetchIndoorsByProjectId,
+} from "../../api/api";
 import {
   setOpenIndoorForm,
   setEditIndoorProjectId,
 } from "../../reducers/Project";
 import IndoorCard from "./IndoorCard";
+import { setIndoors } from "../../reducers/Project";
 
 export default function IndoorForm({ client_id }) {
   const dispatch = useDispatch();
@@ -24,6 +28,8 @@ export default function IndoorForm({ client_id }) {
   const indoors = useSelector((state) => state.project.indoors);
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
+  const [name, setName] = useState("");
+  const user_id = useSelector((state) => state.auth.user_id);
 
   console.log("project_id", project_id);
 
@@ -31,6 +37,48 @@ export default function IndoorForm({ client_id }) {
     dispatch(setOpenIndoorForm(false));
     dispatch(setEditIndoorProjectId(null));
   };
+
+  const handleCreateIndoor = (event) => {
+    event.preventDefault();
+    setLoading(true);
+    const data = {
+      name: name,
+      url: url,
+      client: client_id,
+      project: project_id,
+      created_by: user_id,
+      is_display: true,
+    };
+    createIndoorByProjectId(data)
+      .then((res) => {
+        console.log(res, "res patch of indoor");
+        fetchIndoorsByProjectId(project_id).then((res) => {
+          console.log(res, "res fetch indoors");
+          dispatch(setIndoors(res));
+        });
+
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Successfully Created Indoor"));
+        dispatch(settoastType("success"));
+        // closeForm();
+      })
+      .catch(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage("Failed to create Indoor"));
+        dispatch(settoastType("error"));
+      });
+  };
+
+  useEffect(() => {
+    if (project_id) {
+      fetchIndoorsByProjectId(project_id).then((res) => {
+        console.log(res, "res fetch indoors");
+        dispatch(setIndoors(res));
+      });
+    }
+  });
 
   return (
     <>
@@ -47,7 +95,7 @@ export default function IndoorForm({ client_id }) {
           }}
         >
           <form
-            // onSubmit={handleEditRole}
+            onSubmit={handleCreateIndoor}
             style={{
               position: "absolute",
               top: "50%",
@@ -62,6 +110,11 @@ export default function IndoorForm({ client_id }) {
           >
             <Grid container spacing={2}>
               <Grid item xs={12} display={"flex"} gap={1} alignItems={"center"}>
+                <TextField
+                  required
+                  placeholder="Name"
+                  onChange={(e) => setName(e.target.value)}
+                ></TextField>
                 <TextField
                   fullWidth
                   required
