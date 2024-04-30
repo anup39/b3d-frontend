@@ -84,6 +84,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   const handleShowReport = () => {
     if (client_id && project_id) {
       fetchTableSummationData(client_id, project_id, dispatch);
+      fetchPieSummationData(client_id, project_id, dispatch);
     }
     dispatch(setshowTableMeasurings(true));
     dispatch(setshowPiechart(true));
@@ -127,8 +128,8 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
               newItem = {
                 ...item,
                 value: round(area, 2),
-                length: 0,
-                count: 0,
+                length: "-",
+                count: "-",
                 trimmed: `${item.view_name.split("|")[1]},${
                   item.view_name.split("|")[2]
                 }`,
@@ -138,8 +139,8 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
               newItem = {
                 ...item,
                 length: round(length, 2) * 1000,
-                value: 0,
-                count: 0,
+                value: "-",
+                count: "-",
                 trimmed: `${item.view_name.split("|")[1]},${
                   item.view_name.split("|")[2]
                 }`,
@@ -150,8 +151,8 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
               newItem = {
                 ...item,
                 count: numberOfFeatures,
-                value: 0,
-                length: 0,
+                value: "-",
+                length: "-",
                 trimmed: `${item.view_name.split("|")[1]},${
                   item.view_name.split("|")[2]
                 }`,
