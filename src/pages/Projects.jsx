@@ -99,6 +99,7 @@ export default function Projects() {
                     name={project.name}
                     client_name={project.client_name}
                     description={project.description}
+                    url={project.url}
                     created_at={project.created_at}
                   />
                 ))

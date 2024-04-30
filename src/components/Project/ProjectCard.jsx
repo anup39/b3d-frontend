@@ -25,6 +25,7 @@ export default function ProjectCard({
   name,
   client_name,
   description,
+  url,
 }) {
   // const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -104,6 +105,9 @@ export default function ProjectCard({
               <Typography variant="body2" gutterBottom>
                 Client Name : {client_name}
               </Typography>
+              <Typography variant="body2" gutterBottom>
+                3D URL : {url}
+              </Typography>
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>
@@ -120,6 +124,17 @@ export default function ProjectCard({
                     onClick={handleInspection}
                     sx={{ "&:hover": { cursor: "pointer" } }}
                   />
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="3D URL">
+                  <Button
+                    variant="contained"
+                    onClick={handleInspection}
+                    sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
+                  >
+                    3D URL
+                  </Button>
                 </Tooltip>
               </Grid>
 
@@ -172,5 +187,6 @@ ProjectCard.propTypes = {
   name: PropTypes.string,
   client_name: PropTypes.string,
   description: PropTypes.string,
+  url: PropTypes.string,
   created_at: PropTypes.string,
 };

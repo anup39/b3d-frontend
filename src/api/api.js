@@ -245,6 +245,18 @@ const updateRoleById = async ({ id, data }) => {
   return response.data;
 };
 
+const updateProjectById = async ({ id, data }) => {
+  const response = await axios.patch(
+    `${import.meta.env.VITE_API_DASHBOARD_URL}/projects/${id}/`,
+    data,
+    {
+      headers: {
+        Authorization: "Token " + localStorage.getItem("token"),
+      },
+    }
+  );
+  return response.data;
+};
 export {
   fetchProjectsByClientId,
   fetchProjectsByClientIdAndIds,
@@ -261,4 +273,5 @@ export {
   fetchMeasuringsUploadStatus,
   fetchRoleByUserId,
   updateRoleById,
+  updateProjectById,
 };
