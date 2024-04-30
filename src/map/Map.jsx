@@ -24,6 +24,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { setShowKeyInfo } from "../reducers/DrawnGeometry";
 import MeasuringUploadStatusControl from "../components/MeasuringUploadStatusControl/MeasuringUploadStatusControl";
+import IndoorControl from "../components/IndoorControl/IndoorControl";
 
 export default function Map({ popUpRef }) {
   console.log("here");
@@ -339,22 +340,41 @@ export default function Map({ popUpRef }) {
     <>
       <div ref={mapContainer} id="map" className="map">
         {project_id ? (
-          <Button
-            onClick={handle3D}
-            sx={{
-              position: "absolute",
-              top: "12px",
-              right: "50px",
-              zIndex: 9999,
-              backgroundColor: "white",
-              "&:hover": {
+          <>
+            <Button
+              onClick={handle3D}
+              sx={{
+                position: "absolute",
+                top: "12px",
+                right: "50px",
+                zIndex: 9999,
                 backgroundColor: "white",
-              },
-              color: "#D51B60",
-            }}
-          >
-            3D
-          </Button>
+                "&:hover": {
+                  backgroundColor: "white",
+                },
+                color: "#D51B60",
+              }}
+            >
+              3D
+            </Button>
+            <Button
+              // onClick={handle3D}
+              sx={{
+                position: "absolute",
+                top: "12px",
+                right: "130px",
+                zIndex: 9999,
+                backgroundColor: "white",
+                "&:hover": {
+                  backgroundColor: "white",
+                },
+                color: "#D51B60",
+              }}
+            >
+              Indoor{" "}
+            </Button>
+            <IndoorControl></IndoorControl>
+          </>
         ) : null}
 
         {show_key_info ? (
