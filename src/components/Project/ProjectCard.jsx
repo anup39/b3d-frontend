@@ -10,7 +10,11 @@ import FolderIcon from "@mui/icons-material/Folder";
 import MapIcon from "@mui/icons-material/Map";
 import Tooltip from "@mui/material/Tooltip";
 import RoofingIcon from "@mui/icons-material/Roofing";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setEditProjectId,
+  setOpenEditProjectForm,
+} from "../../reducers/Project";
 
 // import {
 //   setdeleteId,
@@ -27,7 +31,7 @@ export default function ProjectCard({
   description,
   url,
 }) {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [properties, setproperties] = useState([]);
   const [users, setusers] = useState([]);
@@ -76,6 +80,11 @@ export default function ProjectCard({
     // dispatch(setshowMeasuringsPanel(false));
     // navigate(`/projects/${id}/Map`);
     window.location.replace(`/properties/${client_id}/${id}/Map`);
+  };
+
+  const handleEditURL = () => {
+    dispatch(setOpenEditProjectForm(true));
+    dispatch(setEditProjectId(id));
   };
 
   return (
@@ -130,7 +139,7 @@ export default function ProjectCard({
                 <Tooltip title="3D URL">
                   <Button
                     variant="contained"
-                    onClick={handleInspection}
+                    onClick={handleEditURL}
                     sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
                   >
                     3D URL

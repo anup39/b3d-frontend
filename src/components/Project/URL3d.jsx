@@ -15,14 +15,20 @@ import {
   fetchProjectsByClientId,
   updateProjectById,
 } from "../../api/api";
-import { setprojects } from "../../reducers/Project";
+import {
+  setprojects,
+  setOpenEditProjectForm,
+  setEditProjectId,
+} from "../../reducers/Project";
 
-export default function URL3d({ openForm, client_id, project_id, onOpenForm }) {
+export default function URL3d({ client_id }) {
   const dispatch = useDispatch();
+  const openForm = useSelector((state) => state.project.openEditProjectForm);
   const group_name = useSelector((state) => state.auth.role.group_name);
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const projects_ = useSelector((state) => state.auth.role.project);
+  const project_id = useSelector((state) => state.project.editProjectId);
 
   const handleCreateUserRole = (event) => {
     event.preventDefault();
@@ -81,7 +87,8 @@ export default function URL3d({ openForm, client_id, project_id, onOpenForm }) {
   };
 
   const closeForm = () => {
-    onOpenForm(false);
+    dispatch(setOpenEditProjectForm(false));
+    dispatch(setEditProjectId(null));
   };
 
   return (

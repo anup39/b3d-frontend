@@ -13,6 +13,7 @@ import {
   fetchProjectsByClientIdAndIds,
   fetchProjectsByClientId,
 } from "../api/api";
+import URL3d from "../components/Project/URL3d";
 
 export default function Projects() {
   const { client_id, view } = useParams();
@@ -85,7 +86,11 @@ export default function Projects() {
             }}
           >
             {group_name === "super_admin" || group_name === "admin" ? (
-              <ProjectForm client_id={client_id} />
+              <>
+                {" "}
+                <ProjectForm client_id={client_id} />
+                <URL3d client_id={client_id} />
+              </>
             ) : null}
           </Box>
 

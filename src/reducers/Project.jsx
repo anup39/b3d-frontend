@@ -1,10 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { set } from "lodash";
 
 const initialState = {
   project_id: null,
   current_project_name: null,
   projects: [],
   originalProjects: [],
+  openEditProjectForm: false,
+  editProjectId: null,
 };
 
 export const Project = createSlice({
@@ -81,6 +84,12 @@ export const Project = createSlice({
         );
       });
     },
+    setOpenEditProjectForm(state, action) {
+      state.openEditProjectForm = action.payload;
+    },
+    setEditProjectId: (state, action) => {
+      state.editProjectId = action.payload;
+    },
   },
 });
 
@@ -93,6 +102,8 @@ export const {
   setProjectChecked,
   setProjectOpenProperties,
   filterProjects,
+  setOpenEditProjectForm,
+  setEditProjectId,
 } = Project.actions;
 
 export default Project.reducer;
