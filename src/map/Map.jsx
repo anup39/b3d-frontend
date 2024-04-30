@@ -318,30 +318,44 @@ export default function Map({ popUpRef }) {
     }
   }, [map, popUpRef]);
 
+  const handle3D = () => {
+    if (project_id) {
+      axios
+        .get(
+          `${import.meta.env.VITE_API_DASHBOARD_URL}/projects/${project_id}/`
+        )
+        .then((res) => {
+          const project = res.data;
+          const url = project.url;
+          if (url) {
+            window.open(url, "_blank");
+          }
+        });
+    }
+    console.log(project_id, "projectcid");
+  };
+
   return (
     <>
       <div ref={mapContainer} id="map" className="map">
-        <Button
-          // onClick={() => {
-          //   dispatch(setDisplayType("3D"));
-          //   const map = window.map_global;
-          //   const bounds = map.getBounds();
-          //   dispatch(setCurrentMapExtent(bounds.toArray()));
-          // }}
-          sx={{
-            position: "absolute",
-            top: "12px",
-            right: "50px",
-            zIndex: 9999,
-            backgroundColor: "white",
-            "&:hover": {
+        {project_id ? (
+          <Button
+            onClick={handle3D}
+            sx={{
+              position: "absolute",
+              top: "12px",
+              right: "50px",
+              zIndex: 9999,
               backgroundColor: "white",
-            },
-            color: "#D51B60",
-          }}
-        >
-          3D
-        </Button>
+              "&:hover": {
+                backgroundColor: "white",
+              },
+              color: "#D51B60",
+            }}
+          >
+            3D
+          </Button>
+        ) : null}
 
         {show_key_info ? (
           <Card
