@@ -1,10 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { set } from "lodash";
 
 const initialState = {
   project_id: null,
   current_project_name: null,
   projects: [],
   originalProjects: [],
+  openEditProjectForm: false,
+  editProjectId: null,
+  openIndoorForm: false,
+  editIndoorProjectId: null,
+  indoors: [],
 };
 
 export const Project = createSlice({
@@ -81,6 +87,22 @@ export const Project = createSlice({
         );
       });
     },
+    setOpenEditProjectForm(state, action) {
+      state.openEditProjectForm = action.payload;
+    },
+    setEditProjectId: (state, action) => {
+      state.editProjectId = action.payload;
+    },
+
+    setOpenIndoorForm(state, action) {
+      state.openIndoorForm = action.payload;
+    },
+    setEditIndoorProjectId: (state, action) => {
+      state.editIndoorProjectId = action.payload;
+    },
+    setIndoors: (state, action) => {
+      state.indoors = action.payload;
+    },
   },
 });
 
@@ -93,6 +115,11 @@ export const {
   setProjectChecked,
   setProjectOpenProperties,
   filterProjects,
+  setOpenEditProjectForm,
+  setEditProjectId,
+  setOpenIndoorForm,
+  setEditIndoorProjectId,
+  setIndoors,
 } = Project.actions;
 
 export default Project.reducer;

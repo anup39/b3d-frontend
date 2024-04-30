@@ -21,11 +21,20 @@ import ProjectView from "./ProjectView";
 import { useDispatch, useSelector } from "react-redux";
 import UploadPropertyForm from "../Property/UploadPropertyForm";
 import UploadProgress from "../Property/UploadProgress";
-import { useRef } from "react";
-import { setcurrentTif, setshowSidebarContent } from "../../reducers/MapView";
+import { useEffect, useRef } from "react";
+import {
+  setcurrentTif,
+  setshowSidebarContent,
+  setTableSummationData,
+  setTableSummationPieData,
+} from "../../reducers/MapView";
 import { settifs } from "../../reducers/Tifs";
 import removeCheckedCategoriesLayersFromMap from "../../maputils/removeCheckedCategoriesLayers";
 // import ReportActualPage from "./ReportActualPage";
+import fetchTableSummationData from "../../components/LayerControl/fetchTableSummationData";
+import fetchPieSummationData from "../../components/LayerControl/fetchPieSummationData";
+import fetchPieSummationReducer from "../LayerControl/fetchPieSummationReducer";
+import fetchTableSummationReducer from "../LayerControl/fetchTableSummationReducer";
 
 import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import { ListItem, ListItemButton, ListItemText } from "@mui/material";
@@ -55,6 +64,8 @@ import {
 import AddRasterToMap from "../../maputils/AddRasterToMap";
 import { fetchProjectPolygonGeojsonByClientIdAndProjectId } from "../../api/api";
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
+import { setShowIndoorControl } from "../../reducers/MapView";
+import IndoorFrame from "./IndoorFrame";
 
 const drawerWidth = 240;
 
@@ -123,11 +134,20 @@ export default function MapView() {
     showUploadingCategories,
   } = useSelector((state) => state.mapView);
 
+  console.log("mapview");
+
   const current_tif = useSelector(
     (state) => state.mapView.currentMapDetail.current_tif
   );
   const current_measuring_categories = useSelector(
     (state) => state.client.current_measuring_categories
+  );
+
+  const tableSummationData = useSelector(
+    (state) => state.mapView.tableSummationData
+  );
+  const tableSummationPieData = useSelector(
+    (state) => state.mapView.tableSummationPieData
   );
 
   const project_id = useSelector((state) => state.project.project_id);
@@ -138,6 +158,7 @@ export default function MapView() {
   const showProgressFormOpen = useSelector(
     (state) => state.property.showProgressFormOpen
   );
+  const showIndoorFrame = useSelector((state) => state.mapView.showIndoorFrame);
 
   const handleDrawerClose = () => {
     console.log(!openSidebar);
@@ -151,6 +172,7 @@ export default function MapView() {
   const handleMeasuringsPanelChecked = (event, projectid) => {
     // make the pie chart and table to false
     dispatch(setshowTableMeasurings(false));
+    dispatch(setShowIndoorControl(false));
     dispatch(setshowPiechart(false));
     // Remove popup from map
     const popups = document.getElementsByClassName("maplibregl-popup");
@@ -204,6 +226,10 @@ export default function MapView() {
       fetchMeasuringCategories(client_id).then((res) => {
         const measuringcategories = res;
         dispatch(setCurrentMeasuringCategories(measuringcategories));
+        if (client_id && projectid) {
+          fetchTableSummationData(client_id, projectid, dispatch);
+          fetchPieSummationData(client_id, projectid, dispatch);
+        }
       });
       // Here add Property polygon to the map by calling the api
       fetchProjectPolygonGeojsonByClientIdAndProjectId({
@@ -265,6 +291,8 @@ export default function MapView() {
       dispatch(setcurrentProjectName(null));
       dispatch(setcurrentProject(null));
       dispatch(setCurrentMeasuringCategories(null));
+      dispatch(setTableSummationData([]));
+      dispatch(setTableSummationPieData([]));
       dispatch(setcurrentTif(null));
       dispatch(setshowTableMeasurings(false));
       dispatch(setshowPiechart(false));
@@ -278,6 +306,39 @@ export default function MapView() {
       });
     }
   };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      console.log("This will run every 5 seconds!");
+      if (tableSummationData.length > 0) {
+        fetchTableSummationReducer(
+          tableSummationData,
+          client_id,
+          project_id,
+          dispatch
+        );
+      }
+      if (tableSummationPieData.length > 0) {
+        fetchPieSummationReducer(
+          tableSummationPieData,
+          client_id,
+          project_id,
+          dispatch
+        );
+      }
+    }, 5000); // 5000 milliseconds = 5 seconds
+    return () => {
+      clearInterval(intervalId);
+    };
+
+    // Clear interval on component unmount
+  }, [
+    tableSummationData,
+    tableSummationPieData,
+    client_id,
+    project_id,
+    dispatch,
+  ]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -429,6 +490,8 @@ export default function MapView() {
       ) : null}
 
       {showReport ? <ReportPrint popUpRef={popUpRef} /> : null}
+
+      {showIndoorFrame ? <IndoorFrame /> : null}
     </Box>
   );
 }

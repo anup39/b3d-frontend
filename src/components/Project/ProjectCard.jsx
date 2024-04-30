@@ -2,7 +2,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -10,7 +10,13 @@ import FolderIcon from "@mui/icons-material/Folder";
 import MapIcon from "@mui/icons-material/Map";
 import Tooltip from "@mui/material/Tooltip";
 import RoofingIcon from "@mui/icons-material/Roofing";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setEditProjectId,
+  setOpenEditProjectForm,
+  setOpenIndoorForm,
+  setEditIndoorProjectId,
+} from "../../reducers/Project";
 
 // import {
 //   setdeleteId,
@@ -25,12 +31,15 @@ export default function ProjectCard({
   name,
   client_name,
   description,
+  url,
 }) {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [properties, setproperties] = useState([]);
   const [users, setusers] = useState([]);
   const group_name = useSelector((state) => state.auth.role.group_name);
+
+  console.log(url, "url in project card");
 
   // Remaining things to do :
   // const handleViewInMap = () => {
@@ -77,6 +86,16 @@ export default function ProjectCard({
     window.location.replace(`/properties/${client_id}/${id}/Map`);
   };
 
+  const handleEditURL = () => {
+    dispatch(setOpenEditProjectForm(true));
+    dispatch(setEditProjectId(id));
+  };
+
+  const handleIndoor = () => {
+    dispatch(setOpenIndoorForm(true));
+    dispatch(setEditIndoorProjectId(id));
+  };
+
   return (
     <Paper
       sx={{
@@ -104,6 +123,14 @@ export default function ProjectCard({
               <Typography variant="body2" gutterBottom>
                 Client Name : {client_name}
               </Typography>
+              <span>
+                <label>3D URL: </label>
+              </span>
+              {url !== "" ? (
+                <input disabled={true} style={{ width: 500 }} value={url} />
+              ) : (
+                <span>Not added yet</span>
+              )}
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>
@@ -120,6 +147,29 @@ export default function ProjectCard({
                     onClick={handleInspection}
                     sx={{ "&:hover": { cursor: "pointer" } }}
                   />
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="3D URL">
+                  <Button
+                    variant="contained"
+                    onClick={handleEditURL}
+                    sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
+                  >
+                    3D URL
+                  </Button>
+                </Tooltip>
+              </Grid>
+
+              <Grid item>
+                <Tooltip title="Indoor">
+                  <Button
+                    variant="contained"
+                    onClick={handleIndoor}
+                    sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
+                  >
+                    Indoor
+                  </Button>
                 </Tooltip>
               </Grid>
 
@@ -172,5 +222,6 @@ ProjectCard.propTypes = {
   name: PropTypes.string,
   client_name: PropTypes.string,
   description: PropTypes.string,
+  url: PropTypes.string,
   created_at: PropTypes.string,
 };

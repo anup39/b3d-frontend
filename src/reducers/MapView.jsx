@@ -44,6 +44,10 @@ const initialState = {
   printDetails: {
     currentMapExtent: null,
   },
+  showIndoorControl: false,
+  indoorsInMap: [],
+  showIndoorFrame: false,
+  currentIndoor: null,
 };
 
 export const MapView = createSlice({
@@ -150,6 +154,37 @@ export const MapView = createSlice({
     setTableSummationPieData: (state, action) => {
       state.tableSummationPieData = action.payload;
     },
+
+    changeTableSummationData: (state, action) => {
+      if (state.tableSummationData.length === 0) return;
+      const { id, checked } = action.payload;
+      const index = state.tableSummationData.findIndex((row) => row.id === id);
+      console.log(index, "index");
+      state.tableSummationData[index].checked = checked;
+      console.log("checked from reducer ");
+    },
+
+    changePieSummationData: (state, action) => {
+      if (state.tableSummationPieData.length === 0) return;
+      const { id, checked } = action.payload;
+      const index = state.tableSummationPieData.findIndex(
+        (row) => row.id === id
+      );
+      state.tableSummationPieData[index].checked = checked;
+      console.log("checked from reducer ");
+    },
+    updateTableSummationData: (state, action) => {
+      const { id, value, length, count } = action.payload;
+      return state.tableSummationData.map((item) =>
+        item.id === id ? { ...item, value, length, count } : item
+      );
+    },
+    updateTableSummationPieData: (state, action) => {
+      const { id, value } = action.payload;
+      return state.tableSummationPieData.map((item) =>
+        item.id === id ? { ...item, value } : item
+      );
+    },
     setTableSummationDataColumns: (state, action) => {
       state.tableSummationDataColumns = action.payload;
     },
@@ -196,6 +231,18 @@ export const MapView = createSlice({
     setMeasuringsUploadingCount: (state, action) => {
       state.measuringsUploadingCount = action.payload;
     },
+    setShowIndoorControl: (state, action) => {
+      state.showIndoorControl = action.payload;
+    },
+    setIndoorsInMap: (state, action) => {
+      state.indoorsInMap = action.payload;
+    },
+    setShowIndoorFrame: (state, action) => {
+      state.showIndoorFrame = action.payload;
+    },
+    setCurrentIndoor: (state, action) => {
+      state.currentIndoor = action.payload;
+    },
   },
 });
 
@@ -223,6 +270,10 @@ export const {
   resetCurrentBandInformation,
   setTableSummationData,
   setTableSummationPieData,
+  changeTableSummationData,
+  changePieSummationData,
+  updateTableSummationData,
+  updateTableSummationPieData,
   setTableSummationDataColumns,
   setCurrentMapExtent,
   setDisplayType,
@@ -232,6 +283,10 @@ export const {
   // # For the measurings upload panel
   setShowMeasuringFileUploadPanel,
   setMeasuringsUploadingCount,
+  setShowIndoorControl,
+  setIndoorsInMap,
+  setShowIndoorFrame,
+  setCurrentIndoor,
 } = MapView.actions;
 
 export default MapView.reducer;

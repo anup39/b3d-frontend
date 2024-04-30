@@ -28,6 +28,10 @@ import handleCategoriesChange from "../../maputils/handleCategoriesCheckedOrUnch
 import setGeometryOpacity from "../../maputils/handleGeometryOpacity";
 import { fetchGeojsonByCategoryId } from "../../api/api";
 import * as turf from "@turf/turf";
+import {
+  changeTableSummationData,
+  changePieSummationData,
+} from "../../reducers/MapView";
 
 export default function LayersPanel({ map, popUpRef }) {
   const dispatch = useDispatch();
@@ -49,6 +53,23 @@ export default function LayersPanel({ map, popUpRef }) {
     }
   }, [current_measuring_categories]);
 
+  const handlePieChartChange = (event, cat) => {
+    console.log(event);
+    console.log(cat);
+    if (cat.type_of_geometry === "Polygon") {
+      dispatch(
+        changePieSummationData({ id: cat.id, checked: event.target.checked })
+      );
+    }
+  };
+  const handleTableChange = (event, cat) => {
+    console.log(event);
+    console.log(cat);
+    dispatch(
+      changeTableSummationData({ id: cat.id, checked: event.target.checked })
+    );
+  };
+
   const handleChangesd = (event, sdIndex) => {
     const updatedCategories = [...categories];
     updatedCategories[sdIndex].checked = event.target.checked;
@@ -66,6 +87,8 @@ export default function LayersPanel({ map, popUpRef }) {
           map,
           popUpRef
         );
+        handlePieChartChange(event, cat);
+        handleTableChange(event, cat);
       });
     });
     setCategories(updatedCategories);
@@ -93,6 +116,8 @@ export default function LayersPanel({ map, popUpRef }) {
             map,
             popUpRef
           );
+          handlePieChartChange(event, cat);
+          handleTableChange(event, cat);
         }
       }
     );
@@ -131,6 +156,8 @@ export default function LayersPanel({ map, popUpRef }) {
       updatedCategories[sdIndex].sub_category[subIndex].category[catIndex];
     cat.checked = event.target.checked;
     handleCategoriesChange(event, cat, client_id, project_id, map, popUpRef);
+    handlePieChartChange(event, cat);
+    handleTableChange(event, cat);
 
     let allCategoriesChecked = true;
     let someCategoriesChecked = false;

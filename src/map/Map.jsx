@@ -16,7 +16,12 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import AddLayerAndSourceToMap from "../maputils/AddLayerAndSourceToMap";
 import { Button } from "@mui/material";
-import { setCurrentMapExtent, setDisplayType } from "../reducers/MapView";
+import {
+  setCurrentMapExtent,
+  setDisplayType,
+  setIndoorsInMap,
+  setShowIndoorControl,
+} from "../reducers/MapView";
 import { setWKTGeometry, setTypeOfGeometry } from "../reducers/DrawnGeometry";
 import MeasureControl from "../components/DrawControl/MeasureControl";
 import Card from "@mui/material/Card";
@@ -24,6 +29,8 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { setShowKeyInfo } from "../reducers/DrawnGeometry";
 import MeasuringUploadStatusControl from "../components/MeasuringUploadStatusControl/MeasuringUploadStatusControl";
+import IndoorControl from "../components/IndoorControl/IndoorControl";
+import { fetchIndoorsByProjectId } from "../api/api";
 
 export default function Map({ popUpRef }) {
   console.log("here");
@@ -47,7 +54,12 @@ export default function Map({ popUpRef }) {
     (state) => state.drawnPolygon.show_key_info
   );
 
+  const showIndoorControl = useSelector(
+    (state) => state.mapView.showIndoorControl
+  );
+
   console.log(show_key_info, "show key info from map");
+  console.log(project_id, "project id from map");
 
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -318,30 +330,70 @@ export default function Map({ popUpRef }) {
     }
   }, [map, popUpRef]);
 
+  const handle3D = () => {
+    if (project_id && project_id !== "All") {
+      axios
+        .get(
+          `${import.meta.env.VITE_API_DASHBOARD_URL}/projects/${project_id}/`
+        )
+        .then((res) => {
+          const project = res.data;
+          const url = project.url;
+          if (url) {
+            window.open(url, "_blank");
+          }
+        });
+    }
+    console.log(project_id, "projectcid");
+  };
+
+  const handleIndoor = () => {
+    dispatch(setShowIndoorControl(true));
+    fetchIndoorsByProjectId(project_id).then((res) => {
+      dispatch(setIndoorsInMap(res));
+    });
+  };
+
   return (
     <>
       <div ref={mapContainer} id="map" className="map">
-        <Button
-          // onClick={() => {
-          //   dispatch(setDisplayType("3D"));
-          //   const map = window.map_global;
-          //   const bounds = map.getBounds();
-          //   dispatch(setCurrentMapExtent(bounds.toArray()));
-          // }}
-          sx={{
-            position: "absolute",
-            top: "12px",
-            right: "50px",
-            zIndex: 9999,
-            backgroundColor: "white",
-            "&:hover": {
-              backgroundColor: "white",
-            },
-            color: "#D51B60",
-          }}
-        >
-          3D
-        </Button>
+        {project_id && project_id !== "All" ? (
+          <>
+            <Button
+              onClick={handle3D}
+              sx={{
+                position: "absolute",
+                top: "12px",
+                right: "50px",
+                zIndex: 9999,
+                backgroundColor: "white",
+                "&:hover": {
+                  backgroundColor: "white",
+                },
+                color: "#D51B60",
+              }}
+            >
+              3D
+            </Button>
+            <Button
+              onClick={handleIndoor}
+              sx={{
+                position: "absolute",
+                top: "12px",
+                right: "130px",
+                zIndex: 9999,
+                backgroundColor: "white",
+                "&:hover": {
+                  backgroundColor: "white",
+                },
+                color: "#D51B60",
+              }}
+            >
+              Indoor{" "}
+            </Button>
+            {showIndoorControl ? <IndoorControl /> : null}
+          </>
+        ) : null}
 
         {show_key_info ? (
           <Card

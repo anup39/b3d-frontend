@@ -22,10 +22,15 @@ import {
   setshowReport,
   setshowTifPanel,
   setCurrentPropertyPolygonGeojson,
+  setTableSummationData,
+  setTableSummationPieData,
 } from "../../reducers/MapView";
 
 import { setCurrentMeasuringCategories } from "../../reducers/Client";
 import removeCheckedCategoriesLayersFromMap from "../../maputils/removeCheckedCategoriesLayers";
+import fetchTableSummationData from "../../components/LayerControl/fetchTableSummationData";
+import fetchPieSummationData from "../../components/LayerControl/fetchPieSummationData";
+import { setShowIndoorControl } from "../../reducers/MapView";
 
 import {
   setcurrentProject,
@@ -106,6 +111,7 @@ export default function ProjectView({ project, popUpRef }) {
   const handleMeasuringsPanelChecked = (event, project) => {
     // Remove table and PieChart
     dispatch(setshowTableMeasurings(false));
+    dispatch(setShowIndoorControl(false));
     dispatch(setshowPiechart(false));
     // Remove popup from map
     const popups = document.getElementsByClassName("maplibregl-popup");
@@ -155,6 +161,10 @@ export default function ProjectView({ project, popUpRef }) {
         const measuringcategories = res;
         console.log("measuringcategories", measuringcategories);
         dispatch(setCurrentMeasuringCategories(measuringcategories));
+        if (client_id && project.id) {
+          fetchTableSummationData(client_id, project.id, dispatch);
+          fetchPieSummationData(client_id, project.id, dispatch);
+        }
       });
       // Here add Property polygon to the map by calling the api
       fetchProjectPolygonGeojsonByClientIdAndProjectId({
@@ -205,6 +215,8 @@ export default function ProjectView({ project, popUpRef }) {
       dispatch(setcurrentProjectName(null));
       dispatch(setcurrentProject(null));
       dispatch(setCurrentMeasuringCategories(null));
+      dispatch(setTableSummationData([]));
+      dispatch(setTableSummationPieData([]));
       dispatch(setcurrentTif(null));
       dispatch(setshowTableMeasurings(false));
       dispatch(setshowPiechart(false));

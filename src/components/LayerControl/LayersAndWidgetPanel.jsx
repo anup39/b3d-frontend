@@ -13,14 +13,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setshowShapefileUpload,
   setshowReport,
-  setshowMap,
   setshowTableMeasurings,
   setshowPiechart,
-  setTableSummationData,
-  setTableSummationPieData,
   setCurrentMapExtent,
   setCurrentPropertyPolygonGeojson,
-  setOpenSidebar,
   setshowSidebarContent,
 } from "../../reducers/MapView";
 import {
@@ -35,21 +31,17 @@ import {
 import RectangleIcon from "@mui/icons-material/Rectangle";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import axios from "axios";
 import {
   deletePropertyPolygonByPolygonId,
-  fetchGeojsonByCategoryId,
   fetchProjectPolygonGeojsonByClientIdAndProjectId,
-  fetchMeasuringTableSummation,
-  fetchMeasuringPieSummation,
 } from "../../api/api";
 import {
   setshowToast,
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
-import * as turf from "@turf/turf";
-import { round } from "lodash";
+import fetchTableSummationData from "./fetchTableSummationData";
+import fetchPieSummationData from "./fetchPieSummationData";
 
 export default function LayersAndWidgetControl({ map, popUpRef }) {
   const dispatch = useDispatch();
@@ -63,6 +55,10 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     showPiechart,
     showReport,
   } = useSelector((state) => state.mapView);
+
+  const { tableSummationData, tableSummationPieData } = useSelector(
+    (state) => state.mapView
+  );
 
   const currentPropertyPolygonGeojson = useSelector(
     (state) => state.mapView.currentMapDetail.current_property_polygon_geojson
@@ -82,9 +78,15 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
   };
 
   const handleShowReport = () => {
-    if (client_id && project_id) {
-      fetchTableSummationData(client_id, project_id, dispatch);
-    }
+    // if (
+    //   client_id &&
+    //   project_id &&
+    //   tableSummationData.length === 0 &&
+    //   tableSummationPieData.length === 0
+    // ) {
+    //   fetchTableSummationData(client_id, project_id, dispatch);
+    //   fetchPieSummationData(client_id, project_id, dispatch);
+    // }
     dispatch(setshowTableMeasurings(true));
     dispatch(setshowPiechart(true));
     dispatch(setshowReport(!showReport));
@@ -96,122 +98,17 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
     dispatch(setCurrentMapExtent(bounds.toArray()));
   };
 
-  function fetchTableSummationData(client_id, project_id, dispatch) {
-    fetchMeasuringTableSummation({ client_id, project_id }).then((res) => {
-      if (res.rows.length > 0) {
-        const data_copy = JSON.stringify(
-          res.rows
-          // res.rows.filter(
-          //   (item) =>
-          //     item.type_of_geometry === "Polygon" ||
-          //     item.type_of_geometry === "LineString" ||
-          //     item.type_of_geometry === "Point"
-          // )
-        );
-        const new_data = JSON.parse(data_copy);
-        console.log(new_data, "new_data");
-        const newDataPromises = new_data.map(async (item) => {
-          const geometryType = item.type_of_geometry;
-          let newItem;
-
-          return fetchGeojsonByCategoryId({
-            client_id,
-            category_id: item.id,
-            project_id,
-            type_of_geometry: item.type_of_geometry,
-          }).then((res) => {
-            console.log(res);
-
-            if (geometryType === "Polygon") {
-              const area = turf.area(res);
-              newItem = {
-                ...item,
-                value: round(area, 2),
-                length: 0,
-                count: 0,
-                trimmed: `${item.view_name.split("|")[1]},${
-                  item.view_name.split("|")[2]
-                }`,
-              };
-            } else if (geometryType === "LineString") {
-              const length = turf.length(res);
-              newItem = {
-                ...item,
-                length: round(length, 2) * 1000,
-                value: 0,
-                count: 0,
-                trimmed: `${item.view_name.split("|")[1]},${
-                  item.view_name.split("|")[2]
-                }`,
-              };
-            } else {
-              console.log(res, "point geojson");
-              const numberOfFeatures = res.features.length;
-              newItem = {
-                ...item,
-                count: numberOfFeatures,
-                value: 0,
-                length: 0,
-                trimmed: `${item.view_name.split("|")[1]},${
-                  item.view_name.split("|")[2]
-                }`,
-              };
-            }
-
-            return newItem;
-          });
-        });
-        Promise.all(newDataPromises).then((finalArray) => {
-          // const filteredArray = finalArray.filter((item) => item.value !== 0);
-          dispatch(setTableSummationData(finalArray));
-        });
-      } else {
-        dispatch(setTableSummationData([]));
-      }
-    });
-  }
-
-  function fetchPieSummationData(client_id, project_id, dispatch) {
-    fetchMeasuringPieSummation({ client_id, project_id }).then((res) => {
-      if (res.rows.length > 0) {
-        const data_copy = JSON.stringify(
-          res.rows.filter((item) => item.type_of_geometry === "Polygon")
-        );
-        const new_data = JSON.parse(data_copy);
-        console.log(new_data, "new_data");
-        const newDataPromises = new_data.map(async (item) => {
-          return fetchGeojsonByCategoryId({
-            client_id,
-            category_id: item.id,
-            project_id,
-            type_of_geometry: item.type_of_geometry,
-          }).then((res) => {
-            const area = turf.area(res);
-            const newItem = { ...item, value: round(area, 2) };
-            return newItem;
-          });
-        });
-        Promise.all(newDataPromises).then((finalArray) => {
-          // const filteredArray = finalArray.filter((item) => item.value !== 0);
-          dispatch(setTableSummationPieData(finalArray));
-        });
-      } else {
-        dispatch(setTableSummationPieData([]));
-      }
-    });
-  }
-
   const handleMeasuringsTable = () => {
-    if (client_id && project_id) {
-      fetchTableSummationData(client_id, project_id, dispatch);
-    }
+    // if (client_id && project_id && tableSummationData.length === 0) {
+    //   fetchTableSummationData(client_id, project_id, dispatch);
+    // }
     dispatch(setshowTableMeasurings(!showTableMeasurings));
   };
 
   const handlePieChart = () => {
-    if (client_id && project_id) {
-      fetchPieSummationData(client_id, project_id, dispatch);
-    }
+    // if (client_id && project_id && tableSummationData.length === 0) {
+    //   fetchPieSummationData(client_id, project_id, dispatch);
+    // }
     dispatch(setshowPiechart(!showPiechart));
   };
 
