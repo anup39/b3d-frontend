@@ -21,6 +21,7 @@ function fetchTableSummationReducer(data, client_id, project_id, dispatch) {
 
         if (geometryType === "Polygon") {
           const area = turf.area(res);
+          console.log(area, "area");
           newItem = {
             ...item,
             value: area.toFixed(2),

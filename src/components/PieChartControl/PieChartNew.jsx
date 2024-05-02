@@ -24,6 +24,9 @@ export default function PieChartNew() {
               faded: { innerRadius: 10, additionalRadius: -10, color: "gray" },
             },
           ]}
+          slotProps={{
+            legend: { hidden: true },
+          }}
           width={400}
           height={190}
         />
