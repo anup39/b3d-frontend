@@ -32,7 +32,7 @@ export default function AsignRoleForm({
       group: selectedUserRole,
     };
     axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?id=${user_id}`)
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?user=${user_id}`)
       .then((res) => {
         const role_id = res.data[0].id;
         console.log(role_id, "role_id");

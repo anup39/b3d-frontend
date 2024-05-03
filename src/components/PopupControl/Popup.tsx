@@ -361,10 +361,10 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
           <div>{propertyElements}</div>
           <br></br>
 
-          {(group_name === "super_admin" ||
-            group_name === "admin" ||
-            group_name === "editor") &&
-          project_id !== "All" ? (
+          {group_name === "super_admin" ||
+          group_name === "admin" ||
+          group_name === "editor" ||
+          (group_name === "inspektor" && project_id !== "All") ? (
             <>
               <div style={{ display: "flex" }}>
                 <Autocomplete

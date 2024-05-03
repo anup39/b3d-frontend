@@ -81,7 +81,14 @@ export default function TableMeasuringsForMap({
     (state) => state.mapView.tableSummationData
   );
 
-  const rows = tableSummationData.filter((row) => row.checked);
+  const rows = tableSummationData.filter(
+    (row) =>
+      row.checked &&
+      row?.value !== "0.00" &&
+      row?.length !== "0.00" &&
+      row?.count !== 0
+  );
+
   console.log(rows, "rows");
   useEffect(() => {
     if (rows.length > 0) {

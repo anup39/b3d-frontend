@@ -5,13 +5,22 @@ import PropTypes from "prop-types";
 import TabIcon from "@mui/icons-material/Tab";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Button } from "@mui/material";
+import {
+  setCategoryEditData,
+  setOpenCategoryEditForm,
+} from "../../reducers/EditClassification";
+import { useDispatch } from "react-redux";
 
 export default function CategoryCard({
   id,
+  name,
   full_name,
   description,
   type_of_geometry,
+  sub_category,
 }) {
+  const dispatch = useDispatch();
   const [style, setStyle] = useState();
   useEffect(() => {
     axios
@@ -42,7 +51,14 @@ export default function CategoryCard({
           <TabIcon sx={{ width: 30, height: 30, color: "green" }} />
         </Grid>
         <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
+          <Grid
+            item
+            xs
+            container
+            direction="row"
+            alignItems={"center"}
+            spacing={2}
+          >
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
                 <b>{full_name}</b>
@@ -89,6 +105,29 @@ export default function CategoryCard({
                 </>
               ) : null}
             </Grid>
+            <Grid>
+              <Typography variant="body2" style={{ cursor: "pointer" }}>
+                <Button
+                  onClick={() => {
+                    dispatch(setOpenCategoryEditForm(true));
+                    dispatch(
+                      setCategoryEditData({
+                        id,
+                        name,
+                        type_of_geometry,
+                        style,
+                        full_name,
+                        description,
+                        sub_category,
+                      })
+                    );
+                  }}
+                  variant="contained"
+                >
+                  Edit
+                </Button>
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
@@ -103,4 +142,5 @@ CategoryCard.propTypes = {
   description: PropTypes.string,
   type_of_geometry: PropTypes.string,
   created_at: PropTypes.string,
+  sub_category: PropTypes.number,
 };
