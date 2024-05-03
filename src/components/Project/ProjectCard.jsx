@@ -149,29 +149,33 @@ export default function ProjectCard({
                   />
                 </Tooltip>
               </Grid>
-              <Grid item>
-                <Tooltip title="3D URL">
-                  <Button
-                    variant="contained"
-                    onClick={handleEditURL}
-                    sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
-                  >
-                    3D URL
-                  </Button>
-                </Tooltip>
-              </Grid>
-
-              <Grid item>
-                <Tooltip title="Indoor">
-                  <Button
-                    variant="contained"
-                    onClick={handleIndoor}
-                    sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
-                  >
-                    Indoor
-                  </Button>
-                </Tooltip>
-              </Grid>
+              {group_name === "super_admin" || group_name === "admin" ? (
+                <>
+                  {" "}
+                  <Grid item>
+                    <Tooltip title="3D URL">
+                      <Button
+                        variant="contained"
+                        onClick={handleEditURL}
+                        sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
+                      >
+                        3D URL
+                      </Button>
+                    </Tooltip>
+                  </Grid>
+                  <Grid item>
+                    <Tooltip title="Indoor">
+                      <Button
+                        variant="contained"
+                        onClick={handleIndoor}
+                        sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
+                      >
+                        Indoor
+                      </Button>
+                    </Tooltip>
+                  </Grid>
+                </>
+              ) : null}
 
               {/* <Grid item>
                 <button
