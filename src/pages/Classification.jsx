@@ -159,6 +159,7 @@ export default function Classification() {
                   description={c.description}
                   type_of_geometry={c.type_of_geometry}
                   created_at={c.created_at}
+                  sub_category={c.sub_category}
                 />
               ))
             : null}

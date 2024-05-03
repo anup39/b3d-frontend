@@ -12,7 +12,7 @@ export const EditClassification = createSlice({
     setOpenCategoryEditForm: (state, action) => {
       state.openCategoryEditForm = action.payload;
     },
-    setCategoryEditId: (state, action) => {
+    setCategoryEditData: (state, action) => {
       state.categoryEditData = action.payload;
     },
   },

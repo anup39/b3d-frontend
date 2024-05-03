@@ -7,16 +7,18 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "@mui/material";
 import {
-  setCategoryEditId,
+  setCategoryEditData,
   setOpenCategoryEditForm,
 } from "../../reducers/EditClassification";
 import { useDispatch } from "react-redux";
 
 export default function CategoryCard({
   id,
+  name,
   full_name,
   description,
   type_of_geometry,
+  sub_category,
 }) {
   const dispatch = useDispatch();
   const [style, setStyle] = useState();
@@ -109,12 +111,14 @@ export default function CategoryCard({
                   onClick={() => {
                     dispatch(setOpenCategoryEditForm(true));
                     dispatch(
-                      setCategoryEditId({
+                      setCategoryEditData({
                         id,
+                        name,
                         type_of_geometry,
                         style,
                         full_name,
                         description,
+                        sub_category,
                       })
                     );
                   }}
@@ -138,4 +142,5 @@ CategoryCard.propTypes = {
   description: PropTypes.string,
   type_of_geometry: PropTypes.string,
   created_at: PropTypes.string,
+  sub_category: PropTypes.number,
 };

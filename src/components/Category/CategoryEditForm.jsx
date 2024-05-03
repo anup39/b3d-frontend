@@ -2,7 +2,7 @@ import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button, CircularProgress } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
@@ -23,6 +23,8 @@ export default function CategoryEditForm() {
   const categoryEditData = useSelector(
     (state) => state.editClassification.categoryEditData
   );
+  const [value, setValue] = useState(null);
+  const [options, setOptions] = useState([]);
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [selectedStandradCategoryId, setSelectedStandradCategoryId] =
@@ -117,6 +119,23 @@ export default function CategoryEditForm() {
     setSelectedStrokeColor(newColor);
   };
 
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`)
+      .then((response) => {
+        setOptions(response.data);
+        console.log(categoryEditData);
+        setValue(
+          response.data.find(
+            (option) => option.id === categoryEditData?.sub_category
+          ) || null
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [categoryEditData]);
+
   return (
     <>
       <Tooltip title="Create Category">
@@ -126,7 +145,7 @@ export default function CategoryEditForm() {
           variant="contained"
           color="error"
         >
-          Create Category
+          Edit Category
         </Button>
       </Tooltip>
       {openCategoryEditForm && (
@@ -165,7 +184,7 @@ export default function CategoryEditForm() {
                   InputLabelProps={{ shrink: true }}
                   required
                   fullWidth
-                  value={categoryEditData?.name}
+                  defaultValue={categoryEditData?.name}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -182,12 +201,25 @@ export default function CategoryEditForm() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <AutoCompleteCustom
-                  onItemSelected={(id, ids) => {
-                    setSelectedCategoryId(id);
-                    setSelectedStandradCategoryId(ids);
+                <Autocomplete
+                  disablePortal
+                  disableClearable
+                  id="autocomplete-sub-category"
+                  options={options}
+                  getOptionLabel={(option) => option.full_name}
+                  sx={{ width: 300 }}
+                  value={value}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      sx={{ fontFamily: "Roboto", fontSize: "7px" }}
+                      variant="outlined"
+                      placeholder="Sub Category"
+                    />
+                  )}
+                  onChange={(event, newValue) => {
+                    setValue(newValue);
                   }}
-                  category={"sub-category"}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -197,7 +229,7 @@ export default function CategoryEditForm() {
                   options={["Polygon", "LineString", "Point"]}
                   getOptionLabel={(option) => option}
                   style={{ width: 300 }}
-                  value={categoryEditData?.type_of_geometry}
+                  defaultValue={categoryEditData?.type_of_geometry}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -226,7 +258,7 @@ export default function CategoryEditForm() {
                   InputLabelProps={{ shrink: true }}
                   required
                   fullWidth
-                  value={categoryEditData?.style?.fill}
+                  defaultValue={categoryEditData?.style?.fill}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -245,7 +277,7 @@ export default function CategoryEditForm() {
                     min: 0,
                     max: 1,
                   }}
-                  value={categoryEditData?.style?.fill_opacity}
+                  defaultValue={categoryEditData?.style?.fill_opacity}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -261,7 +293,7 @@ export default function CategoryEditForm() {
                   InputLabelProps={{ shrink: true }}
                   required
                   fullWidth
-                  value={categoryEditData?.style?.stroke}
+                  defaultValue={categoryEditData?.style?.stroke}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -280,7 +312,7 @@ export default function CategoryEditForm() {
                     min: 1,
                     max: 5,
                   }}
-                  value={categoryEditData?.style?.stroke_width}
+                  defaultValue={categoryEditData?.style?.stroke_width}
                 />
               </Grid>
               <Grid item xs={12}>
