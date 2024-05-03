@@ -385,7 +385,9 @@ export default function MapView() {
                   }}
                 >
                   {/* Add a client Name here  */}
-                  {clientDetail ? clientDetail.client_name : ""}
+                  {clientDetail
+                    ? clientDetail?.client_name?.substring(0, 10)
+                    : ""}
                 </Typography>
                 <Tooltip title="List View">
                   <ListIcon
