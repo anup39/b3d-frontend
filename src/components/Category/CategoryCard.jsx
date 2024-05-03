@@ -5,6 +5,12 @@ import PropTypes from "prop-types";
 import TabIcon from "@mui/icons-material/Tab";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Button } from "@mui/material";
+import {
+  setCategoryEditId,
+  setOpenCategoryEditForm,
+} from "../../reducers/EditClassification";
+import { useDispatch } from "react-redux";
 
 export default function CategoryCard({
   id,
@@ -12,6 +18,7 @@ export default function CategoryCard({
   description,
   type_of_geometry,
 }) {
+  const dispatch = useDispatch();
   const [style, setStyle] = useState();
   useEffect(() => {
     axios
@@ -42,7 +49,14 @@ export default function CategoryCard({
           <TabIcon sx={{ width: 30, height: 30, color: "green" }} />
         </Grid>
         <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
+          <Grid
+            item
+            xs
+            container
+            direction="row"
+            alignItems={"center"}
+            spacing={2}
+          >
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
                 <b>{full_name}</b>
@@ -88,6 +102,27 @@ export default function CategoryCard({
                   </Typography>
                 </>
               ) : null}
+            </Grid>
+            <Grid>
+              <Typography variant="body2" style={{ cursor: "pointer" }}>
+                <Button
+                  onClick={() => {
+                    dispatch(setOpenCategoryEditForm(true));
+                    dispatch(
+                      setCategoryEditId({
+                        id,
+                        type_of_geometry,
+                        style,
+                        full_name,
+                        description,
+                      })
+                    );
+                  }}
+                  variant="contained"
+                >
+                  Edit
+                </Button>
+              </Typography>
             </Grid>
           </Grid>
         </Grid>

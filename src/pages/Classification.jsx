@@ -15,6 +15,7 @@ import SubCategoryForm from "../components/SubCategory/SubCategoryForm";
 import SubCategoryCard from "../components/SubCategory/SubCategoryCard";
 import CategoryForm from "../components/Category/CategoryForm";
 import CategoryCard from "../components/Category/CategoryCard";
+import CategoryEditForm from "../components/Category/CategoryEditForm";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -147,6 +148,7 @@ export default function Classification() {
         </TabPanel>
         <TabPanel value={value} index={2}>
           <CategoryForm />
+          <CategoryEditForm />
           {categorys
             ? categorys.map((c) => (
                 <CategoryCard
