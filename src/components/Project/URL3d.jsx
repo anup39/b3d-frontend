@@ -59,7 +59,11 @@ export default function URL3d({ client_id }) {
           });
         }
 
-        if (group_name === "editor" || group_name === "viewer") {
+        if (
+          group_name === "editor" ||
+          group_name === "viewer" ||
+          group_name === "inspektor"
+        ) {
           if (projects_.length > 0) {
             fetchProjectsByClientIdAndIds(client_id, projects_).then((res) => {
               const updatedProjects = res.map((project) => {
