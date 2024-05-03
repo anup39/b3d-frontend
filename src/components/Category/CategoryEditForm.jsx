@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
-import AutoCompleteCustom from "../StandardCategory/AutoCompleteCustom";
 import Autocomplete from "@mui/material/Autocomplete";
 import {
   setshowToast,
@@ -197,7 +196,7 @@ export default function CategoryEditForm() {
                   InputLabelProps={{ shrink: true }}
                   required
                   fullWidth
-                  value={categoryEditData?.description}
+                  defaultValue={categoryEditData?.description}
                 />
               </Grid>
               <Grid item xs={12}>
