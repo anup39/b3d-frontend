@@ -25,8 +25,7 @@ export default function CategoryEditForm() {
   const [value, setValue] = useState(null);
   const [options, setOptions] = useState([]);
 
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-  const [selectedStandradCategoryId, setSelectedStandradCategoryId] =
+  const [selectedStandardCategory, setSelectedStandardCategory] =
     useState(null);
   const [inputValue, setInputValue] = useState("");
   const [selectedFillColor, setSelectedFillColor] = useState("#32788f");
@@ -34,7 +33,7 @@ export default function CategoryEditForm() {
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
 
-  const handleCreateCategory = (event) => {
+  const handleEditCategory = (event) => {
     event.preventDefault();
     setLoading(true);
     const nameInput = document.getElementById("name");
@@ -42,19 +41,22 @@ export default function CategoryEditForm() {
     const fillOpacityInput = document.getElementById("fill_opacity");
     const strokeWidthInput = document.getElementById("stroke_width");
 
-    if (selectedCategoryId !== null) {
+    if (value !== null) {
       const data = {
         name: nameInput.value,
         description: descriptionInput.value,
-        sub_category: selectedCategoryId,
-        standard_category: selectedStandradCategoryId,
+        sub_category: value.id,
+        standard_category: selectedStandardCategory,
         type_of_geometry: inputValue,
         created_by: user_id,
       };
+      console.log(data, "data");
 
       axios
-        .post(
-          `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`,
+        .patch(
+          `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
+            categoryEditData.id
+          }/`,
           data
         )
         .then((res) => {
@@ -67,16 +69,16 @@ export default function CategoryEditForm() {
             created_by: user_id,
           };
           axios
-            .post(
+            .patch(
               `${
                 import.meta.env.VITE_API_DASHBOARD_URL
-              }/global-category-style/`,
+              }/global-category-style/${categoryEditData.style.id}/`,
               style_data
             )
             .then(() => {
               setLoading(false);
               dispatch(setshowToast(true));
-              dispatch(settoastMessage("Successfully Created category"));
+              dispatch(settoastMessage("Successfully Edited category"));
               dispatch(settoastType("success"));
               closeForm();
               axios
@@ -84,6 +86,7 @@ export default function CategoryEditForm() {
                   `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
                 )
                 .then((res) => {
+                  console.log(res.data);
                   dispatch(setCategorys(res.data));
                 })
                 .catch(() => {});
@@ -92,7 +95,7 @@ export default function CategoryEditForm() {
         .catch(() => {
           setLoading(false);
           dispatch(setshowToast(true));
-          dispatch(settoastMessage("Failed to create category"));
+          dispatch(settoastMessage("Failed to edit category"));
           dispatch(settoastType("error"));
           closeForm();
         });
@@ -129,6 +132,8 @@ export default function CategoryEditForm() {
             (option) => option.id === categoryEditData?.sub_category
           ) || null
         );
+        setInputValue(categoryEditData?.type_of_geometry);
+        setSelectedStandardCategory(categoryEditData?.standard_category);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -137,16 +142,6 @@ export default function CategoryEditForm() {
 
   return (
     <>
-      <Tooltip title="Create Category">
-        <Button
-          onClick={openForm}
-          sx={{ margin: "5px" }}
-          variant="contained"
-          color="error"
-        >
-          Edit Category
-        </Button>
-      </Tooltip>
       {openCategoryEditForm && (
         <div
           style={{
@@ -160,7 +155,7 @@ export default function CategoryEditForm() {
           }}
         >
           <form
-            onSubmit={handleCreateCategory}
+            onSubmit={handleEditCategory}
             style={{
               position: "absolute",
               top: "50%",
@@ -224,6 +219,7 @@ export default function CategoryEditForm() {
               <Grid item xs={12}>
                 <Autocomplete
                   disablePortal
+                  disabled
                   id="type-of-geometry"
                   options={["Polygon", "LineString", "Point"]}
                   getOptionLabel={(option) => option}

@@ -2,6 +2,8 @@ import RemoveSourceAndLayerFromMap from "./RemoveSourceAndLayerFromMap";
 import axios from "axios";
 import AddLayerAndSourceToMap from "./AddLayerAndSourceToMap";
 
+// Here the editting part is done in the most of the section in the current development:
+
 const handleCategoriesChange = async (
   event,
   cat,
@@ -10,6 +12,7 @@ const handleCategoriesChange = async (
   map,
   popUpRef
 ) => {
+  console.log(cat, "cat");
   const sourceId = String(client_id) + cat.view_name + "source";
   const layerId = String(client_id) + cat.view_name + "layer";
 
@@ -22,9 +25,9 @@ const handleCategoriesChange = async (
       });
 
       const response = await axios.get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/category-style/?category=${
-          cat.id
-        }`
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/global-category-style/?category=${cat.global_category}`
       );
 
       const categoryStyle = response.data[0];
