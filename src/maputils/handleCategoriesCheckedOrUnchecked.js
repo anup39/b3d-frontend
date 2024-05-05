@@ -2,6 +2,8 @@ import RemoveSourceAndLayerFromMap from "./RemoveSourceAndLayerFromMap";
 import axios from "axios";
 import AddLayerAndSourceToMap from "./AddLayerAndSourceToMap";
 
+// Here the editting part is done in the most of the section in the current development:
+
 const handleCategoriesChange = async (
   event,
   cat,
