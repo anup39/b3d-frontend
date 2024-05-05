@@ -20,22 +20,23 @@ export default function CategoryCard({
   type_of_geometry,
   sub_category,
   standard_category,
+  style,
 }) {
   const dispatch = useDispatch();
-  const [style, setStyle] = useState();
-  useEffect(() => {
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/global-category-style/?category=${id}`
-      )
-      .then((res) => {
-        const style = res.data[0];
-        console.log(style, "style");
-        setStyle(style);
-      });
-  }, [id]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(
+  //       `${
+  //         import.meta.env.VITE_API_DASHBOARD_URL
+  //       }/global-category-style/?category=${id}`
+  //     )
+  //     .then((res) => {
+  //       const style = res.data[0];
+  //       console.log(style, "style");
+  //       setStyle(style);
+  //     });
+  // }, [id]);
 
   return (
     <Paper
@@ -147,4 +148,5 @@ CategoryCard.propTypes = {
   created_at: PropTypes.string,
   sub_category: PropTypes.number,
   standard_category: PropTypes.number,
+  style: PropTypes.object,
 };

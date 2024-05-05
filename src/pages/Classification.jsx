@@ -161,6 +161,7 @@ export default function Classification() {
                   created_at={c.created_at}
                   sub_category={c.sub_category}
                   standard_category={c.standard_category}
+                  style={c.style}
                 />
               ))
             : null}

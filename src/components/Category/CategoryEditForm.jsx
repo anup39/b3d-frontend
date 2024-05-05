@@ -219,6 +219,7 @@ export default function CategoryEditForm() {
               <Grid item xs={12}>
                 <Autocomplete
                   disablePortal
+                  disabled
                   id="type-of-geometry"
                   options={["Polygon", "LineString", "Point"]}
                   getOptionLabel={(option) => option}
