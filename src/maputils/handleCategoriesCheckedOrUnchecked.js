@@ -10,6 +10,7 @@ const handleCategoriesChange = async (
   map,
   popUpRef
 ) => {
+  console.log(cat, "cat");
   const sourceId = String(client_id) + cat.view_name + "source";
   const layerId = String(client_id) + cat.view_name + "layer";
 
@@ -22,9 +23,9 @@ const handleCategoriesChange = async (
       });
 
       const response = await axios.get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/category-style/?category=${
-          cat.id
-        }`
+        `${
+          import.meta.env.VITE_API_DASHBOARD_URL
+        }/global-category-style/?category=${cat.global_category}`
       );
 
       const categoryStyle = response.data[0];
