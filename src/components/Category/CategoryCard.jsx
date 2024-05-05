@@ -19,6 +19,7 @@ export default function CategoryCard({
   description,
   type_of_geometry,
   sub_category,
+  standard_category,
 }) {
   const dispatch = useDispatch();
   const [style, setStyle] = useState();
@@ -31,6 +32,7 @@ export default function CategoryCard({
       )
       .then((res) => {
         const style = res.data[0];
+        console.log(style, "style");
         setStyle(style);
       });
   }, [id]);
@@ -119,6 +121,7 @@ export default function CategoryCard({
                         full_name,
                         description,
                         sub_category,
+                        standard_category: standard_category,
                       })
                     );
                   }}
@@ -143,4 +146,5 @@ CategoryCard.propTypes = {
   type_of_geometry: PropTypes.string,
   created_at: PropTypes.string,
   sub_category: PropTypes.number,
+  standard_category: PropTypes.number,
 };
