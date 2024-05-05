@@ -34,7 +34,7 @@ export default function CategoryEditForm() {
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
 
-  const handleCreateCategory = (event) => {
+  const handleEditCategory = (event) => {
     event.preventDefault();
     setLoading(true);
     const nameInput = document.getElementById("name");
@@ -160,7 +160,7 @@ export default function CategoryEditForm() {
           }}
         >
           <form
-            onSubmit={handleCreateCategory}
+            onSubmit={handleEditCategory}
             style={{
               position: "absolute",
               top: "50%",
