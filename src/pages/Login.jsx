@@ -23,6 +23,7 @@ import {
 import { CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../components/LanguageSwitcher/LanguageSwitcher";
 
 const defaultTheme = createTheme();
 
@@ -77,6 +78,7 @@ export default function Login() {
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+        <LanguageSwitcher />
         <Box
           sx={{
             marginTop: 8,

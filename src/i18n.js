@@ -7,7 +7,7 @@ i18n
   .use(LanguageDetector)
   .init({
     resources: {
-      fallbackLng: "da",
+      fallbackLng: "en",
       lng: "da",
       debug: true,
       en: {
