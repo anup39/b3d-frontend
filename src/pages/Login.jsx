@@ -22,10 +22,12 @@ import {
 } from "../reducers/DisplaySettings";
 import { CircularProgress } from "@mui/material";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const defaultTheme = createTheme();
 
 export default function Login() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -87,7 +89,7 @@ export default function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Log in
+            {t("Log_in")}
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -95,7 +97,7 @@ export default function Login() {
               required
               fullWidth
               id="email"
-              label="username"
+              label={t("Username")}
               name="username"
               autoComplete="username"
               autoFocus
@@ -105,14 +107,14 @@ export default function Login() {
               required
               fullWidth
               name="password"
-              label="Password"
+              label={t("Password")}
               type="password"
               id="password"
               autoComplete="current-password"
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              label={t("Remember_me")}
             />
             <Button
               type="submit"
@@ -120,7 +122,7 @@ export default function Login() {
               variant={loading ? "outlined" : "contained"}
               sx={{ mt: 3, mb: 2 }}
             >
-              {loading ? null : "Login"}
+              {loading ? null : t("Log_in")}
               {loading ? <CircularProgress /> : null}
             </Button>
             <Grid container>
@@ -129,11 +131,6 @@ export default function Login() {
                   Forgot password?
                 </Link>
               </Grid> */}
-              <Grid item>
-                <Link href="/register" variant="body2">
-                  {"Don't have an account?  Register"}
-                </Link>
-              </Grid>
             </Grid>
           </form>
         </Box>
