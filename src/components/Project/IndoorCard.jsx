@@ -12,8 +12,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteIndoorById, fetchIndoorsByProjectId } from "../../api/api";
 import { useSelector, useDispatch } from "react-redux";
 import { setIndoors } from "../../reducers/Project";
+import { useTranslation } from "react-i18next";
 
 export default function IndoorCard({ indoor }) {
+  const { t } = useTranslation();
   const { id, name, url } = indoor;
   const dispatch = useDispatch();
   const projectId = useSelector((state) => state.project.editIndoorProjectId);
@@ -60,14 +62,14 @@ export default function IndoorCard({ indoor }) {
           value={url}
         />
 
-        <Tooltip title="Delete Indoor">
+        <Tooltip title={t("Delete") + " " + t("Indoor")}>
           <IconButton
             id="delete-indoor"
             sx={{
               "&:hover": { cursor: "pointer" },
               color: "#d61b60",
             }}
-            aria-label="Delete Indoor"
+            aria-label={t("Delete") + " " + t("Indoor")}
             onClick={handleDeleteIndoor}
           >
             {loading ? (

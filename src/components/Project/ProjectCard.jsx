@@ -17,6 +17,7 @@ import {
   setOpenIndoorForm,
   setEditIndoorProjectId,
 } from "../../reducers/Project";
+import { useTranslation } from "react-i18next";
 
 // import {
 //   setdeleteId,
@@ -33,6 +34,7 @@ export default function ProjectCard({
   description,
   url,
 }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [properties, setproperties] = useState([]);
@@ -121,20 +123,20 @@ export default function ProjectCard({
                 {description}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                Client Name : {client_name}
+                {t("Client") + " " + t("Name")} : {client_name}
               </Typography>
               <span>
-                <label>3D URL: </label>
+                <label>{t("ThreeDurl")} : </label>
               </span>
               {url !== "" ? (
                 <input disabled={true} style={{ width: 500 }} value={url} />
               ) : (
-                <span>Not added yet</span>
+                <span>{t("Not") + " " + t("Added") + " " + t("Yet")}</span>
               )}
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>
-                <Tooltip title="MapView">
+                <Tooltip title={t("Map") + " " + t("View")}>
                   <MapIcon
                     onClick={handleViewInMap}
                     sx={{ "&:hover": { cursor: "pointer" } }}
@@ -142,35 +144,35 @@ export default function ProjectCard({
                 </Tooltip>
               </Grid>
               <Grid item>
-                <Tooltip title="Inspection">
+                {/* <Tooltip title="Inspection">
                   <RoofingIcon
                     onClick={handleInspection}
                     sx={{ "&:hover": { cursor: "pointer" } }}
                   />
-                </Tooltip>
+                </Tooltip> */}
               </Grid>
               {group_name === "super_admin" || group_name === "admin" ? (
                 <>
                   {" "}
                   <Grid item>
-                    <Tooltip title="3D URL">
+                    <Tooltip title={t("ThreeDurl")}>
                       <Button
                         variant="contained"
                         onClick={handleEditURL}
                         sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
                       >
-                        3D URL
+                        {t("ThreeDurl")}
                       </Button>
                     </Tooltip>
                   </Grid>
                   <Grid item>
-                    <Tooltip title="Indoor">
+                    <Tooltip title={t("Indoor")}>
                       <Button
                         variant="contained"
                         onClick={handleIndoor}
                         sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
                       >
-                        Indoor
+                        {t("Indoor")}
                       </Button>
                     </Tooltip>
                   </Grid>
@@ -195,7 +197,7 @@ export default function ProjectCard({
           </Grid>
           <Grid item xs>
             <Typography variant="body2" color="text.secondary">
-              Total Maps: {properties.length}
+              {`${t("Total")}  ${t("Maps")}`}: {properties.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {/* Total Users: {users.length} */}
@@ -211,7 +213,7 @@ export default function ProjectCard({
                 navigate(`/properties/${client_id}/${id}/List`);
               }}
             >
-              Manage Maps
+              {`${t("Manage")}  ${t("Maps")}`}
             </Button>
           </Grid>
         </Grid>

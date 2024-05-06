@@ -9,6 +9,7 @@ import RemoveSourceAndLayerFromMap from "../../maputils/RemoveSourceAndLayerFrom
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { takeScreenshot } from "../../maputils/createMapImage";
+import { useTranslation } from "react-i18next";
 
 // Checking the Issues here
 
@@ -51,6 +52,7 @@ export default function InputFileUpload({
   image,
   loaded,
 }) {
+  const { t } = useTranslation();
   const fileInputRef = useRef();
   const [openrasterErrorToast, setOpenrasterErrorToast] = useState(false);
   const [openrasterErrorMessage, setOpenrasterErrorMessage] = useState("");
@@ -195,7 +197,9 @@ export default function InputFileUpload({
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={openrasterErrorToast}
         autoHideDuration={3000}
-        message="Failed to Upload Geotif"
+        message={
+          t("Failed") + " " + t("To") + " " + t("Upload") + " " + "Geotif"
+        }
       >
         <Alert severity="error" sx={{ width: "100%" }}>
           {openrasterErrorMessage}
@@ -203,11 +207,19 @@ export default function InputFileUpload({
       </Snackbar>
       <Grid item xs={12}>
         <Typography variant="body2" gutterBottom>
-          <b>Supported EPSG</b> : 4326, 32613 , 25832
+          <b>{t("Supported")} EPSG</b> : 4326, 32613 , 25832
         </Typography>
-        <p style={{ color: "red" }}>Contact for other projections.</p>
+        <p style={{ color: "red" }}>
+          {t("Contact") +
+            " " +
+            t("For") +
+            " " +
+            t("Other") +
+            " " +
+            t("Projections")}
+        </p>
         <Typography variant="body2" gutterBottom>
-          <b>Acceptable Files</b> : .tif , .tiff
+          <b>{t("Acceptable") + " " + t("Files")}</b> : .tif , .tiff
         </Typography>
         <p style={{ color: "red" }}>True color (RBG) Band</p>
       </Grid>
@@ -216,7 +228,7 @@ export default function InputFileUpload({
         variant="contained"
         startIcon={<CloudUploadIcon />}
       >
-        Upload Tif File
+        {t("Upload")} Tif {t("File")}
         <VisuallyHiddenInput
           type="file"
           accept=".tif, .tiff"
@@ -229,13 +241,20 @@ export default function InputFileUpload({
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
             <Typography sx={{ fontSize: "12px" }} variant="body2" gutterBottom>
-              <b>FileName</b> : {fileName}
+              <b>
+                {t("File")} {t("Name")}
+              </b>{" "}
+              : {fileName}
             </Typography>
             <Typography variant="body2" gutterBottom>
-              <b>FileSize</b> : {filesize}
+              <b>
+                {" "}
+                {t("File")} {t("Size")}
+              </b>{" "}
+              : {filesize}
             </Typography>
             <Typography variant="body2" gutterBottom>
-              <b>Projection</b>: {projection}
+              <b>{t("Projection")}</b>: {projection}
             </Typography>
             <div>
               {image ? (

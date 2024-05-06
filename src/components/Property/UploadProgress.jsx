@@ -4,9 +4,11 @@ import { Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { setshowProgressFormOpen } from "../../reducers/Property";
+import { useTranslation } from "react-i18next";
 
 export default function UploadProgress() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const progress = useSelector((state) => state.property.progress);
   return (
     <>
@@ -50,7 +52,7 @@ export default function UploadProgress() {
               size="small"
               fullWidth
             >
-              Cancel
+              {t("Close")}
             </Button>
           </Grid>
         </form>

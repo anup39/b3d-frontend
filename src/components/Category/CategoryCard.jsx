@@ -11,6 +11,7 @@ import {
   setOpenCategoryEditForm,
 } from "../../reducers/EditClassification";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 export default function CategoryCard({
   id,
@@ -23,6 +24,7 @@ export default function CategoryCard({
   style,
 }) {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   // useEffect(() => {
   //   axios
@@ -70,12 +72,13 @@ export default function CategoryCard({
                 {description}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                Type of Geometry: {type_of_geometry}
+                {t("Type") + " " + t("Of") + " " + t("Geometry")}:{" "}
+                {type_of_geometry}
               </Typography>
               {style ? (
                 <>
                   <Typography variant="body2" gutterBottom>
-                    <span>Fill Color: </span>
+                    <span>{t("Fill") + " " + t("Color")}: </span>
                     <span
                       style={{
                         color: style.fill,
@@ -86,12 +89,16 @@ export default function CategoryCard({
                     </span>
                   </Typography>
                   <Typography variant="body2" gutterBottom>
-                    <span>Fill Opacity: </span>
+                    <span>
+                      {t("Fill")} {t("Opacity")}:{" "}
+                    </span>
 
                     {style.fill_opacity}
                   </Typography>
                   <Typography variant="body2" gutterBottom>
-                    <span>Stroke Color: </span>
+                    <span>
+                      {t("Stroke")} {t("Color")}:{" "}
+                    </span>
                     <span
                       style={{
                         color: style.stroke,
@@ -102,7 +109,9 @@ export default function CategoryCard({
                     </span>
                   </Typography>
                   <Typography variant="body2" gutterBottom>
-                    <span>Stroke Width: </span>
+                    <span>
+                      {t("Stroke")} {t("Width")}:{" "}
+                    </span>
                     {style.stroke_width}
                   </Typography>
                 </>
@@ -128,7 +137,7 @@ export default function CategoryCard({
                   }}
                   variant="contained"
                 >
-                  Edit
+                  {t("Edit")}
                 </Button>
               </Typography>
             </Grid>

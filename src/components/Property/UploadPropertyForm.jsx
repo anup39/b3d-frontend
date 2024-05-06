@@ -1,32 +1,34 @@
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import { Button, CircularProgress } from '@mui/material';
-import { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
-import { createImagePNG } from '../../maputils/createMapImage';
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import { Button, CircularProgress } from "@mui/material";
+import { useState, useRef, useEffect } from "react";
+import axios from "axios";
+import { createImagePNG } from "../../maputils/createMapImage";
 import {
   setshowTifUpload,
   setshowToast,
   settoastMessage,
   settoastType,
-} from '../../reducers/DisplaySettings';
-import { useDispatch, useSelector } from 'react-redux';
+} from "../../reducers/DisplaySettings";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setProgress,
   setproperties,
   setshowProgressFormOpen,
-} from '../../reducers/Property';
-import InputFileUpload from './InputFileUpload';
-import maplibregl from 'maplibre-gl';
-import PropTypes from 'prop-types';
+} from "../../reducers/Property";
+import InputFileUpload from "./InputFileUpload";
+import maplibregl from "maplibre-gl";
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function UploadPropertyForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const mapContainerProperty = useRef();
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [projection, setProjection] = useState('');
-  const [fileName, setFileName] = useState('');
-  const [filesize, setFilesize] = useState('');
+  const [projection, setProjection] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [filesize, setFilesize] = useState("");
   const [image, setImage] = useState();
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -43,9 +45,9 @@ export default function UploadPropertyForm() {
   const closeForm = () => {
     dispatch(setshowTifUpload(false));
     setUploadedFile(null);
-    setProjection('');
-    setFileName('');
-    setFilesize('');
+    setProjection("");
+    setFileName("");
+    setFilesize("");
     setImage();
     setLoaded(false);
   };
@@ -77,19 +79,19 @@ export default function UploadPropertyForm() {
     event.preventDefault();
     setLoading(true);
 
-    const nameInput = document.getElementById('name');
+    const nameInput = document.getElementById("name");
     const blob_ = createImagePNG(image);
     const formData = new FormData();
-    formData.append('client', client_id_property);
-    formData.append('project', project_id_property);
-    formData.append('name', nameInput.value);
-    formData.append('status', 'Uploaded');
-    formData.append('screenshot_image', blob_, 'image.png');
-    formData.append('file_size', uploadedFile.size);
-    formData.append('projection', projection);
-    formData.append('tif_file', uploadedFile);
-    formData.append('file_name', fileName);
-    formData.append('created_by', user_id);
+    formData.append("client", client_id_property);
+    formData.append("project", project_id_property);
+    formData.append("name", nameInput.value);
+    formData.append("status", "Uploaded");
+    formData.append("screenshot_image", blob_, "image.png");
+    formData.append("file_size", uploadedFile.size);
+    formData.append("projection", projection);
+    formData.append("tif_file", uploadedFile);
+    formData.append("file_name", fileName);
+    formData.append("created_by", user_id);
 
     closeForm();
 
@@ -113,8 +115,14 @@ export default function UploadPropertyForm() {
         dispatch(setProgress(0));
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage('Successfully Created Property'));
-        dispatch(settoastType('success'));
+        dispatch(
+          settoastMessage(
+            `${t("Successfully")}  ${t("Created")} ${t("Property")} ${t(
+              "Map"
+            )}  `
+          )
+        );
+        dispatch(settoastType("success"));
         closeForm();
         axios
           .get(
@@ -129,8 +137,14 @@ export default function UploadPropertyForm() {
       .catch(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage('Failed Created Property'));
-        dispatch(settoastType('error'));
+        dispatch(
+          settoastMessage(
+            `${t("Failed")}  ${t("To")} ${t("Create")} ${t("Property")}  ${t(
+              "Map"
+            )} `
+          )
+        );
+        dispatch(settoastType("error"));
         closeForm();
       });
   };
@@ -156,36 +170,36 @@ export default function UploadPropertyForm() {
   return (
     <div
       style={{
-        position: 'fixed',
+        position: "fixed",
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
-        background: 'rgba(0, 0, 0, 0.5)',
+        width: "100%",
+        height: "100%",
+        background: "rgba(0, 0, 0, 0.5)",
         zIndex: 9999,
       }}
     >
       <form
         onSubmit={handleCreateProperty}
         style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '300px',
-          background: '#fff',
-          padding: '20px',
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "300px",
+          background: "#fff",
+          padding: "20px",
           zIndex: 10000,
         }}
       >
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
-              id='name'
-              name='name'
-              label='Name'
-              variant='outlined'
-              size='small'
+              id="name"
+              name="name"
+              label={t("Name")}
+              variant="outlined"
+              size="small"
               InputLabelProps={{ shrink: true }}
               required
               fullWidth
@@ -209,34 +223,34 @@ export default function UploadPropertyForm() {
             />
             <Grid item>
               <div
-                style={{ width: '100%', height: '160px' }}
+                style={{ width: "100%", height: "160px" }}
                 ref={mapContainerProperty}
-                id='mapproperty'
-                className='mapproperty'
+                id="mapproperty"
+                className="mapproperty"
               />
             </Grid>
           </Grid>
           <Grid item xs={12}>
             <Button
-              type='submit'
+              type="submit"
               fullWidth
-              variant={loading ? 'outlined' : 'contained'}
+              variant={loading ? "outlined" : "contained"}
               sx={{ mt: 0, mb: 0 }}
               disabled={!loaded}
             >
-              {loading ? null : 'Add Property Map'}
+              {loading ? null : `${t("Add")}  ${t("Property")} ${t("Map")}`}
               {loading ? <CircularProgress /> : null}
             </Button>
           </Grid>
           <Grid item xs={12}>
             <Button
               onClick={closeForm}
-              variant='contained'
-              color='error'
-              size='small'
+              variant="contained"
+              color="error"
+              size="small"
               fullWidth
             >
-              Close
+              {t("Close")}
             </Button>
           </Grid>
         </Grid>

@@ -21,8 +21,10 @@ import AppsIcon from "@mui/icons-material/Apps";
 import PeopleIcon from "@mui/icons-material/People";
 import DeleteIcon from "@mui/icons-material/Delete";
 // import { setshowMeasuringsPanel } from "../../reducers/MapView";
+import { useTranslation } from "react-i18next";
 
 export default function ClientCard({ id, name, description }) {
+  const { t } = useTranslation();
   const [properties, setproperties] = useState([]);
   const [users, setusers] = useState([]);
   const navigate = useNavigate();
@@ -105,7 +107,7 @@ export default function ClientCard({ id, name, description }) {
             </Grid>
             <Grid item xs container direction="row" spacing={1}>
               <Grid item>
-                <Tooltip title="MapView">
+                <Tooltip title={t("Map") + " " + t("View")}>
                   <MapIcon
                     onClick={handleViewInMap}
                     sx={{ "&:hover": { cursor: "pointer" } }}
@@ -115,7 +117,7 @@ export default function ClientCard({ id, name, description }) {
               {group_name === "super_admin" || group_name === "admin" ? (
                 <>
                   <Grid item>
-                    <Tooltip title="Manage Class">
+                    <Tooltip title={t("Manage") + " " + t("Class")}>
                       <AppsIcon
                         onClick={handleManageClasses}
                         sx={{ "&:hover": { cursor: "pointer" } }}
@@ -123,7 +125,7 @@ export default function ClientCard({ id, name, description }) {
                     </Tooltip>
                   </Grid>
                   <Grid item>
-                    <Tooltip title="Manage Users">
+                    <Tooltip title={t("Manage") + " " + t("Users")}>
                       <PeopleIcon
                         onClick={handleManageUsers}
                         sx={{ "&:hover": { cursor: "pointer" } }}
@@ -145,13 +147,13 @@ export default function ClientCard({ id, name, description }) {
           </Grid>
           <Grid item xs>
             <Typography variant="body2" color="text.secondary">
-              Total Properties: {projects.length}
+              {t("Total") + " " + t("Properties")} : {projects.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Total Maps: {properties.length}
+              {t("Total") + " " + t("Maps")} : {properties.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Total Users : {users.length}
+              {t("Total") + " " + t("Users")} : {users.length}
             </Typography>
           </Grid>
 
@@ -161,7 +163,7 @@ export default function ClientCard({ id, name, description }) {
               variant="contained"
               color="success"
             >
-              Open
+              {t("Open")}
             </Button>
           </Grid>
         </Grid>{" "}
