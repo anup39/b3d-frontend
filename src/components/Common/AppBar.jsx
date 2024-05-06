@@ -15,6 +15,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, setUserId, setUserName } from "../../reducers/Auth";
+import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
 
 const pagesSuperAdmin = [
   "Clients",
@@ -205,6 +206,13 @@ function Appbar() {
                     {page}
                   </Button>
                 ))}
+          </Box>
+          <Box
+            sx={{
+              marginRight: 2,
+            }}
+          >
+            <LanguageSwitcher />
           </Box>
 
           <Box sx={{ display: "flex", flexDirection: "column" }}>
