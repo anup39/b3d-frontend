@@ -130,8 +130,8 @@ export default function ProjectForm({ client_id }) {
               <Grid item xs={12}>
                 <TextField
                   id="description"
-                  name={t("Description")}
-                  label="Address"
+                  name="description"
+                  label={t("Address")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}

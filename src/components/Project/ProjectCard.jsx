@@ -126,7 +126,7 @@ export default function ProjectCard({
                 {t("Client") + " " + t("Name")} : {client_name}
               </Typography>
               <span>
-                <label>{t("ThreeDURL")} : </label>
+                <label>{t("ThreeDurl")} : </label>
               </span>
               {url !== "" ? (
                 <input disabled={true} style={{ width: 500 }} value={url} />
