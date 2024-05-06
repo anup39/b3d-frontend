@@ -16,20 +16,26 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, setUserId, setUserName } from "../../reducers/Auth";
 import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
-
-const pagesSuperAdmin = [
-  "Clients",
-  "Classification",
-  "InspectionType",
-  "About",
-  "Contact",
-];
-
-const pagesAdmin = ["Clients", "About", "Contact"];
-
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+import { useTranslation } from "react-i18next";
 
 function Appbar() {
+  const { t } = useTranslation();
+  const pagesSuperAdmin = [
+    `${t("Clients")}`,
+    `${t("Classification")}`,
+    `${t("Inspection") + " " + t("Type")}`,
+    `${t("About")}`,
+    `${t("Contact")}`,
+  ];
+
+  const pagesAdmin = [`${t("Clients")}`, `${t("About")}`, `${t("Contact")}`];
+
+  const settings = [
+    `${t("Profile")}`,
+    `${t("Account")}`,
+    `${t("Dashboard")}`,
+    `${t("Logout")}`,
+  ];
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -49,13 +55,13 @@ function Appbar() {
 
   const handleCloseNavMenu = (event) => {
     const page = event.target.innerHTML;
-    if (page.toUpperCase() === "CLASSIFICATION") {
+    if (page.toUpperCase() === `${t("Classification")}`) {
       navigate("/class");
     }
-    if (page.toUpperCase() === "CLIENTS") {
+    if (page.toUpperCase() === `${t("Clients")}`) {
       navigate("/dashboard");
     }
-    if (page.toUpperCase() === "INSPECTIONTYPE") {
+    if (page.toUpperCase() === `${t("Inspection") + " " + t("Type")}`) {
       navigate("/inspection-type");
     }
     setAnchorElNav(null);
@@ -63,20 +69,20 @@ function Appbar() {
 
   const handleCloseNavMenuButton = (event) => {
     const page = event.target.innerText;
-    if (page.toUpperCase() === "CLASSIFICATION") {
+    if (page.toUpperCase() === `${t("Classification")}`) {
       navigate("/class");
     }
-    if (page.toUpperCase() === "CLIENTS") {
+    if (page.toUpperCase() === `${t("Clients")}`) {
       navigate("/dashboard");
     }
-    if (page.toUpperCase() === "INSPECTIONTYPE") {
+    if (page.toUpperCase() === `${t("Inspection") + " " + t("Type")}`) {
       navigate("/inspection-type");
     }
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = (event) => {
-    if (event.target.innerHTML === "Logout") {
+    if (event.target.innerHTML === `${t("Logout")}`) {
       localStorage.removeItem("token");
       localStorage.removeItem("user_id");
       localStorage.removeItem("username");
@@ -218,7 +224,7 @@ function Appbar() {
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography>{username}</Typography>
             <Typography>
-              <b>Role:</b> {role?.group_name}
+              <b>{t("Role")}:</b> {role?.group_name}
             </Typography>
           </Box>
 
