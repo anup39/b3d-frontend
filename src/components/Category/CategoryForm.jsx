@@ -13,8 +13,10 @@ import {
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
+import { useTranslation } from "react-i18next";
 
 export default function CategoryForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
 
@@ -69,7 +71,11 @@ export default function CategoryForm() {
             .then(() => {
               setLoading(false);
               dispatch(setshowToast(true));
-              dispatch(settoastMessage("Successfully Created category"));
+              dispatch(
+                settoastMessage(
+                  `${t("Category")} ${t("Created")} ${t("Successfully")}`
+                )
+              );
               dispatch(settoastType("success"));
               closeForm();
               axios
@@ -85,7 +91,11 @@ export default function CategoryForm() {
         .catch(() => {
           setLoading(false);
           dispatch(setshowToast(true));
-          dispatch(settoastMessage("Failed to create category"));
+          dispatch(
+            settoastMessage(
+              `${t("Failed")} ${t("To")} ${t("Create")} ${t("Category")}`
+            )
+          );
           dispatch(settoastType("error"));
           closeForm();
         });
@@ -112,14 +122,14 @@ export default function CategoryForm() {
 
   return (
     <>
-      <Tooltip title="Create Category">
+      <Tooltip title={t("Create") + " " + t("Category")}>
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Create Category
+          {t("Create") + " " + t("Category")}
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -152,7 +162,7 @@ export default function CategoryForm() {
                 <TextField
                   id="name"
                   name="name"
-                  label="Name"
+                  label={t("Name")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -164,7 +174,7 @@ export default function CategoryForm() {
                 <TextField
                   id="description"
                   name="description"
-                  label="Description"
+                  label={t("Description")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -191,7 +201,7 @@ export default function CategoryForm() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Type of Geometry"
+                      label={t("Type") + " " + t("Of") + " " + t("Geometry")}
                       variant="outlined"
                       required
                     />
@@ -208,7 +218,7 @@ export default function CategoryForm() {
                   id="fill_color"
                   type="color"
                   name="fill_color"
-                  label="Fill Color"
+                  label={t("Fill") + " " + t("Color")}
                   variant="outlined"
                   size="small"
                   value={selectedFillColor}
@@ -223,7 +233,7 @@ export default function CategoryForm() {
                   id="fill_opacity"
                   type="number"
                   name="fill_opacity"
-                  label="Fill Opacity"
+                  label={t("Fill") + " " + t("Opacity")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -241,7 +251,7 @@ export default function CategoryForm() {
                   id="stroke_color"
                   type="color"
                   name="stroke_color"
-                  label="Stroke Color"
+                  label={t("Stroke") + " " + t("Color")}
                   variant="outlined"
                   size="small"
                   value={selectedStrokeColor}
@@ -256,7 +266,7 @@ export default function CategoryForm() {
                   id="stroke_width"
                   type="number"
                   name="stroke_width"
-                  label="Stroke Width"
+                  label={t("Stroke") + " " + t("Width")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -276,7 +286,7 @@ export default function CategoryForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Category"}
+                  {loading ? null : t("Create") + " " + t("Category")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -288,7 +298,7 @@ export default function CategoryForm() {
                   size="small"
                   fullWidth
                 >
-                  Close
+                  {t("Cancel")}
                 </Button>
               </Grid>
             </Grid>

@@ -13,9 +13,11 @@ import {
   settoastType,
 } from "../../reducers/DisplaySettings";
 import { setOpenCategoryEditForm } from "../../reducers/EditClassification";
+import { useTranslation } from "react-i18next";
 
 export default function CategoryEditForm() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const openCategoryEditForm = useSelector(
     (state) => state.editClassification.openCategoryEditForm
   );
@@ -78,7 +80,11 @@ export default function CategoryEditForm() {
             .then(() => {
               setLoading(false);
               dispatch(setshowToast(true));
-              dispatch(settoastMessage("Successfully Edited category"));
+              dispatch(
+                settoastMessage(
+                  `${t("Successfully")} ${t("Edited")} ${t("Category")}`
+                )
+              );
               dispatch(settoastType("success"));
               closeForm();
               axios
@@ -95,7 +101,11 @@ export default function CategoryEditForm() {
         .catch(() => {
           setLoading(false);
           dispatch(setshowToast(true));
-          dispatch(settoastMessage("Failed to edit category"));
+          dispatch(
+            settoastMessage(
+              `${t("Failed")} ${t("To")}  ${t("Edit")} ${t("Category")}`
+            )
+          );
           dispatch(settoastType("error"));
           closeForm();
         });
@@ -172,7 +182,7 @@ export default function CategoryEditForm() {
                 <TextField
                   id="name"
                   name="name"
-                  label="Name"
+                  label={t("Name")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -185,7 +195,7 @@ export default function CategoryEditForm() {
                 <TextField
                   id="description"
                   name="description"
-                  label="Description"
+                  label={t("Description")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -208,7 +218,7 @@ export default function CategoryEditForm() {
                       {...params}
                       sx={{ fontFamily: "Roboto", fontSize: "7px" }}
                       variant="outlined"
-                      placeholder="Sub Category"
+                      placeholder={t("Sub") + " " + t("Category")}
                     />
                   )}
                   onChange={(event, newValue) => {
@@ -228,7 +238,7 @@ export default function CategoryEditForm() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Type of Geometry"
+                      label={t("Type") + " " + t("Of") + " " + t("Geometry")}
                       variant="outlined"
                       required
                     />
@@ -245,7 +255,7 @@ export default function CategoryEditForm() {
                   id="fill_color"
                   type="color"
                   name="fill_color"
-                  label="Fill Color"
+                  label={t("Fill") + " " + t("Color")}
                   variant="outlined"
                   size="small"
                   // value={selectedFillColor}
@@ -261,7 +271,7 @@ export default function CategoryEditForm() {
                   id="fill_opacity"
                   type="number"
                   name="fill_opacity"
-                  label="Fill Opacity"
+                  label={t("Fill") + " " + t("Opacity")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -280,7 +290,7 @@ export default function CategoryEditForm() {
                   id="stroke_color"
                   type="color"
                   name="stroke_color"
-                  label="Stroke Color"
+                  label={t("Stroke") + " " + t("Color")}
                   variant="outlined"
                   size="small"
                   // value={selectedStrokeColor}
@@ -296,7 +306,7 @@ export default function CategoryEditForm() {
                   id="stroke_width"
                   type="number"
                   name="stroke_width"
-                  label="Stroke Width"
+                  label={t("Stroke") + " " + t("Width")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -317,7 +327,7 @@ export default function CategoryEditForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Edit Category"}
+                  {loading ? null : t("Edit") + " " + t("Category")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -329,7 +339,7 @@ export default function CategoryEditForm() {
                   size="small"
                   fullWidth
                 >
-                  Close
+                  {t("Cancel")}
                 </Button>
               </Grid>
             </Grid>
