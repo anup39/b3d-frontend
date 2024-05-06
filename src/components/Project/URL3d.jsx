@@ -20,8 +20,10 @@ import {
   setOpenEditProjectForm,
   setEditProjectId,
 } from "../../reducers/Project";
+import { useTranslation } from "react-i18next";
 
 export default function URL3d({ client_id }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const openForm = useSelector((state) => state.project.openEditProjectForm);
   const group_name = useSelector((state) => state.auth.role.group_name);
@@ -80,14 +82,22 @@ export default function URL3d({ client_id }) {
         }
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Successfully Added 3D URL"));
+        dispatch(
+          settoastMessage(
+            `${t("Successfully")}  ${t("Created")} ${t("ThreeDurl")}  `
+          )
+        );
         dispatch(settoastType("success"));
         closeForm();
       })
       .catch(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Failed to add 3D URL"));
+        dispatch(
+          settoastMessage(
+            `${t("Failed")}  ${t("To")} ${t("Create")} ${t("ThreeDurl")} `
+          )
+        );
         dispatch(settoastType("error"));
       });
   };
@@ -129,7 +139,7 @@ export default function URL3d({ client_id }) {
                 <TextField
                   fullWidth
                   required
-                  placeholder="Add 3D url"
+                  placeholder={t("Add") + " " + t("ThreeDurl")}
                   onChange={(e) => setUrl(e.target.value)}
                 ></TextField>
               </Grid>
@@ -140,7 +150,7 @@ export default function URL3d({ client_id }) {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Add 3D URL"}
+                  {loading ? null : `${t("Add")} ${t("ThreeDurl")}`}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -152,7 +162,7 @@ export default function URL3d({ client_id }) {
                   size="small"
                   fullWidth
                 >
-                  Close
+                  {t("Close")}
                 </Button>
               </Grid>
             </Grid>

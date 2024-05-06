@@ -20,8 +20,10 @@ import {
 } from "../../reducers/Project";
 import IndoorCard from "./IndoorCard";
 import { setIndoors } from "../../reducers/Project";
+import { useTranslation } from "react-i18next";
 
 export default function IndoorForm({ client_id }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const openForm = useSelector((state) => state.project.openIndoorForm);
   const project_id = useSelector((state) => state.project.editIndoorProjectId);
@@ -59,14 +61,20 @@ export default function IndoorForm({ client_id }) {
 
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Successfully Created Indoor"));
+        dispatch(
+          settoastMessage(`{t("Successfully")} ${t("Created")} ${t("Indoor")}`)
+        );
         dispatch(settoastType("success"));
         // closeForm();
       })
       .catch(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Failed to create Indoor"));
+        dispatch(
+          settoastMessage(
+            `{t("Failed")} ${t("To")} ${t("Create")} ${t("Indoor")}`
+          )
+        );
         dispatch(settoastType("error"));
       });
   };
@@ -117,13 +125,13 @@ export default function IndoorForm({ client_id }) {
               <Grid item xs={12} display={"flex"} gap={1} alignItems={"center"}>
                 <TextField
                   required
-                  placeholder="Name"
+                  placeholder={t("Name")}
                   onChange={(e) => setName(e.target.value)}
                 ></TextField>
                 <TextField
                   fullWidth
                   required
-                  placeholder="Add url"
+                  placeholder={t("URL")}
                   onChange={(e) => setUrl(e.target.value)}
                 ></TextField>
 
@@ -134,7 +142,7 @@ export default function IndoorForm({ client_id }) {
                   type="submit"
                   variant={loading ? "outlined" : "contained"}
                 >
-                  {loading ? null : "Add URL"}
+                  {loading ? null : `${t("Add")} ${t("URL")}`}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -148,7 +156,9 @@ export default function IndoorForm({ client_id }) {
                   </>
                 ) : (
                   <>
-                    <Typography sx={{ ml: "41%" }}>No indoors yet.</Typography>
+                    <Typography sx={{ ml: "41%" }}>
+                      {t("No") + " " + t("Indoors") + " " + t("Yet")}
+                    </Typography>
                   </>
                 )}
               </Grid>
@@ -162,7 +172,7 @@ export default function IndoorForm({ client_id }) {
                   size="small"
                   //   fullWidth
                 >
-                  Close
+                  {t("Close")}
                 </Button>
               </Grid>
             </Grid>

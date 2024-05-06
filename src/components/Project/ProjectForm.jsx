@@ -12,8 +12,10 @@ import {
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
+import { useTranslation } from "react-i18next";
 
 export default function ProjectForm({ client_id }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,7 +34,11 @@ export default function ProjectForm({ client_id }) {
       .then(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Successfully Created Project"));
+        dispatch(
+          settoastMessage(
+            `${t("Successfully")}  ${t("Created")} ${t("Property")}  `
+          )
+        );
         dispatch(settoastType("success"));
         closeForm();
         axios
@@ -53,7 +59,11 @@ export default function ProjectForm({ client_id }) {
       .catch(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Failed to Create Project"));
+        dispatch(
+          settoastMessage(
+            `${t("Failed")}  ${t("To")} ${t("Created")}  ${t("Property")}  `
+          )
+        );
         dispatch(settoastType("error"));
         closeForm();
       });
@@ -69,14 +79,14 @@ export default function ProjectForm({ client_id }) {
 
   return (
     <>
-      <Tooltip title="Create Property">
+      <Tooltip title={t("Create") + " " + t("Property")}>
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Create Property
+          {t("Create") + " " + t("Property")}
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -109,7 +119,7 @@ export default function ProjectForm({ client_id }) {
                 <TextField
                   id="name"
                   name="name"
-                  label="Name"
+                  label={t("Name")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -120,7 +130,7 @@ export default function ProjectForm({ client_id }) {
               <Grid item xs={12}>
                 <TextField
                   id="description"
-                  name="description"
+                  name={t("Description")}
                   label="Address"
                   variant="outlined"
                   size="small"
@@ -136,7 +146,7 @@ export default function ProjectForm({ client_id }) {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Property"}
+                  {loading ? null : `${t("Create")} ${t("Property")}`}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -148,7 +158,7 @@ export default function ProjectForm({ client_id }) {
                   size="small"
                   fullWidth
                 >
-                  Close
+                  {t("Close")}
                 </Button>
               </Grid>
             </Grid>
