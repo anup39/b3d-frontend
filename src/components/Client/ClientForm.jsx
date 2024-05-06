@@ -16,8 +16,10 @@ import {
   settoastType,
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useTranslation } from "react-i18next";
 
 export default function ClientForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -58,7 +60,13 @@ export default function ClientForm() {
           .then(() => {
             setLoading(false);
             dispatch(setshowToast(true));
-            dispatch(settoastMessage("Successfully Created Client"));
+            dispatch(
+              settoastMessage(
+                `${t("Successfully")} +" "+ ${t("Created")} + " " + ${t(
+                  "Client"
+                )}  `
+              )
+            );
             dispatch(settoastType("success"));
             closeForm();
             axios
@@ -78,7 +86,11 @@ export default function ClientForm() {
         dispatch(setshowToast(true));
         dispatch(
           settoastMessage(
-            error_message ? error_message : "Failed to Create Client"
+            error_message
+              ? error_message
+              : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t(
+                  "Create"
+                )} + " "+ ${t("Client")}`
           )
         );
         dispatch(settoastType("error"));
@@ -99,14 +111,14 @@ export default function ClientForm() {
 
   return (
     <>
-      <Tooltip title="Create Client">
+      <Tooltip title={t("Create") + " " + t("Client")}>
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Create Client
+          {t("Create") + " " + t("Client")}
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -140,7 +152,7 @@ export default function ClientForm() {
                   required
                   fullWidth
                   id="username"
-                  label="username"
+                  label={t("Username")}
                   name="username"
                   autoComplete="username"
                   autoFocus
@@ -152,7 +164,7 @@ export default function ClientForm() {
                 <TextField
                   id="firstname"
                   name="firstname"
-                  label="First Name"
+                  label={t("Firstname")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -164,7 +176,7 @@ export default function ClientForm() {
                 <TextField
                   id="lastname"
                   name="lastname"
-                  label="Last Name"
+                  label={t("Lastname")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -178,7 +190,7 @@ export default function ClientForm() {
                   required
                   fullWidth
                   id="email"
-                  label="email"
+                  label={t("Email")}
                   name="email"
                   autoComplete="email"
                   size="small"
@@ -191,7 +203,7 @@ export default function ClientForm() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label={t("Password")}
                   type={showPassword ? "text" : "password"}
                   id="password"
                   autoComplete="current-password"
@@ -215,7 +227,7 @@ export default function ClientForm() {
                 <TextField
                   id="description"
                   name="description"
-                  label="Description"
+                  label={t("Description")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -230,7 +242,7 @@ export default function ClientForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Client"}
+                  {loading ? null : t("Create") + " " + t("Client")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -242,7 +254,7 @@ export default function ClientForm() {
                   size="small"
                   fullWidth
                 >
-                  Close
+                  {t("Cancel")}
                 </Button>
               </Grid>
             </Grid>
