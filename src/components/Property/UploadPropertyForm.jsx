@@ -238,9 +238,7 @@ export default function UploadPropertyForm() {
               sx={{ mt: 0, mb: 0 }}
               disabled={!loaded}
             >
-              {loading
-                ? null
-                : `${t("Add")} + " " + ${t("Property")} + " " + ${t("Map")}`}
+              {loading ? null : `${t("Add")}  ${t("Property")} ${t("Map")}`}
               {loading ? <CircularProgress /> : null}
             </Button>
           </Grid>

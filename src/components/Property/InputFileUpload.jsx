@@ -210,7 +210,13 @@ export default function InputFileUpload({
           <b>{t("Supported")} EPSG</b> : 4326, 32613 , 25832
         </Typography>
         <p style={{ color: "red" }}>
-          {t("Contact") + " " + t("For") + t("Other") + t("Projections")}
+          {t("Contact") +
+            " " +
+            t("For") +
+            " " +
+            t("Other") +
+            " " +
+            t("Projections")}
         </p>
         <Typography variant="body2" gutterBottom>
           <b>{t("Acceptable") + " " + t("Files")}</b> : .tif , .tiff
