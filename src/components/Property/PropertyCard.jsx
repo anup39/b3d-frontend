@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
 import LinearProgressLabel from "./LinearProgressLabel";
+import { useTranslation } from "react-i18next";
 
 const Img = styled("img")({
   margin: "auto",
@@ -48,6 +49,7 @@ export default function PropertyCard({
   // };
 
   // const handleGetWMS = () => {};
+  const { t } = useTranslation();
 
   const tms_url = `${
     import.meta.env.VITE_API_RASTER_URL
@@ -78,28 +80,37 @@ export default function PropertyCard({
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                <b>Name </b>: {name}
+                <b>{t("Name")} </b>: {name}
               </Typography>
               <Typography sx={{ fontSize: "13px" }} variant="subtitle1">
-                <b>File Name</b> : {file_name}
+                <b>
+                  {t("File")} {t("Name")}
+                </b>{" "}
+                : {file_name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                <b>Projection </b>: {projection}
+                {t("Projection")}
+                <b> </b>: {projection}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                <b>File size </b>: {bytesToMB(file_size)} MB
+                {t("File")} {t("Size")}
+                <b> </b>: {bytesToMB(file_size)} MB
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                <b>Task ID</b>: {task_id}
+                {t("Task")} {t("Id")}
+                <b></b>: {task_id}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                <b>Status </b>: {status}
+                {t("Status")}
+                <b> </b>: {status}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                <b>Client Name </b>: {client_name}
+                {t("Client")} {t("Name")}
+                <b></b>: {client_name}
               </Typography>{" "}
               <Typography variant="body2" gutterBottom>
-                <b>Property Name </b>: {project_name}
+                {t("Property")} {t("Name")}
+                <b> </b>: {project_name}
               </Typography>
               <Typography variant="body2" gutterBottom>
                 <b>TMS/XYZ:</b> {tms_url}
