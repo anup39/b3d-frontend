@@ -78,7 +78,6 @@ export default function Login() {
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <LanguageSwitcher />
         <Box
           sx={{
             marginTop: 8,
@@ -87,6 +86,7 @@ export default function Login() {
             alignItems: "center",
           }}
         >
+          <LanguageSwitcher />
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>

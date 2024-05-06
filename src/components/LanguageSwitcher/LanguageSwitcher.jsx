@@ -14,13 +14,13 @@ export default function LanguageSwitcher() {
     i18n.changeLanguage(event.target.value);
   };
   return (
-    <FormControl fullWidth>
-      <InputLabel id="demo-language-select-label">Language</InputLabel>
+    <FormControl>
+      <InputLabel id="demo-language-select-label"></InputLabel>
       <Select
         labelId="demo-language-select-label"
         id="demo-language-select"
         value={language}
-        label="Language"
+        label=""
         defaultValue="en"
         onChange={handleChange}
       >
