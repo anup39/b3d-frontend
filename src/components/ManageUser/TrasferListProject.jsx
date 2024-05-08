@@ -17,6 +17,8 @@ import Box from "@mui/material/Box";
 import { setshowAssignPropertiesPopup } from "../../reducers/DisplaySettings";
 import { CircularProgress } from "@mui/material";
 import { updateRoleById } from "../../api/api";
+import { useTranslation } from "react-i18next";
+
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
 }
@@ -30,6 +32,7 @@ function union(a, b) {
 }
 
 export default function TransferListProject({ client_id }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([]);
@@ -101,7 +104,7 @@ export default function TransferListProject({ client_id }) {
           />
         }
         title={title}
-        subheader={`${numberOfChecked(items)}/${items.length} selected`}
+        subheader={`${numberOfChecked(items)}/${items.length} ${t("Selected")}`}
       />
       <Divider />
       <List
@@ -192,7 +195,7 @@ export default function TransferListProject({ client_id }) {
 
   return (
     <Grid container spacing={2} justifyContent="center" alignItems="center">
-      <Grid item>{customList("Choices", left)}</Grid>
+      <Grid item>{customList(t("Choices"), left)}</Grid>
       <Grid item>
         <Grid container direction="column" alignItems="center">
           <Button
@@ -217,7 +220,7 @@ export default function TransferListProject({ client_id }) {
           </Button>
         </Grid>
       </Grid>
-      <Grid item>{customList("Chosen", right)}</Grid>
+      <Grid item>{customList(t("Choices"), right)}</Grid>
       <Grid item xs={12}>
         <Box
           sx={{
@@ -231,7 +234,7 @@ export default function TransferListProject({ client_id }) {
             }}
             variant={loading ? "outlined" : "contained"}
           >
-            {loading ? null : "Save"}
+            {loading ? null : t("Save")}
             {loading ? <CircularProgress /> : null}
           </Button>
           <Button
@@ -243,7 +246,7 @@ export default function TransferListProject({ client_id }) {
               dispatch(setshowAssignPropertiesPopup(false));
             }}
           >
-            Cancel
+            {t("Close")}
           </Button>
         </Box>
       </Grid>
