@@ -6,9 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setShowMeasuringFileUploadPanel } from "../../reducers/MapView";
 import Box from "@mui/material/Box";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function MeasuringUploadButton({ measuringsUploadingCount }) {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const showMeasuringFileUploadPanel = useSelector(
     (state) => state.showMeasuringUploadPanel
   );
@@ -24,7 +26,9 @@ export default function MeasuringUploadButton({ measuringsUploadingCount }) {
             console.log("MeasuringUploadButton clicked");
           }}
         >
-          <Tooltip title="Measuring Data Import Status">
+          <Tooltip
+            title={t("Measurings") + " " + t("Upload") + " " + t("Status")}
+          >
             <Badge badgeContent={measuringsUploadingCount} color="secondary">
               <DriveFolderUploadIcon sx={{ color: "red", fontSize: 24 }} />
             </Badge>
