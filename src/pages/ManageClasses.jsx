@@ -9,6 +9,7 @@ import { Button, Tooltip } from "@mui/material";
 import AppBar from "../components/Common/AppBar";
 import TransferList from "../components/StandardCategory/TransferList";
 import ErrorPopup from "../components/Common/ErrorPopup";
+import { useTranslation } from "react-i18next";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,6 +46,7 @@ function a11yProps(index) {
 }
 
 export default function Classification() {
+  const { t } = useTranslation();
   const { client_id } = useParams();
   const [value, setValue] = useState(0);
   const [clientName, setClientName] = useState("");
@@ -91,18 +93,18 @@ export default function Classification() {
           }}
         >
           <Tab
-            label="Standard Category"
+            label={t("Standard") + " " + t("Category")}
             sx={{ ":hover": { backgroundColor: "white" } }}
             {...a11yProps(0)}
           />
           <Tab
             sx={{ ":hover": { backgroundColor: "white" } }}
-            label="Sub Category"
+            label={t("Sub") + " " + t("Category")}
             {...a11yProps(1)}
           />
           <Tab
             sx={{ ":hover": { backgroundColor: "white" } }}
-            label="Category"
+            label={t("Category")}
             {...a11yProps(2)}
           />
         </Tabs>
@@ -119,7 +121,7 @@ export default function Classification() {
               variant="outlined"
               color="error"
             >
-              Client : {clientName}
+              {t("Client")} : {clientName}
             </Button>
           </Tooltip>
           <TransferList
@@ -134,7 +136,7 @@ export default function Classification() {
               variant="outlined"
               color="error"
             >
-              Client : {clientName}
+              {t("Client")} : {clientName}
             </Button>
           </Tooltip>
           <TransferList
@@ -149,7 +151,7 @@ export default function Classification() {
               variant="outlined"
               color="error"
             >
-              Client : {clientName}
+              {t("Client")} : {clientName}
             </Button>
           </Tooltip>
           <TransferList
