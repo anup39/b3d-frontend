@@ -3,9 +3,11 @@ import { Box, Typography, Button } from "@mui/material";
 import { setshowDeleteUserRolePopup } from "../../reducers/DisplaySettings";
 import { setDeleteUserRoleId, setUsers } from "../../reducers/Users";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 import axios from "axios";
 export default function DeleteUserRoleForm({ client_id }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const showDeleteUserRolePopup = useSelector(
     (state) => state.displaySettings.showDeleteUserRolePopup
@@ -65,7 +67,7 @@ export default function DeleteUserRoleForm({ client_id }) {
           >
             <Box>
               <Typography gutterBottom>
-                Are you sure you want to delete this role?
+                {t("Delete")} {t("Role")}?
               </Typography>
               <Box
                 sx={{
@@ -74,7 +76,7 @@ export default function DeleteUserRoleForm({ client_id }) {
                 }}
               >
                 <Button onClick={handleDeleteUserRole} variant="contained">
-                  <Typography variant="button">Yes</Typography>
+                  <Typography variant="button">{t("Yes")}</Typography>
                 </Button>
                 <Button
                   onClick={() => {
@@ -86,7 +88,7 @@ export default function DeleteUserRoleForm({ client_id }) {
                   }}
                   variant="contained"
                 >
-                  <Typography variant="button">Cancel</Typography>
+                  <Typography variant="button">{t("Cancel")}</Typography>
                 </Button>
               </Box>
             </Box>
