@@ -1,9 +1,10 @@
 import { Button, Typography, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIndoor, setShowIndoorFrame } from "../../reducers/MapView";
-import { color } from "three/examples/jsm/nodes/Nodes.js";
+import { useTranslation } from "react-i18next";
 
 export default function IndoorFrame() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const currentIndoor = useSelector((state) => state.mapView.currentIndoor);
   const closeForm = () => {
@@ -60,7 +61,7 @@ export default function IndoorFrame() {
                 color="error"
                 size="small"
               >
-                Close
+                {t("Close")}
               </Button>
             </Box>
             <Box>

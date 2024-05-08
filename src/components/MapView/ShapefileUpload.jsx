@@ -20,8 +20,10 @@ import {
   setdistinct,
 } from "../../reducers/UploadMeasuring";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 export default function ShapefileForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const mapContainerShapefile = useRef();
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -167,7 +169,7 @@ export default function ShapefileForm() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography>
-                Upload Measurings for : {current_project_name}
+                {t("Upload") + " " + t("Measurings")}: {current_project_name}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -256,7 +258,7 @@ export default function ShapefileForm() {
                 sx={{ mt: 0, mb: 0 }}
                 disabled={!loaded}
               >
-                {loading ? null : "Add Property Map"}
+                {loading ? null : t("Create") + " " + t("Measurings")}
                 {loading ? <CircularProgress /> : null}
               </Button>
             </Grid>
@@ -268,7 +270,7 @@ export default function ShapefileForm() {
                 size="small"
                 fullWidth
               >
-                Close
+                {t("Close")}
               </Button>
             </Grid>
           </Grid>

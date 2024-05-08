@@ -6,8 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { filterProjects } from "../../reducers/Project";
 import { setSearchText } from "../../reducers/MapView";
 import { IconButton, Tooltip } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export default function AutoCompleteProperties() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const searchText = useSelector((state) => state.mapView.searchText);
 
@@ -36,7 +38,7 @@ export default function AutoCompleteProperties() {
           dispatch(setSearchText(event.target.value));
         }}
         id="search-properties"
-        label="Search Properties"
+        label={t("Search") + " " + t("Property")}
         variant="outlined"
       />
 
@@ -48,7 +50,7 @@ export default function AutoCompleteProperties() {
         }}
         size="small"
       >
-        <Tooltip title="Clear Search" placement="top">
+        <Tooltip title={t("Clear") + " " + t("Search")} placement="top">
           <CancelIcon sx={{ fontSize: 20, color: "#E91E62" }} />
         </Tooltip>
       </IconButton>

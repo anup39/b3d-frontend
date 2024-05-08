@@ -27,8 +27,10 @@ import {
   settoastType,
   settoastMessage,
 } from "../../reducers/DisplaySettings";
+import { useTranslation } from "react-i18next";
 
 export default function UploadingCategories() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const distinct = useSelector((state) => state.uploadMeasuring.distinct);
   const currentfile = useSelector((state) => state.uploadMeasuring.currentfile);
@@ -268,7 +270,7 @@ export default function UploadingCategories() {
                   // sx={{ ml: "50%", mb: 0 }}
                   // fullWidth
                 >
-                  Done
+                  {t("Save")}
                 </Button>
                 <Button
                   onClick={closeForm}
@@ -278,7 +280,7 @@ export default function UploadingCategories() {
                   // sx={{ ml: "50%", mb: 0 }}
                   // fullWidth
                 >
-                  Close
+                  {t("Close")}
                 </Button>
               </Box>
             </Grid>

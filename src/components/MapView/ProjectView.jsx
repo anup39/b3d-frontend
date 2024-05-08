@@ -56,10 +56,12 @@ import {
 } from "../../api/api";
 import AddRasterToMap from "../../maputils/AddRasterToMap";
 import { fetchTifDataByClientId } from "../../api/api";
+import { useTranslation } from "react-i18next";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export default function ProjectView({ project, popUpRef }) {
+  const { t } = useTranslation();
   const map = window.map_global;
   const dispatch = useDispatch();
   const { current_tif } = useSelector(
@@ -335,7 +337,7 @@ export default function ProjectView({ project, popUpRef }) {
             />
           </Box>
 
-          <Tooltip title="Show Measurings">
+          <Tooltip title={t("Show") + " " + t("Measurings")}>
             <Checkbox
               onChange={(event) => handleMeasuringsPanelChecked(event, project)}
               size="small"
@@ -355,7 +357,9 @@ export default function ProjectView({ project, popUpRef }) {
               onClick={handleEyeButton}
               disabled={project_id === project.id ? false : true}
             >
-              <Tooltip title="Show Property Polygon">
+              <Tooltip
+                title={t("Show") + " " + t("Property") + " " + t("Polygon")}
+              >
                 <RemoveRedEyeIcon sx={{ fontSize: 14 }} />
               </Tooltip>
             </IconButton>
@@ -364,7 +368,7 @@ export default function ProjectView({ project, popUpRef }) {
               onClick={handleHideButton}
               disabled={project_id === project.id ? false : true}
             >
-              <Tooltip title="Show Area">
+              <Tooltip title={t("Show") + " " + t("Area")}>
                 <VisibilityOffIcon sx={{ fontSize: 14 }} />
               </Tooltip>
             </IconButton>
