@@ -11,6 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import GridNoRowsOverlay from "./Norows";
+import { useTranslation } from "react-i18next";
 
 const renderCell = (params) => {
   const { color, type_of_geometry } = params.value;
@@ -71,8 +72,9 @@ export default function TableMeasuringsForMap({
   marginLeftOfTitle,
   mode,
 }) {
-  const [height, setHeight] = useState(260);
+  const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [height, setHeight] = useState(260);
   const showTableMeasurings = useSelector(
     (state) => state.mapView.showTableMeasurings
   );
@@ -122,11 +124,11 @@ export default function TableMeasuringsForMap({
                 ml: `${marginLeftOfTitle}`,
               }}
             >
-              Table represents area in meter square(m²)
+              {t("Table")} {t("Represents")} {t("Area")} in meter square(m²)
             </Typography>
 
             {showCloseButton ? (
-              <Tooltip placement="top-end" title="Close Pie Chart">
+              <Tooltip placement="top-end" title={t("Close")}>
                 <HighlightOffIcon
                   onClick={() => {
                     dispatch(setshowTableMeasurings(false));
