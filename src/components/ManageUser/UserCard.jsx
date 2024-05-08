@@ -15,6 +15,7 @@ import {
   setAssignProperitesUser,
 } from "../../reducers/Users";
 import ApartmentIcon from "@mui/icons-material/Apartment";
+import { useTranslation } from "react-i18next";
 
 export default function UserCard({
   id,
@@ -28,6 +29,7 @@ export default function UserCard({
   user,
 }) {
   console.log("user card");
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const username_current = useSelector((state) => state.auth.username);
 
@@ -67,16 +69,16 @@ export default function UserCard({
               <Grid item xs container direction="column" spacing={2}>
                 <Grid item xs>
                   <Typography gutterBottom variant="subtitle1" component="div">
-                    <b>User Name </b>: {username}
+                    <b>{t("Username")} </b>: {username}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    <b>Email</b> : {email}
+                    <b>{t("Email")}</b> : {email}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    <b>Role</b> : {role}
+                    <b>{t("Role")}</b> : {role}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    <b>Date Joined</b> :{" "}
+                    <b>{t("Date") + " " + t("Joined")}</b> :
                     {new Date(date_joined).toLocaleDateString()}
                   </Typography>
                 </Grid>
@@ -84,7 +86,7 @@ export default function UserCard({
                   {role !== "admin" ? (
                     <>
                       <Grid item>
-                        <Tooltip title="Edit Roles">
+                        <Tooltip title={t("Edit") + " " + t("Role")}>
                           <EditIcon
                             onClick={handleAssignRole}
                             sx={{ "&:hover": { cursor: "pointer" } }}
@@ -93,7 +95,7 @@ export default function UserCard({
                       </Grid>
 
                       <Grid item>
-                        <Tooltip title="Delete Role">
+                        <Tooltip title={t("Delete") + " " + t("Role")}>
                           <DeleteIcon
                             onClick={handleDeleteUserRole}
                             sx={{ "&:hover": { cursor: "pointer" } }}
@@ -101,7 +103,7 @@ export default function UserCard({
                         </Tooltip>
                       </Grid>
                       <Grid item>
-                        <Tooltip title="Assign Properties to user">
+                        <Tooltip title={t("Assign") + " " + t("Properties")}>
                           <ApartmentIcon
                             onClick={handleAssignProperties}
                             sx={{ "&:hover": { cursor: "pointer" } }}
