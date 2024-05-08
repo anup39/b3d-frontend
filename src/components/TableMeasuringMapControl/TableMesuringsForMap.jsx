@@ -27,45 +27,6 @@ const renderCell = (params) => {
   return icon;
 };
 
-const columns = [
-  {
-    field: "symbol",
-    headerName: "Symbol",
-    type: "string",
-    width: 100,
-    renderCell: renderCell,
-  },
-
-  {
-    field: "trimmed",
-    type: "string",
-    width: 170,
-    editable: false,
-    headerName: "Category",
-  },
-  {
-    field: "value",
-    type: "number",
-    width: 100,
-    editable: false,
-    headerName: "Area (m²)",
-  },
-  {
-    field: "length",
-    type: "number",
-    width: 100,
-    editable: false,
-    headerName: "Length (m)",
-  },
-  {
-    field: "count",
-    type: "number",
-    width: 80,
-    editable: false,
-    headerName: "Count",
-  },
-];
-
 export default function TableMeasuringsForMap({
   width,
   showCloseButton,
@@ -73,6 +34,45 @@ export default function TableMeasuringsForMap({
   mode,
 }) {
   const { t } = useTranslation();
+
+  const columns = [
+    {
+      field: "symbol",
+      headerName: `${t("Symbol")}`,
+      type: "string",
+      width: 100,
+      renderCell: renderCell,
+    },
+
+    {
+      field: "trimmed",
+      type: "string",
+      width: 170,
+      editable: false,
+      headerName: `${t("Category")}`,
+    },
+    {
+      field: "value",
+      type: "number",
+      width: 100,
+      editable: false,
+      headerName: `${t("Area")} (m²)`,
+    },
+    {
+      field: "length",
+      type: "number",
+      width: 100,
+      editable: false,
+      headerName: `${t("Length")} (m)`,
+    },
+    {
+      field: "count",
+      type: "number",
+      width: 80,
+      editable: false,
+      headerName: `${t("Count")}`,
+    },
+  ];
   const dispatch = useDispatch();
   const [height, setHeight] = useState(260);
   const showTableMeasurings = useSelector(

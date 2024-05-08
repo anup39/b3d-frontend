@@ -5,6 +5,7 @@ import "./measure.css";
 import maplibregl from "maplibre-gl";
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 const geojson = {
   type: "FeatureCollection",
@@ -73,6 +74,7 @@ function handleMeasureEvent(e) {
 }
 
 export default function Measure({ popUpRef }) {
+  const { t } = useTranslation();
   const [checked, setChecked] = useState(false);
 
   const handleMeasure = () => {
@@ -145,7 +147,7 @@ export default function Measure({ popUpRef }) {
   };
   return (
     <div>
-      <Tooltip title="Measure">
+      <Tooltip title={t("Measure")}>
         <IconButton
           onClick={handleMeasure}
           //   id="cancel-draw"

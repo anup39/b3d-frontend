@@ -12,8 +12,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useCallback } from "react";
 import { setShowKeyInfo } from "../../reducers/DrawnGeometry";
+import { useTranslation } from "react-i18next";
 
 export default function Cancel() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const client_id = useSelector((state) => state.client.clientDetail.client_id);
   const view_name = useSelector((state) => state.drawnPolygon.view_name);
@@ -60,7 +62,7 @@ export default function Cancel() {
 
   return (
     <div>
-      <Tooltip title="Cancel">
+      <Tooltip title={t("Cancel")}>
         <IconButton
           onClick={handleCancelDraw}
           id="cancel-draw"

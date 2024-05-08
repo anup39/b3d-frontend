@@ -8,7 +8,9 @@ import {
   setShowIndoorFrame,
 } from "../../reducers/MapView";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 export default function IndoorControl() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const indoorsInMap = useSelector((state) => state.mapView.indoorsInMap);
 
@@ -50,7 +52,7 @@ export default function IndoorControl() {
           //   backgroundColor: "#BDBDBD",
         }}
       >
-        <Typography>Available Indoors</Typography>
+        <Typography>{t("Available") + " " + t("Indoors")}</Typography>
         <Tooltip title="Close">
           <IconButton onClick={() => dispatch(setShowIndoorControl(false))}>
             <Cancel />
@@ -103,7 +105,7 @@ export default function IndoorControl() {
                   mt: 2,
                 }}
               >
-                No indoors yet
+                {t("No") + " " + t("Indoors")}
               </Typography>
             )}
           </>

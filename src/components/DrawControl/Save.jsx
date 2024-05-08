@@ -24,8 +24,10 @@ import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import PropTypes from "prop-types";
 import { useEffect, useCallback } from "react";
 import { setShowKeyInfo } from "../../reducers/DrawnGeometry";
+import { useTranslation } from "react-i18next";
 
 export default function Save({ popUpRef }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const wkt_geometry = useSelector((state) => state.drawnPolygon.wkt_geometry);
   const type_of_geometry = useSelector(
@@ -670,7 +672,7 @@ export default function Save({ popUpRef }) {
       dispatch(settoastType("error"));
       dispatch(
         settoastMessage(
-          "No category drawn or edited in map. Please draw or edit category in Map"
+          `${t("No")} ${t("Category")} ${t("Drawn")} ${t("To")} ${t("Save")}`
         )
       );
     }
@@ -686,6 +688,7 @@ export default function Save({ popUpRef }) {
     type_of_geometry,
     view_name,
     wkt_geometry,
+    t,
   ]);
 
   useEffect(() => {
@@ -707,7 +710,7 @@ export default function Save({ popUpRef }) {
 
   return (
     <div>
-      <Tooltip title="Save">
+      <Tooltip title={t("Save")}>
         <IconButton
           onClick={handleSave}
           id="save-draw"
