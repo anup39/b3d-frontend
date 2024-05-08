@@ -13,8 +13,10 @@ import {
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
 import AutoCompleteInspection from "../StandardInspection/AutoCompleteInspection";
+import { useTranslation } from "react-i18next";
 
 export default function SubInspectionForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedStandardInspectionId, setSelectedStandardInspectionId] =
@@ -39,7 +41,9 @@ export default function SubInspectionForm() {
       .then(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Successfully Created Sub category"));
+        dispatch(
+          settoastMessage(`${t("Sub")} ${t("Inspection")} ${t("Created")}`)
+        );
         dispatch(settoastType("success"));
         closeForm();
         axios
@@ -51,7 +55,13 @@ export default function SubInspectionForm() {
       .catch(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Failed to  Create Sub Inspection"));
+        dispatch(
+          settoastMessage(
+            `${t("Failed")} ${t("To")} ${t("Create")} ${t("Sub")} ${t(
+              "Inspection"
+            )}`
+          )
+        );
         dispatch(settoastType("error"));
         closeForm();
       });
@@ -68,14 +78,14 @@ export default function SubInspectionForm() {
 
   return (
     <>
-      <Tooltip title="Create SubInspection">
+      <Tooltip title={t("Create") + " " + t("Sub") + " " + t("Inspection")}>
         <Button
           onClick={openForm}
           sx={{ marginBottom: "25px" }}
           variant="contained"
           color="error"
         >
-          Create SubInspection
+          {t("Create") + " " + t("Sub") + " " + t("Inspection")}
         </Button>
       </Tooltip>
 
@@ -109,7 +119,7 @@ export default function SubInspectionForm() {
                 <TextField
                   id="name"
                   name="name"
-                  label="Name"
+                  label={t("Name")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -121,7 +131,7 @@ export default function SubInspectionForm() {
                 <TextField
                   id="description"
                   name="description"
-                  label="Description"
+                  label={t("Description")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -142,7 +152,7 @@ export default function SubInspectionForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Sub Inspection"}
+                  {loading ? null : t("Create")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -154,7 +164,7 @@ export default function SubInspectionForm() {
                   size="small"
                   fullWidth
                 >
-                  Close
+                  {t("Cancel")}
                 </Button>
               </Grid>
             </Grid>

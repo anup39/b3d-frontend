@@ -12,8 +12,10 @@ import {
   settoastType,
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useTranslation } from "react-i18next";
 
 export default function StandardInspectionForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -37,7 +39,9 @@ export default function StandardInspectionForm() {
       .then(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Successfully Created Standard category"));
+        dispatch(
+          settoastMessage(`${t("Standard")} ${t("Inspection")} ${t("Created")}`)
+        );
         dispatch(settoastType("success"));
         closeForm();
 
@@ -50,7 +54,13 @@ export default function StandardInspectionForm() {
       .catch(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Failed to load Standard Inspection"));
+        dispatch(
+          settoastMessage(
+            `${t("Failed")} ${t("To")} ${t("Create")} ${t("Standard")} ${t(
+              "Inspection"
+            )}`
+          )
+        );
         dispatch(settoastType("error"));
         closeForm();
       });
@@ -66,14 +76,16 @@ export default function StandardInspectionForm() {
 
   return (
     <>
-      <Tooltip title="Create StandardInspection">
+      <Tooltip
+        title={t("Create") + " " + t("Standard") + " " + t("Inspection")}
+      >
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Create StandardInspection
+          {t("Create") + " " + t("Standard") + " " + t("Inspection")}
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -106,7 +118,7 @@ export default function StandardInspectionForm() {
                 <TextField
                   id="name"
                   name="name"
-                  label="Name"
+                  label={t("Name")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -118,7 +130,7 @@ export default function StandardInspectionForm() {
                 <TextField
                   id="description"
                   name="description"
-                  label="Description"
+                  label={t("Description")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -133,7 +145,7 @@ export default function StandardInspectionForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Standard Inspection"}
+                  {loading ? null : t("Create")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -145,7 +157,7 @@ export default function StandardInspectionForm() {
                   size="small"
                   fullWidth
                 >
-                  Close
+                  {t("Cancel")}
                 </Button>
               </Grid>
             </Grid>

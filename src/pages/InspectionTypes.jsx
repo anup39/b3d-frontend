@@ -15,6 +15,7 @@ import SubInspectionForm from "../components/SubInspection/SubInspectionForm";
 import SubCategoryCard from "../components/SubCategory/SubCategoryCard";
 import InspectionForm from "../components/Inspections/InspectionForm";
 import InspectionCard from "../components/Inspections/InspectionCard";
+import { useTranslation } from "react-i18next";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -51,6 +52,7 @@ function a11yProps(index) {
 }
 
 export default function InspectionTypes() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [value, setValue] = useState(0);
   const standardInspections = useSelector(
@@ -114,9 +116,12 @@ export default function InspectionTypes() {
             borderColor: "divider",
           }}
         >
-          <Tab label="Standard Inspection" {...a11yProps(0)} />
-          <Tab label="Sub Inspection" {...a11yProps(1)} />
-          <Tab label="Inspection" {...a11yProps(2)} />
+          <Tab
+            label={t("Standard") + " " + t("Inspection")}
+            {...a11yProps(0)}
+          />
+          <Tab label={t("Sub") + " " + t("Inspection")} {...a11yProps(1)} />
+          <Tab label={t("Inspection")} {...a11yProps(2)} />
         </Tabs>
         <TabPanel value={value} index={0}>
           <StandardInspectionForm />
