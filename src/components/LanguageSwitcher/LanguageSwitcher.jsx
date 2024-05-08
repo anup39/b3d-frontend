@@ -6,7 +6,9 @@ import Select from "@mui/material/Select";
 import { useTranslation } from "react-i18next";
 
 export default function LanguageSwitcher() {
-  const [language, setLanguage] = React.useState("en");
+  const [language, setLanguage] = React.useState(
+    localStorage.getItem("i18nextLng") || "en"
+  );
   const { i18n } = useTranslation();
 
   const handleChange = (event) => {

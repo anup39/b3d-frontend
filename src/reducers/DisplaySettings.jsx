@@ -90,6 +90,7 @@ export const {
   setshowInspectionType,
   setshowDeleteUserRolePopup,
   setshowAssignPropertiesPopup,
+  setLanguage,
 } = DisplaySettings.actions;
 
 export default DisplaySettings.reducer;
