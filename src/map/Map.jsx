@@ -31,6 +31,7 @@ import { setShowKeyInfo } from "../reducers/DrawnGeometry";
 import MeasuringUploadStatusControl from "../components/MeasuringUploadStatusControl/MeasuringUploadStatusControl";
 import IndoorControl from "../components/IndoorControl/IndoorControl";
 import { fetchIndoorsByProjectId } from "../api/api";
+import LanguageSwitcher from "../components/LanguageSwitcher/LanguageSwitcher";
 
 export default function Map({ popUpRef }) {
   console.log("here");
@@ -357,6 +358,16 @@ export default function Map({ popUpRef }) {
   return (
     <>
       <div ref={mapContainer} id="map" className="map">
+        <LanguageSwitcher
+          position={"absolute"}
+          top={"4px"}
+          right={"42px"}
+          zIndex={9999}
+          margin={1}
+          padding={0}
+          backgroundColor={"white"}
+          borderRadius={"5px"}
+        />
         {project_id && project_id !== "All" ? (
           <>
             <Button
@@ -364,7 +375,7 @@ export default function Map({ popUpRef }) {
               sx={{
                 position: "absolute",
                 top: "12px",
-                right: "50px",
+                right: "125px",
                 zIndex: 9999,
                 backgroundColor: "white",
                 "&:hover": {
@@ -375,12 +386,13 @@ export default function Map({ popUpRef }) {
             >
               3D
             </Button>
+
             <Button
               onClick={handleIndoor}
               sx={{
                 position: "absolute",
                 top: "12px",
-                right: "130px",
+                right: "200px",
                 zIndex: 9999,
                 backgroundColor: "white",
                 "&:hover": {
@@ -399,8 +411,8 @@ export default function Map({ popUpRef }) {
           <Card
             sx={{
               position: "absolute",
-              top: "11px",
-              right: "120px",
+              top: "12px",
+              right: "41%",
               zIndex: 99999,
             }}
           >

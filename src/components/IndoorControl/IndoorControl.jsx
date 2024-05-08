@@ -30,7 +30,7 @@ export default function IndoorControl() {
       sx={{
         position: "absolute",
         top: "12px",
-        right: "220px",
+        right: "280px",
         zIndex: 9999,
         backgroundColor: "white",
         "&:hover": {
