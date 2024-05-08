@@ -18,8 +18,10 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import { Autocomplete } from "@mui/material";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function UserForm({ client_id }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -78,7 +80,11 @@ export default function UserForm({ client_id }) {
               .then(() => {
                 setLoading(false);
                 dispatch(setshowToast(true));
-                dispatch(settoastMessage("Successfully Created User"));
+                dispatch(
+                  settoastMessage(
+                    `${t("User")} ${t("Created")} ${t("Successfully")}`
+                  )
+                );
                 dispatch(settoastType("success"));
                 closeForm();
                 axios
@@ -99,7 +105,9 @@ export default function UserForm({ client_id }) {
         dispatch(setshowToast(true));
         dispatch(
           settoastMessage(
-            error_message ? error_message : "Failed to Create User"
+            error_message
+              ? error_message
+              : `${t("Failed")} ${t("To")} ${t("Create")} ${t("User")}`
           )
         );
         dispatch(settoastType("error"));
@@ -120,14 +128,14 @@ export default function UserForm({ client_id }) {
 
   return (
     <>
-      <Tooltip title="Create User">
+      <Tooltip title={t("Create") + " " + t("User")}>
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Create User
+          {t("Create") + " " + t("User")}
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -161,7 +169,7 @@ export default function UserForm({ client_id }) {
                   required
                   fullWidth
                   id="username"
-                  label="username"
+                  label={t("Username")}
                   name="username"
                   autoComplete="username"
                   autoFocus
@@ -173,7 +181,7 @@ export default function UserForm({ client_id }) {
                 <TextField
                   id="first_name"
                   name="first_name"
-                  label="First Name"
+                  label={t("Firstname")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -185,7 +193,7 @@ export default function UserForm({ client_id }) {
                 <TextField
                   id="last_name"
                   name="last_name"
-                  label="Last Name"
+                  label={t("Lastname")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -199,7 +207,7 @@ export default function UserForm({ client_id }) {
                   required
                   fullWidth
                   id="email"
-                  label="email"
+                  label={t("Email")}
                   name="email"
                   autoComplete="email"
                   size="small"
@@ -212,7 +220,7 @@ export default function UserForm({ client_id }) {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label={t("Password")}
                   type={showPassword ? "text" : "password"}
                   id="password"
                   autoComplete="current-password"
@@ -243,7 +251,7 @@ export default function UserForm({ client_id }) {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Select User Role"
+                      label={t("Role")}
                       InputLabelProps={{ shrink: true }}
                       variant="outlined"
                       size="small"
@@ -264,7 +272,7 @@ export default function UserForm({ client_id }) {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create User"}
+                  {loading ? null : t("Create") + " " + t("User")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -276,7 +284,7 @@ export default function UserForm({ client_id }) {
                   size="small"
                   fullWidth
                 >
-                  Close
+                  {t("Cancel")}
                 </Button>
               </Grid>
             </Grid>

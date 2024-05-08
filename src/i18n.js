@@ -155,6 +155,8 @@ i18n
           Enter: "Enter",
           Drawing: "Drawing",
           And: "And",
+          Drawn: "Drawn",
+          Welcome: "Welcome",
         },
       },
       da: {
@@ -301,6 +303,8 @@ i18n
           Enter: "Indtast",
           Drawing: "Tegning",
           And: "Og",
+          Drawn: "Tegnet",
+          Welcome: "Velkommen",
         },
       },
     },

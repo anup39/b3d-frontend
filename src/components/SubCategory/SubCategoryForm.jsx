@@ -13,8 +13,10 @@ import {
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
 import AutoCompleteCustom from "../StandardCategory/AutoCompleteCustom";
+import { useTranslation } from "react-i18next";
 
 export default function SubCategoryForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
@@ -41,7 +43,13 @@ export default function SubCategoryForm() {
         .then(() => {
           setLoading(false);
           dispatch(setshowToast(true));
-          dispatch(settoastMessage("Successfully Created Sub category"));
+          dispatch(
+            settoastMessage(
+              `${t("Successfully")} ${t("Created")} ${t("Sub")} ${t(
+                "Category"
+              )}`
+            )
+          );
           dispatch(settoastType("success"));
           closeForm();
           axios
@@ -72,14 +80,14 @@ export default function SubCategoryForm() {
 
   return (
     <>
-      <Tooltip title="Create SubCategory">
+      <Tooltip title={t("Create") + " " + t("Sub") + " " + t("Category")}>
         <Button
           onClick={openForm}
           sx={{ marginBottom: "25px" }}
           variant="contained"
           color="error"
         >
-          Create SubCategory
+          {t("Create") + " " + t("Sub") + " " + t("Category")}
         </Button>
       </Tooltip>
 
@@ -113,7 +121,7 @@ export default function SubCategoryForm() {
                 <TextField
                   id="name"
                   name="name"
-                  label="Name"
+                  label={t("Name")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -125,7 +133,7 @@ export default function SubCategoryForm() {
                 <TextField
                   id="description"
                   name="description"
-                  label="Description"
+                  label={t("Description")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -146,7 +154,9 @@ export default function SubCategoryForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Sub Category"}
+                  {loading
+                    ? null
+                    : t("Create") + " " + t("Sub") + " " + t("Category")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -158,7 +168,7 @@ export default function SubCategoryForm() {
                   size="small"
                   fullWidth
                 >
-                  Close
+                  {t("Close")}
                 </Button>
               </Grid>
             </Grid>

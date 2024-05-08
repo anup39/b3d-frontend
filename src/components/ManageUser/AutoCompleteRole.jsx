@@ -3,8 +3,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function AutoCompleteRole({ onItemSelected }) {
+  const { t } = useTranslation();
   const [options, setOptions] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
@@ -32,7 +34,7 @@ export default function AutoCompleteRole({ onItemSelected }) {
         <TextField
           {...params}
           required
-          label={"Select Group"}
+          label={t("Role")}
           variant="outlined"
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}

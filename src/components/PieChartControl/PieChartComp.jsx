@@ -6,8 +6,10 @@ import Tooltip from "@mui/material/Tooltip";
 import { useDispatch } from "react-redux";
 import { setshowPiechart } from "../../reducers/MapView";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function PieChartComp({ showCloseButton }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const showPiechart = useSelector((state) => state.mapView.showPiechart);
 
@@ -16,7 +18,7 @@ export default function PieChartComp({ showCloseButton }) {
       {showPiechart ? (
         <>
           {showCloseButton ? (
-            <Tooltip placement="top-end" title="Close Pie Chart">
+            <Tooltip placement="top-end" title={t("Close")}>
               <HighlightOffIcon
                 onClick={() => {
                   dispatch(setshowPiechart(false));

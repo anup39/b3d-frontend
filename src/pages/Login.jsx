@@ -52,7 +52,7 @@ export default function Login() {
         localStorage.setItem("username", username);
 
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Successfully Logged In "));
+        dispatch(settoastMessage(`${t("Welcome")} ${username}`));
         dispatch(settoastType("success"));
         axios
           .get(
@@ -91,7 +91,7 @@ export default function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            {t("Log_in")}
+            {t("Login")}
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -116,7 +116,7 @@ export default function Login() {
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label={t("Remember_me")}
+              label={t("Remember")}
             />
             <Button
               type="submit"
@@ -124,7 +124,7 @@ export default function Login() {
               variant={loading ? "outlined" : "contained"}
               sx={{ mt: 3, mb: 2 }}
             >
-              {loading ? null : t("Log_in")}
+              {loading ? null : t("Login")}
               {loading ? <CircularProgress /> : null}
             </Button>
             <Grid container>

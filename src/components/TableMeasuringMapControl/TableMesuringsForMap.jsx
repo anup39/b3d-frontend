@@ -11,6 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import GridNoRowsOverlay from "./Norows";
+import { useTranslation } from "react-i18next";
 
 const renderCell = (params) => {
   const { color, type_of_geometry } = params.value;
@@ -26,53 +27,54 @@ const renderCell = (params) => {
   return icon;
 };
 
-const columns = [
-  {
-    field: "symbol",
-    headerName: "Symbol",
-    type: "string",
-    width: 100,
-    renderCell: renderCell,
-  },
-
-  {
-    field: "trimmed",
-    type: "string",
-    width: 170,
-    editable: false,
-    headerName: "Category",
-  },
-  {
-    field: "value",
-    type: "number",
-    width: 100,
-    editable: false,
-    headerName: "Area (m²)",
-  },
-  {
-    field: "length",
-    type: "number",
-    width: 100,
-    editable: false,
-    headerName: "Length (m)",
-  },
-  {
-    field: "count",
-    type: "number",
-    width: 80,
-    editable: false,
-    headerName: "Count",
-  },
-];
-
 export default function TableMeasuringsForMap({
   width,
   showCloseButton,
   marginLeftOfTitle,
   mode,
 }) {
-  const [height, setHeight] = useState(260);
+  const { t } = useTranslation();
+
+  const columns = [
+    {
+      field: "symbol",
+      headerName: `${t("Symbol")}`,
+      type: "string",
+      width: 100,
+      renderCell: renderCell,
+    },
+
+    {
+      field: "trimmed",
+      type: "string",
+      width: 170,
+      editable: false,
+      headerName: `${t("Category")}`,
+    },
+    {
+      field: "value",
+      type: "number",
+      width: 100,
+      editable: false,
+      headerName: `${t("Area")} (m²)`,
+    },
+    {
+      field: "length",
+      type: "number",
+      width: 100,
+      editable: false,
+      headerName: `${t("Length")} (m)`,
+    },
+    {
+      field: "count",
+      type: "number",
+      width: 80,
+      editable: false,
+      headerName: `${t("Count")}`,
+    },
+  ];
   const dispatch = useDispatch();
+  const [height, setHeight] = useState(260);
   const showTableMeasurings = useSelector(
     (state) => state.mapView.showTableMeasurings
   );
@@ -122,11 +124,11 @@ export default function TableMeasuringsForMap({
                 ml: `${marginLeftOfTitle}`,
               }}
             >
-              Table represents area in meter square(m²)
+              {t("Table")} {t("Represents")} {t("Area")} in meter square(m²)
             </Typography>
 
             {showCloseButton ? (
-              <Tooltip placement="top-end" title="Close Pie Chart">
+              <Tooltip placement="top-end" title={t("Close")}>
                 <HighlightOffIcon
                   onClick={() => {
                     dispatch(setshowTableMeasurings(false));

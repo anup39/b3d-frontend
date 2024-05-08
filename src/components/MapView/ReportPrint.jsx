@@ -13,8 +13,10 @@ import {
   setshowTableMeasurings,
 } from "../../reducers/MapView";
 import PieChartComp from "../PieChartControl/PieChartComp";
+import { useTranslation } from "react-i18next";
 
 export default function ReportPrint() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const mapContainerReport = useRef(null);
   const [map, setMap] = React.useState(null);
@@ -174,7 +176,7 @@ export default function ReportPrint() {
                       variant="contained"
                       sx={{ backgroundColor: "#E91E62", color: "white" }}
                     >
-                      Print
+                      {t("Print")}
                     </Button>
                   </Box>
                   <Box>
@@ -183,11 +185,13 @@ export default function ReportPrint() {
                       variant="contained"
                       sx={{ backgroundColor: "#E91E62", color: "white" }}
                     >
-                      Cancel
+                      {t("Close")}
                     </Button>
                   </Box>
                   <Box sx={{ minWidth: 10, zIndex: 9999 }}>
-                    <Typography>Paper Size:</Typography>
+                    <Typography>
+                      {t("Paper")} {t("Size")}:
+                    </Typography>
                     <select value={paperSize} onChange={handleChange}>
                       <option value="A5">A5</option>
                       <option value="A4">A4</option>
@@ -203,10 +207,10 @@ export default function ReportPrint() {
                 <div style={{ display: "flex" }}>
                   <Box sx={{ mb: 2 }}>
                     <Typography sx={{ color: "#666666" }}>
-                      Project Name : {current_project_name}
+                      {t("Property")} : {current_project_name}
                     </Typography>
                     <Typography sx={{ color: "#666666" }}>
-                      Date : {new Date().toLocaleDateString()}
+                      {t("Date")} : {new Date().toLocaleDateString()}
                     </Typography>
                   </Box>
                 </div>

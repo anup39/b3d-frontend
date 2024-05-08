@@ -13,6 +13,7 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import AutoCompleteRole from "./AutoCompleteRole";
 import { setUsers } from "../../reducers/Users";
+import { useTranslation } from "react-i18next";
 
 export default function AsignRoleForm({
   client_id,
@@ -21,6 +22,7 @@ export default function AsignRoleForm({
   user_name,
   onOpenForm,
 }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [selectedUserRole, setSelectedUserRole] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -45,7 +47,11 @@ export default function AsignRoleForm({
             // window.location.reload(true);
             setLoading(false);
             dispatch(setshowToast(true));
-            dispatch(settoastMessage("Successfully Created User Role"));
+            dispatch(
+              settoastMessage(
+                `${t("Successfully")} ${t("Created")} ${t("Role")}`
+              )
+            );
             dispatch(settoastType("success"));
             closeForm();
             axios
@@ -62,7 +68,11 @@ export default function AsignRoleForm({
           .catch(() => {
             setLoading(false);
             dispatch(setshowToast(true));
-            dispatch(settoastMessage("Failed to Change the Role"));
+            dispatch(
+              settoastMessage(
+                `${t("Failed")} ${t("To")} ${t("Create")} ${t("Role")}`
+              )
+            );
             dispatch(settoastType("error"));
           });
       });
@@ -104,7 +114,7 @@ export default function AsignRoleForm({
                 <TextField
                   id="user"
                   name="user"
-                  label="user"
+                  label={t("User")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -126,7 +136,7 @@ export default function AsignRoleForm({
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Role"}
+                  {loading ? null : t("Assign") + " " + t("Role")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -138,7 +148,7 @@ export default function AsignRoleForm({
                   size="small"
                   fullWidth
                 >
-                  Close
+                  {t("Close")}
                 </Button>
               </Grid>
             </Grid>

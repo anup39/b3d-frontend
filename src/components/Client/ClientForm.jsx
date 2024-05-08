@@ -62,9 +62,7 @@ export default function ClientForm() {
             dispatch(setshowToast(true));
             dispatch(
               settoastMessage(
-                `${t("Successfully")} +" "+ ${t("Created")} + " " + ${t(
-                  "Client"
-                )}  `
+                `${t("Successfully")}  ${t("Created")}  ${t("Client")}  `
               )
             );
             dispatch(settoastType("success"));

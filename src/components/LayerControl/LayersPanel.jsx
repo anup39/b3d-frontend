@@ -32,8 +32,10 @@ import {
   changeTableSummationData,
   changePieSummationData,
 } from "../../reducers/MapView";
+import { useTranslation } from "react-i18next";
 
 export default function LayersPanel({ map, popUpRef }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [categories, setCategories] = useState(all_categories);
   const [loading, setLoading] = useState(true);
@@ -468,7 +470,7 @@ export default function LayersPanel({ map, popUpRef }) {
                         group_name === "editor") &&
                       project_id !== "All" ? (
                         cat.type_of_geometry === "LineString" ? (
-                          <Tooltip title={"Draw" + " " + cat.name}>
+                          <Tooltip title={`${t("Draw")}` + " " + cat.name}>
                             <ShowChartIcon
                               onClick={(event) => handleDraw(event, cat)}
                               sx={{
@@ -480,7 +482,7 @@ export default function LayersPanel({ map, popUpRef }) {
                             />
                           </Tooltip>
                         ) : cat.type_of_geometry === "Polygon" ? (
-                          <Tooltip title={"Draw" + " " + cat.name}>
+                          <Tooltip title={`${t("Draw")}` + " " + cat.name}>
                             <PentagonIcon
                               size="small"
                               onClick={(event) => handleDraw(event, cat)}
@@ -493,7 +495,7 @@ export default function LayersPanel({ map, popUpRef }) {
                             />
                           </Tooltip>
                         ) : (
-                          <Tooltip title={"Draw" + " " + cat.name}>
+                          <Tooltip title={`${t("Draw")}` + " " + cat.name}>
                             <CircleIcon
                               onClick={(event) => handleDraw(event, cat)}
                               sx={{
@@ -507,7 +509,7 @@ export default function LayersPanel({ map, popUpRef }) {
                         )
                       ) : null}
 
-                      <Tooltip title="Zoom to Layer">
+                      <Tooltip title={t("Zoom")}>
                         <ZoomInIcon
                           onClick={(event) => handleZoomToLayer(event, cat)}
                           sx={{

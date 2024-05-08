@@ -1,8 +1,10 @@
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export default function MapLoader() {
+  const { t } = useTranslation();
   return (
     <div
       style={{
@@ -30,7 +32,7 @@ export default function MapLoader() {
       >
         <Box>
           <CircularProgress sx={{ margin: 2 }} />
-          <Typography sx={{ marginLeft: 1 }}>Loading..</Typography>
+          <Typography sx={{ marginLeft: 1 }}>{t("Loading")}</Typography>
         </Box>
       </div>
     </div>

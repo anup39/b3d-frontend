@@ -66,6 +66,7 @@ import { fetchProjectPolygonGeojsonByClientIdAndProjectId } from "../../api/api"
 import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import { setShowIndoorControl } from "../../reducers/MapView";
 import IndoorFrame from "./IndoorFrame";
+import { useTranslation } from "react-i18next";
 
 const drawerWidth = 240;
 
@@ -116,6 +117,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MapView() {
+  const { t } = useTranslation();
   const map = window.map_global;
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -389,7 +391,7 @@ export default function MapView() {
                     ? clientDetail?.client_name?.substring(0, 10)
                     : ""}
                 </Typography>
-                <Tooltip title="List View">
+                <Tooltip title={t("List") + " " + "View"}>
                   <ListIcon
                     onClick={handleListView}
                     sx={{
@@ -440,9 +442,13 @@ export default function MapView() {
                     }}
                   >
                     {/* #Ui for all the measurements */}
-                    <ListItemText secondary={"All Properties"} />
+                    <ListItemText
+                      secondary={t("All") + " " + t("Properties")}
+                    />
 
-                    <Tooltip title="Show All Properties">
+                    <Tooltip
+                      title={t("Show") + " " + t("All") + " " + t("Properites")}
+                    >
                       <Checkbox
                         onChange={(event) =>
                           handleMeasuringsPanelChecked(event, "All")

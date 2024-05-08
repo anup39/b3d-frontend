@@ -42,8 +42,10 @@ import {
 } from "../../reducers/DisplaySettings";
 import fetchTableSummationData from "./fetchTableSummationData";
 import fetchPieSummationData from "./fetchPieSummationData";
+import { useTranslation } from "react-i18next";
 
 export default function LayersAndWidgetControl({ map, popUpRef }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [expandMeasurings, setExpandMeasurings] = useState(true);
   const { mode, view_name } = useSelector((state) => state.drawnPolygon);
@@ -228,7 +230,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                 marginLeft: "10px",
               }}
             >
-              Measurings :{" "}
+              {t("Measurings")} :{" "}
               <span style={{ color: "#757575", marginRight: "20px" }}>
                 {current_project_name ? current_project_name : null}
               </span>
@@ -264,7 +266,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                       fontWeight: "bold",
                     }}
                   >
-                    Report
+                    {t("Report")}
                   </span>
                 </>
               ) : null}
@@ -288,7 +290,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
               ) : null}
               {/* Table Button */}
               {project_id !== "All" ? (
-                <Tooltip title="Table">
+                <Tooltip title={t("Table")}>
                   <TableChartIcon
                     onClick={handleMeasuringsTable}
                     sx={{
@@ -303,7 +305,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
 
               {/* Pie Chart Button */}
               {project_id !== "All" ? (
-                <Tooltip title="Pie Chart">
+                <Tooltip title={t("Piechart")}>
                   <PieChartIcon
                     onClick={handlePieChart}
                     sx={{
@@ -333,7 +335,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                     title={
                       currentPropertyPolygonGeojson?.features?.length > 0
                         ? "Already drawn polygon exists. Please delete it first."
-                        : "Draw Property Polygon"
+                        : `${t("Draw")} ${t("Polygon")} ${t("Property")} `
                     }
                   >
                     <RectangleIcon
@@ -365,7 +367,11 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                     }
                     onClick={handleEditPolygon}
                   >
-                    <Tooltip title="Edit Property Poygon">
+                    <Tooltip
+                      title={
+                        t("Edit") + " " + t("Polygon") + " " + t("Property")
+                      }
+                    >
                       <EditIcon
                         sx={{
                           "&:hover": { cursor: "pointer" },
@@ -396,7 +402,11 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                     }
                     onClick={handleDeletePolygon}
                   >
-                    <Tooltip title="Delete Property Poygon">
+                    <Tooltip
+                      title={
+                        t("Delete") + " " + t("Polygon") + " " + t("Property")
+                      }
+                    >
                       <DeleteIcon
                         sx={{
                           "&:hover": { cursor: "pointer" },

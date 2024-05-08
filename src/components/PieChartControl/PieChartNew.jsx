@@ -1,8 +1,10 @@
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useSelector } from "react-redux";
 import { Box, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export default function PieChartNew() {
+  const { t } = useTranslation();
   const data_reducer = useSelector(
     (state) => state.mapView.tableSummationPieData
   );
@@ -13,7 +15,7 @@ export default function PieChartNew() {
   return (
     <Box flexGrow={2}>
       <Typography sx={{ padding: 0.5, color: "#2B8AFF", fontWeight: 600 }}>
-        Piechart represents area in meter square(m²)
+        {t("Piechart")} {t("Represents")} {t("Area")} in meter square(m²)
       </Typography>
       {data.length > 0 ? (
         <PieChart
@@ -32,7 +34,7 @@ export default function PieChartNew() {
         />
       ) : (
         <Typography sx={{ ml: 10, mr: 10, fontSize: 12, p: 2 }}>
-          Either none of category is checked or no data available
+          {t("No") + " " + t("Data") + " " + t("Available")}
         </Typography>
       )}
     </Box>

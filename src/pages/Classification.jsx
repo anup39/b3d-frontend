@@ -16,6 +16,7 @@ import SubCategoryCard from "../components/SubCategory/SubCategoryCard";
 import CategoryForm from "../components/Category/CategoryForm";
 import CategoryCard from "../components/Category/CategoryCard";
 import CategoryEditForm from "../components/Category/CategoryEditForm";
+import { useTranslation } from "react-i18next";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -52,6 +53,7 @@ function a11yProps(index) {
 }
 
 export default function Classification() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [value, setValue] = useState(0);
   const standardCategorys = useSelector(
@@ -113,9 +115,9 @@ export default function Classification() {
             borderColor: "divider",
           }}
         >
-          <Tab label="Standard Category" {...a11yProps(0)} />
-          <Tab label="Sub Category" {...a11yProps(1)} />
-          <Tab label="Category" {...a11yProps(2)} />
+          <Tab label={t("Standard") + " " + t("Category")} {...a11yProps(0)} />
+          <Tab label={t("Sub") + " " + t("Category")} {...a11yProps(1)} />
+          <Tab label={t("Category")} {...a11yProps(2)} />
         </Tabs>
         <TabPanel value={value} index={0}>
           <StandardCategoryForm />

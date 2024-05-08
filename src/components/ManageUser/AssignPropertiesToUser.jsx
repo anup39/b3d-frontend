@@ -11,8 +11,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { setshowAssignPropertiesPopup } from "../../reducers/DisplaySettings";
 import TransferListProject from "./TrasferListProject";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function AssignPropertiesToUser({ client_id }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const assignProperitesUser = useSelector(
     (state) => state.users.assignProperitesUser
@@ -53,7 +55,9 @@ export default function AssignPropertiesToUser({ client_id }) {
                   gap: "10px",
                 }}
               >
-                <Typography>Assign Properties to </Typography>
+                <Typography>
+                  {t("Assign") + " " + t("Property") + " " + t("To")}
+                </Typography>
                 <Typography
                   sx={{
                     color: "blue",

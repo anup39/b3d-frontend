@@ -62,7 +62,7 @@ export default function IndoorForm({ client_id }) {
         setLoading(false);
         dispatch(setshowToast(true));
         dispatch(
-          settoastMessage(`{t("Successfully")} ${t("Created")} ${t("Indoor")}`)
+          settoastMessage(`${t("Successfully")} ${t("Created")} ${t("Indoor")}`)
         );
         dispatch(settoastType("success"));
         // closeForm();
@@ -72,7 +72,7 @@ export default function IndoorForm({ client_id }) {
         dispatch(setshowToast(true));
         dispatch(
           settoastMessage(
-            `{t("Failed")} ${t("To")} ${t("Create")} ${t("Indoor")}`
+            `${t("Failed")} ${t("To")} ${t("Create")} ${t("Indoor")}`
           )
         );
         dispatch(settoastType("error"));

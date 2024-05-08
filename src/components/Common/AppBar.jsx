@@ -55,13 +55,15 @@ function Appbar() {
 
   const handleCloseNavMenu = (event) => {
     const page = event.target.innerHTML;
-    if (page.toUpperCase() === `${t("Classification")}`) {
+    console.log(page);
+
+    if (page === `${t("Classification")}`) {
       navigate("/class");
     }
-    if (page.toUpperCase() === `${t("Clients")}`) {
+    if (page === `${t("Clients")}`) {
       navigate("/dashboard");
     }
-    if (page.toUpperCase() === `${t("Inspection") + " " + t("Type")}`) {
+    if (page === `${t("Inspection") + " " + t("Type")}`) {
       navigate("/inspection-type");
     }
     setAnchorElNav(null);
@@ -69,13 +71,14 @@ function Appbar() {
 
   const handleCloseNavMenuButton = (event) => {
     const page = event.target.innerText;
-    if (page.toUpperCase() === `${t("Classification")}`) {
+    console.log(page);
+    if (page === `${t("Classification")}`) {
       navigate("/class");
     }
-    if (page.toUpperCase() === `${t("Clients")}`) {
+    if (page === `${t("Clients")}`) {
       navigate("/dashboard");
     }
-    if (page.toUpperCase() === `${t("Inspection") + " " + t("Type")}`) {
+    if (page === `${t("Inspection") + " " + t("Type")}`) {
       navigate("/inspection-type");
     }
     setAnchorElNav(null);
@@ -198,7 +201,12 @@ function Appbar() {
                   <Button
                     key={page}
                     onClick={handleCloseNavMenuButton}
-                    sx={{ my: 2, color: "#027FFE", display: "block" }}
+                    sx={{
+                      my: 2,
+                      color: "#027FFE",
+                      display: "block",
+                      textTransform: "none",
+                    }}
                   >
                     {page}
                   </Button>
@@ -207,7 +215,12 @@ function Appbar() {
                   <Button
                     key={page}
                     onClick={handleCloseNavMenuButton}
-                    sx={{ my: 2, color: "#027FFE", display: "block" }}
+                    sx={{
+                      my: 2,
+                      color: "#027FFE",
+                      display: "block",
+                      textTransform: "none",
+                    }}
                   >
                     {page}
                   </Button>

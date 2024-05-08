@@ -10,6 +10,7 @@ import { setshowMapLoader } from "../../reducers/MapView";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setCurrentFile, setLayers } from "../../reducers/UploadMeasuring";
+import { useTranslation } from "react-i18next";
 
 function getPopupHTML(properties) {
   let html = "";
@@ -73,6 +74,7 @@ export default function InputShapefileUpload({
   setFileName,
   setFilesize,
 }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const fileInputRef = useRef();
 
@@ -202,7 +204,7 @@ export default function InputShapefileUpload({
     <div>
       <Grid item xs={12}>
         <Typography variant="body2" gutterBottom>
-          <b>Acceptable Files</b> : .json,.geojson ,.zip
+          <b>{t("Acceptable") + " " + t("Files")}</b> : .json,.geojson ,.zip
         </Typography>
       </Grid>
       <Button
@@ -210,7 +212,7 @@ export default function InputShapefileUpload({
         variant="contained"
         startIcon={<CloudUploadIcon />}
       >
-        Upload Shapefile or Geojson File
+        {t("Upload")} Shapefile or Geojson {t("File")}
         <VisuallyHiddenInput
           type="file"
           accept=".geojson, .json "
@@ -223,10 +225,10 @@ export default function InputShapefileUpload({
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
             <Typography sx={{ fontSize: "12px" }} variant="body2" gutterBottom>
-              <b>FileName</b> : {fileName}
+              <b>{t("File") + " " + t("Name")}</b> : {fileName}
             </Typography>
             <Typography variant="body2" gutterBottom>
-              <b>FileSize</b> : {filesize}
+              <b>{t("File") + " " + t("Size")}</b> : {filesize}
             </Typography>
           </div>
         </div>

@@ -12,8 +12,10 @@ import {
   settoastType,
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useTranslation } from "react-i18next";
 
 export default function StandardCategoryForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -37,7 +39,13 @@ export default function StandardCategoryForm() {
       .then(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Successfully Created Standard category"));
+        dispatch(
+          settoastMessage(
+            `${t("Successfully")} ${"Created"} ${t("Standard")} ${t(
+              "Category"
+            )}`
+          )
+        );
         dispatch(settoastType("success"));
         closeForm();
 
@@ -70,14 +78,14 @@ export default function StandardCategoryForm() {
 
   return (
     <>
-      <Tooltip title="Create StandardCategory">
+      <Tooltip title={t("Create") + " " + t("Standard") + " " + t("Category")}>
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Create StandardCategory
+          {t("Create") + " " + t("Standard") + " " + t("Category")}
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -110,7 +118,7 @@ export default function StandardCategoryForm() {
                 <TextField
                   id="name"
                   name="name"
-                  label="Name"
+                  label={t("Name")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -122,7 +130,7 @@ export default function StandardCategoryForm() {
                 <TextField
                   id="description"
                   name="description"
-                  label="Description"
+                  label={t("Description")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -137,7 +145,9 @@ export default function StandardCategoryForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Standard Category"}
+                  {loading
+                    ? null
+                    : t("Create") + " " + t("Standard") + " " + t("Category")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -149,7 +159,7 @@ export default function StandardCategoryForm() {
                   size="small"
                   fullWidth
                 >
-                  Close
+                  {t("Close")}
                 </Button>
               </Grid>
             </Grid>

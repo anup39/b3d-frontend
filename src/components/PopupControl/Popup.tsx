@@ -18,6 +18,7 @@ import { useState, useEffect } from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Tooltip from "@mui/material/Tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useTranslation } from "react-i18next";
 
 declare global {
   interface Window {
@@ -39,6 +40,7 @@ interface PopupProps {
 }
 
 const Popup = ({ properties, feature_id, features }: PopupProps) => {
+  const { t } = useTranslation();
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -382,7 +384,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                     <TextField
                       {...params}
                       sx={{ fontFamily: "Roboto", fontSize: "5px" }}
-                      label="Category"
+                      label={t("Category")}
                       // value={properties.name}
                     />
                   )}
@@ -391,7 +393,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                 {loading ? (
                   <CircularProgress sx={{ p: 1 }} size={40} />
                 ) : (
-                  <Tooltip title="Save Category">
+                  <Tooltip title={t("Save") + " " + t("Category")}>
                     <IconButton onClick={handleSaveCategory}>
                       <CheckCircleIcon
                         sx={{
@@ -419,7 +421,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                   }}
                   onClick={() => handleDeleteCategory(properties, feature_id)}
                 >
-                  Delete
+                  {t("Delete")}
                 </Button>
                 <Button
                   size="small"
@@ -433,7 +435,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                   }}
                   onClick={() => handleEditCategory()}
                 >
-                  Edit
+                  {t("Edit")}
                 </Button>
               </div>
             </>

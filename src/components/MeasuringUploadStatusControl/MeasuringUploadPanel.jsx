@@ -12,8 +12,10 @@ import PropTypes from "prop-types";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
 import LinearProgressLabel from "../Property/LinearProgressLabel";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 export default function MeasuringUploadPanel({ measuringsUploads }) {
+  const { t } = useTranslation();
   const current_project_name = useSelector(
     (state) => state.project.current_project_name
   );
@@ -37,7 +39,7 @@ export default function MeasuringUploadPanel({ measuringsUploads }) {
               padding: "10px",
             }}
           >
-            Measuring Data Uploads for {current_project_name}
+            {t("Measurings")} {t("Uploads")} {t("For")} {current_project_name}
           </Typography>
         </div>
         {measuringsUploads.length > 0 ? (
@@ -80,7 +82,7 @@ export default function MeasuringUploadPanel({ measuringsUploads }) {
                           variant="body2"
                           color="text.secondary"
                         >
-                          Total Features: {total_features}
+                          {t("Total") + " " + t("Features")}: {total_features}
                         </Typography>
                         <Typography
                           sx={{ display: "inline" }}
@@ -88,7 +90,7 @@ export default function MeasuringUploadPanel({ measuringsUploads }) {
                           variant="body2"
                           color="text.secondary"
                         >
-                          Status: {status}
+                          {t("Status")}: {status}
                         </Typography>
                         <LinearProgressLabel
                           value={progress}
@@ -100,7 +102,7 @@ export default function MeasuringUploadPanel({ measuringsUploads }) {
                           variant="body2"
                           color="text.secondary"
                         >
-                          Filename: {file_name}
+                          {t("File") + " " + t("Name")}: {file_name}
                         </Typography>
                         <Typography
                           sx={{ display: "inline" }}
@@ -108,7 +110,8 @@ export default function MeasuringUploadPanel({ measuringsUploads }) {
                           variant="body2"
                           color="text.secondary"
                         >
-                          Filesize: {(file_size / 1048576).toFixed(2)} MB
+                          {t("File") + " " + t("Size")}:{" "}
+                          {(file_size / 1048576).toFixed(2)} MB
                         </Typography>
                         <Typography
                           sx={{ display: "inline" }}
@@ -116,7 +119,7 @@ export default function MeasuringUploadPanel({ measuringsUploads }) {
                           variant="body2"
                           color="text.secondary"
                         >
-                          Projection: {projection}
+                          {t("Projection")}: {projection}
                         </Typography>
                         <Typography
                           sx={{ display: "inline", fontSize: "9px" }}
@@ -124,7 +127,7 @@ export default function MeasuringUploadPanel({ measuringsUploads }) {
                           variant="body2"
                           color="text.secondary"
                         >
-                          Task ID: {task_id}
+                          {t("Task") + " " + t("Id")}: {task_id}
                         </Typography>
                       </Box>
                     </React.Fragment>
@@ -135,7 +138,7 @@ export default function MeasuringUploadPanel({ measuringsUploads }) {
           )
         ) : (
           <Box sx={{ padding: 2 }}>
-            <Typography>No measuring data uploading.</Typography>
+            <Typography>{t("No") + " " + t("Data")}</Typography>
           </Box>
         )}
       </>

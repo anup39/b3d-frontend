@@ -20,6 +20,7 @@ import {
   seterrorMessage,
   setshowErrorPopup,
 } from "../../reducers/DisplaySettings";
+import { useTranslation } from "react-i18next";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -38,6 +39,7 @@ function union(a, b) {
 }
 
 export default function TransferList({ client_id, component }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [checked, setChecked] = useState([]);
   const [finalLeft, setFinalLeft] = useState([]);
@@ -282,7 +284,7 @@ export default function TransferList({ client_id, component }) {
           />
         }
         title={title}
-        subheader={`${numberOfChecked(items)}/${items.length} selected`}
+        subheader={`${numberOfChecked(items)}/${items.length} ${t("Selected")}`}
       />
       <Divider />
       <List
@@ -580,7 +582,7 @@ export default function TransferList({ client_id, component }) {
 
   return (
     <Grid container spacing={2} justifyContent="center" alignItems="center">
-      <Grid item>{customList("Choices", finalLeft)}</Grid>
+      <Grid item>{customList(t("Choices"), finalLeft)}</Grid>
       <Grid item>
         <Grid container direction="column" alignItems="center">
           <Button
@@ -605,7 +607,7 @@ export default function TransferList({ client_id, component }) {
           </Button>
         </Grid>
       </Grid>
-      <Grid item>{customList("Chosen", finalRight)}</Grid>
+      <Grid item>{customList(t("Choices"), finalRight)}</Grid>
       <Grid item>
         <Button
           onClick={handleSave}
@@ -614,7 +616,7 @@ export default function TransferList({ client_id, component }) {
           variant={loading ? "outlined" : "contained"}
           sx={{ mt: 3, mb: 2 }}
         >
-          {loading ? null : "Save"}
+          {loading ? null : t("Save")}
           {loading ? <CircularProgress /> : null}
         </Button>
       </Grid>

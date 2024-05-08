@@ -3,6 +3,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import TabIcon from "@mui/icons-material/Tab";
+import { useTranslation } from "react-i18next";
 
 export default function InspectionCard({
   full_name,
@@ -12,6 +13,7 @@ export default function InspectionCard({
   stroke_color,
   stroke_width,
 }) {
+  const { t } = useTranslation();
   return (
     <Paper
       sx={{
@@ -38,7 +40,7 @@ export default function InspectionCard({
               </Typography>
               <>
                 <Typography variant="body2" gutterBottom>
-                  <span>Fill Color: </span>
+                  <span>{t("Fill") + " " + t("Color")}: </span>
                   <span
                     style={{
                       color: fill_color,
@@ -49,12 +51,12 @@ export default function InspectionCard({
                   </span>
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  <span>Fill Opacity: </span>
+                  <span>{t("Fill") + " " + t("Opacity")}: </span>
 
                   {fill_opacity}
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  <span>Stroke Color: </span>
+                  <span>{t("Stroke") + " " + t("Color")}: </span>
                   <span
                     style={{
                       color: stroke_color,
@@ -65,7 +67,7 @@ export default function InspectionCard({
                   </span>
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  <span>Stroke Width: </span>
+                  <span>{t("Stroke") + " " + t("Width")}: </span>
                   {stroke_width}
                 </Typography>
               </>
