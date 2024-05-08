@@ -8,7 +8,9 @@ import PropTypes from "prop-types";
 
 export default function LanguageSwitcher(props) {
   const [language, setLanguage] = React.useState(
-    localStorage.getItem("i18nextLng") || "en"
+    localStorage.getItem("i18nextLng") !== "en-GB"
+      ? localStorage.getItem("i18nextLng")
+      : "en"
   );
   const { i18n } = useTranslation();
 
