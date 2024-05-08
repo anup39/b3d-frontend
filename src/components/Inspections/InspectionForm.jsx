@@ -12,8 +12,10 @@ import {
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
+import { useTranslation } from "react-i18next";
 
 export default function InspectionForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(false);
 
@@ -51,7 +53,7 @@ export default function InspectionForm() {
       .then(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Successfully Created Standard category"));
+        dispatch(settoastMessage(`${t("Inspection")} ${t("Created")}`));
         dispatch(settoastType("success"));
         closeForm();
 
@@ -64,7 +66,11 @@ export default function InspectionForm() {
       .catch(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage("Failed to load Inspection"));
+        dispatch(
+          settoastMessage(
+            `${t("Failed")} ${t("To")} ${t("Create")} ${t("Inspection")}`
+          )
+        );
         dispatch(settoastType("error"));
         closeForm();
       });
@@ -91,14 +97,14 @@ export default function InspectionForm() {
 
   return (
     <>
-      <Tooltip title="Create Inspection">
+      <Tooltip title={t("Create") + " " + t("Inspection")}>
         <Button
           onClick={openForm}
           sx={{ margin: "5px" }}
           variant="contained"
           color="error"
         >
-          Create Inspection
+          {t("Create") + " " + t("Inspection")}
         </Button>
       </Tooltip>
       {isFormOpen && (
@@ -131,7 +137,7 @@ export default function InspectionForm() {
                 <TextField
                   id="name"
                   name="name"
-                  label="Name"
+                  label={t("Name")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -143,7 +149,7 @@ export default function InspectionForm() {
                 <TextField
                   id="description"
                   name="description"
-                  label="Description"
+                  label={t("Description")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -165,7 +171,7 @@ export default function InspectionForm() {
                   id="fill_color"
                   type="color"
                   name="fill_color"
-                  label="Fill Color"
+                  label={t("Fill") + " " + t("Color")}
                   variant="outlined"
                   size="small"
                   value={selectedFillColor}
@@ -180,7 +186,7 @@ export default function InspectionForm() {
                   id="fill_opacity"
                   type="number"
                   name="fill_opacity"
-                  label="Fill Opacity"
+                  label={t("Fill") + " " + t("Opacity")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -198,7 +204,7 @@ export default function InspectionForm() {
                   id="stroke_color"
                   type="color"
                   name="stroke_color"
-                  label="Stroke Color"
+                  label={t("Stroke") + " " + t("Color")}
                   variant="outlined"
                   size="small"
                   value={selectedStrokeColor}
@@ -213,7 +219,7 @@ export default function InspectionForm() {
                   id="stroke_width"
                   type="number"
                   name="stroke_width"
-                  label="Stroke Width"
+                  label={t("Stroke") + " " + t("Width")}
                   variant="outlined"
                   size="small"
                   InputLabelProps={{ shrink: true }}
@@ -233,7 +239,7 @@ export default function InspectionForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : "Create Inspection"}
+                  {loading ? null : t("Create")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
@@ -245,7 +251,7 @@ export default function InspectionForm() {
                   size="small"
                   fullWidth
                 >
-                  Close
+                  {t("Cancel")}
                 </Button>
               </Grid>
             </Grid>

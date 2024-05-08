@@ -64,9 +64,9 @@ function handleMeasureEvent(e) {
       .setLngLat(e.lngLat)
       .addTo(map)
       .setHTML(
-        `<div id="measure-popup">${distance
+        `<div id="measure-popup">${(distance * 1000)
           .toFixed(2)
-          .toLocaleString()}km </div>`
+          .toLocaleString()}m </div>`
       );
   }
 
