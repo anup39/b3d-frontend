@@ -215,7 +215,7 @@ export default function InputShapefileUpload({
         {t("Upload")} Shapefile or Geojson {t("File")}
         <VisuallyHiddenInput
           type="file"
-          accept=".geojson, .json "
+          accept=".geojson, .json, .zip"
           ref={fileInputRef}
           onChange={handleFileChange}
           required
