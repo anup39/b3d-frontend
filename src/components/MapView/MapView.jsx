@@ -309,38 +309,38 @@ export default function MapView() {
     }
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      console.log("This will run every 5 seconds!");
-      if (tableSummationData.length > 0) {
-        fetchTableSummationReducer(
-          tableSummationData,
-          client_id,
-          project_id,
-          dispatch
-        );
-      }
-      if (tableSummationPieData.length > 0) {
-        fetchPieSummationReducer(
-          tableSummationPieData,
-          client_id,
-          project_id,
-          dispatch
-        );
-      }
-    }, 5000); // 5000 milliseconds = 5 seconds
-    return () => {
-      clearInterval(intervalId);
-    };
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     console.log("This will run every 5 seconds!");
+  //     if (tableSummationData.length > 0) {
+  //       fetchTableSummationReducer(
+  //         tableSummationData,
+  //         client_id,
+  //         project_id,
+  //         dispatch
+  //       );
+  //     }
+  //     if (tableSummationPieData.length > 0) {
+  //       fetchPieSummationReducer(
+  //         tableSummationPieData,
+  //         client_id,
+  //         project_id,
+  //         dispatch
+  //       );
+  //     }
+  //   }, 5000); // 5000 milliseconds = 5 seconds
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
 
-    // Clear interval on component unmount
-  }, [
-    tableSummationData,
-    tableSummationPieData,
-    client_id,
-    project_id,
-    dispatch,
-  ]);
+  //   // Clear interval on component unmount
+  // }, [
+  //   tableSummationData,
+  //   tableSummationPieData,
+  //   client_id,
+  //   project_id,
+  //   dispatch,
+  // ]);
 
   return (
     <Box sx={{ display: "flex" }}>
