@@ -53,3 +53,16 @@ english language is the best language
 I need to fixed the trello issues 
 this is the new begining of the project 
 this is the new begining of the project
+
+
+
+export function setupExtent() {
+    return (document.getElementById('mapextent')!.addEventListener('click',function extent(){
+       const map=window.map
+        return map.fitBounds([
+            [32.958984, -5.353521],
+            [43.50585, 5.615985]
+        ]);
+    })
+    );
+}
