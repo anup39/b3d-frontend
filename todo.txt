@@ -75,3 +75,4 @@ also new changes for the development
 for the development of the project
 New in the development
 Test in the development 
+The new section of the project
