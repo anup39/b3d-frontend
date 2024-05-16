@@ -73,11 +73,35 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
             key !== "type_of_geometry" &&
             key !== "component"
         ) // Exclude 'perimeter' and 'area'
-        .map(([key, value]) => (
-          <div key={key}>
-            <strong>{key}:</strong> {value}
-          </div>
-        ))
+        .map(([key, value]) => {
+          console.log(key, "key");
+          const language = localStorage.getItem("i18nextLng");
+          if (key === "view_name") {
+            if (language === "en") {
+              key = "Category";
+            } else key = "Kategori";
+          }
+          if (key === "area") {
+            if (language === "en") {
+              key = "Area";
+            } else key = "Areal";
+          }
+          if (key === "perimeter") {
+            if (language === "en") {
+              key = "Perimeter";
+            } else key = "Omkrets";
+          }
+          if (key === "length") {
+            if (language === "en") {
+              key = "Length";
+            } else key = "Lengde";
+          }
+          return (
+            <div key={key}>
+              <strong>{key}:</strong> {value}
+            </div>
+          );
+        })
     : null;
 
   const handleDeleteCategory = (properties, feature_id) => {
