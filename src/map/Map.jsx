@@ -21,6 +21,8 @@ import {
   setDisplayType,
   setIndoorsInMap,
   setShowIndoorControl,
+  setShowThreeDFrame,
+  setCurrentThreeD,
 } from "../reducers/MapView";
 import { setWKTGeometry, setTypeOfGeometry } from "../reducers/DrawnGeometry";
 import MeasureControl from "../components/DrawControl/MeasureControl";
@@ -340,9 +342,11 @@ export default function Map({ popUpRef }) {
         .then((res) => {
           const project = res.data;
           const url = project.url;
-          if (url) {
-            window.open(url, "_blank");
-          }
+          // if (url) {
+          //   window.open(url, "_blank");
+          // }
+          dispatch(setCurrentThreeD(project));
+          dispatch(setShowThreeDFrame(true));
         });
     }
     console.log(project_id, "projectcid");
