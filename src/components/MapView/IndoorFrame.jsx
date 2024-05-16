@@ -55,20 +55,43 @@ export default function IndoorFrame() {
               >
                 {currentIndoor?.name}
               </Typography>
-              <Button
-                onClick={closeForm}
-                variant="contained"
-                color="error"
-                size="small"
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mb: 2,
+                  gap: 2,
+                }}
               >
-                {t("Close")}
-              </Button>
+                <Button
+                  onClick={closeForm}
+                  variant="contained"
+                  color="error"
+                  size="small"
+                >
+                  {t("Close")}
+                </Button>
+                <Button
+                  onClick={() => {
+                    document.getElementById("indoorFrame").requestFullscreen();
+                  }}
+                  variant="contained"
+                  color="error"
+                  size="small"
+                >
+                  {t("Full Screen")}
+                </Button>
+              </Box>
             </Box>
             <Box>
               <iframe
+                id="indoorFrame"
                 src={currentIndoor?.url}
                 width="100%"
                 height="600px"
+                frameBorder="0"
+                allowFullScreen
               ></iframe>
             </Box>
           </Box>

@@ -55,22 +55,44 @@ export default function ThreeDFrame() {
               >
                 {currentThreeD?.name}
               </Typography>
-              <Button
-                onClick={closeForm}
-                variant="contained"
-                color="error"
-                size="small"
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mb: 2,
+                  gap: 2,
+                }}
               >
-                {t("Close")}
-              </Button>
+                <Button
+                  onClick={closeForm}
+                  variant="contained"
+                  color="error"
+                  size="small"
+                >
+                  {t("Close")}
+                </Button>
+                <Button
+                  onClick={() => {
+                    document.getElementById("threeDFrame").requestFullscreen();
+                  }}
+                  variant="contained"
+                  color="error"
+                  size="small"
+                >
+                  {t("Full Screen")}
+                </Button>
+              </Box>
             </Box>
 
             {currentThreeD.url ? (
               <Box>
                 <iframe
+                  id="threeDFrame"
                   src={currentThreeD?.url}
                   width="100%"
                   height="600px"
+                  allowFullScreen
                 ></iframe>
               </Box>
             ) : (
