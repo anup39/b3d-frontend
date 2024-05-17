@@ -9,6 +9,7 @@ import { Button, Box } from "@mui/material";
 import {
   setCategoryEditData,
   setOpenCategoryEditForm,
+  setOpenCustomFieldForm,
 } from "../../reducers/EditClassification";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -145,7 +146,7 @@ export default function CategoryCard({
               </Button>
               <Button
                 onClick={() => {
-                  dispatch(setOpenCategoryEditForm(true));
+                  dispatch(setOpenCustomFieldForm(true));
                   dispatch(
                     setCategoryEditData({
                       id,
