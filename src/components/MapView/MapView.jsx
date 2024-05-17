@@ -67,6 +67,7 @@ import AddLayerAndSourceToMap from "../../maputils/AddLayerAndSourceToMap";
 import { setShowIndoorControl } from "../../reducers/MapView";
 import IndoorFrame from "./IndoorFrame";
 import { useTranslation } from "react-i18next";
+import ThreeDFrame from "./3DFrame";
 
 const drawerWidth = 240;
 
@@ -161,6 +162,8 @@ export default function MapView() {
     (state) => state.property.showProgressFormOpen
   );
   const showIndoorFrame = useSelector((state) => state.mapView.showIndoorFrame);
+
+  const showThreeDFrame = useSelector((state) => state.mapView.showThreeDFrame);
 
   const handleDrawerClose = () => {
     console.log(!openSidebar);
@@ -500,6 +503,8 @@ export default function MapView() {
       {showReport ? <ReportPrint popUpRef={popUpRef} /> : null}
 
       {showIndoorFrame ? <IndoorFrame /> : null}
+
+      {showThreeDFrame ? <ThreeDFrame /> : null}
     </Box>
   );
 }

@@ -5,10 +5,11 @@ import PropTypes from "prop-types";
 import TabIcon from "@mui/icons-material/Tab";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Button } from "@mui/material";
+import { Button, Box } from "@mui/material";
 import {
   setCategoryEditData,
   setOpenCategoryEditForm,
+  setOpenCustomFieldForm,
 } from "../../reducers/EditClassification";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -117,30 +118,53 @@ export default function CategoryCard({
                 </>
               ) : null}
             </Grid>
-            <Grid>
-              <Typography variant="body2" style={{ cursor: "pointer" }}>
-                <Button
-                  onClick={() => {
-                    dispatch(setOpenCategoryEditForm(true));
-                    dispatch(
-                      setCategoryEditData({
-                        id,
-                        name,
-                        type_of_geometry,
-                        style,
-                        full_name,
-                        description,
-                        sub_category,
-                        standard_category: standard_category,
-                      })
-                    );
-                  }}
-                  variant="contained"
-                >
-                  {t("Edit")}
-                </Button>
-              </Typography>
-            </Grid>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+              }}
+            >
+              <Button
+                onClick={() => {
+                  dispatch(setOpenCategoryEditForm(true));
+                  dispatch(
+                    setCategoryEditData({
+                      id,
+                      name,
+                      type_of_geometry,
+                      style,
+                      full_name,
+                      description,
+                      sub_category,
+                      standard_category: standard_category,
+                    })
+                  );
+                }}
+                variant="contained"
+              >
+                {t("Edit")}
+              </Button>
+              <Button
+                onClick={() => {
+                  dispatch(setOpenCustomFieldForm(true));
+                  dispatch(
+                    setCategoryEditData({
+                      id,
+                      name,
+                      type_of_geometry,
+                      style,
+                      full_name,
+                      description,
+                      sub_category,
+                      standard_category: standard_category,
+                    })
+                  );
+                }}
+                variant="contained"
+              >
+                {t("Add Custom Field")}
+              </Button>
+            </Box>
           </Grid>
         </Grid>
       </Grid>

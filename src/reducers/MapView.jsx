@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = {
   level: "Projects",
@@ -48,6 +48,8 @@ const initialState = {
   indoorsInMap: [],
   showIndoorFrame: false,
   currentIndoor: null,
+  showThreeDFrame: false,
+  currentThreeD: null,
 };
 
 export const MapView = createSlice({
@@ -243,6 +245,12 @@ export const MapView = createSlice({
     setCurrentIndoor: (state, action) => {
       state.currentIndoor = action.payload;
     },
+    setShowThreeDFrame: (state, action) => {
+      state.showThreeDFrame = action.payload;
+    },
+    setCurrentThreeD: (state, action) => {
+      state.currentThreeD = action.payload;
+    },
   },
 });
 
@@ -287,6 +295,8 @@ export const {
   setIndoorsInMap,
   setShowIndoorFrame,
   setCurrentIndoor,
+  setShowThreeDFrame,
+  setCurrentThreeD,
 } = MapView.actions;
 
 export default MapView.reducer;

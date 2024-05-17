@@ -1,15 +1,15 @@
 import { Button, Typography, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentIndoor, setShowIndoorFrame } from "../../reducers/MapView";
+import { setShowThreeDFrame, setCurrentThreeD } from "../../reducers/MapView";
 import { useTranslation } from "react-i18next";
 
-export default function IndoorFrame() {
+export default function ThreeDFrame() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const currentIndoor = useSelector((state) => state.mapView.currentIndoor);
+  const currentThreeD = useSelector((state) => state.mapView.currentThreeD);
   const closeForm = () => {
-    dispatch(setShowIndoorFrame(false));
-    dispatch(setCurrentIndoor(null));
+    dispatch(setShowThreeDFrame(false));
+    dispatch(setCurrentThreeD(null));
   };
 
   return (
@@ -53,7 +53,7 @@ export default function IndoorFrame() {
                   color: "black",
                 }}
               >
-                {currentIndoor?.name}
+                {currentThreeD?.name}
               </Typography>
               <Box
                 sx={{
@@ -74,7 +74,7 @@ export default function IndoorFrame() {
                 </Button>
                 <Button
                   onClick={() => {
-                    document.getElementById("indoorFrame").requestFullscreen();
+                    document.getElementById("threeDFrame").requestFullscreen();
                   }}
                   variant="contained"
                   color="error"
@@ -84,16 +84,29 @@ export default function IndoorFrame() {
                 </Button>
               </Box>
             </Box>
-            <Box>
-              <iframe
-                id="indoorFrame"
-                src={currentIndoor?.url}
-                width="100%"
-                height="600px"
-                frameBorder="0"
-                allowFullScreen
-              ></iframe>
-            </Box>
+
+            {currentThreeD.url ? (
+              <Box>
+                <iframe
+                  id="threeDFrame"
+                  src={currentThreeD?.url}
+                  width="100%"
+                  height="600px"
+                  allowFullScreen
+                ></iframe>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  color: "red",
+                  textAlign: "center",
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                }}
+              >
+                No 3D infromation
+              </Box>
+            )}
           </Box>
         </form>
       </div>
@@ -101,4 +114,4 @@ export default function IndoorFrame() {
   );
 }
 
-IndoorFrame.propTypes = {};
+ThreeDFrame.propTypes = {};
