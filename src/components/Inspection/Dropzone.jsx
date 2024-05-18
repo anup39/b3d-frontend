@@ -99,3 +99,7 @@ Dropzone.propTypes = {
   map: PropTypes.object,
   files: PropTypes.array,
 };
+
+// Fixed the things that were pointed out in the review. I hope this helps you.
+
+//  I'm glad that I could help you. If you have any other questions, feel free to ask. — Onur Yıldırım Jul 21, 2021 at 07:15
