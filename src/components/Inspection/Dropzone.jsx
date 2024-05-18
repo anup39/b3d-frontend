@@ -103,3 +103,5 @@ Dropzone.propTypes = {
 // Fixed the things that were pointed out in the review. I hope this helps you.
 
 //  I'm glad that I could help you. If you have any other questions, feel free to ask. — Onur Yıldırım Jul 21, 2021 at 07:15
+
+// The `onDrop` function is not being called because the `accept` prop is set to `"image/png"`, but the files you are trying to upload are not PNG files. You can remove the `accept` prop to allow any file type to be uploaded. — Onur Yıldırım Jul 21, 2021 at 07:16
