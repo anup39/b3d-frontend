@@ -7,6 +7,7 @@ import { useState } from "react";
 import TextField from "@mui/material/TextField";
 
 export default function TextFieldCategory() {
+  const [checkedBox, setCheckedBox] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const typeOfElement = useSelector(
@@ -20,6 +21,10 @@ export default function TextFieldCategory() {
     event.preventDefault();
     setLoading(true);
     setLoading(false);
+    const labelInput = document.getElementById("label");
+    const valueInput = document.getElementById("value");
+
+    console.log(labelInput.value, valueInput?.value, checkedBox);
   };
 
   const openForm = () => {
@@ -88,10 +93,13 @@ export default function TextFieldCategory() {
               {typeOfElement === "Checkbox" ? (
                 <Grid item xs={12}>
                   <Checkbox
-                    id="value"
+                    id="checkbox-input"
                     label={t("Value")}
-                    name="value"
-                    autoComplete="value"
+                    name="checkbox-input"
+                    value={checkedBox}
+                    onChange={(event) => {
+                      setCheckedBox(event.target.checked);
+                    }}
                   />
                 </Grid>
               ) : null}
