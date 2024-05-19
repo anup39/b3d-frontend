@@ -19,10 +19,6 @@ import CategoryEditForm from "../components/Category/CategoryEditForm";
 import { useTranslation } from "react-i18next";
 import AddCustomField from "../components/Category/AddCustomField";
 import TextField from "../components/Category/TextField";
-import Checkbox from "../components/Category/Checkbox";
-import Url from "../components/Category/Url";
-import SelectField from "../components/Category/SelectField";
-import NumberField from "../components/Category/Number";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -159,10 +155,6 @@ export default function Classification() {
           <CategoryEditForm />
           <AddCustomField />
           <TextField />
-          <Checkbox />
-          <Url />
-          <SelectField />
-          <NumberField />
           {categorys
             ? categorys.map((c) => (
                 <CategoryCard

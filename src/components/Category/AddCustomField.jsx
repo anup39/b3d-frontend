@@ -65,7 +65,7 @@ export default function AddCustomField() {
                 <Autocomplete
                   disablePortal
                   id="type-of-element"
-                  options={["Text", "Select", "Checkbox", "Url", "Number"]}
+                  options={["Text", "Checkbox", "Url", "Number"]}
                   getOptionLabel={(option) => option}
                   style={{ width: 300 }}
                   defaultValue={"Text"}

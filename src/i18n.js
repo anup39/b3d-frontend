@@ -1,7 +1,6 @@
 import { initReactI18next } from "react-i18next";
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import { Select } from "@react-three/drei";
 
 i18n
   .use(initReactI18next)
@@ -157,6 +156,7 @@ i18n
           And: "And",
           Drawn: "Drawn",
           Welcome: "Welcome",
+          Label: "Label",
         },
       },
       da: {
@@ -305,6 +305,7 @@ i18n
           And: "Og",
           Drawn: "Tegnet",
           Welcome: "Velkommen",
+          Label: "Mærkat",
         },
       },
     },

@@ -1,16 +1,10 @@
 import Grid from "@mui/material/Grid";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, Checkbox } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { setCategorys } from "../../reducers/Category";
-import {
-  setshowToast,
-  settoastMessage,
-  settoastType,
-} from "../../reducers/DisplaySettings";
-import { setOpenCustomFieldForm } from "../../reducers/EditClassification";
+import { setTypeOfElement } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import TextField from "@mui/material/TextField";
 
 export default function TextFieldCategory() {
   const dispatch = useDispatch();
@@ -18,11 +12,6 @@ export default function TextFieldCategory() {
   const typeOfElement = useSelector(
     (state) => state.editClassification.typeOfElement
   );
-  const categoryEditData = useSelector(
-    (state) => state.editClassification.categoryEditData
-  );
-  const [value, setValue] = useState(null);
-  const [options, setOptions] = useState([]);
 
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
@@ -30,88 +19,20 @@ export default function TextFieldCategory() {
   const handleEditCategory = (event) => {
     event.preventDefault();
     setLoading(true);
-    const nameInput = document.getElementById("name");
-    const descriptionInput = document.getElementById("description");
-    const fillOpacityInput = document.getElementById("fill_opacity");
-    const strokeWidthInput = document.getElementById("stroke_width");
-
-    if (value !== null) {
-      const data = {
-        name: nameInput.value,
-        description: descriptionInput.value,
-        sub_category: value.id,
-        created_by: user_id,
-      };
-      console.log(data, "data");
-
-      axios
-        .patch(
-          `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
-            categoryEditData.id
-          }/`,
-          data
-        )
-        .then((res) => {
-          const style_data = {
-            fill_opacity: fillOpacityInput.value,
-            stroke_width: strokeWidthInput.value,
-            category: res.data.id,
-            created_by: user_id,
-          };
-          axios
-            .patch(
-              `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/global-category-style/${categoryEditData.style.id}/`,
-              style_data
-            )
-            .then(() => {
-              setLoading(false);
-              dispatch(setshowToast(true));
-              dispatch(
-                settoastMessage(
-                  `${t("Successfully")} ${t("Edited")} ${t("Category")}`
-                )
-              );
-              dispatch(settoastType("success"));
-              closeForm();
-              axios
-                .get(
-                  `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
-                )
-                .then((res) => {
-                  console.log(res.data);
-                  dispatch(setCategorys(res.data));
-                })
-                .catch(() => {});
-            });
-        })
-        .catch(() => {
-          setLoading(false);
-          dispatch(setshowToast(true));
-          dispatch(
-            settoastMessage(
-              `${t("Failed")} ${t("To")}  ${t("Edit")} ${t("Category")}`
-            )
-          );
-          dispatch(settoastType("error"));
-          closeForm();
-        });
-    }
   };
 
   const openForm = () => {
-    dispatch(setOpenCategoryEditForm(true));
+    // dispatch(setOpenCategoryEditForm(true));
   };
 
   const closeForm = () => {
     console.log("close form");
-    dispatch(setOpenCustomFieldForm(false));
+    dispatch(setTypeOfElement(null));
   };
 
   return (
     <>
-      {typeOfElement === "Text" && (
+      {typeOfElement && (
         <div
           style={{
             position: "fixed",
@@ -137,7 +58,44 @@ export default function TextFieldCategory() {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12}></Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="label"
+                  label={t("Label")}
+                  name="label"
+                  autoComplete="label"
+                />
+              </Grid>
+              {typeOfElement === "Text" ||
+              typeOfElement === "Number" ||
+              typeOfElement === "Url" ? (
+                <Grid item xs={12}>
+                  <TextField
+                    type={typeOfElement === "Number" ? "number" : "text"}
+                    required
+                    fullWidth
+                    id="value"
+                    label={t("Value")}
+                    name="value"
+                    autoComplete="value"
+                  />
+                </Grid>
+              ) : null}
+
+              {typeOfElement === "Checkbox" ? (
+                <Grid item xs={12}>
+                  <Checkbox
+                    required
+                    id="value"
+                    label={t("Value")}
+                    name="value"
+                    autoComplete="value"
+                  />
+                </Grid>
+              ) : null}
+
               <Grid item xs={12}>
                 <Button
                   type="submit"
