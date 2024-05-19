@@ -181,9 +181,8 @@ export default function AddCustomField() {
               <Grid item xs={12}>
                 <Autocomplete
                   disablePortal
-                  disabled
                   id="type-of-geometry"
-                  options={["Polygon", "LineString", "Point"]}
+                  options={["Text", "Select", "Checkbox", "Url", "Number"]}
                   getOptionLabel={(option) => option}
                   style={{ width: 300 }}
                   defaultValue={categoryEditData?.type_of_geometry}
