@@ -5,6 +5,13 @@ import { setTypeOfElement } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../../reducers/DisplaySettings";
+import axios from "axios";
+import { setCategorys } from "../../reducers/Category";
 
 export default function TextFieldCategory() {
   const [checkedBox, setCheckedBox] = useState(false);
@@ -16,15 +23,83 @@ export default function TextFieldCategory() {
 
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
+  const categoryEditData = useSelector(
+    (state) => state.editClassification.categoryEditData
+  );
 
   const handleEditCategory = (event) => {
     event.preventDefault();
     setLoading(true);
-    setLoading(false);
     const labelInput = document.getElementById("label");
     const valueInput = document.getElementById("value");
 
-    console.log(labelInput.value, valueInput?.value, checkedBox);
+    if (value !== null) {
+      const data = {
+        name: nameInput.value,
+        description: descriptionInput.value,
+        sub_category: value.id,
+        standard_category: selectedStandardCategory,
+        type_of_geometry: inputValue,
+        created_by: user_id,
+      };
+      console.log(data, "data");
+
+      axios
+        .patch(
+          `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
+            categoryEditData.id
+          }/`,
+          data
+        )
+        .then((res) => {
+          const style_data = {
+            fill: selectedFillColor,
+            fill_opacity: fillOpacityInput.value,
+            stroke: selectedStrokeColor,
+            stroke_width: strokeWidthInput.value,
+            category: res.data.id,
+            created_by: user_id,
+          };
+          axios
+            .patch(
+              `${
+                import.meta.env.VITE_API_DASHBOARD_URL
+              }/global-category-style/${categoryEditData.style.id}/`,
+              style_data
+            )
+            .then(() => {
+              setLoading(false);
+              dispatch(setshowToast(true));
+              dispatch(
+                settoastMessage(
+                  `${t("Successfully")} ${t("Edited")} ${t("Category")}`
+                )
+              );
+              dispatch(settoastType("success"));
+              closeForm();
+              axios
+                .get(
+                  `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
+                )
+                .then((res) => {
+                  console.log(res.data);
+                  dispatch(setCategorys(res.data));
+                })
+                .catch(() => {});
+            });
+        })
+        .catch(() => {
+          setLoading(false);
+          dispatch(setshowToast(true));
+          dispatch(
+            settoastMessage(
+              `${t("Failed")} ${t("To")}  ${t("Edit")} ${t("Category")}`
+            )
+          );
+          dispatch(settoastType("error"));
+          closeForm();
+        });
+    }
   };
 
   const openForm = () => {

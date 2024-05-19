@@ -168,6 +168,7 @@ export default function Classification() {
                   sub_category={c.sub_category}
                   standard_category={c.standard_category}
                   style={c.style}
+                  extra_fields={c.extra_fileds}
                 />
               ))
             : null}
