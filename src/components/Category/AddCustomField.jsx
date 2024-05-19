@@ -181,15 +181,15 @@ export default function AddCustomField() {
               <Grid item xs={12}>
                 <Autocomplete
                   disablePortal
-                  id="type-of-geometry"
+                  id="type-of-element"
                   options={["Text", "Select", "Checkbox", "Url", "Number"]}
                   getOptionLabel={(option) => option}
                   style={{ width: 300 }}
-                  defaultValue={categoryEditData?.type_of_geometry}
+                  defaultValue={"Text"}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label={t("Type") + " " + t("Of") + " " + t("Geometry")}
+                      label={t("Type") + " " + t("Of") + " " + t("Element")}
                       variant="outlined"
                       required
                     />
@@ -208,7 +208,7 @@ export default function AddCustomField() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : t("Edit") + " " + t("Category")}
+                  {loading ? null : t("Create")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
