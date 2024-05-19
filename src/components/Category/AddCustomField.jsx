@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Autocomplete from "@mui/material/Autocomplete";
 import { setOpenCustomFieldForm } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { setTypeOfElement } from "../../reducers/EditClassification";
 
 export default function AddCustomField() {
@@ -31,7 +31,15 @@ export default function AddCustomField() {
     console.log("close form");
     dispatch(setOpenCustomFieldForm(false));
     dispatch(setTypeOfElement(null));
+    setInputValue("Text");
   };
+
+  useEffect(() => {
+    if (openCustomFieldForm) {
+      setInputValue("Text");
+      dispatch(setTypeOfElement(null));
+    }
+  }, [openCustomFieldForm, dispatch]);
 
   return (
     <>
