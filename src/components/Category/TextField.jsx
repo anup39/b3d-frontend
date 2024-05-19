@@ -19,6 +19,7 @@ export default function TextFieldCategory() {
   const handleEditCategory = (event) => {
     event.preventDefault();
     setLoading(true);
+    setLoading(false);
   };
 
   const openForm = () => {
@@ -87,7 +88,6 @@ export default function TextFieldCategory() {
               {typeOfElement === "Checkbox" ? (
                 <Grid item xs={12}>
                   <Checkbox
-                    required
                     id="value"
                     label={t("Value")}
                     name="value"
