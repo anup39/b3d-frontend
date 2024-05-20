@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
 
-export default function TextFieldCategory() {
+export default function Field() {
   const [checkedBox, setCheckedBox] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
