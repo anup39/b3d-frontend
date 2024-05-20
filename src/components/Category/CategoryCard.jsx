@@ -23,9 +23,12 @@ export default function CategoryCard({
   sub_category,
   standard_category,
   style,
+  extra_fields,
 }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  console.log(extra_fields, "extra_fileds");
 
   // useEffect(() => {
   //   axios
@@ -157,6 +160,7 @@ export default function CategoryCard({
                       description,
                       sub_category,
                       standard_category: standard_category,
+                      extra_fields,
                     })
                   );
                 }}
@@ -182,4 +186,5 @@ CategoryCard.propTypes = {
   sub_category: PropTypes.number,
   standard_category: PropTypes.number,
   style: PropTypes.object,
+  extra_fields: PropTypes.object,
 };

@@ -4,6 +4,7 @@ const initialState = {
   openCategoryEditForm: false,
   categoryEditData: null,
   openCustomFieldForm: false,
+  typeOfElement: null,
 };
 
 export const EditClassification = createSlice({
@@ -19,6 +20,9 @@ export const EditClassification = createSlice({
     setOpenCustomFieldForm: (state, action) => {
       state.openCustomFieldForm = action.payload;
     },
+    setTypeOfElement: (state, action) => {
+      state.typeOfElement = action.payload;
+    },
   },
 });
 
@@ -27,6 +31,7 @@ export const {
   setOpenCategoryEditForm,
   setCategoryEditData,
   setOpenCustomFieldForm,
+  setTypeOfElement,
 } = EditClassification.actions;
 
 export default EditClassification.reducer;

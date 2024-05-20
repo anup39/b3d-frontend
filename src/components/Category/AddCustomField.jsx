@@ -1,19 +1,12 @@
-import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button, CircularProgress } from "@mui/material";
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { setCategorys } from "../../reducers/Category";
 import Autocomplete from "@mui/material/Autocomplete";
-import {
-  setshowToast,
-  settoastMessage,
-  settoastType,
-} from "../../reducers/DisplaySettings";
 import { setOpenCustomFieldForm } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
+import { setTypeOfElement } from "../../reducers/EditClassification";
 
 export default function AddCustomField() {
   const dispatch = useDispatch();
@@ -21,134 +14,32 @@ export default function AddCustomField() {
   const openCustomFieldForm = useSelector(
     (state) => state.editClassification.openCustomFieldForm
   );
-  const categoryEditData = useSelector(
-    (state) => state.editClassification.categoryEditData
-  );
-  const [value, setValue] = useState(null);
-  const [options, setOptions] = useState([]);
 
-  const [selectedStandardCategory, setSelectedStandardCategory] =
-    useState(null);
-  const [inputValue, setInputValue] = useState("");
-  const [selectedFillColor, setSelectedFillColor] = useState("#32788f");
-  const [selectedStrokeColor, setSelectedStrokeColor] = useState("#d71414");
+  const [inputValue, setInputValue] = useState("Text");
   const [loading, setLoading] = useState(false);
-  const user_id = useSelector((state) => state.auth.user_id);
 
   const handleEditCategory = (event) => {
+    console.log(inputValue, "inputValue");
     event.preventDefault();
     setLoading(true);
-    const nameInput = document.getElementById("name");
-    const descriptionInput = document.getElementById("description");
-    const fillOpacityInput = document.getElementById("fill_opacity");
-    const strokeWidthInput = document.getElementById("stroke_width");
-
-    if (value !== null) {
-      const data = {
-        name: nameInput.value,
-        description: descriptionInput.value,
-        sub_category: value.id,
-        standard_category: selectedStandardCategory,
-        type_of_geometry: inputValue,
-        created_by: user_id,
-      };
-      console.log(data, "data");
-
-      axios
-        .patch(
-          `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
-            categoryEditData.id
-          }/`,
-          data
-        )
-        .then((res) => {
-          const style_data = {
-            fill: selectedFillColor,
-            fill_opacity: fillOpacityInput.value,
-            stroke: selectedStrokeColor,
-            stroke_width: strokeWidthInput.value,
-            category: res.data.id,
-            created_by: user_id,
-          };
-          axios
-            .patch(
-              `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/global-category-style/${categoryEditData.style.id}/`,
-              style_data
-            )
-            .then(() => {
-              setLoading(false);
-              dispatch(setshowToast(true));
-              dispatch(
-                settoastMessage(
-                  `${t("Successfully")} ${t("Edited")} ${t("Category")}`
-                )
-              );
-              dispatch(settoastType("success"));
-              closeForm();
-              axios
-                .get(
-                  `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
-                )
-                .then((res) => {
-                  console.log(res.data);
-                  dispatch(setCategorys(res.data));
-                })
-                .catch(() => {});
-            });
-        })
-        .catch(() => {
-          setLoading(false);
-          dispatch(setshowToast(true));
-          dispatch(
-            settoastMessage(
-              `${t("Failed")} ${t("To")}  ${t("Edit")} ${t("Category")}`
-            )
-          );
-          dispatch(settoastType("error"));
-          closeForm();
-        });
-    }
-  };
-
-  const openForm = () => {
-    dispatch(setOpenCategoryEditForm(true));
+    dispatch(setTypeOfElement(inputValue));
+    setLoading(false);
+    dispatch(setOpenCustomFieldForm(false));
   };
 
   const closeForm = () => {
     console.log("close form");
     dispatch(setOpenCustomFieldForm(false));
-  };
-
-  const handleFillColorChange = (event) => {
-    const newColor = event.target.value;
-    setSelectedFillColor(newColor);
-  };
-
-  const handleStrokeColorChange = (event) => {
-    const newColor = event.target.value;
-    setSelectedStrokeColor(newColor);
+    dispatch(setTypeOfElement(null));
+    setInputValue("Text");
   };
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`)
-      .then((response) => {
-        setOptions(response.data);
-        console.log(categoryEditData);
-        setValue(
-          response.data.find(
-            (option) => option.id === categoryEditData?.sub_category
-          ) || null
-        );
-        setInputValue(categoryEditData?.type_of_geometry);
-        setSelectedStandardCategory(categoryEditData?.standard_category);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [categoryEditData]);
+    if (openCustomFieldForm) {
+      setInputValue("Text");
+      dispatch(setTypeOfElement(null));
+    }
+  }, [openCustomFieldForm, dispatch]);
 
   return (
     <>
@@ -181,16 +72,15 @@ export default function AddCustomField() {
               <Grid item xs={12}>
                 <Autocomplete
                   disablePortal
-                  disabled
-                  id="type-of-geometry"
-                  options={["Polygon", "LineString", "Point"]}
+                  id="type-of-element"
+                  options={["Text", "Checkbox", "Url", "Number"]}
                   getOptionLabel={(option) => option}
                   style={{ width: 300 }}
-                  defaultValue={categoryEditData?.type_of_geometry}
+                  defaultValue={"Text"}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label={t("Type") + " " + t("Of") + " " + t("Geometry")}
+                      label={t("Type") + " " + t("Of") + " " + t("Element")}
                       variant="outlined"
                       required
                     />
@@ -209,7 +99,7 @@ export default function AddCustomField() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : t("Edit") + " " + t("Category")}
+                  {loading ? null : t("Create")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>

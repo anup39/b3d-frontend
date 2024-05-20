@@ -18,6 +18,7 @@ import CategoryCard from "../components/Category/CategoryCard";
 import CategoryEditForm from "../components/Category/CategoryEditForm";
 import { useTranslation } from "react-i18next";
 import AddCustomField from "../components/Category/AddCustomField";
+import TextField from "../components/Category/TextField";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -153,6 +154,7 @@ export default function Classification() {
           <CategoryForm />
           <CategoryEditForm />
           <AddCustomField />
+          <TextField />
           {categorys
             ? categorys.map((c) => (
                 <CategoryCard
@@ -166,6 +168,7 @@ export default function Classification() {
                   sub_category={c.sub_category}
                   standard_category={c.standard_category}
                   style={c.style}
+                  extra_fields={c.extra_fields}
                 />
               ))
             : null}
