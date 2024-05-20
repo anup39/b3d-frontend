@@ -33,73 +33,66 @@ export default function TextFieldCategory() {
     const labelInput = document.getElementById("label");
     const valueInput = document.getElementById("value");
 
-    if (value !== null) {
-      const data = {
-        name: nameInput.value,
-        description: descriptionInput.value,
-        sub_category: value.id,
-        standard_category: selectedStandardCategory,
-        type_of_geometry: inputValue,
-        created_by: user_id,
+    console.log(categoryEditData, "categoryEditData");
+    let new_item = {};
+    if (typeOfElement === "Checkbox") {
+      new_item = {
+        type: typeOfElement,
+        label: labelInput.value,
+        value: checkedBox,
       };
-      console.log(data, "data");
-
-      axios
-        .patch(
-          `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
-            categoryEditData.id
-          }/`,
-          data
-        )
-        .then((res) => {
-          const style_data = {
-            fill: selectedFillColor,
-            fill_opacity: fillOpacityInput.value,
-            stroke: selectedStrokeColor,
-            stroke_width: strokeWidthInput.value,
-            category: res.data.id,
-            created_by: user_id,
-          };
-          axios
-            .patch(
-              `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/global-category-style/${categoryEditData.style.id}/`,
-              style_data
-            )
-            .then(() => {
-              setLoading(false);
-              dispatch(setshowToast(true));
-              dispatch(
-                settoastMessage(
-                  `${t("Successfully")} ${t("Edited")} ${t("Category")}`
-                )
-              );
-              dispatch(settoastType("success"));
-              closeForm();
-              axios
-                .get(
-                  `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
-                )
-                .then((res) => {
-                  console.log(res.data);
-                  dispatch(setCategorys(res.data));
-                })
-                .catch(() => {});
-            });
-        })
-        .catch(() => {
-          setLoading(false);
-          dispatch(setshowToast(true));
-          dispatch(
-            settoastMessage(
-              `${t("Failed")} ${t("To")}  ${t("Edit")} ${t("Category")}`
-            )
-          );
-          dispatch(settoastType("error"));
-          closeForm();
-        });
+    } else {
+      new_item = {
+        type: typeOfElement,
+        label: labelInput.value,
+        value: valueInput.value,
+      };
     }
+
+    let extra_fields = { ...categoryEditData.extra_fields };
+
+    let newData = [];
+
+    if (extra_fields.data) {
+      console.log(extra_fields.data, "extra_fields.data");
+      newData = [...extra_fields.data, new_item];
+    } else {
+      newData = [new_item];
+    }
+
+    console.log(extra_fields, "extra_fields");
+
+    const data = {
+      extra_fields: { data: newData },
+    };
+    axios
+      .patch(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
+          categoryEditData.id
+        }/`,
+        data
+      )
+      .then(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage(`${t("Successfully")} ${t("Created")}`));
+        dispatch(settoastType("success"));
+        closeForm();
+        axios
+          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
+          .then((res) => {
+            console.log(res.data);
+            dispatch(setCategorys(res.data));
+          })
+          .catch(() => {});
+      })
+      .catch(() => {
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(settoastMessage(`${t("Failed")} ${t("To")}  ${t("Create")}`));
+        dispatch(settoastType("error"));
+        closeForm();
+      });
   };
 
   const openForm = () => {
