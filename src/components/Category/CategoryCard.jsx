@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import TabIcon from "@mui/icons-material/Tab";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Box } from "@mui/material";
+import { Button, Box, Checkbox, Link } from "@mui/material";
 import {
   setCategoryEditData,
   setOpenCategoryEditForm,
@@ -118,6 +118,67 @@ export default function CategoryCard({
                     </span>
                     {style.stroke_width}
                   </Typography>
+                </>
+              ) : null}
+
+              {extra_fields.data && extra_fields.data.length > 0 ? (
+                <>
+                  <Typography variant="body2" gutterBottom>
+                    <b>{t("Additonal")}</b>
+                  </Typography>
+                  {extra_fields.data.map((field, index) => {
+                    switch (field.type) {
+                      case "Text":
+                        return (
+                          <Typography key={index}>
+                            {field.label}: {field.value}
+                          </Typography>
+                        );
+                      case "Checkbox":
+                        return (
+                          <Box
+                            sx={{
+                              display: "flex",
+                              gap: 1,
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography key={index}>{field.label}:</Typography>
+                            <Checkbox
+                              size="small"
+                              key={index}
+                              checked={field.value}
+                              disabled
+                            >
+                              {field.label}
+                            </Checkbox>
+                          </Box>
+                        );
+                      case "Url":
+                        return (
+                          <Box
+                            sx={{
+                              display: "flex",
+                              gap: 1,
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography key={index}>{field.label}:</Typography>
+                            <Link href={field.value} target="_blank">
+                              {field.value}
+                            </Link>
+                          </Box>
+                        );
+                      case "Number":
+                        return (
+                          <Typography key={index}>
+                            {field.label}: {field.value}
+                          </Typography>
+                        );
+                      default:
+                        return null;
+                    }
+                  })}
                 </>
               ) : null}
             </Grid>
