@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
 
-export default function TextFieldCategory() {
+export default function Field() {
   const [checkedBox, setCheckedBox] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -40,12 +40,14 @@ export default function TextFieldCategory() {
         type: typeOfElement,
         label: labelInput.value,
         value: checkedBox,
+        delete: false,
       };
     } else {
       new_item = {
         type: typeOfElement,
         label: labelInput.value,
         value: valueInput.value,
+        delete: false,
       };
     }
 

@@ -3,13 +3,12 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import TabIcon from "@mui/icons-material/Tab";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Button, Box } from "@mui/material";
+import { Button, Box, Link } from "@mui/material";
 import {
   setCategoryEditData,
   setOpenCategoryEditForm,
   setOpenCustomFieldForm,
+  setOpenEditCustomFieldForm,
 } from "../../reducers/EditClassification";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -27,8 +26,6 @@ export default function CategoryCard({
 }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
-  console.log(extra_fields, "extra_fileds");
 
   // useEffect(() => {
   //   axios
@@ -120,6 +117,66 @@ export default function CategoryCard({
                   </Typography>
                 </>
               ) : null}
+
+              {extra_fields.data && extra_fields.data.length > 0 ? (
+                <>
+                  <Typography variant="body2" gutterBottom>
+                    <b>{t("Additional")}</b>
+                  </Typography>
+                  {extra_fields.data.map((field, index) => {
+                    switch (field.type) {
+                      case "Text":
+                        return (
+                          <Typography key={index}>
+                            {field.label}: {field.value}
+                          </Typography>
+                        );
+                      case "Checkbox":
+                        return (
+                          <Box
+                            key={index}
+                            sx={{
+                              display: "flex",
+                              gap: 1,
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography>{field.label}:</Typography>
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              disabled
+                            />
+                          </Box>
+                        );
+                      case "Url":
+                        return (
+                          <Box
+                            key={index}
+                            sx={{
+                              display: "flex",
+                              gap: 1,
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography>{field.label}:</Typography>
+                            <Link href={field.value} target="_blank">
+                              {field.value}
+                            </Link>
+                          </Box>
+                        );
+                      case "Number":
+                        return (
+                          <Typography key={index}>
+                            {field.label}: {field.value}
+                          </Typography>
+                        );
+                      default:
+                        return null;
+                    }
+                  })}
+                </>
+              ) : null}
             </Grid>
             <Box
               sx={{
@@ -166,8 +223,32 @@ export default function CategoryCard({
                 }}
                 variant="contained"
               >
-                {t("Add Custom Field")}
+                {t("Add") + " " + t("Custom" + " " + t("Field"))}
               </Button>
+
+              {extra_fields.data && extra_fields.data.length > 0 ? (
+                <Button
+                  onClick={() => {
+                    dispatch(setOpenEditCustomFieldForm(true));
+                    dispatch(
+                      setCategoryEditData({
+                        id,
+                        name,
+                        type_of_geometry,
+                        style,
+                        full_name,
+                        description,
+                        sub_category,
+                        standard_category: standard_category,
+                        extra_fields,
+                      })
+                    );
+                  }}
+                  variant="contained"
+                >
+                  {t("Edit") + " " + t("Custom" + " " + t("Field"))}
+                </Button>
+              ) : null}
             </Box>
           </Grid>
         </Grid>
