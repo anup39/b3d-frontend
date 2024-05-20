@@ -11,6 +11,7 @@ import {
 } from "../../reducers/DisplaySettings";
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function EditCustomFieldForm() {
   const dispatch = useDispatch();
@@ -33,8 +34,10 @@ export default function EditCustomFieldForm() {
     console.log(extra_fields, "extra_fields");
     console.log(extraFields, "extraFields");
 
+    const newExtraFields = extraFields.filter((field) => !field.delete);
+
     const data = {
-      extra_fields: { data: extraFields },
+      extra_fields: { data: newExtraFields },
     };
     axios
       .patch(
@@ -134,77 +137,127 @@ export default function EditCustomFieldForm() {
                                 display: "flex",
                                 gap: "10px",
                                 alignItems: "center",
-                                marginBottom: "10px",
+                                justifyContent: "space-between",
+                                marginBottom: "15px",
                               }}
                             >
-                              <TextField
-                                sx={{ width: "50%" }}
-                                size="small"
-                                required
-                                label={t("Label")}
-                                name="label"
-                                defaultValue={field.label}
-                                onChange={(e) =>
-                                  handleFieldChange(
-                                    index,
-                                    "label",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <TextField
-                                sx={{ width: "50%" }}
-                                size="small"
-                                required
-                                label={t("Value")}
-                                name="value"
-                                defaultValue={field.value}
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  gap: "10px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <TextField
+                                  sx={{ width: "59%" }}
+                                  size="small"
+                                  required
+                                  label={t("Label")}
+                                  name="label"
+                                  defaultValue={field.label}
+                                  onChange={(e) =>
+                                    handleFieldChange(
+                                      index,
+                                      "label",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                <TextField
+                                  sx={{ width: "59%" }}
+                                  size="small"
+                                  required
+                                  label={t("Value")}
+                                  name="value"
+                                  defaultValue={field.value}
+                                  onChange={(e) => {
+                                    handleFieldChange(
+                                      index,
+                                      "value",
+                                      e.target.value
+                                    );
+                                  }}
+                                />
+                              </Box>
+
+                              <span>
+                                <label>Delete:</label>
+                              </span>
+                              <input
+                                style={{ width: "5%" }}
                                 onChange={(e) => {
                                   handleFieldChange(
                                     index,
-                                    "value",
-                                    e.target.value
+                                    "delete",
+                                    e.target.checked
                                   );
                                 }}
+                                type="checkbox"
+                                defaultChecked={field.delete}
                               />
                             </Box>
                           );
                         case "Checkbox":
                           return (
                             <Box
-                              key={index}
                               sx={{
                                 display: "flex",
                                 gap: "10px",
                                 alignItems: "center",
-                                marginBottom: "10px",
+                                justifyContent: "space-between",
+                                marginBottom: "15px",
                               }}
+                              key={index}
                             >
-                              <TextField
-                                sx={{ width: "50%" }}
-                                size="small"
-                                required
-                                label={t("Label")}
-                                name="label"
-                                defaultValue={field.label}
-                                onChange={(e) =>
-                                  handleFieldChange(
-                                    index,
-                                    "label",
-                                    e.target.value
-                                  )
-                                }
-                              />
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  gap: "10px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <TextField
+                                  sx={{ width: "59%" }}
+                                  size="small"
+                                  required
+                                  label={t("Label")}
+                                  name="label"
+                                  defaultValue={field.label}
+                                  onChange={(e) =>
+                                    handleFieldChange(
+                                      index,
+                                      "label",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                <input
+                                  style={{ width: "5%" }}
+                                  onChange={(e) => {
+                                    handleFieldChange(
+                                      index,
+                                      "value",
+                                      e.target.checked
+                                    );
+                                  }}
+                                  type="checkbox"
+                                  defaultChecked={field.value}
+                                />
+                              </Box>
+                              <span>
+                                <label>Delete:</label>
+                              </span>
                               <input
+                                style={{ width: "5%" }}
                                 onChange={(e) => {
                                   handleFieldChange(
                                     index,
-                                    "value",
+                                    "delete",
                                     e.target.checked
                                   );
                                 }}
                                 type="checkbox"
-                                defaultChecked={field.value}
+                                defaultChecked={field.delete}
                               />
                             </Box>
                           );
@@ -216,38 +269,63 @@ export default function EditCustomFieldForm() {
                                 display: "flex",
                                 gap: "10px",
                                 alignItems: "center",
-                                marginBottom: "10px",
+                                justifyContent: "space-between",
+                                marginBottom: "15px",
                               }}
                             >
-                              <TextField
-                                sx={{ width: "50%" }}
-                                size="small"
-                                required
-                                label={t("Label")}
-                                name="label"
-                                defaultValue={field.label}
-                                onChange={(e) =>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  gap: "10px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <TextField
+                                  sx={{ width: "59%" }}
+                                  size="small"
+                                  required
+                                  label={t("Label")}
+                                  name="label"
+                                  defaultValue={field.label}
+                                  onChange={(e) =>
+                                    handleFieldChange(
+                                      index,
+                                      "label",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                <input
+                                  style={{ width: "59%" }}
+                                  type="url"
+                                  size="small"
+                                  required
+                                  label={t("Value")}
+                                  name="value"
+                                  defaultValue={field.value}
+                                  onChange={(e) =>
+                                    handleFieldChange(
+                                      index,
+                                      "value",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </Box>
+                              <span>
+                                <label>Delete:</label>
+                              </span>
+                              <input
+                                style={{ width: "5%" }}
+                                onChange={(e) => {
                                   handleFieldChange(
                                     index,
-                                    "label",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <TextField
-                                sx={{ width: "50%" }}
-                                size="small"
-                                required
-                                label={t("Value")}
-                                name="value"
-                                defaultValue={field.value}
-                                onChange={(e) =>
-                                  handleFieldChange(
-                                    index,
-                                    "value",
-                                    e.target.value
-                                  )
-                                }
+                                    "delete",
+                                    e.target.checked
+                                  );
+                                }}
+                                type="checkbox"
+                                defaultChecked={field.delete}
                               />
                             </Box>
                           );
@@ -259,39 +337,64 @@ export default function EditCustomFieldForm() {
                                 display: "flex",
                                 gap: "10px",
                                 alignItems: "center",
-                                marginBottom: "10px",
+                                justifyContent: "space-between",
+                                marginBottom: "15px",
                               }}
                             >
-                              <TextField
-                                sx={{ width: "50%" }}
-                                size="small"
-                                required
-                                label={t("Label")}
-                                name="label"
-                                defaultValue={field.label}
-                                onChange={(e) =>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  gap: "10px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <TextField
+                                  sx={{ width: "59%" }}
+                                  size="small"
+                                  required
+                                  label={t("Label")}
+                                  name="label"
+                                  defaultValue={field.label}
+                                  onChange={(e) =>
+                                    handleFieldChange(
+                                      index,
+                                      "label",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                <TextField
+                                  sx={{ width: "59%" }}
+                                  type="number"
+                                  size="small"
+                                  required
+                                  label={t("Value")}
+                                  name="value"
+                                  defaultValue={field.value}
+                                  onChange={(e) =>
+                                    handleFieldChange(
+                                      index,
+                                      "value",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </Box>
+
+                              <span>
+                                <label>Delete:</label>
+                              </span>
+                              <input
+                                style={{ width: "5%" }}
+                                onChange={(e) => {
                                   handleFieldChange(
                                     index,
-                                    "label",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <TextField
-                                sx={{ width: "50%" }}
-                                type="number"
-                                size="small"
-                                required
-                                label={t("Value")}
-                                name="value"
-                                defaultValue={field.value}
-                                onChange={(e) =>
-                                  handleFieldChange(
-                                    index,
-                                    "value",
-                                    e.target.value
-                                  )
-                                }
+                                    "delete",
+                                    e.target.checked
+                                  );
+                                }}
+                                type="checkbox"
+                                defaultChecked={field.delete}
                               />
                             </Box>
                           );

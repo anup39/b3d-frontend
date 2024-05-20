@@ -40,12 +40,14 @@ export default function TextFieldCategory() {
         type: typeOfElement,
         label: labelInput.value,
         value: checkedBox,
+        delete: false,
       };
     } else {
       new_item = {
         type: typeOfElement,
         label: labelInput.value,
         value: valueInput.value,
+        delete: false,
       };
     }
 
