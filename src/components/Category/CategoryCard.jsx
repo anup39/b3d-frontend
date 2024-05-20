@@ -3,13 +3,12 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import TabIcon from "@mui/icons-material/Tab";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Button, Box, Checkbox, Link } from "@mui/material";
+import { Button, Box, Link } from "@mui/material";
 import {
   setCategoryEditData,
   setOpenCategoryEditForm,
   setOpenCustomFieldForm,
+  setOpenEditCustomFieldForm,
 } from "../../reducers/EditClassification";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -226,6 +225,30 @@ export default function CategoryCard({
               >
                 {t("Add Custom Field")}
               </Button>
+
+              {extra_fields.data && extra_fields.data.length > 0 ? (
+                <Button
+                  onClick={() => {
+                    dispatch(setOpenEditCustomFieldForm(true));
+                    dispatch(
+                      setCategoryEditData({
+                        id,
+                        name,
+                        type_of_geometry,
+                        style,
+                        full_name,
+                        description,
+                        sub_category,
+                        standard_category: standard_category,
+                        extra_fields,
+                      })
+                    );
+                  }}
+                  variant="contained"
+                >
+                  {t("Edit Custom Field")}
+                </Button>
+              ) : null}
             </Box>
           </Grid>
         </Grid>
