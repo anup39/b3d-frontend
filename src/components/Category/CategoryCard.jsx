@@ -27,8 +27,6 @@ export default function CategoryCard({
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  console.log(extra_fields, "extra_fileds");
-
   // useEffect(() => {
   //   axios
   //     .get(
@@ -136,13 +134,14 @@ export default function CategoryCard({
                       case "Checkbox":
                         return (
                           <Box
+                            key={index}
                             sx={{
                               display: "flex",
                               gap: 1,
                               alignItems: "center",
                             }}
                           >
-                            <Typography key={index}>{field.label}:</Typography>
+                            <Typography>{field.label}:</Typography>
                             <input
                               type="checkbox"
                               checked={field.value}
@@ -153,13 +152,14 @@ export default function CategoryCard({
                       case "Url":
                         return (
                           <Box
+                            key={index}
                             sx={{
                               display: "flex",
                               gap: 1,
                               alignItems: "center",
                             }}
                           >
-                            <Typography key={index}>{field.label}:</Typography>
+                            <Typography>{field.label}:</Typography>
                             <Link href={field.value} target="_blank">
                               {field.value}
                             </Link>

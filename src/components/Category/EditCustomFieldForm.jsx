@@ -1,16 +1,9 @@
 import Grid from "@mui/material/Grid";
-import {
-  Button,
-  CircularProgress,
-  Typography,
-  Link,
-  Box,
-  TextField,
-} from "@mui/material";
+import { Button, CircularProgress, Box, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenEditCustomFieldForm } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   setshowToast,
   settoastMessage,
@@ -20,7 +13,6 @@ import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
 
 export default function EditCustomFieldForm() {
-  const [checkedBox, setCheckedBox] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const openEditCustomFieldForm = useSelector(
@@ -31,45 +23,18 @@ export default function EditCustomFieldForm() {
   const categoryEditData = useSelector(
     (state) => state.editClassification.categoryEditData
   );
-  const extra_fields = categoryEditData.extra_fields;
+  const extra_fields = categoryEditData?.extra_fields;
+  const [extraFields, setExtraFields] = useState([]);
 
   const handleEditCategory = (event) => {
     event.preventDefault();
     setLoading(true);
-    const labelInput = document.getElementById("label");
-    const valueInput = document.getElementById("value");
-
-    console.log(categoryEditData, "categoryEditData");
-    let new_item = {};
-    if (typeOfElement === "Checkbox") {
-      new_item = {
-        type: typeOfElement,
-        label: labelInput.value,
-        value: checkedBox,
-      };
-    } else {
-      new_item = {
-        type: typeOfElement,
-        label: labelInput.value,
-        value: valueInput.value,
-      };
-    }
-
-    let extra_fields = { ...categoryEditData.extra_fields };
-
-    let newData = [];
-
-    if (extra_fields.data) {
-      console.log(extra_fields.data, "extra_fields.data");
-      newData = [...extra_fields.data, new_item];
-    } else {
-      newData = [new_item];
-    }
 
     console.log(extra_fields, "extra_fields");
+    console.log(extraFields, "extraFields");
 
     const data = {
-      extra_fields: { data: newData },
+      extra_fields: { data: extraFields },
     };
     axios
       .patch(
@@ -81,13 +46,13 @@ export default function EditCustomFieldForm() {
       .then(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage(`${t("Successfully")} ${t("Created")}`));
+        dispatch(settoastMessage(`${t("Successfully")} ${t("Edited")}`));
         dispatch(settoastType("success"));
         closeForm();
         axios
           .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
           .then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             dispatch(setCategorys(res.data));
           })
           .catch(() => {});
@@ -95,7 +60,7 @@ export default function EditCustomFieldForm() {
       .catch(() => {
         setLoading(false);
         dispatch(setshowToast(true));
-        dispatch(settoastMessage(`${t("Failed")} ${t("To")}  ${t("Create")}`));
+        dispatch(settoastMessage(`${t("Failed")} ${t("To")}  ${t("Edit")}`));
         dispatch(settoastType("error"));
         closeForm();
       });
@@ -109,6 +74,24 @@ export default function EditCustomFieldForm() {
     console.log("close form");
     dispatch(setOpenEditCustomFieldForm(null));
   };
+
+  const handleFieldChange = (index, name, value) => {
+    console.log(extraFields, "extraFields");
+    const newExtraFields = [...extraFields];
+    newExtraFields[index][name] = value;
+    setExtraFields(newExtraFields);
+  };
+
+  useEffect(() => {
+    if (openEditCustomFieldForm && categoryEditData.extra_fields) {
+      setExtraFields(
+        JSON.parse(JSON.stringify(categoryEditData.extra_fields.data))
+      );
+    }
+    return () => {
+      setExtraFields([]);
+    };
+  }, [openEditCustomFieldForm, categoryEditData]);
 
   return (
     <>
@@ -139,13 +122,14 @@ export default function EditCustomFieldForm() {
           >
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                {extra_fields.data && extra_fields.data.length > 0 ? (
+                {extraFields && extraFields.length > 0 ? (
                   <>
-                    {extra_fields.data.map((field, index) => {
+                    {extraFields.map((field, index) => {
                       switch (field.type) {
                         case "Text":
                           return (
                             <Box
+                              key={index}
                               sx={{
                                 display: "flex",
                                 gap: "10px",
@@ -156,26 +140,39 @@ export default function EditCustomFieldForm() {
                               <TextField
                                 sx={{ width: "50%" }}
                                 size="small"
-                                key={index}
                                 required
                                 label={t("Label")}
                                 name="label"
                                 defaultValue={field.label}
+                                onChange={(e) =>
+                                  handleFieldChange(
+                                    index,
+                                    "label",
+                                    e.target.value
+                                  )
+                                }
                               />
                               <TextField
                                 sx={{ width: "50%" }}
                                 size="small"
-                                key={index}
                                 required
                                 label={t("Value")}
                                 name="value"
                                 defaultValue={field.value}
+                                onChange={(e) => {
+                                  handleFieldChange(
+                                    index,
+                                    "value",
+                                    e.target.value
+                                  );
+                                }}
                               />
                             </Box>
                           );
                         case "Checkbox":
                           return (
                             <Box
+                              key={index}
                               sx={{
                                 display: "flex",
                                 gap: "10px",
@@ -186,18 +183,35 @@ export default function EditCustomFieldForm() {
                               <TextField
                                 sx={{ width: "50%" }}
                                 size="small"
-                                key={index}
                                 required
                                 label={t("Label")}
                                 name="label"
                                 defaultValue={field.label}
+                                onChange={(e) =>
+                                  handleFieldChange(
+                                    index,
+                                    "label",
+                                    e.target.value
+                                  )
+                                }
                               />
-                              <input type="checkbox" checked={field.value} />
+                              <input
+                                onChange={(e) => {
+                                  handleFieldChange(
+                                    index,
+                                    "value",
+                                    e.target.checked
+                                  );
+                                }}
+                                type="checkbox"
+                                defaultChecked={field.value}
+                              />
                             </Box>
                           );
                         case "Url":
                           return (
                             <Box
+                              key={index}
                               sx={{
                                 display: "flex",
                                 gap: "10px",
@@ -208,26 +222,39 @@ export default function EditCustomFieldForm() {
                               <TextField
                                 sx={{ width: "50%" }}
                                 size="small"
-                                key={index}
                                 required
                                 label={t("Label")}
                                 name="label"
                                 defaultValue={field.label}
+                                onChange={(e) =>
+                                  handleFieldChange(
+                                    index,
+                                    "label",
+                                    e.target.value
+                                  )
+                                }
                               />
                               <TextField
                                 sx={{ width: "50%" }}
                                 size="small"
-                                key={index}
                                 required
                                 label={t("Value")}
                                 name="value"
                                 defaultValue={field.value}
+                                onChange={(e) =>
+                                  handleFieldChange(
+                                    index,
+                                    "value",
+                                    e.target.value
+                                  )
+                                }
                               />
                             </Box>
                           );
                         case "Number":
                           return (
                             <Box
+                              key={index}
                               sx={{
                                 display: "flex",
                                 gap: "10px",
@@ -238,21 +265,33 @@ export default function EditCustomFieldForm() {
                               <TextField
                                 sx={{ width: "50%" }}
                                 size="small"
-                                key={index}
                                 required
                                 label={t("Label")}
                                 name="label"
                                 defaultValue={field.label}
+                                onChange={(e) =>
+                                  handleFieldChange(
+                                    index,
+                                    "label",
+                                    e.target.value
+                                  )
+                                }
                               />
                               <TextField
                                 sx={{ width: "50%" }}
                                 type="number"
                                 size="small"
-                                key={index}
                                 required
                                 label={t("Value")}
                                 name="value"
                                 defaultValue={field.value}
+                                onChange={(e) =>
+                                  handleFieldChange(
+                                    index,
+                                    "value",
+                                    e.target.value
+                                  )
+                                }
                               />
                             </Box>
                           );
