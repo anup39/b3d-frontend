@@ -11,7 +11,6 @@ import {
 } from "../../reducers/DisplaySettings";
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function EditCustomFieldForm() {
   const dispatch = useDispatch();
@@ -67,10 +66,6 @@ export default function EditCustomFieldForm() {
         dispatch(settoastType("error"));
         closeForm();
       });
-  };
-
-  const openForm = () => {
-    // dispatch(setOpenCategoryEditForm(true));
   };
 
   const closeForm = () => {
@@ -217,7 +212,7 @@ export default function EditCustomFieldForm() {
                                 }}
                               >
                                 <TextField
-                                  sx={{ width: "59%" }}
+                                  sx={{ width: "48%" }}
                                   size="small"
                                   required
                                   label={t("Label")}

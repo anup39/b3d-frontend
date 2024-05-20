@@ -121,7 +121,7 @@ export default function CategoryCard({
               {extra_fields.data && extra_fields.data.length > 0 ? (
                 <>
                   <Typography variant="body2" gutterBottom>
-                    <b>{t("Additonal")}</b>
+                    <b>{t("Additional")}</b>
                   </Typography>
                   {extra_fields.data.map((field, index) => {
                     switch (field.type) {
@@ -223,7 +223,7 @@ export default function CategoryCard({
                 }}
                 variant="contained"
               >
-                {t("Add Custom Field")}
+                {t("Add") + " " + t("Custom" + " " + t("Field"))}
               </Button>
 
               {extra_fields.data && extra_fields.data.length > 0 ? (
@@ -246,7 +246,7 @@ export default function CategoryCard({
                   }}
                   variant="contained"
                 >
-                  {t("Edit Custom Field")}
+                  {t("Edit") + " " + t("Custom" + " " + t("Field"))}
                 </Button>
               ) : null}
             </Box>
