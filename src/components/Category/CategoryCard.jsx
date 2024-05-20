@@ -144,14 +144,11 @@ export default function CategoryCard({
                             }}
                           >
                             <Typography key={index}>{field.label}:</Typography>
-                            <Checkbox
-                              size="small"
-                              key={index}
+                            <input
+                              type="checkbox"
                               checked={field.value}
                               disabled
-                            >
-                              {field.label}
-                            </Checkbox>
+                            />
                           </Box>
                         );
                       case "Url":
