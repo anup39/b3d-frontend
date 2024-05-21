@@ -1,4 +1,5 @@
 import Grid from "@mui/material/Grid";
+import React from "react";
 import {
   Button,
   CircularProgress,
@@ -238,9 +239,8 @@ export default function Field() {
                   </Box>
                   <Box>
                     {options.map((option, index) => (
-                      <>
+                      <React.Fragment key={index}>
                         <Box
-                          key={index}
                           sx={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -263,7 +263,7 @@ export default function Field() {
                             }}
                           ></Delete>
                         </Box>
-                      </>
+                      </React.Fragment>
                     ))}
                   </Box>
                 </Grid>
