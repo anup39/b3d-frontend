@@ -1,5 +1,12 @@
 import Grid from "@mui/material/Grid";
-import { Button, CircularProgress, Checkbox, Box } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Checkbox,
+  Box,
+  Typography,
+  Tooltip,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setTypeOfElement } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
@@ -12,6 +19,7 @@ import {
 } from "../../reducers/DisplaySettings";
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
+import { Delete } from "@mui/icons-material";
 
 export default function Field() {
   const [checkedBox, setCheckedBox] = useState(false);
@@ -227,6 +235,36 @@ export default function Field() {
                       onChange={(event) => setOption(event.target.value)}
                     ></input>
                     <Button onClick={handleAddOption}>Add</Button>
+                  </Box>
+                  <Box>
+                    {options.map((option, index) => (
+                      <>
+                        <Box
+                          key={index}
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            gap: "10px",
+                            backgroundColor: "#f5f5f5",
+                          }}
+                        >
+                          <Typography>{option}</Typography>
+                          <Delete
+                            sx={{
+                              cursor: "pointer",
+                              color: "red",
+                            }}
+                            onClick={() => {
+                              const newOptions = options.filter(
+                                (opt) => opt !== option
+                              );
+                              setOptions(newOptions);
+                            }}
+                          ></Delete>
+                        </Box>
+                      </>
+                    ))}
                   </Box>
                 </Grid>
               ) : null}
