@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Grid";
-import { Button, CircularProgress, Checkbox } from "@mui/material";
+import { Button, CircularProgress, Checkbox, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setTypeOfElement } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
@@ -23,6 +23,9 @@ export default function Field() {
 
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
+  const [selectedOption, setSelectedOption] = useState("");
+  const [option, setOption] = useState("");
+  const [options, setOptions] = useState([]);
   const categoryEditData = useSelector(
     (state) => state.editClassification.categoryEditData
   );
@@ -106,6 +109,17 @@ export default function Field() {
     dispatch(setTypeOfElement(null));
   };
 
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  const handleAddOption = () => {
+    if (option) {
+      setOptions([...options, option]);
+      setOption("");
+    }
+  };
+
   return (
     <>
       {typeOfElement && (
@@ -171,6 +185,49 @@ export default function Field() {
                       setCheckedBox(event.target.checked);
                     }}
                   />
+                </Grid>
+              ) : null}
+
+              {typeOfElement === "Dropdown" ? (
+                <Grid item xs={12}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {" "}
+                    <select
+                      required
+                      value={selectedOption}
+                      onChange={handleSelectChange}
+                    >
+                      <option disabled value="">
+                        --select an option--
+                      </option>
+                      {options.map((option, index) => (
+                        <option key={index} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                      {/* other options here */}
+                    </select>
+                    <input
+                      value={option}
+                      style={{
+                        width: "80px",
+                        padding: "2px",
+                        border: "1px solid #000",
+                        borderRadius: "5px",
+                        marginLeft: "10px",
+                      }}
+                      type="text"
+                      placeholder="Add option"
+                      onChange={(event) => setOption(event.target.value)}
+                    ></input>
+                    <Button onClick={handleAddOption}>Add</Button>
+                  </Box>
                 </Grid>
               ) : null}
 
