@@ -171,6 +171,29 @@ export default function CategoryCard({
                             {field.label}: {field.value}
                           </Typography>
                         );
+                      case "Dropdown":
+                        return (
+                          <select
+                            required
+                            // value={field.value}
+                            // onChange={handleSelectChange}
+                          >
+                            <option disabled value="">
+                              --select an option--
+                            </option>
+                            {field.value.map((option, index) => (
+                              <option
+                                key={index}
+                                value={option.value}
+                                id={option.id}
+                              >
+                                {option.value}
+                              </option>
+                            ))}
+                            {/* other options here */}
+                          </select>
+                        );
+
                       default:
                         return null;
                     }
