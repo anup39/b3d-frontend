@@ -11,7 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setTypeOfElement } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import {
   setshowToast,
@@ -54,6 +54,13 @@ export default function Field() {
         value: checkedBox,
         delete: false,
       };
+    } else if (typeOfElement === "Dropdown") {
+      new_item = {
+        type: typeOfElement,
+        label: labelInput.value,
+        value: options,
+        delete: false,
+      };
     } else {
       new_item = {
         type: typeOfElement,
@@ -73,8 +80,6 @@ export default function Field() {
     } else {
       newData = [new_item];
     }
-
-    console.log(extra_fields, "extra_fields");
 
     const data = {
       extra_fields: { data: newData },
@@ -116,18 +121,46 @@ export default function Field() {
   const closeForm = () => {
     console.log("close form");
     dispatch(setTypeOfElement(null));
+    setCheckedBox(false);
+    setOption("");
+    setOptions([]);
   };
 
   const handleSelectChange = (event) => {
+    const selectedOptionId =
+      event.target.options[event.target.selectedIndex].getAttribute("id");
+
+    setOptions((prevOptions) =>
+      prevOptions.map((option) =>
+        option.id === parseInt(selectedOptionId)
+          ? { ...option, selected: true }
+          : { ...option, selected: false }
+      )
+    );
+
     setSelectedOption(event.target.value);
   };
 
   const handleAddOption = () => {
     if (option) {
-      setOptions([...options, option]);
+      setOptions((prevOptions) => [
+        ...prevOptions,
+        { id: prevOptions.length + 1, value: option, selected: false },
+      ]);
       setOption("");
     }
   };
+
+  useEffect(() => {
+    setCheckedBox(false);
+    setOption("");
+    setOptions([]);
+    return () => {
+      setCheckedBox(false);
+      setOption("");
+      setOptions([]);
+    };
+  }, []);
 
   return (
     <>
@@ -216,8 +249,8 @@ export default function Field() {
                         --select an option--
                       </option>
                       {options.map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
+                        <option key={index} value={option.value} id={option.id}>
+                          {option.value}
                         </option>
                       ))}
                       {/* other options here */}
@@ -233,7 +266,10 @@ export default function Field() {
                       }}
                       type="text"
                       placeholder="Add option"
-                      onChange={(event) => setOption(event.target.value)}
+                      onChange={(event) => {
+                        console.log(event.target, "event.target");
+                        setOption(event.target.value);
+                      }}
                     ></input>
                     <Button onClick={handleAddOption}>Add</Button>
                   </Box>
@@ -249,7 +285,7 @@ export default function Field() {
                             backgroundColor: "#f5f5f5",
                           }}
                         >
-                          <Typography>{option}</Typography>
+                          <Typography>{option.value}</Typography>
                           <Delete
                             sx={{
                               cursor: "pointer",
