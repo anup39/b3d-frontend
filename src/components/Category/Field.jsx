@@ -124,7 +124,10 @@ export default function Field() {
 
   const handleAddOption = () => {
     if (option) {
-      setOptions([...options, option]);
+      setOptions((prevOptions) => [
+        ...prevOptions,
+        { id: prevOptions.length + 1, value: option },
+      ]);
       setOption("");
     }
   };
@@ -216,8 +219,8 @@ export default function Field() {
                         --select an option--
                       </option>
                       {options.map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
+                        <option key={index} value={option.value}>
+                          {option.value}
                         </option>
                       ))}
                       {/* other options here */}
@@ -249,7 +252,7 @@ export default function Field() {
                             backgroundColor: "#f5f5f5",
                           }}
                         >
-                          <Typography>{option}</Typography>
+                          <Typography>{option.value}</Typography>
                           <Delete
                             sx={{
                               cursor: "pointer",
