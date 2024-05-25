@@ -126,7 +126,11 @@ export default function CategoryCard({
                   {extra_fields.data.map((field, index) => {
                     switch (field.type) {
                       case "Text":
-                        return <Box></Box>;
+                        return (
+                          <Typography key={index}>
+                            {field.label}: {field.value}
+                          </Typography>
+                        );
                       case "Checkbox":
                         return (
                           <Box
@@ -169,25 +173,25 @@ export default function CategoryCard({
                         );
                       case "Dropdown":
                         return (
-                          <select
-                            required
-                            // value={field.value}
-                            // onChange={handleSelectChange}
+                          <Box
+                            key={index}
+                            sx={{
+                              display: "flex",
+                              gap: 1,
+                              alignItems: "center",
+                            }}
                           >
-                            <option disabled value="">
-                              --select an option--
-                            </option>
-                            {field.value.map((option, index) => (
-                              <option
-                                key={index}
-                                value={option.value}
-                                id={option.id}
-                              >
-                                {option.value}
-                              </option>
-                            ))}
-                            {/* other options here */}
-                          </select>
+                            <Typography>{field.label}:</Typography>
+                            {field.value && field.value.length > 0
+                              ? field.value.map((item, index) => {
+                                  return item.selected ? (
+                                    <Typography key={index}>
+                                      {item.value}
+                                    </Typography>
+                                  ) : null;
+                                })
+                              : null}
+                          </Box>
                         );
 
                       default:
