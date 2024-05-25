@@ -171,6 +171,29 @@ export default function CategoryCard({
                             {field.label}: {field.value}
                           </Typography>
                         );
+                      case "Dropdown":
+                        return (
+                          <Box
+                            key={index}
+                            sx={{
+                              display: "flex",
+                              gap: 1,
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography>{field.label}:</Typography>
+                            {field.value && field.value.length > 0
+                              ? field.value.map((item, index) => {
+                                  return item.selected ? (
+                                    <Typography key={index}>
+                                      {item.value}
+                                    </Typography>
+                                  ) : null;
+                                })
+                              : null}
+                          </Box>
+                        );
+
                       default:
                         return null;
                     }
