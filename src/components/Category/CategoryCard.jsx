@@ -126,11 +126,7 @@ export default function CategoryCard({
                   {extra_fields.data.map((field, index) => {
                     switch (field.type) {
                       case "Text":
-                        return (
-                          <Typography key={index}>
-                            {field.label}: {field.value}
-                          </Typography>
-                        );
+                        return <Box></Box>;
                       case "Checkbox":
                         return (
                           <Box
