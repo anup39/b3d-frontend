@@ -477,13 +477,18 @@ export default function EditCustomFieldForm() {
                                   onChange={(event) =>
                                     handleSelectChange(index, "value", event)
                                   }
+                                  value={
+                                    field.value.find(
+                                      (option) => option.selected
+                                    ).value
+                                  }
                                 >
                                   {field.value.map((option, index) => (
                                     <option
                                       key={index}
                                       value={option.value}
                                       id={option.id}
-                                      selected={option.selected}
+                                      // selected={option.selected}
                                     >
                                       {option.value}
                                     </option>
