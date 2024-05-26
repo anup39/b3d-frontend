@@ -1,3 +1,4 @@
+import React from "react";
 import Grid from "@mui/material/Grid";
 import {
   Button,
@@ -17,9 +18,7 @@ import {
 } from "../../reducers/DisplaySettings";
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
+import Delete from "@mui/icons-material/Delete";
 
 export default function EditCustomFieldForm() {
   const dispatch = useDispatch();
@@ -143,14 +142,21 @@ export default function EditCustomFieldForm() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px",
+              width: "500px",
               background: "#fff",
               padding: "20px",
               zIndex: 10000,
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid
+                sx={{
+                  maxHeight: "60vh",
+                  overflowY: "scroll",
+                }}
+                item
+                xs={12}
+              >
                 {extraFields && extraFields.length > 0 ? (
                   <>
                     {extraFields.map((field, index) => {
@@ -165,6 +171,7 @@ export default function EditCustomFieldForm() {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 marginBottom: "15px",
+                                marginRight: "10px",
                               }}
                             >
                               <Box
@@ -232,6 +239,7 @@ export default function EditCustomFieldForm() {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 marginBottom: "15px",
+                                marginRight: "10px",
                               }}
                               key={index}
                             >
@@ -297,6 +305,7 @@ export default function EditCustomFieldForm() {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 marginBottom: "15px",
+                                marginRight: "10px",
                               }}
                             >
                               <Box
@@ -365,6 +374,7 @@ export default function EditCustomFieldForm() {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 marginBottom: "15px",
+                                marginRight: "10px",
                               }}
                             >
                               <Box
@@ -426,108 +436,148 @@ export default function EditCustomFieldForm() {
                           );
                         case "Dropdown":
                           return (
-                            <Box
-                              key={index}
-                              sx={{
-                                display: "flex",
-                                gap: "10px",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                marginBottom: "15px",
-                              }}
-                            >
+                            <Box>
                               <Box
+                                key={index}
                                 sx={{
                                   display: "flex",
                                   gap: "10px",
                                   alignItems: "center",
+                                  justifyContent: "space-between",
+                                  marginBottom: "11px",
+                                  marginRight: "10px",
                                 }}
                               >
-                                <TextField
-                                  sx={{ width: "59%" }}
-                                  size="small"
-                                  required
-                                  label={t("Label")}
-                                  name="label"
-                                  defaultValue={field.label}
-                                  onChange={(e) =>
-                                    handleFieldChange(
-                                      index,
-                                      "label",
-                                      e.target.value
-                                    )
-                                  }
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    gap: "10px",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <TextField
+                                    sx={{ width: "59%" }}
+                                    size="small"
+                                    required
+                                    label={t("Label")}
+                                    name="label"
+                                    defaultValue={field.label}
+                                    onChange={(e) =>
+                                      handleFieldChange(
+                                        index,
+                                        "label",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </Box>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <select
+                                    style={{
+                                      width: 105,
+                                      padding: "2px",
+                                      border: "1px solid #000",
+                                      borderRadius: "5px",
+                                    }}
+                                    required
+                                    onChange={(event) =>
+                                      handleSelectChange(index, "value", event)
+                                    }
+                                    value={
+                                      field.value.find(
+                                        (option) => option.selected
+                                      ).value
+                                    }
+                                  >
+                                    {field.value.map((option, index) => (
+                                      <option
+                                        key={index}
+                                        value={option.value}
+                                        id={option.id}
+                                        // selected={option.selected}
+                                      >
+                                        {option.value}
+                                      </option>
+                                    ))}
+                                  </select>
+
+                                  {/* <input
+                                    value={option}
+                                    style={{
+                                      width: "80px",
+                                      padding: "2px",
+                                      border: "1px solid #000",
+                                      borderRadius: "5px",
+                                      marginLeft: "10px",
+                                    }}
+                                    type="text"
+                                    placeholder="Add option"
+                                    onChange={(event) => {
+                                      console.log(event.target, "event.target");
+                                      setOption(event.target.value);
+                                    }}
+                                  ></input>
+                                  <Button onClick={handleAddOption}>Add</Button> */}
+                                </Box>
+
+                                <span>
+                                  <label>Delete:</label>
+                                </span>
+                                <input
+                                  style={{ width: "5%" }}
+                                  // onChange={(e) => {
+                                  //   handleFieldChange(
+                                  //     index,
+                                  //     "delete",
+                                  //     e.target.checked
+                                  //   );
+                                  // }}
+                                  type="checkbox"
+                                  defaultChecked={field.delete}
                                 />
                               </Box>
                               <Box
                                 sx={{
-                                  display: "flex",
-                                  justifyContent: "space-between",
-                                  alignItems: "center",
+                                  marginLeft: "5px",
+                                  marginRight: "10px",
+                                  marginBottom: "25px",
+                                  borderRadius: "2px",
                                 }}
                               >
-                                <select
-                                  style={{
-                                    width: 105,
-                                    padding: "2px",
-                                    border: "1px solid #000",
-                                    borderRadius: "5px",
-                                  }}
-                                  required
-                                  onChange={(event) =>
-                                    handleSelectChange(index, "value", event)
-                                  }
-                                  value={
-                                    field.value.find(
-                                      (option) => option.selected
-                                    ).value
-                                  }
-                                >
-                                  {field.value.map((option, index) => (
-                                    <option
-                                      key={index}
-                                      value={option.value}
-                                      id={option.id}
-                                      // selected={option.selected}
+                                {field.value.map((option, index) => (
+                                  <React.Fragment key={index}>
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        gap: "10px",
+                                        backgroundColor: "#f5f5f5",
+                                      }}
                                     >
-                                      {option.value}
-                                    </option>
-                                  ))}
-                                </select>
-                                {/* <input
-                                  value={option}
-                                  style={{
-                                    width: "80px",
-                                    padding: "2px",
-                                    border: "1px solid #000",
-                                    borderRadius: "5px",
-                                    marginLeft: "10px",
-                                  }}
-                                  type="text"
-                                  placeholder="Add option"
-                                  onChange={(event) => {
-                                    console.log(event.target, "event.target");
-                                    setOption(event.target.value);
-                                  }}
-                                ></input>
-                                <Button onClick={handleAddOption}>Add</Button> */}
+                                      <Typography>{option.value}</Typography>
+                                      <Delete
+                                        sx={{
+                                          cursor: "pointer",
+                                          color: "red",
+                                        }}
+                                        // onClick={() => {
+                                        //   const newOptions = options.filter(
+                                        //     (opt) => opt !== option
+                                        //   );
+                                        //   setOptions(newOptions);
+                                        // }}
+                                      ></Delete>
+                                    </Box>
+                                  </React.Fragment>
+                                ))}
                               </Box>
-
-                              <span>
-                                <label>Delete:</label>
-                              </span>
-                              <input
-                                style={{ width: "5%" }}
-                                onChange={(e) => {
-                                  handleFieldChange(
-                                    index,
-                                    "delete",
-                                    e.target.checked
-                                  );
-                                }}
-                                type="checkbox"
-                                defaultChecked={field.delete}
-                              />
                             </Box>
                           );
                         default:
