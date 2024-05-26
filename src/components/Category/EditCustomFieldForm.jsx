@@ -17,6 +17,9 @@ import {
 } from "../../reducers/DisplaySettings";
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 export default function EditCustomFieldForm() {
   const dispatch = useDispatch();
@@ -83,6 +86,23 @@ export default function EditCustomFieldForm() {
     console.log(extraFields, "extraFields");
     const newExtraFields = [...extraFields];
     newExtraFields[index][name] = value;
+    setExtraFields(newExtraFields);
+  };
+
+  const handleSelectChange = (index, name, event) => {
+    const selectedOptionId =
+      event.target.options[event.target.selectedIndex].getAttribute("id");
+
+    const newExtraFields = [...extraFields];
+    newExtraFields[index][name].map((field) => {
+      field.value.map((option) => {
+        if (option.id === selectedOptionId) {
+          option.selected = true;
+        } else {
+          option.selected = false;
+        }
+      });
+    });
     setExtraFields(newExtraFields);
   };
 
@@ -441,15 +461,18 @@ export default function EditCustomFieldForm() {
                                   alignItems: "center",
                                 }}
                               >
-                                {" "}
                                 <select
+                                  style={{
+                                    width: 105,
+                                    padding: "2px",
+                                    border: "1px solid #000",
+                                    borderRadius: "5px",
+                                  }}
                                   required
-                                  // value={field.value}
-                                  // onChange={handleSelectChange}
+                                  onChange={(event) =>
+                                    handleSelectChange(index, "value", event)
+                                  }
                                 >
-                                  <option disabled value="">
-                                    --select an option--
-                                  </option>
                                   {field.value.map((option, index) => (
                                     <option
                                       key={index}
@@ -460,7 +483,6 @@ export default function EditCustomFieldForm() {
                                       {option.value}
                                     </option>
                                   ))}
-                                  {/* other options here */}
                                 </select>
                                 {/* <input
                                   value={option}
