@@ -1,5 +1,12 @@
+import React from "react";
 import Grid from "@mui/material/Grid";
-import { Button, CircularProgress, Box, TextField } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Box,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenEditCustomFieldForm } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
@@ -11,6 +18,7 @@ import {
 } from "../../reducers/DisplaySettings";
 import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
+import Delete from "@mui/icons-material/Delete";
 
 export default function EditCustomFieldForm() {
   const dispatch = useDispatch();
@@ -25,6 +33,8 @@ export default function EditCustomFieldForm() {
   );
   const extra_fields = categoryEditData?.extra_fields;
   const [extraFields, setExtraFields] = useState([]);
+
+  console.log(extraFields, "extraFields");
 
   const handleEditCategory = (event) => {
     event.preventDefault();
@@ -80,6 +90,26 @@ export default function EditCustomFieldForm() {
     setExtraFields(newExtraFields);
   };
 
+  const handleSelectChange = (index, name, event) => {
+    const selectedOptionId = parseInt(
+      event.target.options[event.target.selectedIndex].getAttribute("id")
+    );
+
+    console.log(typeof selectedOptionId, "selectedOptionId");
+
+    const newExtraFields = [...extraFields];
+    console.log(newExtraFields, "newExtraFields");
+    console.log(newExtraFields[index][name], "newExtraFields[index][name]");
+    newExtraFields[index][name].map((option) => {
+      if (option.id === selectedOptionId) {
+        option.selected = true;
+      } else {
+        option.selected = false;
+      }
+    });
+    setExtraFields(newExtraFields);
+  };
+
   useEffect(() => {
     if (openEditCustomFieldForm && categoryEditData.extra_fields) {
       setExtraFields(
@@ -112,14 +142,21 @@ export default function EditCustomFieldForm() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px",
+              width: "500px",
               background: "#fff",
               padding: "20px",
               zIndex: 10000,
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid
+                sx={{
+                  maxHeight: "60vh",
+                  overflowY: "scroll",
+                }}
+                item
+                xs={12}
+              >
                 {extraFields && extraFields.length > 0 ? (
                   <>
                     {extraFields.map((field, index) => {
@@ -134,6 +171,7 @@ export default function EditCustomFieldForm() {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 marginBottom: "15px",
+                                marginRight: "10px",
                               }}
                             >
                               <Box
@@ -201,6 +239,7 @@ export default function EditCustomFieldForm() {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 marginBottom: "15px",
+                                marginRight: "10px",
                               }}
                               key={index}
                             >
@@ -266,6 +305,7 @@ export default function EditCustomFieldForm() {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 marginBottom: "15px",
+                                marginRight: "10px",
                               }}
                             >
                               <Box
@@ -334,6 +374,7 @@ export default function EditCustomFieldForm() {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 marginBottom: "15px",
+                                marginRight: "10px",
                               }}
                             >
                               <Box
@@ -391,6 +432,152 @@ export default function EditCustomFieldForm() {
                                 type="checkbox"
                                 defaultChecked={field.delete}
                               />
+                            </Box>
+                          );
+                        case "Dropdown":
+                          return (
+                            <Box>
+                              <Box
+                                key={index}
+                                sx={{
+                                  display: "flex",
+                                  gap: "10px",
+                                  alignItems: "center",
+                                  justifyContent: "space-between",
+                                  marginBottom: "11px",
+                                  marginRight: "10px",
+                                }}
+                              >
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    gap: "10px",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <TextField
+                                    sx={{ width: "59%" }}
+                                    size="small"
+                                    required
+                                    label={t("Label")}
+                                    name="label"
+                                    defaultValue={field.label}
+                                    onChange={(e) =>
+                                      handleFieldChange(
+                                        index,
+                                        "label",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </Box>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <select
+                                    style={{
+                                      width: 105,
+                                      padding: "2px",
+                                      border: "1px solid #000",
+                                      borderRadius: "5px",
+                                    }}
+                                    required
+                                    onChange={(event) =>
+                                      handleSelectChange(index, "value", event)
+                                    }
+                                    value={
+                                      field.value.find(
+                                        (option) => option.selected
+                                      ).value
+                                    }
+                                  >
+                                    {field.value.map((option, index) => (
+                                      <option
+                                        key={index}
+                                        value={option.value}
+                                        id={option.id}
+                                        // selected={option.selected}
+                                      >
+                                        {option.value}
+                                      </option>
+                                    ))}
+                                  </select>
+
+                                  {/* <input
+                                    value={option}
+                                    style={{
+                                      width: "80px",
+                                      padding: "2px",
+                                      border: "1px solid #000",
+                                      borderRadius: "5px",
+                                      marginLeft: "10px",
+                                    }}
+                                    type="text"
+                                    placeholder="Add option"
+                                    onChange={(event) => {
+                                      console.log(event.target, "event.target");
+                                      setOption(event.target.value);
+                                    }}
+                                  ></input>
+                                  <Button onClick={handleAddOption}>Add</Button> */}
+                                </Box>
+
+                                <span>
+                                  <label>Delete:</label>
+                                </span>
+                                <input
+                                  style={{ width: "5%" }}
+                                  // onChange={(e) => {
+                                  //   handleFieldChange(
+                                  //     index,
+                                  //     "delete",
+                                  //     e.target.checked
+                                  //   );
+                                  // }}
+                                  type="checkbox"
+                                  defaultChecked={field.delete}
+                                />
+                              </Box>
+                              <Box
+                                sx={{
+                                  marginLeft: "5px",
+                                  marginRight: "10px",
+                                  marginBottom: "25px",
+                                  borderRadius: "2px",
+                                }}
+                              >
+                                {field.value.map((option, index) => (
+                                  <React.Fragment key={index}>
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        gap: "10px",
+                                        backgroundColor: "#f5f5f5",
+                                      }}
+                                    >
+                                      <Typography>{option.value}</Typography>
+                                      <Delete
+                                        sx={{
+                                          cursor: "pointer",
+                                          color: "red",
+                                        }}
+                                        // onClick={() => {
+                                        //   const newOptions = options.filter(
+                                        //     (opt) => opt !== option
+                                        //   );
+                                        //   setOptions(newOptions);
+                                        // }}
+                                      ></Delete>
+                                    </Box>
+                                  </React.Fragment>
+                                ))}
+                              </Box>
                             </Box>
                           );
                         default:
