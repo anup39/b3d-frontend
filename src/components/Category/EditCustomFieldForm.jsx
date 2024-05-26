@@ -35,6 +35,8 @@ export default function EditCustomFieldForm() {
   const extra_fields = categoryEditData?.extra_fields;
   const [extraFields, setExtraFields] = useState([]);
 
+  console.log(extraFields, "extraFields");
+
   const handleEditCategory = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -90,18 +92,21 @@ export default function EditCustomFieldForm() {
   };
 
   const handleSelectChange = (index, name, event) => {
-    const selectedOptionId =
-      event.target.options[event.target.selectedIndex].getAttribute("id");
+    const selectedOptionId = parseInt(
+      event.target.options[event.target.selectedIndex].getAttribute("id")
+    );
+
+    console.log(typeof selectedOptionId, "selectedOptionId");
 
     const newExtraFields = [...extraFields];
-    newExtraFields[index][name].map((field) => {
-      field.value.map((option) => {
-        if (option.id === selectedOptionId) {
-          option.selected = true;
-        } else {
-          option.selected = false;
-        }
-      });
+    console.log(newExtraFields, "newExtraFields");
+    console.log(newExtraFields[index][name], "newExtraFields[index][name]");
+    newExtraFields[index][name].map((option) => {
+      if (option.id === selectedOptionId) {
+        option.selected = true;
+      } else {
+        option.selected = false;
+      }
     });
     setExtraFields(newExtraFields);
   };
