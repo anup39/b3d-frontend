@@ -434,6 +434,52 @@ export default function EditCustomFieldForm() {
                                   }
                                 />
                               </Box>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "center",
+                                }}
+                              >
+                                {" "}
+                                <select
+                                  required
+                                  // value={field.value}
+                                  // onChange={handleSelectChange}
+                                >
+                                  <option disabled value="">
+                                    --select an option--
+                                  </option>
+                                  {field.value.map((option, index) => (
+                                    <option
+                                      key={index}
+                                      value={option.value}
+                                      id={option.id}
+                                      selected={option.selected}
+                                    >
+                                      {option.value}
+                                    </option>
+                                  ))}
+                                  {/* other options here */}
+                                </select>
+                                {/* <input
+                                  value={option}
+                                  style={{
+                                    width: "80px",
+                                    padding: "2px",
+                                    border: "1px solid #000",
+                                    borderRadius: "5px",
+                                    marginLeft: "10px",
+                                  }}
+                                  type="text"
+                                  placeholder="Add option"
+                                  onChange={(event) => {
+                                    console.log(event.target, "event.target");
+                                    setOption(event.target.value);
+                                  }}
+                                ></input>
+                                <Button onClick={handleAddOption}>Add</Button> */}
+                              </Box>
 
                               <span>
                                 <label>Delete:</label>
