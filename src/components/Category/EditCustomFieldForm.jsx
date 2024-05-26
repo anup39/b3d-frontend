@@ -1,5 +1,11 @@
 import Grid from "@mui/material/Grid";
-import { Button, CircularProgress, Box, TextField } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Box,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenEditCustomFieldForm } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
@@ -370,6 +376,59 @@ export default function EditCustomFieldForm() {
                                     handleFieldChange(
                                       index,
                                       "value",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </Box>
+
+                              <span>
+                                <label>Delete:</label>
+                              </span>
+                              <input
+                                style={{ width: "5%" }}
+                                onChange={(e) => {
+                                  handleFieldChange(
+                                    index,
+                                    "delete",
+                                    e.target.checked
+                                  );
+                                }}
+                                type="checkbox"
+                                defaultChecked={field.delete}
+                              />
+                            </Box>
+                          );
+                        case "Dropdown":
+                          return (
+                            <Box
+                              key={index}
+                              sx={{
+                                display: "flex",
+                                gap: "10px",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                marginBottom: "15px",
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  gap: "10px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <TextField
+                                  sx={{ width: "59%" }}
+                                  size="small"
+                                  required
+                                  label={t("Label")}
+                                  name="label"
+                                  defaultValue={field.label}
+                                  onChange={(e) =>
+                                    handleFieldChange(
+                                      index,
+                                      "label",
                                       e.target.value
                                     )
                                   }
