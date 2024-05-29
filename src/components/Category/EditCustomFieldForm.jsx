@@ -110,6 +110,15 @@ export default function EditCustomFieldForm() {
     setExtraFields(newExtraFields);
   };
 
+  const handleDeleteOption = (index, id) => {
+    console.log(id, "id");
+    const newExtraFields = [...extraFields];
+    newExtraFields[index].value = newExtraFields[index].value.filter(
+      (option) => option.id !== id
+    );
+    setExtraFields(newExtraFields);
+  };
+
   useEffect(() => {
     if (openEditCustomFieldForm && categoryEditData.extra_fields) {
       setExtraFields(
@@ -491,8 +500,12 @@ export default function EditCustomFieldForm() {
                                     }
                                     value={
                                       field.value.find(
-                                        (option) => option.selected
-                                      ).value
+                                        (option) => option?.selected
+                                      )?.value
+                                        ? field.value?.find(
+                                            (option) => option?.selected
+                                          )?.value
+                                        : ""
                                     }
                                   >
                                     {field.value.map((option, index) => (
@@ -550,8 +563,8 @@ export default function EditCustomFieldForm() {
                                   borderRadius: "2px",
                                 }}
                               >
-                                {field.value.map((option, index) => (
-                                  <React.Fragment key={index}>
+                                {field.value.map((option, i) => (
+                                  <React.Fragment key={i}>
                                     <Box
                                       sx={{
                                         display: "flex",
@@ -567,12 +580,9 @@ export default function EditCustomFieldForm() {
                                           cursor: "pointer",
                                           color: "red",
                                         }}
-                                        // onClick={() => {
-                                        //   const newOptions = options.filter(
-                                        //     (opt) => opt !== option
-                                        //   );
-                                        //   setOptions(newOptions);
-                                        // }}
+                                        onClick={() => {
+                                          handleDeleteOption(index, option.id);
+                                        }}
                                       ></Delete>
                                     </Box>
                                   </React.Fragment>
