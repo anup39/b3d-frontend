@@ -33,6 +33,7 @@ export default function EditCustomFieldForm() {
   );
   const extra_fields = categoryEditData?.extra_fields;
   const [extraFields, setExtraFields] = useState([]);
+  const [inputValue, setInputValue] = useState("");
 
   console.log(extraFields, "extraFields");
 
@@ -520,8 +521,8 @@ export default function EditCustomFieldForm() {
                                     ))}
                                   </select>
 
-                                  {/* <input
-                                    value={option}
+                                  <input
+                                    id={`addOption${index}`}
                                     style={{
                                       width: "80px",
                                       padding: "2px",
@@ -531,12 +532,31 @@ export default function EditCustomFieldForm() {
                                     }}
                                     type="text"
                                     placeholder="Add option"
-                                    onChange={(event) => {
-                                      console.log(event.target, "event.target");
-                                      setOption(event.target.value);
-                                    }}
+                                    // onChange={(event) => {
+                                    //   setInputValue(event.target.value);
+                                    // }}
                                   ></input>
-                                  <Button onClick={handleAddOption}>Add</Button> */}
+                                  <Button
+                                    onClick={() => {
+                                      const value = document.getElementById(
+                                        `addOption${index}`
+                                      ).value;
+
+                                      if (value) {
+                                        const newExtraFields = [...extraFields];
+                                        newExtraFields[index].value.push({
+                                          id:
+                                            newExtraFields[index].value.length +
+                                            1,
+                                          value: value,
+                                          selected: false,
+                                        });
+                                        setExtraFields(newExtraFields);
+                                      }
+                                    }}
+                                  >
+                                    Add
+                                  </Button>
                                 </Box>
 
                                 <span>
