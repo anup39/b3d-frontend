@@ -19,6 +19,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Tooltip from "@mui/material/Tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
+import { Box, Link, Typography } from "@mui/material";
 
 declare global {
   interface Window {
@@ -99,6 +100,88 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
           return (
             <div key={key}>
               <strong>{key}:</strong> {value}
+              {value?.data?.length > 0 ? (
+                <>
+                  <Typography variant="body2" gutterBottom>
+                    <b>{t("Additional")}</b>
+                  </Typography>
+                  {value?.data?.map((field, index) => {
+                    switch (field.type) {
+                      case "Text":
+                        return (
+                          <Typography key={index}>
+                            {field.label}: {field.value}
+                          </Typography>
+                        );
+                      case "Checkbox":
+                        return (
+                          <Box
+                            key={index}
+                            sx={{
+                              display: "flex",
+                              gap: 1,
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography>{field.label}:</Typography>
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              disabled
+                            />
+                          </Box>
+                        );
+                      case "Url":
+                        return (
+                          <Box
+                            key={index}
+                            sx={{
+                              display: "flex",
+                              gap: 1,
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography>{field.label}:</Typography>
+                            <Link href={field.value} target="_blank">
+                              {field.value}
+                            </Link>
+                          </Box>
+                        );
+                      case "Number":
+                        return (
+                          <Typography key={index}>
+                            {field.label}: {field.value}
+                          </Typography>
+                        );
+                      case "Dropdown":
+                        return (
+                          <Box
+                            key={index}
+                            sx={{
+                              display: "flex",
+                              gap: 1,
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography>{field.label}:</Typography>
+                            {field.value && field.value.length > 0
+                              ? field.value.map((item, index) => {
+                                  return item.selected ? (
+                                    <Typography key={index}>
+                                      {item.value}
+                                    </Typography>
+                                  ) : null;
+                                })
+                              : null}
+                          </Box>
+                        );
+
+                      default:
+                        return null;
+                    }
+                  })}
+                </>
+              ) : null}
             </div>
           );
         })
