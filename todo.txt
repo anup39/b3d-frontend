@@ -40,28 +40,3 @@ November 17 TODO:
 9) While creating user only super admin can create role of super_admin --- not done
 10) Delete user user role is delete , user is_active false but disable for login user both things
 
-
-
-
-
-New issues to be Fixed
-Matter of the content to be gathered
-The section of the material
-
-
-New changes in the department 
-Gather all the infomations 
-Material section of the new court 
-
-
-New charge for the material and the section
-
-
-Fixed the materail section
-Section to be Fixed
-New testing for the material section
-Testing for the material section for the new changes 
-New section for the material for the section and the collection for the time and section
-time for the deliverty of the material
-The new section for the time and the delivery and the connection 
-There is the material for the current time and the section
