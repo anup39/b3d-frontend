@@ -446,7 +446,7 @@ export default function EditCustomFieldForm() {
                           );
                         case "Dropdown":
                           return (
-                            <Box>
+                            <Box key={index}>
                               <Box
                                 key={index}
                                 sx={{
@@ -520,43 +520,6 @@ export default function EditCustomFieldForm() {
                                       </option>
                                     ))}
                                   </select>
-
-                                  <input
-                                    id={`addOption${index}`}
-                                    style={{
-                                      width: "80px",
-                                      padding: "2px",
-                                      border: "1px solid #000",
-                                      borderRadius: "5px",
-                                      marginLeft: "10px",
-                                    }}
-                                    type="text"
-                                    placeholder="Add option"
-                                    // onChange={(event) => {
-                                    //   setInputValue(event.target.value);
-                                    // }}
-                                  ></input>
-                                  <Button
-                                    onClick={() => {
-                                      const value = document.getElementById(
-                                        `addOption${index}`
-                                      ).value;
-
-                                      if (value) {
-                                        const newExtraFields = [...extraFields];
-                                        newExtraFields[index].value.push({
-                                          id:
-                                            newExtraFields[index].value.length +
-                                            1,
-                                          value: value,
-                                          selected: false,
-                                        });
-                                        setExtraFields(newExtraFields);
-                                      }
-                                    }}
-                                  >
-                                    Add
-                                  </Button>
                                 </Box>
 
                                 <span>
@@ -564,13 +527,13 @@ export default function EditCustomFieldForm() {
                                 </span>
                                 <input
                                   style={{ width: "5%" }}
-                                  // onChange={(e) => {
-                                  //   handleFieldChange(
-                                  //     index,
-                                  //     "delete",
-                                  //     e.target.checked
-                                  //   );
-                                  // }}
+                                  onChange={(e) => {
+                                    handleFieldChange(
+                                      index,
+                                      "delete",
+                                      e.target.checked
+                                    );
+                                  }}
                                   type="checkbox"
                                   defaultChecked={field.delete}
                                 />
@@ -583,7 +546,7 @@ export default function EditCustomFieldForm() {
                                   borderRadius: "2px",
                                 }}
                               >
-                                {field.value.map((option, i) => (
+                                {/* {field.value.map((option, i) => (
                                   <React.Fragment key={i}>
                                     <Box
                                       sx={{
@@ -606,7 +569,7 @@ export default function EditCustomFieldForm() {
                                       ></Delete>
                                     </Box>
                                   </React.Fragment>
-                                ))}
+                                ))} */}
                               </Box>
                             </Box>
                           );

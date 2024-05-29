@@ -274,7 +274,7 @@ export default function Field() {
                     <Button onClick={handleAddOption}>Add</Button>
                   </Box>
                   <Box>
-                    {options.map((option, index) => (
+                    {/* {options.map((option, index) => (
                       <React.Fragment key={index}>
                         <Box
                           sx={{
@@ -300,7 +300,7 @@ export default function Field() {
                           ></Delete>
                         </Box>
                       </React.Fragment>
-                    ))}
+                    ))} */}
                   </Box>
                 </Grid>
               ) : null}
