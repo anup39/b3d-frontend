@@ -100,13 +100,19 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
           }
           return (
             <div key={key}>
-              <strong>{key}:</strong> {value}
-              {value?.data?.length > 0 ? (
+              {key !== "extra_fields" ? (
+                <>
+                  {" "}
+                  <strong>{key}:</strong> {value}
+                </>
+              ) : null}
+
+              {key === "extra_fields" && JSON.parse(value)?.data?.length > 0 ? (
                 <React.Fragment>
                   <Typography variant="body2" gutterBottom>
                     <b>{t("Additional")}</b>
                   </Typography>
-                  {value?.data?.map((field, index) => {
+                  {JSON.parse(value)?.data?.map((field, index) => {
                     switch (field.type) {
                       case "Text":
                         return (
