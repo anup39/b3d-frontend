@@ -20,6 +20,7 @@ import Tooltip from "@mui/material/Tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import { Box, Link, Typography } from "@mui/material";
+import React from "react";
 
 declare global {
   interface Window {
@@ -101,7 +102,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
             <div key={key}>
               <strong>{key}:</strong> {value}
               {value?.data?.length > 0 ? (
-                <>
+                <React.Fragment>
                   <Typography variant="body2" gutterBottom>
                     <b>{t("Additional")}</b>
                   </Typography>
@@ -180,7 +181,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                         return null;
                     }
                   })}
-                </>
+                </React.Fragment>
               ) : null}
             </div>
           );
