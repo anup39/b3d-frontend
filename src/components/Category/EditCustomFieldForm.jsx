@@ -33,6 +33,7 @@ export default function EditCustomFieldForm() {
   );
   const extra_fields = categoryEditData?.extra_fields;
   const [extraFields, setExtraFields] = useState([]);
+  const [inputValue, setInputValue] = useState("");
 
   console.log(extraFields, "extraFields");
 
@@ -107,6 +108,15 @@ export default function EditCustomFieldForm() {
         option.selected = false;
       }
     });
+    setExtraFields(newExtraFields);
+  };
+
+  const handleDeleteOption = (index, id) => {
+    console.log(id, "id");
+    const newExtraFields = [...extraFields];
+    newExtraFields[index].value = newExtraFields[index].value.filter(
+      (option) => option.id !== id
+    );
     setExtraFields(newExtraFields);
   };
 
@@ -436,7 +446,7 @@ export default function EditCustomFieldForm() {
                           );
                         case "Dropdown":
                           return (
-                            <Box>
+                            <Box key={index}>
                               <Box
                                 key={index}
                                 sx={{
@@ -491,8 +501,12 @@ export default function EditCustomFieldForm() {
                                     }
                                     value={
                                       field.value.find(
-                                        (option) => option.selected
-                                      ).value
+                                        (option) => option?.selected
+                                      )?.value
+                                        ? field.value?.find(
+                                            (option) => option?.selected
+                                          )?.value
+                                        : ""
                                     }
                                   >
                                     {field.value.map((option, index) => (
@@ -506,24 +520,6 @@ export default function EditCustomFieldForm() {
                                       </option>
                                     ))}
                                   </select>
-
-                                  {/* <input
-                                    value={option}
-                                    style={{
-                                      width: "80px",
-                                      padding: "2px",
-                                      border: "1px solid #000",
-                                      borderRadius: "5px",
-                                      marginLeft: "10px",
-                                    }}
-                                    type="text"
-                                    placeholder="Add option"
-                                    onChange={(event) => {
-                                      console.log(event.target, "event.target");
-                                      setOption(event.target.value);
-                                    }}
-                                  ></input>
-                                  <Button onClick={handleAddOption}>Add</Button> */}
                                 </Box>
 
                                 <span>
@@ -531,13 +527,13 @@ export default function EditCustomFieldForm() {
                                 </span>
                                 <input
                                   style={{ width: "5%" }}
-                                  // onChange={(e) => {
-                                  //   handleFieldChange(
-                                  //     index,
-                                  //     "delete",
-                                  //     e.target.checked
-                                  //   );
-                                  // }}
+                                  onChange={(e) => {
+                                    handleFieldChange(
+                                      index,
+                                      "delete",
+                                      e.target.checked
+                                    );
+                                  }}
                                   type="checkbox"
                                   defaultChecked={field.delete}
                                 />
@@ -550,8 +546,8 @@ export default function EditCustomFieldForm() {
                                   borderRadius: "2px",
                                 }}
                               >
-                                {field.value.map((option, index) => (
-                                  <React.Fragment key={index}>
+                                {/* {field.value.map((option, i) => (
+                                  <React.Fragment key={i}>
                                     <Box
                                       sx={{
                                         display: "flex",
@@ -567,16 +563,13 @@ export default function EditCustomFieldForm() {
                                           cursor: "pointer",
                                           color: "red",
                                         }}
-                                        // onClick={() => {
-                                        //   const newOptions = options.filter(
-                                        //     (opt) => opt !== option
-                                        //   );
-                                        //   setOptions(newOptions);
-                                        // }}
+                                        onClick={() => {
+                                          handleDeleteOption(index, option.id);
+                                        }}
                                       ></Delete>
                                     </Box>
                                   </React.Fragment>
-                                ))}
+                                ))} */}
                               </Box>
                             </Box>
                           );
