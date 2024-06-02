@@ -55,6 +55,22 @@ export default function ThreeDFrame() {
               >
                 {currentThreeD?.name}
               </Typography>
+              <Box>
+                {" "}
+                <Typography color={"red"}>
+                  If you are not logged in to Dronedeploy. Use this credentials
+                </Typography>
+                <Box>
+                  {" "}
+                  <label>User: </label>
+                  <span>portal@b3d.dk</span>
+                </Box>
+                <Box>
+                  <label>Password: </label>
+                  <span>B3dportal</span>
+                </Box>
+              </Box>
+
               <Box
                 sx={{
                   display: "flex",

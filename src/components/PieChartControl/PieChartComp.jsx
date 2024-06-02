@@ -8,7 +8,7 @@ import { setshowPiechart } from "../../reducers/MapView";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-export default function PieChartComp({ showCloseButton }) {
+export default function PieChartComp({ showCloseButton, showHeading }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const showPiechart = useSelector((state) => state.mapView.showPiechart);
@@ -32,7 +32,7 @@ export default function PieChartComp({ showCloseButton }) {
               />
             </Tooltip>
           ) : null}
-          <PieChartNew />
+          <PieChartNew showHeading={showHeading} />
         </>
       ) : null}
     </>

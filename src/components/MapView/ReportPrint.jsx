@@ -225,7 +225,7 @@ export default function ReportPrint() {
                   ref={mapContainerReport}
                 ></div>
                 <Box sx={{ ml: "0%" }}>
-                  <PieChartComp showCloseButton={false} />
+                  <PieChartComp showCloseButton={false} showHeading={false} />
                 </Box>
                 <Box sx={{ mt: 5 }}>
                   <div
@@ -241,6 +241,7 @@ export default function ReportPrint() {
                       showCloseButton={false}
                       marginLeftOfTitle={"0%"}
                       mode={"print"}
+                      showHeading={false}
                     />
                   </div>
                 </Box>
