@@ -241,6 +241,7 @@ export default function ReportPrint() {
                       showCloseButton={false}
                       marginLeftOfTitle={"0%"}
                       mode={"print"}
+                      showHeading={false}
                     />
                   </div>
                 </Box>
