@@ -37,9 +37,13 @@ export default function PieChartNew({ showHeading }) {
           height={190}
         />
       ) : (
-        <Typography sx={{ ml: 10, mr: 10, fontSize: 12, p: 2 }}>
-          {t("No") + " " + t("Data") + " " + t("Available")}
-        </Typography>
+        <>
+          {showHeading ? (
+            <Typography sx={{ ml: 10, mr: 10, fontSize: 12, p: 2 }}>
+              {t("No") + " " + t("Data") + " " + t("Available")}
+            </Typography>
+          ) : null}
+        </>
       )}
     </Box>
   );
