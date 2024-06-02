@@ -2,8 +2,9 @@ import { PieChart } from "@mui/x-charts/PieChart";
 import { useSelector } from "react-redux";
 import { Box, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { bool } from "prop-types";
 
-export default function PieChartNew() {
+export default function PieChartNew({ showHeading }) {
   const { t } = useTranslation();
   const data_reducer = useSelector(
     (state) => state.mapView.tableSummationPieData
@@ -14,9 +15,12 @@ export default function PieChartNew() {
 
   return (
     <Box flexGrow={2}>
-      <Typography sx={{ padding: 0.5, color: "#2B8AFF", fontWeight: 600 }}>
-        {t("Piechart")} {t("Represents")} {t("Area")} in meter square(m²)
-      </Typography>
+      {showHeading ? (
+        <Typography sx={{ padding: 0.5, color: "#2B8AFF", fontWeight: 600 }}>
+          {t("Piechart")} {t("Represents")} {t("Area")} in meter square(m²)
+        </Typography>
+      ) : null}
+
       {data.length > 0 ? (
         <PieChart
           series={[
@@ -33,10 +37,18 @@ export default function PieChartNew() {
           height={190}
         />
       ) : (
-        <Typography sx={{ ml: 10, mr: 10, fontSize: 12, p: 2 }}>
-          {t("No") + " " + t("Data") + " " + t("Available")}
-        </Typography>
+        <>
+          {showHeading ? (
+            <Typography sx={{ ml: 10, mr: 10, fontSize: 12, p: 2 }}>
+              {t("No") + " " + t("Data") + " " + t("Available")}
+            </Typography>
+          ) : null}
+        </>
       )}
     </Box>
   );
 }
+
+PieChartNew.propTypes = {
+  showHeading: bool,
+};

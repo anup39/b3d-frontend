@@ -30,6 +30,7 @@ const renderCell = (params) => {
 export default function TableMeasuringsForMap({
   width,
   showCloseButton,
+  showHeading,
   marginLeftOfTitle,
   mode,
 }) {
@@ -116,16 +117,18 @@ export default function TableMeasuringsForMap({
               alignItems: "center",
             }}
           >
-            <Typography
-              sx={{
-                padding: 0,
-                color: "#2B8AFF",
-                fontWeight: 600,
-                ml: `${marginLeftOfTitle}`,
-              }}
-            >
-              {t("Table")} {t("Represents")} {t("Area")} in meter square(m²)
-            </Typography>
+            {showHeading ? (
+              <Typography
+                sx={{
+                  padding: 0,
+                  color: "#2B8AFF",
+                  fontWeight: 600,
+                  ml: `${marginLeftOfTitle}`,
+                }}
+              >
+                {t("Table")} {t("Represents")} {t("Area")} in meter square(m²)
+              </Typography>
+            ) : null}
 
             {showCloseButton ? (
               <Tooltip placement="top-end" title={t("Close")}>
@@ -180,5 +183,6 @@ export default function TableMeasuringsForMap({
 TableMeasuringsForMap.propTypes = {
   width: PropTypes.number,
   showCloseButton: PropTypes.bool,
+  showHeading: PropTypes.bool,
   marginLeftOfTitle: PropTypes.number,
 };
