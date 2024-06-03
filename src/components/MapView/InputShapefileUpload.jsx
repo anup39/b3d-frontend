@@ -110,7 +110,7 @@ export default function InputShapefileUpload({
 
     axios
       .post(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/api/upload-geojson/`,
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/upload-geojson/`,
         formData
       )
       .then((res) => {
