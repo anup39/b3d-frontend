@@ -205,6 +205,7 @@ export default function Field() {
               typeOfElement === "Url" ? (
                 <Grid item xs={12}>
                   <TextField
+                    disabled
                     type={typeOfElement === "Number" ? "number" : "text"}
                     required
                     fullWidth
@@ -219,6 +220,7 @@ export default function Field() {
               {typeOfElement === "Checkbox" ? (
                 <Grid item xs={12}>
                   <Checkbox
+                    disabled
                     id="checkbox-input"
                     label={t("Value")}
                     name="checkbox-input"
@@ -241,6 +243,7 @@ export default function Field() {
                   >
                     {" "}
                     <select
+                      // disabled
                       required
                       value={selectedOption}
                       onChange={handleSelectChange}
@@ -249,7 +252,12 @@ export default function Field() {
                         --select an option--
                       </option>
                       {options.map((option, index) => (
-                        <option key={index} value={option.value} id={option.id}>
+                        <option
+                          disabled
+                          key={index}
+                          value={option.value}
+                          id={option.id}
+                        >
                           {option.value}
                         </option>
                       ))}
