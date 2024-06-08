@@ -5,14 +5,19 @@ import axios from "axios";
 import AppBar from "../components/Common/AppBar";
 import ClientCard from "../components/Client/ClientCard";
 import ClientForm from "../components/Client/ClientForm";
+import { useGetClientsQuery } from "../api/clientApi";
 
 export default function Clients() {
   const dispatch = useDispatch();
-  const clients = useSelector((state) => state.client.clients);
+  // const clients = useSelector((state) => state.client.clients);
   // const user_id = useSelector((state) => state.auth.user_id);
   const permissions = useSelector((state) => state.auth.role.permissions);
   const group_name = useSelector((state) => state.auth.role.group_name);
   const client = useSelector((state) => state.auth.role.client);
+
+  const { data: clients } = useGetClientsQuery();
+
+  console.log("clients", clients);
 
   useEffect(() => {
     if (group_name === "super_admin") {
