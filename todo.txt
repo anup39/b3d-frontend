@@ -40,12 +40,3 @@ November 17 TODO:
 9) While creating user only super admin can create role of super_admin --- not done
 10) Delete user user role is delete , user is_active false but disable for login user both things
 
-Make new changes in the server and client as per the above mentioned points and let me know if you have any changes in the server
-Time square
-next level
-
-
-Testing the results of the server and client and application
-Testing able
-testing the application
-fixing the results 
