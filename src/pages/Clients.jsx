@@ -15,30 +15,32 @@ export default function Clients() {
   const group_name = useSelector((state) => state.auth.role.group_name);
   const client = useSelector((state) => state.auth.role.client);
 
-  const { data: clients } = useGetClientsQuery();
+  // console.log("clients", clients);
 
-  console.log("clients", clients);
+  const { data: clients } = useGetClientsQuery(client);
 
-  useEffect(() => {
-    if (group_name === "super_admin") {
-      console.log("group", group_name);
-      axios
-        .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, {})
-        .then((res) => {
-          dispatch(setclients(res.data));
-        });
-    } else {
-      client &&
-        axios
-          .get(
-            `${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${client}/`,
-            {}
-          )
-          .then((res) => {
-            dispatch(setclients([res.data]));
-          });
-    }
-  }, [dispatch, group_name, client]);
+  console.log(clients, "clients");
+
+  // useEffect(() => {
+  //   if (group_name === "super_admin") {
+  //     console.log("group", group_name);
+  //     axios
+  //       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, {})
+  //       .then((res) => {
+  //         dispatch(setclients(res.data));
+  //       });
+  //   } else {
+  //     client &&
+  //       axios
+  //         .get(
+  //           `${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${client}/`,
+  //           {}
+  //         )
+  //         .then((res) => {
+  //           dispatch(setclients([res.data]));
+  //         });
+  //   }
+  // }, [dispatch, group_name, client]);
 
   return (
     <div>
