@@ -20,6 +20,7 @@ import SubInspection from "./reducers/SubInspection";
 import Inspections from "./reducers/Inspections";
 import EditClassification from "./reducers/EditClassification";
 import { projectApi } from "./api/projectApi";
+import { clientApi } from "./api/clientApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 export const store = configureStore({
@@ -45,9 +46,13 @@ export const store = configureStore({
     inspections: Inspections,
     editClassification: EditClassification,
     [projectApi.reducerPath]: projectApi.reducer,
+    [clientApi.reducerPath]: clientApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(projectApi.middleware),
+    getDefaultMiddleware().concat(
+      projectApi.middleware as any,
+      clientApi.middleware as any
+    ),
 });
 
 setupListeners(store.dispatch);
