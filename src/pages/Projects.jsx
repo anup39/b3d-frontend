@@ -20,12 +20,13 @@ export default function Projects() {
   const { client_id, view } = useParams();
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.project.projects);
-
   const group_name = useSelector((state) => state.auth.role.group_name);
   const projects_ = useSelector((state) => state.auth.role.project);
   console.log("projects_", projects_);
   console.log("group_name", group_name);
   // console.log("projects", projects);
+
+  // const { data: projects } = useGetProjectsQuery(client);
 
   useEffect(() => {
     if (
