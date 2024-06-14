@@ -20,6 +20,7 @@ import InputFileUpload from "./InputFileUpload";
 import maplibregl from "maplibre-gl";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import { v4 as uuidv4 } from "uuid";
 
 export default function UploadPropertyForm() {
   const { t } = useTranslation();
@@ -75,7 +76,7 @@ export default function UploadPropertyForm() {
     setImage(value);
   };
 
-  const handleCreateProperty = (event) => {
+  const handleCreateProperty = async (event) => {
     event.preventDefault();
     setLoading(true);
 
@@ -89,7 +90,6 @@ export default function UploadPropertyForm() {
     formData.append("screenshot_image", blob_, "image.png");
     formData.append("file_size", uploadedFile.size);
     formData.append("projection", projection);
-    formData.append("tif_file", uploadedFile);
     formData.append("file_name", fileName);
     formData.append("created_by", user_id);
 
@@ -97,56 +97,84 @@ export default function UploadPropertyForm() {
 
     dispatch(setshowProgressFormOpen(true));
 
-    axios
-      .post(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/`,
-        formData,
-        {
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            dispatch(setProgress(percentCompleted));
-          },
-        }
-      )
-      .then(() => {
-        dispatch(setshowProgressFormOpen(false));
-        dispatch(setProgress(0));
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(
-          settoastMessage(
-            `${t("Successfully")}  ${t("Created")} ${t("Property")} ${t(
-              "Map"
-            )}  `
-          )
+    const CHUNK_SIZE = 1000000; // Size of chunks (1MB)
+    const SIZE = uploadedFile.size;
+    const CHUNKS_COUNT = Math.ceil(SIZE / CHUNK_SIZE);
+    let currentChunk = 1;
+
+    // Generate a UUID
+    const uuid = uuidv4();
+
+    try {
+      for (let i = 0; i < CHUNKS_COUNT; i++) {
+        const start = i * CHUNK_SIZE;
+        const end = (i + 1) * CHUNK_SIZE < SIZE ? (i + 1) * CHUNK_SIZE : SIZE;
+        const chunk = uploadedFile.slice(start, end);
+
+        const chunkFormData = new FormData();
+        chunkFormData.append("tif_file", chunk);
+        chunkFormData.append("chunk_number", currentChunk++);
+        chunkFormData.append("total_chunks", CHUNKS_COUNT);
+        chunkFormData.append("uuid", uuid);
+        chunkFormData.append("client", client_id_property);
+        chunkFormData.append("project", project_id_property);
+        chunkFormData.append("name", nameInput.value);
+        chunkFormData.append("status", "Uploaded");
+        chunkFormData.append("screenshot_image", blob_, "image.png");
+        chunkFormData.append("file_size", uploadedFile.size);
+        chunkFormData.append("projection", projection);
+        chunkFormData.append("file_name", fileName);
+        chunkFormData.append("created_by", user_id);
+
+        await axios.post(
+          `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/`,
+          chunkFormData,
+          {
+            onUploadProgress: (progressEvent) => {
+              const percentCompleted = Math.round(
+                (currentChunk / CHUNKS_COUNT) * 100
+              );
+
+              dispatch(setProgress(percentCompleted));
+            },
+          }
         );
-        dispatch(settoastType("success"));
-        closeForm();
-        axios
-          .get(
-            `${
-              import.meta.env.VITE_API_DASHBOARD_URL
-            }/raster-data/?project=${client_id_property}`
-          )
-          .then((res) => {
-            dispatch(setproperties(res.data));
-          });
-      })
-      .catch(() => {
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(
-          settoastMessage(
-            `${t("Failed")}  ${t("To")} ${t("Create")} ${t("Property")}  ${t(
-              "Map"
-            )} `
-          )
-        );
-        dispatch(settoastType("error"));
-        closeForm();
-      });
+      }
+
+      // After all chunks uploaded
+      dispatch(setshowProgressFormOpen(false));
+      dispatch(setProgress(0));
+      setLoading(false);
+      dispatch(setshowToast(true));
+      dispatch(
+        settoastMessage(
+          `${t("Successfully")}  ${t("Created")} ${t("Property")} ${t("Map")}  `
+        )
+      );
+      dispatch(settoastType("success"));
+      closeForm();
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/raster-data/?project=${client_id_property}`
+        )
+        .then((res) => {
+          dispatch(setproperties(res.data));
+        });
+    } catch (error) {
+      setLoading(false);
+      dispatch(setshowToast(true));
+      dispatch(
+        settoastMessage(
+          `${t("Failed")}  ${t("To")} ${t("Create")} ${t("Property")}  ${t(
+            "Map"
+          )} `
+        )
+      );
+      dispatch(settoastType("error"));
+      closeForm();
+    }
   };
 
   useEffect(() => {
