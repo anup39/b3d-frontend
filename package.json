@@ -60,7 +60,8 @@
     "sass": "^1.63.6",
     "slick-carousel": "^1.8.1",
     "three": "^0.160.0",
-    "use-image": "^1.1.1"
+    "use-image": "^1.1.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",
