@@ -57,7 +57,7 @@ export default function PropertyCard({
 
   const wmts_url = `${
     import.meta.env.VITE_API_RASTER_URL
-  }/${id}/ows/?SERVICE=WMTS&REQUEST=GetCapabilites`;
+  }/${id}/ows/?SERVICE=WMTS&REQUEST=GetCapabilities`;
 
   return (
     <Paper
