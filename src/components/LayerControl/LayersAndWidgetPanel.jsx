@@ -254,6 +254,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                     sx={{
                       "&:hover": { cursor: "pointer" },
                       mt: 1,
+                      mr: 1,
                       color: "#d61b60",
                     }}
                   />
