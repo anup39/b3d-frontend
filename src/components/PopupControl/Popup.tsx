@@ -470,6 +470,8 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
         });
     }
   };
+
+  console.log(options, "options");
   return (
     <>
       {properties ? (
@@ -488,7 +490,12 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                   disablePortal
                   id="autocomplete-category"
                   options={options}
-                  getOptionLabel={(option) => option.name}
+                  getOptionLabel={(option) =>
+                    option.sub_category_name.charAt(0).toUpperCase() +
+                    option.sub_category_name.slice(1) +
+                    " | " +
+                    option.name
+                  }
                   sx={{ width: 200 }}
                   value={value}
                   onChange={(event: any, newValue: string | null) => {
