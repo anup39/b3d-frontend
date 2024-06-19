@@ -25,6 +25,7 @@ import {
   setdeleteTarget,
 } from "../../reducers/DisplaySettings";
 import { fetchTifDataByProjectId } from "../../api/api";
+import ProjectEditForm from "./ProjectEditForm";
 
 // import {
 //   setdeleteId,
@@ -47,6 +48,7 @@ export default function ProjectCard({
   const [properties, setproperties] = useState([]);
   const [users, setusers] = useState([]);
   const group_name = useSelector((state) => state.auth.role.group_name);
+  const [showProjectEditForm, setShowProjectEditForm] = useState(false);
 
   console.log(url, "url in project card");
 
@@ -58,6 +60,10 @@ export default function ProjectCard({
   // const handleManageUsers = () => {
   //   navigate(`/manage-users/${id}`);
   // };
+
+  const onFormOpen = (value) => {
+    setShowProjectEditForm(value);
+  };
 
   const handleDeleteProject = () => {
     fetchTifDataByProjectId(id).then((res) => {
@@ -78,6 +84,10 @@ export default function ProjectCard({
         dispatch(setdeleteTarget("projects"));
       }
     });
+  };
+
+  const handleEditProject = () => {
+    setShowProjectEditForm(true);
   };
 
   const handleInspection = () => {
@@ -116,87 +126,98 @@ export default function ProjectCard({
   };
 
   return (
-    <Paper
-      sx={{
-        p: 1,
-        margin: 1,
-        // maxWidth: 500,
-        flexGrow: 1,
-        backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-      }}
-    >
-      <Grid container spacing={2}>
-        <Grid item>
-          <FolderIcon sx={{ width: 128, height: 128, color: "#65C9FF" }} />
-        </Grid>
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
-            <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {name}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                {description}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                {t("Client") + " " + t("Name")} : {client_name}
-              </Typography>
-              <span>
-                <label>{t("ThreeDurl")} : </label>
-              </span>
-              {url !== "" ? (
-                <input disabled={true} style={{ width: 500 }} value={url} />
-              ) : (
-                <span>{t("Not") + " " + t("Added") + " " + t("Yet")}</span>
-              )}
-            </Grid>
-            <Grid item xs container direction="row" spacing={1}>
-              <Grid item>
-                <Tooltip title={t("Map") + " " + t("View")}>
-                  <MapIcon
-                    onClick={handleViewInMap}
-                    sx={{ "&:hover": { cursor: "pointer" } }}
-                  />
-                </Tooltip>
+    <>
+      {showProjectEditForm ? (
+        <ProjectEditForm
+          client_id={client_id}
+          project_id={id}
+          name={name}
+          description={description}
+          onFormOpen={onFormOpen}
+        ></ProjectEditForm>
+      ) : null}
+
+      <Paper
+        sx={{
+          p: 1,
+          margin: 1,
+          // maxWidth: 500,
+          flexGrow: 1,
+          backgroundColor: (theme) =>
+            theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item>
+            <FolderIcon sx={{ width: 128, height: 128, color: "#65C9FF" }} />
+          </Grid>
+          <Grid item xs={12} sm container>
+            <Grid item xs container direction="column" spacing={2}>
+              <Grid item xs>
+                <Typography gutterBottom variant="subtitle1" component="div">
+                  {name}
+                </Typography>
+                <Typography variant="body2" gutterBottom>
+                  {description}
+                </Typography>
+                <Typography variant="body2" gutterBottom>
+                  {t("Client") + " " + t("Name")} : {client_name}
+                </Typography>
+                <span>
+                  <label>{t("ThreeDurl")} : </label>
+                </span>
+                {url !== "" ? (
+                  <input disabled={true} style={{ width: 500 }} value={url} />
+                ) : (
+                  <span>{t("Not") + " " + t("Added") + " " + t("Yet")}</span>
+                )}
               </Grid>
-              <Grid item>
-                {/* <Tooltip title="Inspection">
+              <Grid item xs container direction="row" spacing={1}>
+                <Grid item>
+                  <Tooltip title={t("Map") + " " + t("View")}>
+                    <MapIcon
+                      onClick={handleViewInMap}
+                      sx={{ "&:hover": { cursor: "pointer" } }}
+                    />
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  {/* <Tooltip title="Inspection">
                   <RoofingIcon
                     onClick={handleInspection}
                     sx={{ "&:hover": { cursor: "pointer" } }}
                   />
                 </Tooltip> */}
-              </Grid>
-              {group_name === "super_admin" || group_name === "admin" ? (
-                <>
-                  {" "}
-                  <Grid item>
-                    <Tooltip title={t("ThreeDurl")}>
-                      <Button
-                        variant="contained"
-                        onClick={handleEditURL}
-                        sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
-                      >
-                        {t("ThreeDurl")}
-                      </Button>
-                    </Tooltip>
-                  </Grid>
-                  <Grid item>
-                    <Tooltip title={t("Indoor")}>
-                      <Button
-                        variant="contained"
-                        onClick={handleIndoor}
-                        sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
-                      >
-                        {t("Indoor")}
-                      </Button>
-                    </Tooltip>
-                  </Grid>
-                </>
-              ) : null}
+                </Grid>
+                {group_name === "super_admin" || group_name === "admin" ? (
+                  <>
+                    {" "}
+                    <Grid item>
+                      <Tooltip title={t("ThreeDurl")}>
+                        <Button
+                          variant="contained"
+                          onClick={handleEditURL}
+                          sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
+                        >
+                          {t("ThreeDurl")}
+                        </Button>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip title={t("Indoor")}>
+                        <Button
+                          variant="contained"
+                          onClick={handleIndoor}
+                          sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
+                        >
+                          {t("Indoor")}
+                        </Button>
+                      </Tooltip>
+                    </Grid>
+                  </>
+                ) : null}
 
-              {/* <Grid item>
+                {/* <Grid item>
                 <button
                   disabled
                   className="btn-main"
@@ -205,48 +226,64 @@ export default function ProjectCard({
                   Manage Users
                 </button>
               </Grid> */}
-              <Grid item>
-                <Button
-                  sx={{
-                    p: 0,
-                    backgroundColor: "red",
-                    color: "white",
-                    "&:hover": {
-                      cursor: "pointer",
-                      backgroundColor: "#2265C0",
-                    },
-                  }}
-                  onClick={handleDeleteProject}
-                >
-                  Delete
-                </Button>
+                <Grid item>
+                  <Button
+                    sx={{
+                      p: 0,
+                      backgroundColor: "red",
+                      color: "white",
+                      "&:hover": {
+                        cursor: "pointer",
+                        backgroundColor: "#2265C0",
+                      },
+                    }}
+                    onClick={handleDeleteProject}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    sx={{
+                      marginLeft: "10px",
+                      p: 0,
+                      backgroundColor: "red",
+                      color: "white",
+                      "&:hover": {
+                        cursor: "pointer",
+                        backgroundColor: "#2265C0",
+                      },
+                    }}
+                    onClick={handleEditProject}
+                  >
+                    Edit
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-          <Grid item xs>
-            <Typography variant="body2" color="text.secondary">
-              {`${t("Total")}  ${t("Maps")}`}: {properties.length}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {/* Total Users: {users.length} */}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Button
-              sx={{ marginTop: "25px" }}
-              variant="contained"
-              color="success"
-              id="orthoButton"
-              onClick={() => {
-                navigate(`/properties/${client_id}/${id}/List`);
-              }}
-            >
-              {`${t("Manage")}  ${t("Maps")}`}
-            </Button>
+            <Grid item xs>
+              <Typography variant="body2" color="text.secondary">
+                {`${t("Total")}  ${t("Maps")}`}: {properties.length}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {/* Total Users: {users.length} */}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button
+                sx={{ marginTop: "25px" }}
+                variant="contained"
+                color="success"
+                id="orthoButton"
+                onClick={() => {
+                  navigate(`/properties/${client_id}/${id}/List`);
+                }}
+              >
+                {`${t("Manage")}  ${t("Maps")}`}
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    </Paper>
+      </Paper>
+    </>
   );
 }
 
