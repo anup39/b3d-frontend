@@ -7,7 +7,7 @@ const initialState = {
   showDeletePopup: false,
   deletePopupMessage: "Are you sure you want to delete?",
   deleteId: null,
-  deleteTarget: "",
+  deleteTarget: null,
   showGeomFormPopup: "none",
   showErrorPopup: false,
   errorMessage: "There is an error",
