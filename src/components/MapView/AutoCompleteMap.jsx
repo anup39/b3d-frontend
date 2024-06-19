@@ -56,7 +56,12 @@ export default function AutoCompleteMap({
       disableClearable
       id="autocomplete-upload-category"
       options={options}
-      getOptionLabel={(option) => option.name}
+      getOptionLabel={(option) =>
+        option.sub_category_name.charAt(0).toUpperCase() +
+        option.sub_category_name.slice(1) +
+        " | " +
+        option.name
+      }
       sx={{ width: 400, fontFamily: "Roboto", fontSize: "7px" }}
       value={value}
       renderInput={(params) => (
