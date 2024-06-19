@@ -18,6 +18,13 @@ import {
   setEditIndoorProjectId,
 } from "../../reducers/Project";
 import { useTranslation } from "react-i18next";
+import {
+  setdeleteId,
+  setshowDeletePopup,
+  setdeletePopupMessage,
+  setdeleteTarget,
+} from "../../reducers/DisplaySettings";
+import { fetchTifDataByProjectId } from "../../api/api";
 
 // import {
 //   setdeleteId,
@@ -52,16 +59,26 @@ export default function ProjectCard({
   //   navigate(`/manage-users/${id}`);
   // };
 
-  // const handleDeleteProject = () => {
-  //   dispatch(setshowDeletePopup(true));
-  //   dispatch(setdeleteId(id));
-  //   dispatch(setdeleteTarget("projects"));
-  //   dispatch(
-  //     setdeletePopupMessage(
-  //       `Are you sure you want to delete Project ${id} and its content?`
-  //     )
-  //   );
-  // };
+  const handleDeleteProject = () => {
+    fetchTifDataByProjectId(id).then((res) => {
+      console.log(res, "res.data");
+      if (res.length > 0) {
+        dispatch(setshowDeletePopup(true));
+        dispatch(setdeleteId(null));
+        dispatch(setdeleteTarget(null));
+        dispatch(
+          setdeletePopupMessage(
+            `You cannot delete this Project when there is map?`
+          )
+        );
+      } else {
+        dispatch(setshowDeletePopup(true));
+        dispatch(setdeletePopupMessage("Are you sure you want to delete?"));
+        dispatch(setdeleteId(id));
+        dispatch(setdeleteTarget("projects"));
+      }
+    });
+  };
 
   const handleInspection = () => {
     navigate(`/projects/${client_id}/inspections/${id}`);
@@ -188,11 +205,22 @@ export default function ProjectCard({
                   Manage Users
                 </button>
               </Grid> */}
-              {/* <Grid item> */}
-              {/* <button className="btn-main" onClick={handleDeleteProject}>
+              <Grid item>
+                <Button
+                  sx={{
+                    p: 0,
+                    backgroundColor: "red",
+                    color: "white",
+                    "&:hover": {
+                      cursor: "pointer",
+                      backgroundColor: "#2265C0",
+                    },
+                  }}
+                  onClick={handleDeleteProject}
+                >
                   Delete
-                </button> */}
-              {/* </Grid> */}
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
           <Grid item xs>

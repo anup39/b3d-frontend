@@ -93,6 +93,7 @@ export default function DeletePopup() {
               </Grid>
               <Grid item xs={12}>
                 <Button
+                  disabled={deleteId === null || deleteTarget === null}
                   type="submit"
                   fullWidth
                   variant={loading ? "outlined" : "contained"}
