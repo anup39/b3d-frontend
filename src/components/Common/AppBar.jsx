@@ -43,8 +43,8 @@ function Appbar() {
 
   const { username } = useSelector((state) => state.auth);
 
-  const role = useSelector((state) => state.auth.role);
-  const group_name = useSelector((state) => state.auth.role.group_name);
+  const role = useSelector((state) => state.auth?.role);
+  const group_name = useSelector((state) => state.auth?.role?.group_name);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);

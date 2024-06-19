@@ -75,69 +75,69 @@ export default function Login() {
   };
 
   return (
-    // <ThemeProvider theme={defaultTheme}>
-    // <Container component="main" maxWidth="xs">
-    // <CssBaseline />
-    <Box
-      sx={{
-        marginTop: 8,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <LanguageSwitcher />
-      <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-        <LockOutlinedIcon />
-      </Avatar>
-      <Typography component="h1" variant="h5">
-        {t("Login")}
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="email"
-          label={t("Username")}
-          name="username"
-          autoComplete="username"
-          autoFocus
-        />
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          name="password"
-          label={t("Password")}
-          type="password"
-          id="password"
-          autoComplete="current-password"
-        />
-        {/* <FormControlLabel
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <LanguageSwitcher />
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            {t("Login")}
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label={t("Username")}
+              name="username"
+              autoComplete="username"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label={t("Password")}
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label={t("Remember")}
             /> */}
-        <Button
-          type="submit"
-          fullWidth
-          variant={loading ? "outlined" : "contained"}
-          sx={{ mt: 3, mb: 2 }}
-        >
-          {loading ? null : t("Login")}
-          {loading ? <CircularProgress /> : null}
-        </Button>
-        <Grid container>
-          {/* <Grid item xs>
+            <Button
+              type="submit"
+              fullWidth
+              variant={loading ? "outlined" : "contained"}
+              sx={{ mt: 3, mb: 2 }}
+            >
+              {loading ? null : t("Login")}
+              {loading ? <CircularProgress /> : null}
+            </Button>
+            <Grid container>
+              {/* <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
               </Grid> */}
-        </Grid>
-      </form>
-    </Box>
-
-    //   </Container>
-    // </ThemeProvider>
+            </Grid>
+          </form>
+        </Box>
+        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
+      </Container>
+    </ThemeProvider>
   );
 }

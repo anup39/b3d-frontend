@@ -3,14 +3,45 @@ import AppBar from "../components/Common/AppBar";
 import ClientCard from "../components/Client/ClientCard";
 import ClientForm from "../components/Client/ClientForm";
 import { useGetClientsQuery } from "../api/clientApi";
+import { useState, useEffect } from "react";
+import { CircularProgress, Typography, Box } from "@mui/material";
 
 export default function Clients() {
   // const user_id = useSelector((state) => state.auth.user_id);
-  const permissions = useSelector((state) => state.auth.role.permissions);
+  const permissions = useSelector((state) => state.auth?.role?.permissions);
   // const group_name = useSelector((state) => state.auth.role.group_name);
-  const client = useSelector((state) => state.auth.role.client);
+  const client = useSelector((state) => state.auth?.role?.client);
+  const [loading, setLoading] = useState(true);
 
   const { data: clients } = useGetClientsQuery(client);
+  useEffect(() => {
+    if (permissions) {
+      setLoading(false);
+    }
+  }, [permissions]);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress></CircularProgress>
+          <Typography>Loading</Typography>
+        </Box>
+      </Box>
+    ); // or your loading spinner
+  }
 
   return (
     <div>
