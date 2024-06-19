@@ -103,7 +103,7 @@ export default function Projects() {
           {projects.length === 0 ? (
             <Box
               sx={{
-                position: "absolute",
+                position: "fixed",
                 top: "50%",
                 left: "50%",
               }}
