@@ -48,6 +48,7 @@ export default function ClientCard({ id, name, description }) {
 
   const handleOpenClient = () => {
     navigate(`/projects/${id}/List`);
+    dispatch(setprojects([]));
   };
 
   const handleDeleteClient = () => {

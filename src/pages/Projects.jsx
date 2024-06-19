@@ -6,7 +6,7 @@ import AppBar from "../components/Common/AppBar";
 import ProjectCard from "../components/Project/ProjectCard";
 import ProjectForm from "../components/Project/ProjectForm";
 import MapView from "../components/MapView/MapView";
-import { Box } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { setClientDetail } from "../reducers/Client";
 import {
   fetchClientDetailsByClientId,
@@ -100,9 +100,29 @@ export default function Projects() {
               </>
             ) : null}
           </Box>
+          {projects.length === 0 ? (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <CircularProgress></CircularProgress>
+                <Typography>Loading</Typography>
+              </Box>
+            </Box>
+          ) : null}
 
           <div>
-            {projects
+            {projects && projects.length > 0
               ? projects.map((project) => (
                   <ProjectCard
                     key={project.id}
