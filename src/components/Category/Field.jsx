@@ -244,7 +244,7 @@ export default function Field() {
                     {" "}
                     <select
                       // disabled
-                      required
+                      // required
                       value={selectedOption}
                       onChange={handleSelectChange}
                     >

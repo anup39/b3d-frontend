@@ -41,6 +41,8 @@ export default function CategoryCard({
   //     });
   // }, [id]);
 
+  console.log("extra_fields", extra_fields);
+
   return (
     <Paper
       sx={{
@@ -127,9 +129,7 @@ export default function CategoryCard({
                     switch (field.type) {
                       case "Text":
                         return (
-                          <Typography key={index}>
-                            {field.label}: {field.value}
-                          </Typography>
+                          <Typography key={index}>{field.label}</Typography>
                         );
                       case "Checkbox":
                         return (
@@ -141,12 +141,12 @@ export default function CategoryCard({
                               alignItems: "center",
                             }}
                           >
-                            <Typography>{field.label}:</Typography>
-                            <input
+                            <Typography>{field.label}</Typography>
+                            {/* <input
                               type="checkbox"
                               checked={field.value}
                               disabled
-                            />
+                            /> */}
                           </Box>
                         );
                       case "Url":
@@ -159,17 +159,15 @@ export default function CategoryCard({
                               alignItems: "center",
                             }}
                           >
-                            <Typography>{field.label}:</Typography>
-                            <Link href={field.value} target="_blank">
+                            <Typography>{field.label}</Typography>
+                            {/* <Link href={field.value} target="_blank">
                               {field.value}
-                            </Link>
+                            </Link> */}
                           </Box>
                         );
                       case "Number":
                         return (
-                          <Typography key={index}>
-                            {field.label}: {field.value}
-                          </Typography>
+                          <Typography key={index}>{field.label}</Typography>
                         );
                       case "Dropdown":
                         return (
@@ -181,8 +179,8 @@ export default function CategoryCard({
                               alignItems: "center",
                             }}
                           >
-                            <Typography>{field.label}:</Typography>
-                            {field.value && field.value.length > 0
+                            <Typography>{field.label}</Typography>
+                            {/* {field.value && field.value.length > 0
                               ? field.value.map((item, index) => {
                                   return item.selected ? (
                                     <Typography key={index}>
@@ -190,7 +188,7 @@ export default function CategoryCard({
                                     </Typography>
                                   ) : null;
                                 })
-                              : null}
+                              : null} */}
                           </Box>
                         );
 
