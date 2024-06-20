@@ -41,8 +41,11 @@ export default function Projects() {
             openProperties: false,
           };
         });
-
-        dispatch(setprojects(updatedProjects));
+        if (updatedProjects.length > 0) {
+          dispatch(setprojects(updatedProjects));
+        } else {
+          dispatch(setprojects(null));
+        }
       });
     }
 
@@ -60,8 +63,11 @@ export default function Projects() {
               openProperties: false,
             };
           });
-
-          dispatch(setprojects(updatedProjects));
+          if (updatedProjects.length > 0) {
+            dispatch(setprojects(updatedProjects));
+          } else {
+            dispatch(setprojects(null));
+          }
         });
       }
     }
@@ -100,7 +106,20 @@ export default function Projects() {
               </>
             ) : null}
           </Box>
-          {projects.length === 0 ? (
+
+          {!projects ? (
+            <Box
+              sx={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+              }}
+            >
+              <Typography>No Properties</Typography>
+            </Box>
+          ) : null}
+
+          {projects && projects.length === 0 ? (
             <Box
               sx={{
                 position: "fixed",

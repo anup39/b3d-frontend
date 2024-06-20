@@ -4,7 +4,7 @@ import { set } from "lodash";
 const initialState = {
   project_id: null,
   current_project_name: null,
-  projects: [],
+  projects: null,
   originalProjects: [],
   openEditProjectForm: false,
   editProjectId: null,
