@@ -254,10 +254,11 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                     sx={{
                       "&:hover": { cursor: "pointer" },
                       mt: 1,
+                      mr: 1,
                       color: "#d61b60",
                     }}
                   />
-                  <span
+                  {/* <span
                     style={{
                       marginTop: "10px",
                       padding: 2,
@@ -267,7 +268,7 @@ export default function LayersAndWidgetControl({ map, popUpRef }) {
                     }}
                   >
                     {t("Report")}
-                  </span>
+                  </span> */}
                 </>
               ) : null}
 

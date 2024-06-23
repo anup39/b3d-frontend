@@ -339,7 +339,7 @@ export default function LayersPanel({ map, popUpRef }) {
                       fontWeight: 900,
                     },
                   }}
-                  label={sd.label}
+                  label={sd.label.charAt(0).toUpperCase() + sd.label.slice(1)}
                   control={
                     <Checkbox
                       size="small"
@@ -389,7 +389,9 @@ export default function LayersPanel({ map, popUpRef }) {
                         fontWeight: 900,
                       },
                     }}
-                    label={sub.label}
+                    label={
+                      sub.label.charAt(0).toUpperCase() + sub.label.slice(1)
+                    }
                     control={
                       <Checkbox
                         size="small"
@@ -427,7 +429,9 @@ export default function LayersPanel({ map, popUpRef }) {
                             fontWeight: 900,
                           },
                         }}
-                        label={cat.label}
+                        label={
+                          cat.label.charAt(0).toUpperCase() + cat.label.slice(1)
+                        }
                         control={
                           <Checkbox
                             sx={{

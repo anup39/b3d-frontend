@@ -32,20 +32,15 @@ export default function DeletePopup() {
     event.preventDefault();
     setLoading(true);
     axios
-      .patch(
-        `${
-          import.meta.env.VITE_API_DASHBOARD_URL
-        }/${deleteTarget}/${deleteId}/`,
-        {
-          is_deleted: true,
-        }
+      .delete(
+        `${import.meta.env.VITE_API_DASHBOARD_URL}/${deleteTarget}/${deleteId}/`
       )
       .then(() => {
         setLoading(false);
         dispatch(setshowDeletePopup(false));
         dispatch(setdeletePopupMessage("Are you sure you want to delete?"));
         dispatch(setdeleteId(null));
-        dispatch(setdeleteTarget(""));
+        dispatch(setdeleteTarget(null));
         dispatch(setshowToast(true));
         dispatch(settoastMessage(`Successfully Deleted  ${deleteId}`));
         dispatch(settoastType("success"));
@@ -98,6 +93,7 @@ export default function DeletePopup() {
               </Grid>
               <Grid item xs={12}>
                 <Button
+                  disabled={deleteId === null || deleteTarget === null}
                   type="submit"
                   fullWidth
                   variant={loading ? "outlined" : "contained"}
@@ -111,6 +107,11 @@ export default function DeletePopup() {
                 <Button
                   onClick={() => {
                     dispatch(setshowDeletePopup(false));
+                    dispatch(
+                      setdeletePopupMessage("Are you sure you want to delete?")
+                    );
+                    dispatch(setdeleteId(null));
+                    dispatch(setdeleteTarget(null));
                   }}
                   variant="contained"
                   color="error"

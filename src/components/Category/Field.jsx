@@ -23,6 +23,7 @@ import { setCategorys } from "../../reducers/Category";
 import { Delete } from "@mui/icons-material";
 
 export default function Field() {
+  console.log("in field");
   const [checkedBox, setCheckedBox] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -92,6 +93,22 @@ export default function Field() {
         data
       )
       .then(() => {
+        // Here update all  the annotations with new extra fields related to this category
+        axios
+          .post(
+            `${import.meta.env.VITE_API_DASHBOARD_URL}/update-extra-fields/`,
+            {
+              user_id: user_id,
+              category_edit_data: categoryEditData,
+              extra_fields: { data: newData },
+            }
+          )
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         setLoading(false);
         dispatch(setshowToast(true));
         dispatch(settoastMessage(`${t("Successfully")} ${t("Created")}`));
@@ -244,7 +261,7 @@ export default function Field() {
                     {" "}
                     <select
                       // disabled
-                      required
+                      // required
                       value={selectedOption}
                       onChange={handleSelectChange}
                     >

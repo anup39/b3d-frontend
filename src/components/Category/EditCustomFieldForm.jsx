@@ -192,7 +192,7 @@ export default function EditCustomFieldForm() {
                                 }}
                               >
                                 <TextField
-                                  sx={{ width: "59%" }}
+                                  sx={{ width: "100%" }}
                                   size="small"
                                   required
                                   label={t("Label")}
@@ -205,21 +205,6 @@ export default function EditCustomFieldForm() {
                                       e.target.value
                                     )
                                   }
-                                />
-                                <TextField
-                                  sx={{ width: "59%" }}
-                                  size="small"
-                                  required
-                                  label={t("Value")}
-                                  name="value"
-                                  defaultValue={field.value}
-                                  onChange={(e) => {
-                                    handleFieldChange(
-                                      index,
-                                      "value",
-                                      e.target.value
-                                    );
-                                  }}
                                 />
                               </Box>
 
@@ -261,7 +246,7 @@ export default function EditCustomFieldForm() {
                                 }}
                               >
                                 <TextField
-                                  sx={{ width: "48%" }}
+                                  sx={{ width: "100%" }}
                                   size="small"
                                   required
                                   label={t("Label")}
@@ -274,18 +259,6 @@ export default function EditCustomFieldForm() {
                                       e.target.value
                                     )
                                   }
-                                />
-                                <input
-                                  style={{ width: "5%" }}
-                                  onChange={(e) => {
-                                    handleFieldChange(
-                                      index,
-                                      "value",
-                                      e.target.checked
-                                    );
-                                  }}
-                                  type="checkbox"
-                                  defaultChecked={field.value}
                                 />
                               </Box>
                               <span>
@@ -326,7 +299,7 @@ export default function EditCustomFieldForm() {
                                 }}
                               >
                                 <TextField
-                                  sx={{ width: "59%" }}
+                                  sx={{ width: "100%" }}
                                   size="small"
                                   required
                                   label={t("Label")}
@@ -336,22 +309,6 @@ export default function EditCustomFieldForm() {
                                     handleFieldChange(
                                       index,
                                       "label",
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                                <input
-                                  style={{ width: "59%" }}
-                                  type="url"
-                                  size="small"
-                                  required
-                                  label={t("Value")}
-                                  name="value"
-                                  defaultValue={field.value}
-                                  onChange={(e) =>
-                                    handleFieldChange(
-                                      index,
-                                      "value",
                                       e.target.value
                                     )
                                   }
@@ -395,7 +352,7 @@ export default function EditCustomFieldForm() {
                                 }}
                               >
                                 <TextField
-                                  sx={{ width: "59%" }}
+                                  sx={{ width: "100%" }}
                                   size="small"
                                   required
                                   label={t("Label")}
@@ -405,22 +362,6 @@ export default function EditCustomFieldForm() {
                                     handleFieldChange(
                                       index,
                                       "label",
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                                <TextField
-                                  sx={{ width: "59%" }}
-                                  type="number"
-                                  size="small"
-                                  required
-                                  label={t("Value")}
-                                  name="value"
-                                  defaultValue={field.value}
-                                  onChange={(e) =>
-                                    handleFieldChange(
-                                      index,
-                                      "value",
                                       e.target.value
                                     )
                                   }
@@ -466,7 +407,7 @@ export default function EditCustomFieldForm() {
                                   }}
                                 >
                                   <TextField
-                                    sx={{ width: "59%" }}
+                                    sx={{ width: "100%" }}
                                     size="small"
                                     required
                                     label={t("Label")}
@@ -480,46 +421,6 @@ export default function EditCustomFieldForm() {
                                       )
                                     }
                                   />
-                                </Box>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <select
-                                    style={{
-                                      width: 105,
-                                      padding: "2px",
-                                      border: "1px solid #000",
-                                      borderRadius: "5px",
-                                    }}
-                                    required
-                                    onChange={(event) =>
-                                      handleSelectChange(index, "value", event)
-                                    }
-                                    value={
-                                      field.value.find(
-                                        (option) => option?.selected
-                                      )?.value
-                                        ? field.value?.find(
-                                            (option) => option?.selected
-                                          )?.value
-                                        : ""
-                                    }
-                                  >
-                                    {field.value.map((option, index) => (
-                                      <option
-                                        key={index}
-                                        value={option.value}
-                                        id={option.id}
-                                        // selected={option.selected}
-                                      >
-                                        {option.value}
-                                      </option>
-                                    ))}
-                                  </select>
                                 </Box>
 
                                 <span>

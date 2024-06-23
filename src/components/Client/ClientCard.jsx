@@ -31,7 +31,7 @@ export default function ClientCard({ id, name, description }) {
   const dispatch = useDispatch();
   const group_name = useSelector((state) => state.auth.role.group_name);
 
-  const projects = useSelector((state) => state.project.projects);
+  const projects = useSelector((state) => state.project?.projects);
 
   const handleViewInMap = () => {
     // dispatch(setshowMeasuringsPanel(false));
@@ -48,6 +48,7 @@ export default function ClientCard({ id, name, description }) {
 
   const handleOpenClient = () => {
     navigate(`/projects/${id}/List`);
+    dispatch(setprojects([]));
   };
 
   const handleDeleteClient = () => {
@@ -147,7 +148,7 @@ export default function ClientCard({ id, name, description }) {
           </Grid>
           <Grid item xs>
             <Typography variant="body2" color="text.secondary">
-              {t("Total") + " " + t("Properties")} : {projects.length}
+              {t("Total") + " " + t("Properties")} : {projects?.length || 0}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {t("Total") + " " + t("Maps")} : {properties.length}

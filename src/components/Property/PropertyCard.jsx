@@ -6,6 +6,14 @@ import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
 import LinearProgressLabel from "./LinearProgressLabel";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import {
+  setdeleteId,
+  setdeletePopupMessage,
+  setdeleteTarget,
+  setshowDeletePopup,
+} from "../../reducers/DisplaySettings";
+import { Button } from "@mui/material";
 
 const Img = styled("img")({
   margin: "auto",
@@ -31,6 +39,7 @@ export default function PropertyCard({
   client_name,
   project_name,
 }) {
+  const dispatch = useDispatch();
   // Remaning things to work in next version
 
   // const navigate = useNavigate();
@@ -38,10 +47,13 @@ export default function PropertyCard({
   // console.log("map");
   // navigate(`/map/${properti}/${1}`);
   // };
-  // const handleDeleteProperty = () => {
-  //   console.log("Delete ", id);
-  //   navigate(`/map/${id}`);
-  // };
+  const handleDeleteProperty = () => {
+    console.log("Delete ", id);
+    dispatch(setdeleteId(id));
+    dispatch(setdeletePopupMessage("Are you sure you want to delete?"));
+    dispatch(setdeleteTarget("raster-data"));
+    dispatch(setshowDeletePopup(true));
+  };
 
   // const handleReprocessProperty = () => {
   //   // navigate(`/map/${id}`);
@@ -57,7 +69,7 @@ export default function PropertyCard({
 
   const wmts_url = `${
     import.meta.env.VITE_API_RASTER_URL
-  }/${id}/ows/?SERVICE=WMTS&REQUEST=GetCapabilites`;
+  }/${id}/ows/?SERVICE=WMTS&REQUEST=GetCapabilities`;
 
   return (
     <Paper
@@ -135,9 +147,13 @@ export default function PropertyCard({
                 </button> */}
               </Grid>
               <Grid item>
-                {/* <button className="btn-main" onClick={handleDeleteProperty}>
+                <Button
+                  variant="contained"
+                  sx={{ backgroundColor: "#f44336", color: "#fff" }}
+                  onClick={handleDeleteProperty}
+                >
                   Delete
-                </button> */}
+                </Button>
               </Grid>
             </Grid>
           </Grid>
