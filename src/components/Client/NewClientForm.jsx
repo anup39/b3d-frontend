@@ -13,34 +13,45 @@ import {
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
+import { fetchClientDetailsByClientId } from "../../api/api";
 
-export default function NewClientForm() {
+export default function NewClientForm({
+  id = null,
+  closeEditForm = null,
+  setIsFormTaskDone = null,
+  isFormTaskDone,
+}) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(id ? true : false);
   const [loading, setLoading] = useState(false);
+  const [clientData, setClientData] = useState(null);
   const user_id = useSelector((state) => state.auth.user_id);
-  const [roles, setRoles] = useState([]);
 
-  const handleCreateClient = (event) => {
-    event.preventDefault();
-    setLoading(true);
-    const data_ = new FormData(event.currentTarget);
-    data_.append("created_by", user_id);
-    data_.append("is_display", true);
-    console.log(Object.fromEntries(data_));
+  if (id) {
+    useEffect(() => {
+      setLoading(true);
+      fetchClientDetailsByClientId(id)
+        .then((response) => {
+          setLoading(false);
+          setClientData(response);
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }, []);
+  }
+
+  const createClient = (data) => {
+    data.append("created_by", user_id);
+    data.append("is_display", true);
     axios
-      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, data_)
+      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, data)
       .then((res) => {
-        const client_data = res.data;
         dispatch(settoastType("success"));
         closeForm();
         setLoading(false);
-        axios
-          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`)
-          .then((res) => {
-            dispatch(setclients(res.data));
-          });
+        setIsFormTaskDone(!isFormTaskDone);
       })
       .catch((error) => {
         const error_message = error.response.data.message;
@@ -59,26 +70,89 @@ export default function NewClientForm() {
       });
   };
 
+  const editClient = (data) => {
+    axios
+      .patch(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${id}`, data)
+      .then((res) => {
+        dispatch(settoastType("success"));
+        closeForm();
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Patch request error:", error);
+        const error_message = error.message;
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(
+          settoastMessage(
+            error_message
+              ? error_message
+              : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t("Edit")} + " "+ ${t(
+                  "Client"
+                )}`
+          )
+        );
+        dispatch(settoastType("error"));
+      });
+  };
+
+  const handleCreateClient = (event) => {
+    event.preventDefault();
+    setLoading(true);
+    const data_ = new FormData(event.currentTarget);
+    if (id) {
+      editClient(data_);
+    } else {
+      createClient(data_);
+    }
+    setClientData(null);
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`)
+      .then((res) => {
+        dispatch(setclients(res.data));
+      })
+      .catch((err) => {
+        const error_message = error.response.data.message;
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(
+          settoastMessage(
+            error_message
+              ? error_message
+              : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t("Fetch")} + " "+ ${t(
+                  "Clients"
+                )}`
+          )
+        );
+        dispatch(settoastType("error"));
+      });
+  };
+
   const openForm = () => {
     setIsFormOpen(true);
   };
 
   const closeForm = () => {
+    if (closeEditForm) {
+      closeEditForm();
+    }
     setIsFormOpen(false);
   };
 
   return (
     <>
-      <Tooltip title={t("Create") + " " + t("Client")}>
-        <Button
-          onClick={openForm}
-          sx={{ margin: "5px" }}
-          variant="contained"
-          color="error"
-        >
-          {t("Create") + " " + t("Client")}
-        </Button>
-      </Tooltip>
+      {!id && (
+        <Tooltip title={t("Create") + " " + t("Client")}>
+          <Button
+            onClick={openForm}
+            sx={{ margin: "5px" }}
+            variant="contained"
+            color="error"
+          >
+            {t("Create") + " " + t("Client")}
+          </Button>
+        </Tooltip>
+      )}
       {isFormOpen && (
         <div
           style={{
@@ -116,6 +190,10 @@ export default function NewClientForm() {
                   autoFocus
                   size="small"
                   InputLabelProps={{ shrink: true }}
+                  value={clientData?.name || ""}
+                  onChange={(e) =>
+                    setClientData({ ...clientData, name: e.target.value })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -127,6 +205,13 @@ export default function NewClientForm() {
                   size="small"
                   InputLabelProps={{ shrink: true }}
                   fullWidth
+                  value={clientData?.administrator || ""}
+                  onChange={(e) =>
+                    setClientData({
+                      ...clientData,
+                      administrator: e.target.value,
+                    })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -138,6 +223,10 @@ export default function NewClientForm() {
                   size="small"
                   InputLabelProps={{ shrink: true }}
                   fullWidth
+                  value={clientData?.lbf_number || ""}
+                  onChange={(e) =>
+                    setClientData({ ...clientData, lbf_number: e.target.value })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -149,6 +238,10 @@ export default function NewClientForm() {
                   size="small"
                   InputLabelProps={{ shrink: true }}
                   fullWidth
+                  value={clientData?.cvr_number || ""}
+                  onChange={(e) =>
+                    setClientData({ ...clientData, cvr_number: e.target.value })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -161,6 +254,13 @@ export default function NewClientForm() {
                   InputLabelProps={{ shrink: true }}
                   required
                   fullWidth
+                  value={clientData?.description || ""}
+                  onChange={(e) =>
+                    setClientData({
+                      ...clientData,
+                      description: e.target.value,
+                    })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -170,7 +270,9 @@ export default function NewClientForm() {
                   variant={loading ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : t("Create") + " " + t("Client")}
+                  {loading
+                    ? null
+                    : t(`${id ? "Update" : "Create"}`) + " " + t("Client")}
                   {loading ? <CircularProgress /> : null}
                 </Button>
               </Grid>
