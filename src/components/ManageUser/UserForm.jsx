@@ -35,7 +35,7 @@ export default function UserForm({ client_id }) {
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/groups/`)
       .then((res) => {
         const filtered_group = res.data.filter(
-          (group) => group.name !== "admin" && group.name !== "super_admin"
+          (group) => group.name !== "super_admin"
         );
         setRoles(filtered_group);
       })
