@@ -5,6 +5,7 @@ import ClientForm from "../components/Client/ClientForm";
 import { useGetClientsQuery } from "../api/clientApi";
 import { useState, useEffect } from "react";
 import { CircularProgress, Typography, Box } from "@mui/material";
+import NewClientForm from "../components/NewClient/NewClientForm";
 
 export default function Clients() {
   // const user_id = useSelector((state) => state.auth.user_id);
@@ -47,7 +48,7 @@ export default function Clients() {
     <div>
       <AppBar />
       {permissions && permissions.includes("add_client") ? (
-        <ClientForm />
+        <NewClientForm />
       ) : null}
 
       <div style={{ backgroundColor: "#F2F6F8" }}>
