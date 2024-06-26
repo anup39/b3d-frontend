@@ -5,7 +5,7 @@ import ClientForm from "../components/Client/ClientForm";
 import { useGetClientsQuery } from "../api/clientApi";
 import { useState, useEffect } from "react";
 import { CircularProgress, Typography, Box } from "@mui/material";
-import NewClientForm from "../components/NewClient/NewClientForm";
+import NewClientForm from "../components/Client/NewClientForm";
 
 export default function Clients() {
   // const user_id = useSelector((state) => state.auth.user_id);

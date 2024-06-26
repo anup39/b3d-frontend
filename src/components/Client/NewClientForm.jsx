@@ -131,8 +131,8 @@ export default function NewClientForm() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  id="lbfNumber"
-                  name="lbfNumber"
+                  id="lbf_number"
+                  name="lbf_number"
                   label={t("LBF-Number")}
                   variant="outlined"
                   size="small"
@@ -142,8 +142,8 @@ export default function NewClientForm() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  id="cvrNumber"
-                  name="cvrNumber"
+                  id="cvr_number"
+                  name="cvr_number"
                   label={t("CVR-Number")}
                   variant="outlined"
                   size="small"
