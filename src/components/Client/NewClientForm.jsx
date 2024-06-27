@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setclients } from "../../reducers/Client";
+import { setIsClientUpdated } from "../../reducers/Client";
 import {
   setshowToast,
   settoastMessage,
@@ -15,21 +16,17 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import { fetchClientDetailsByClientId } from "../../api/api";
 
-export default function NewClientForm({
-  id = null,
-  closeEditForm = null,
-  setIsFormTaskDone = null,
-  isFormTaskDone,
-}) {
+export default function NewClientForm({ id, closeEditForm }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(id ? true : false);
   const [loading, setLoading] = useState(false);
   const [clientData, setClientData] = useState(null);
   const user_id = useSelector((state) => state.auth.user_id);
+  const { isClientUpdated } = useSelector((state) => state.client);
 
-  if (id) {
-    useEffect(() => {
+  useEffect(() => {
+    if (id) {
       setLoading(true);
       fetchClientDetailsByClientId(id)
         .then((response) => {
@@ -37,10 +34,23 @@ export default function NewClientForm({
           setClientData(response);
         })
         .catch((error) => {
-          console.log(error.message);
+          const error_message = error?.message;
+          setLoading(false);
+          dispatch(setshowToast(true));
+          dispatch(
+            settoastMessage(
+              error_message
+                ? error_message
+                : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t(
+                    "Fetch"
+                  )} + " "+ ${t("Client")} + " " + ${t("Data")}`
+            )
+          );
+          dispatch(settoastType("error"));
+          closeForm();
         });
-    }, []);
-  }
+    }
+  }, [id]);
 
   const createClient = (data) => {
     data.append("created_by", user_id);
@@ -51,7 +61,7 @@ export default function NewClientForm({
         dispatch(settoastType("success"));
         closeForm();
         setLoading(false);
-        setIsFormTaskDone(!isFormTaskDone);
+        dispatch(setIsClientUpdated(!isClientUpdated));
       })
       .catch((error) => {
         const error_message = error.response.data.message;
@@ -72,11 +82,12 @@ export default function NewClientForm({
 
   const editClient = (data) => {
     axios
-      .patch(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${id}`, data)
+      .patch(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${id}/`, data)
       .then((res) => {
         dispatch(settoastType("success"));
         closeForm();
         setLoading(false);
+        dispatch(setIsClientUpdated(!isClientUpdated));
       })
       .catch((error) => {
         console.error("Patch request error:", error);
@@ -133,9 +144,7 @@ export default function NewClientForm({
   };
 
   const closeForm = () => {
-    if (closeEditForm) {
-      closeEditForm();
-    }
+    closeEditForm && closeEditForm();
     setIsFormOpen(false);
   };
 

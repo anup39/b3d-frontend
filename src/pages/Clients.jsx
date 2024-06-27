@@ -14,9 +14,9 @@ export default function Clients() {
   // const group_name = useSelector((state) => state.auth.role.group_name);
   const client = useSelector((state) => state.auth?.role?.client);
   const [loading, setLoading] = useState(true);
-  const [isFormTaskDone, setIsFormTaskDone] = useState(false);
   const dispatch = useDispatch();
   const { clients: allClients } = useSelector((state) => state.client);
+  const { isClientUpdated } = useSelector((state) => state.client);
 
   // const { data: clients } = useGetClientsQuery(client);
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function Clients() {
         );
         dispatch(settoastType("error"));
       });
-  }, [isFormTaskDone]);
+  }, [isClientUpdated]);
 
   useEffect(() => {
     if (permissions) {
@@ -75,10 +75,7 @@ export default function Clients() {
     <div>
       <AppBar />
       {permissions && permissions.includes("add_client") ? (
-        <NewClientForm
-          setIsFormTaskDone={setIsFormTaskDone}
-          isFormTaskDone={isFormTaskDone}
-        />
+        <NewClientForm />
       ) : null}
 
       <div style={{ backgroundColor: "#F2F6F8" }}>
