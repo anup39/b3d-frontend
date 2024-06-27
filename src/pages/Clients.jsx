@@ -1,11 +1,12 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AppBar from "../components/Common/AppBar";
 import ClientCard from "../components/Client/ClientCard";
-import ClientForm from "../components/Client/ClientForm";
 import { useGetClientsQuery } from "../api/clientApi";
 import { useState, useEffect } from "react";
 import { CircularProgress, Typography, Box } from "@mui/material";
 import NewClientForm from "../components/Client/NewClientForm";
+import { setclients } from "../reducers/Client";
+import axios from "axios";
 
 export default function Clients() {
   // const user_id = useSelector((state) => state.auth.user_id);
@@ -13,8 +14,34 @@ export default function Clients() {
   // const group_name = useSelector((state) => state.auth.role.group_name);
   const client = useSelector((state) => state.auth?.role?.client);
   const [loading, setLoading] = useState(true);
+  const [isFormTaskDone, setIsFormTaskDone] = useState(false);
+  const dispatch = useDispatch();
+  const { clients: allClients } = useSelector((state) => state.client);
 
-  const { data: clients } = useGetClientsQuery(client);
+  // const { data: clients } = useGetClientsQuery(client);
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`)
+      .then((res) => {
+        dispatch(setclients(res.data));
+      })
+      .catch((err) => {
+        const error_message = error.response.data.message;
+        setLoading(false);
+        dispatch(setshowToast(true));
+        dispatch(
+          settoastMessage(
+            error_message
+              ? error_message
+              : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t("Fetch")} + " "+ ${t(
+                  "Clients"
+                )}`
+          )
+        );
+        dispatch(settoastType("error"));
+      });
+  }, [isFormTaskDone]);
+
   useEffect(() => {
     if (permissions) {
       setLoading(false);
@@ -48,12 +75,15 @@ export default function Clients() {
     <div>
       <AppBar />
       {permissions && permissions.includes("add_client") ? (
-        <NewClientForm />
+        <NewClientForm
+          setIsFormTaskDone={setIsFormTaskDone}
+          isFormTaskDone={isFormTaskDone}
+        />
       ) : null}
 
       <div style={{ backgroundColor: "#F2F6F8" }}>
-        {clients
-          ? clients.map((client) => (
+        {allClients
+          ? allClients.map((client) => (
               <ClientCard
                 key={client.id}
                 id={client.id}
