@@ -16,7 +16,15 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import { fetchClientDetailsByClientId } from "../../api/api";
 
-export default function NewClientForm({ id, closeEditForm }) {
+const defaultProps = {
+  id: null,
+  closeEditForm: null,
+};
+
+export default function NewClientForm({
+  id = defaultProps.id,
+  closeEditForm = defaultProps.closeEditForm,
+}) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(id ? true : false);
