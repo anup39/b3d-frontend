@@ -108,7 +108,7 @@ export default function ClientCard({ id, name, description }) {
     fetchProjectsByClientId(id).then((res) => {
       setTotalProjects(res);
     });
-  }, []);
+  }, [id]);
 
   return (
     <>

@@ -18,29 +18,29 @@ export default function Clients() {
   const { clients: allClients } = useSelector((state) => state.client);
   const { isClientUpdated } = useSelector((state) => state.client);
 
-  // const { data: clients } = useGetClientsQuery(client);
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`)
-      .then((res) => {
-        dispatch(setclients(res.data));
-      })
-      .catch((err) => {
-        const error_message = error.response.data.message;
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(
-          settoastMessage(
-            error_message
-              ? error_message
-              : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t("Fetch")} + " "+ ${t(
-                  "Clients"
-                )}`
-          )
-        );
-        dispatch(settoastType("error"));
-      });
-  }, [isClientUpdated]);
+  const { data: clients } = useGetClientsQuery(client);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`)
+  //     .then((res) => {
+  //       dispatch(setclients(res.data));
+  //     })
+  //     .catch((err) => {
+  //       const error_message = error.response.data.message;
+  //       setLoading(false);
+  //       dispatch(setshowToast(true));
+  //       dispatch(
+  //         settoastMessage(
+  //           error_message
+  //             ? error_message
+  //             : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t("Fetch")} + " "+ ${t(
+  //                 "Clients"
+  //               )}`
+  //         )
+  //       );
+  //       dispatch(settoastType("error"));
+  //     });
+  // }, [isClientUpdated]);
 
   useEffect(() => {
     if (permissions) {

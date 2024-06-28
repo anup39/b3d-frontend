@@ -2,7 +2,7 @@ import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setclients } from "../../reducers/Client";
@@ -15,16 +15,20 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import { fetchClientDetailsByClientId } from "../../api/api";
+import PropTypes from "prop-types";
 
-const defaultProps = {
+NewClientForm.defaultProps = {
   id: null,
   closeEditForm: null,
 };
 
-export default function NewClientForm({
-  id = defaultProps.id,
-  closeEditForm = defaultProps.closeEditForm,
-}) {
+NewClientForm.propTypes = {
+  id: PropTypes.number,
+  closeEditForm: PropTypes.func,
+};
+
+export default function NewClientForm({ id, closeEditForm }) {
+  console.log(id, closeEditForm);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(id ? true : false);
@@ -58,14 +62,14 @@ export default function NewClientForm({
           closeForm();
         });
     }
-  }, [id]);
+  }, [id, closeForm, dispatch, t]);
 
   const createClient = (data) => {
     data.append("created_by", user_id);
     data.append("is_display", true);
     axios
       .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, data)
-      .then((res) => {
+      .then(() => {
         dispatch(settoastType("success"));
         closeForm();
         setLoading(false);
@@ -91,7 +95,7 @@ export default function NewClientForm({
   const editClient = (data) => {
     axios
       .patch(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${id}/`, data)
-      .then((res) => {
+      .then(() => {
         dispatch(settoastType("success"));
         closeForm();
         setLoading(false);
@@ -131,7 +135,7 @@ export default function NewClientForm({
         dispatch(setclients(res.data));
       })
       .catch((err) => {
-        const error_message = error.response.data.message;
+        const error_message = err.response.data.message;
         setLoading(false);
         dispatch(setshowToast(true));
         dispatch(
@@ -151,10 +155,12 @@ export default function NewClientForm({
     setIsFormOpen(true);
   };
 
-  const closeForm = () => {
-    closeEditForm && closeEditForm();
+  const closeForm = useCallback(() => {
+    if (closeEditForm) {
+      closeEditForm();
+    }
     setIsFormOpen(false);
-  };
+  }, [closeEditForm]);
 
   return (
     <>
