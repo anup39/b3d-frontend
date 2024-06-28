@@ -4,6 +4,7 @@ const initialState = {
   clientDetail: { client_id: null, client_name: null, client_image: null },
   current_measuring_categories: null,
   clients: [],
+  isClientUpdated: false, //flag to check client edit/delete form action
 };
 
 export const Client = createSlice({
@@ -20,11 +21,18 @@ export const Client = createSlice({
       const current_measuring_categories = action.payload;
       state.current_measuring_categories = current_measuring_categories;
     },
+    setIsClientUpdated: (state, action) => {
+      state.isClientUpdated = action.payload;
+    },
   },
 });
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const { setclients, setClientDetail, setCurrentMeasuringCategories } =
-  Client.actions;
+export const {
+  setclients,
+  setClientDetail,
+  setCurrentMeasuringCategories,
+  setIsClientUpdated,
+} = Client.actions;
 
 export default Client.reducer;

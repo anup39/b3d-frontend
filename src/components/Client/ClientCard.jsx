@@ -83,6 +83,7 @@ export default function ClientCard({ id, name, description }) {
   const handleEditClient = () => {
     openEditForm();
   };
+
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/?client=${id}`)
@@ -183,9 +184,10 @@ export default function ClientCard({ id, name, description }) {
                   >
                     Delete
                   </Button>
+                </Grid>
+                <Grid item>
                   <Button
                     sx={{
-                      marginLeft: "10px",
                       p: 0,
                       backgroundColor: "red",
                       color: "white",
