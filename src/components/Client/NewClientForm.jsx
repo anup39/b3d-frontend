@@ -37,6 +37,13 @@ export default function NewClientForm({ id, closeEditForm }) {
   const user_id = useSelector((state) => state.auth.user_id);
   const { isClientUpdated } = useSelector((state) => state.client);
 
+  const closeForm = useCallback(() => {
+    if (closeEditForm) {
+      closeEditForm();
+    }
+    setIsFormOpen(false);
+  }, [closeEditForm]);
+
   useEffect(() => {
     if (id) {
       setLoading(true);
@@ -154,13 +161,6 @@ export default function NewClientForm({ id, closeEditForm }) {
   const openForm = () => {
     setIsFormOpen(true);
   };
-
-  const closeForm = useCallback(() => {
-    if (closeEditForm) {
-      closeEditForm();
-    }
-    setIsFormOpen(false);
-  }, [closeEditForm]);
 
   return (
     <>
