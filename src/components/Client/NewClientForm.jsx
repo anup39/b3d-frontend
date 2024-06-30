@@ -4,9 +4,6 @@ import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { setclients } from "../../reducers/Client";
-import { setIsClientUpdated } from "../../reducers/Client";
 import {
   setshowToast,
   settoastMessage,
@@ -16,6 +13,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import { fetchClientDetailsByClientId } from "../../api/api";
 import PropTypes from "prop-types";
+import {
+  useCreateClientMutation,
+  useUpdateClientByIdMutation,
+} from "../../api/clientApi";
 
 NewClientForm.defaultProps = {
   id: null,
@@ -28,14 +29,15 @@ NewClientForm.propTypes = {
 };
 
 export default function NewClientForm({ id, closeEditForm }) {
-  console.log(id, closeEditForm);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isFormOpen, setIsFormOpen] = useState(id ? true : false);
   const [loading, setLoading] = useState(false);
   const [clientData, setClientData] = useState(null);
   const user_id = useSelector((state) => state.auth.user_id);
-  const { isClientUpdated } = useSelector((state) => state.client);
+
+  const [updateClientById] = useUpdateClientByIdMutation();
+  const [createClient] = useCreateClientMutation();
 
   const closeForm = useCallback(() => {
     if (closeEditForm) {
@@ -71,92 +73,90 @@ export default function NewClientForm({ id, closeEditForm }) {
     }
   }, [id, closeForm, dispatch, t]);
 
-  const createClient = (data) => {
-    data.append("created_by", user_id);
-    data.append("is_display", true);
-    axios
-      .post(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`, data)
-      .then(() => {
-        dispatch(settoastType("success"));
-        closeForm();
-        setLoading(false);
-        dispatch(setIsClientUpdated(!isClientUpdated));
-      })
-      .catch((error) => {
-        const error_message = error.response.data.message;
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(
-          settoastMessage(
-            error_message
-              ? error_message
-              : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t(
-                  "Create"
-                )} + " "+ ${t("Client")}`
-          )
-        );
-        dispatch(settoastType("error"));
-      });
-  };
+  const createNewClient = useCallback(
+    (data) => {
+      data.append("created_by", user_id);
+      data.append("is_display", true);
+      createClient({ data: data })
+        .unwrap()
+        .then(() => {
+          dispatch(setshowToast(true));
+          dispatch(
+            settoastMessage(
+              `${t("Client")} ${t("Created")} ${t("Successfully")}`
+            )
+          );
+          dispatch(settoastType("success"));
+          closeForm();
+          setLoading(false);
+        })
+        .catch((error) => {
+          const { error: error_message } = error;
+          setLoading(false);
+          dispatch(setshowToast(true));
+          dispatch(
+            settoastMessage(
+              error_message
+                ? error_message
+                : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t(
+                    "Create"
+                  )} + " "+ ${t("Client")}`
+            )
+          );
+          dispatch(settoastType("error"));
+        });
+    },
+    [createClient, dispatch, t, user_id, closeForm]
+  );
 
-  const editClient = (data) => {
-    axios
-      .patch(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/${id}/`, data)
-      .then(() => {
-        dispatch(settoastType("success"));
-        closeForm();
-        setLoading(false);
-        dispatch(setIsClientUpdated(!isClientUpdated));
-      })
-      .catch((error) => {
-        console.error("Patch request error:", error);
-        const error_message = error.message;
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(
-          settoastMessage(
-            error_message
-              ? error_message
-              : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t("Edit")} + " "+ ${t(
-                  "Client"
-                )}`
-          )
-        );
-        dispatch(settoastType("error"));
-      });
-  };
+  const editClient = useCallback(
+    (data) => {
+      updateClientById({ data: data, client_id: id })
+        .unwrap()
+        .then(() => {
+          dispatch(setshowToast(true));
+          dispatch(
+            settoastMessage(
+              `${t("Client")} ${t("Edited")} ${t("Successfully")}`
+            )
+          );
+          dispatch(settoastType("success"));
+          closeForm();
+          setLoading(false);
+        })
+        .catch((error) => {
+          const { error: error_message } = error;
+          setLoading(false);
+          dispatch(setshowToast(true));
+          dispatch(
+            settoastMessage(
+              error_message
+                ? error_message
+                : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t(
+                    "Edit"
+                  )} + " "+ ${t("Client")}`
+            )
+          );
+          dispatch(settoastType("error"));
+        });
+    },
+    [updateClientById, dispatch, t, id, closeForm]
+  );
 
-  const handleCreateClient = (event) => {
-    event.preventDefault();
-    setLoading(true);
-    const data_ = new FormData(event.currentTarget);
-    if (id) {
-      editClient(data_);
-    } else {
-      createClient(data_);
-    }
-    setClientData(null);
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/clients/`)
-      .then((res) => {
-        dispatch(setclients(res.data));
-      })
-      .catch((err) => {
-        const error_message = err.response.data.message;
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(
-          settoastMessage(
-            error_message
-              ? error_message
-              : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t("Fetch")} + " "+ ${t(
-                  "Clients"
-                )}`
-          )
-        );
-        dispatch(settoastType("error"));
-      });
-  };
+  const handleCreateClient = useCallback(
+    (event) => {
+      event.preventDefault();
+      setLoading(true);
+      const data_ = new FormData(event.currentTarget);
+      if (id) {
+        editClient(data_);
+      } else {
+        createNewClient(data_);
+      }
+      setClientData(null);
+    },
+    [id, editClient, createNewClient]
+  );
 
   const openForm = () => {
     setIsFormOpen(true);
