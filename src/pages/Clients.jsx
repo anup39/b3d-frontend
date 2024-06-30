@@ -30,7 +30,7 @@ export default function Clients() {
     }
   }, [permissions]);
 
-  if (loading) {
+  if (loading || isLoading) {
     return (
       <Box
         sx={{
