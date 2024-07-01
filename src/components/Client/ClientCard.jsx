@@ -11,6 +11,7 @@ import {
   setdeleteId,
   setdeletePopupMessage,
   setdeleteTarget,
+  setshowDeleteLoader,
   setshowDeletePopup,
 } from "../../reducers/DisplaySettings";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -60,31 +61,42 @@ export default function ClientCard({ id, name, description }) {
   };
 
   const handleDeleteClient = () => {
+    const initiateDeleteProcess = () => {
+      dispatch(setshowDeleteLoader(true));
+      dispatch(setshowDeletePopup(true));
+      dispatch(setdeleteId(null));
+      dispatch(setdeleteTarget(null));
+      dispatch(
+        setdeletePopupMessage(
+          `Are you sure you want to delete Client ${name} and its content?`
+        )
+      );
+    };
+    const resetDeleteProcess = (message, id = null, target = null) => {
+      dispatch(setshowDeleteLoader(false));
+      dispatch(setshowDeletePopup(true));
+      dispatch(setdeleteId(id));
+      dispatch(setdeleteTarget(target));
+      dispatch(setdeletePopupMessage(message));
+    };
+    initiateDeleteProcess();
     fetchProjectsByClientId(id)
       .then((res) => {
         const projects = res;
         if (projects.length > 0) {
-          dispatch(setshowDeletePopup(true));
-          dispatch(setdeleteId(null));
-          dispatch(setdeleteTarget(null));
-          dispatch(
-            setdeletePopupMessage(
-              `You cannot delete this Client when there is Property?`
-            )
+          resetDeleteProcess(
+            `You cannot delete this Client when there is Property?`
           );
         } else {
-          dispatch(setshowDeletePopup(true));
-          dispatch(
-            setdeletePopupMessage(
-              `Are you sure you want to delete Client ${name} and its content?`
-            )
+          resetDeleteProcess(
+            `Are you sure you want to delete Client ${name} and its content?`,
+            id,
+            "clients"
           );
-          dispatch(setdeleteId(id));
-          dispatch(setdeleteTarget("clients"));
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        console.error("error", error);
       });
   };
   const handleEditClient = () => {
