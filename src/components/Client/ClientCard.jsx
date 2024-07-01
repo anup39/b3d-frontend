@@ -60,25 +60,32 @@ export default function ClientCard({ id, name, description }) {
   };
 
   const handleDeleteClient = () => {
-    if (totalProjects.length > 0) {
-      dispatch(setshowDeletePopup(true));
-      dispatch(setdeleteId(null));
-      dispatch(setdeleteTarget(null));
-      dispatch(
-        setdeletePopupMessage(
-          `You cannot delete this Client when there is Property?`
-        )
-      );
-    } else {
-      dispatch(setshowDeletePopup(true));
-      dispatch(
-        setdeletePopupMessage(
-          `Are you sure you want to delete Client ${name} and its content?`
-        )
-      );
-      dispatch(setdeleteId(id));
-      dispatch(setdeleteTarget("clients"));
-    }
+    fetchProjectsByClientId(id)
+      .then((res) => {
+        const projects = res;
+        if (projects.length > 0) {
+          dispatch(setshowDeletePopup(true));
+          dispatch(setdeleteId(null));
+          dispatch(setdeleteTarget(null));
+          dispatch(
+            setdeletePopupMessage(
+              `You cannot delete this Client when there is Property?`
+            )
+          );
+        } else {
+          dispatch(setshowDeletePopup(true));
+          dispatch(
+            setdeletePopupMessage(
+              `Are you sure you want to delete Client ${name} and its content?`
+            )
+          );
+          dispatch(setdeleteId(id));
+          dispatch(setdeleteTarget("clients"));
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   };
   const handleEditClient = () => {
     openEditForm();
