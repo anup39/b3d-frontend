@@ -34,6 +34,7 @@ export default function ClientCard({ id, name, description }) {
   const group_name = useSelector((state) => state.auth.role.group_name);
   const [totalProjects, setTotalProjects] = useState([]);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const permissions = useSelector((state) => state.auth?.role?.permissions);
 
   const handleViewInMap = () => {
     // dispatch(setshowMeasuringsPanel(false));
@@ -61,6 +62,7 @@ export default function ClientCard({ id, name, description }) {
   };
 
   const handleDeleteClient = () => {
+    // TODO: "When a client is deleted delete user roles, permissions and users related to this client";
     const initiateDeleteProcess = () => {
       dispatch(setshowDeleteLoader(true));
       dispatch(setshowDeletePopup(true));
@@ -187,39 +189,43 @@ export default function ClientCard({ id, name, description }) {
                     </Grid>
                   </>
                 ) : null}
+                {permissions && permissions.includes("delete_client") ? (
+                  <Grid item>
+                    <Button
+                      sx={{
+                        p: 0,
+                        backgroundColor: "red",
+                        color: "white",
+                        "&:hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#2265C0",
+                        },
+                      }}
+                      onClick={handleDeleteClient}
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                ) : null}
 
-                <Grid item>
-                  <Button
-                    sx={{
-                      p: 0,
-                      backgroundColor: "red",
-                      color: "white",
-                      "&:hover": {
-                        cursor: "pointer",
-                        backgroundColor: "#2265C0",
-                      },
-                    }}
-                    onClick={handleDeleteClient}
-                  >
-                    Delete
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    sx={{
-                      p: 0,
-                      backgroundColor: "red",
-                      color: "white",
-                      "&:hover": {
-                        cursor: "pointer",
-                        backgroundColor: "#2265C0",
-                      },
-                    }}
-                    onClick={handleEditClient}
-                  >
-                    Edit
-                  </Button>
-                </Grid>
+                {permissions && permissions.includes("change_client") ? (
+                  <Grid item>
+                    <Button
+                      sx={{
+                        p: 0,
+                        backgroundColor: "red",
+                        color: "white",
+                        "&:hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#2265C0",
+                        },
+                      }}
+                      onClick={handleEditClient}
+                    >
+                      Edit
+                    </Button>
+                  </Grid>
+                ) : null}
               </Grid>
             </Grid>
             <Grid item xs>

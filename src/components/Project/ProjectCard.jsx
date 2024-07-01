@@ -48,6 +48,7 @@ export default function ProjectCard({
   const [properties, setproperties] = useState([]);
   const [users, setusers] = useState([]);
   const group_name = useSelector((state) => state.auth.role.group_name);
+  const permissions = useSelector((state) => state.auth?.role?.permissions);
   const [showProjectEditForm, setShowProjectEditForm] = useState(false);
 
   console.log(url, "url in project card");
@@ -226,36 +227,41 @@ export default function ProjectCard({
                   Manage Users
                 </button>
               </Grid> */}
+
                 <Grid item>
-                  <Button
-                    sx={{
-                      p: 0,
-                      backgroundColor: "red",
-                      color: "white",
-                      "&:hover": {
-                        cursor: "pointer",
-                        backgroundColor: "#2265C0",
-                      },
-                    }}
-                    onClick={handleDeleteProject}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    sx={{
-                      marginLeft: "10px",
-                      p: 0,
-                      backgroundColor: "red",
-                      color: "white",
-                      "&:hover": {
-                        cursor: "pointer",
-                        backgroundColor: "#2265C0",
-                      },
-                    }}
-                    onClick={handleEditProject}
-                  >
-                    Edit
-                  </Button>
+                  {permissions && permissions.includes("delete_project") ? (
+                    <Button
+                      sx={{
+                        p: 0,
+                        backgroundColor: "red",
+                        color: "white",
+                        "&:hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#2265C0",
+                        },
+                      }}
+                      onClick={handleDeleteProject}
+                    >
+                      Delete
+                    </Button>
+                  ) : null}
+                  {permissions && permissions.includes("change_project") ? (
+                    <Button
+                      sx={{
+                        marginLeft: "10px",
+                        p: 0,
+                        backgroundColor: "red",
+                        color: "white",
+                        "&:hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#2265C0",
+                        },
+                      }}
+                      onClick={handleEditProject}
+                    >
+                      Edit
+                    </Button>
+                  ) : null}
                 </Grid>
               </Grid>
             </Grid>
