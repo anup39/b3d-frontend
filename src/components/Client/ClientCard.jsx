@@ -11,6 +11,7 @@ import {
   setdeleteId,
   setdeletePopupMessage,
   setdeleteTarget,
+  setshowDeleteLoader,
   setshowDeletePopup,
 } from "../../reducers/DisplaySettings";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -33,6 +34,7 @@ export default function ClientCard({ id, name, description }) {
   const group_name = useSelector((state) => state.auth.role.group_name);
   const [totalProjects, setTotalProjects] = useState([]);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const permissions = useSelector((state) => state.auth?.role?.permissions);
 
   const handleViewInMap = () => {
     // dispatch(setshowMeasuringsPanel(false));
@@ -60,25 +62,44 @@ export default function ClientCard({ id, name, description }) {
   };
 
   const handleDeleteClient = () => {
-    if (totalProjects.length > 0) {
+    // TODO: "When a client is deleted delete user roles, permissions and users related to this client";
+    const initiateDeleteProcess = () => {
+      dispatch(setshowDeleteLoader(true));
       dispatch(setshowDeletePopup(true));
       dispatch(setdeleteId(null));
       dispatch(setdeleteTarget(null));
       dispatch(
         setdeletePopupMessage(
-          `You cannot delete this Client when there is Property?`
-        )
-      );
-    } else {
-      dispatch(setshowDeletePopup(true));
-      dispatch(
-        setdeletePopupMessage(
           `Are you sure you want to delete Client ${name} and its content?`
         )
       );
+    };
+    const resetDeleteProcess = (message, id = null, target = null) => {
+      dispatch(setshowDeleteLoader(false));
+      dispatch(setshowDeletePopup(true));
       dispatch(setdeleteId(id));
-      dispatch(setdeleteTarget("clients"));
-    }
+      dispatch(setdeleteTarget(target));
+      dispatch(setdeletePopupMessage(message));
+    };
+    initiateDeleteProcess();
+    fetchProjectsByClientId(id)
+      .then((res) => {
+        const projects = res;
+        if (projects.length > 0) {
+          resetDeleteProcess(
+            `You cannot delete this Client when there is Property?`
+          );
+        } else {
+          resetDeleteProcess(
+            `Are you sure you want to delete Client ${name} and its content?`,
+            id,
+            "clients"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("error", error);
+      });
   };
   const handleEditClient = () => {
     openEditForm();
@@ -168,39 +189,43 @@ export default function ClientCard({ id, name, description }) {
                     </Grid>
                   </>
                 ) : null}
+                {permissions && permissions.includes("delete_client") ? (
+                  <Grid item>
+                    <Button
+                      sx={{
+                        p: 0,
+                        backgroundColor: "red",
+                        color: "white",
+                        "&:hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#2265C0",
+                        },
+                      }}
+                      onClick={handleDeleteClient}
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                ) : null}
 
-                <Grid item>
-                  <Button
-                    sx={{
-                      p: 0,
-                      backgroundColor: "red",
-                      color: "white",
-                      "&:hover": {
-                        cursor: "pointer",
-                        backgroundColor: "#2265C0",
-                      },
-                    }}
-                    onClick={handleDeleteClient}
-                  >
-                    Delete
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    sx={{
-                      p: 0,
-                      backgroundColor: "red",
-                      color: "white",
-                      "&:hover": {
-                        cursor: "pointer",
-                        backgroundColor: "#2265C0",
-                      },
-                    }}
-                    onClick={handleEditClient}
-                  >
-                    Edit
-                  </Button>
-                </Grid>
+                {permissions && permissions.includes("change_client") ? (
+                  <Grid item>
+                    <Button
+                      sx={{
+                        p: 0,
+                        backgroundColor: "red",
+                        color: "white",
+                        "&:hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#2265C0",
+                        },
+                      }}
+                      onClick={handleEditClient}
+                    >
+                      Edit
+                    </Button>
+                  </Grid>
+                ) : null}
               </Grid>
             </Grid>
             <Grid item xs>

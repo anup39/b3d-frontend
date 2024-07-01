@@ -10,8 +10,15 @@ export const clientApi = createApi({
   }),
   tagTypes: ["Clients"],
   endpoints: (builder) => ({
+    // Get all clients
     getClients: builder.query<any, string>({
       queryFn: async (client_id, _api, _extraOptions, baseQuery) => {
+        _extraOptions = {
+          refetchOnMountOrArgChange: true,
+          refetchOnReconnect: true,
+          forceRefetch: true,
+        };
+        console.log(_api, "_api");
         if (!client_id) {
           return baseQuery(`clients/`);
         } else {
@@ -24,13 +31,22 @@ export const clientApi = createApi({
           ? [...result.map(({ id }) => ({ type: "Clients", id })), "Clients"]
           : ["Clients"],
     }),
+    // Get single client by id
     getClientsByClientId: builder.query<any, { client_id: string }>({
-      query: ({ client_id }) => ({
-        url: `/clients/${client_id}/`,
-        headers: {
-          Authorization: "Token " + localStorage.getItem("token"),
-        },
-      }),
+      query: ({ client_id }) => {
+        return {
+          url: `/clients/${client_id}/`,
+          headers: {
+            Authorization: "Token " + localStorage.getItem("token"),
+          },
+          forceRefetch: true,
+          refetchOnMountOrArgChange: true,
+          refetchOnReconnect: true,
+        };
+      },
+      transformResponse: (response: any[]) => {
+        return [response];
+      },
     }),
     // Create new client
     createClient: builder.mutation({

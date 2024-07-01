@@ -6,7 +6,7 @@ import ButtonBase from "@mui/material/ButtonBase";
 import PropTypes from "prop-types";
 import LinearProgressLabel from "./LinearProgressLabel";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setdeleteId,
   setdeletePopupMessage,
@@ -40,6 +40,7 @@ export default function PropertyCard({
   project_name,
 }) {
   const dispatch = useDispatch();
+  const permissions = useSelector((state) => state.auth?.role?.permissions);
   // Remaning things to work in next version
 
   // const navigate = useNavigate();
@@ -146,15 +147,17 @@ export default function PropertyCard({
                   Reprocess
                 </button> */}
               </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  sx={{ backgroundColor: "#f44336", color: "#fff" }}
-                  onClick={handleDeleteProperty}
-                >
-                  Delete
-                </Button>
-              </Grid>
+              {permissions && permissions.includes("delete_rasterdata") ? (
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "#f44336", color: "#fff" }}
+                    onClick={handleDeleteProperty}
+                  >
+                    Delete
+                  </Button>
+                </Grid>
+              ) : null}
             </Grid>
           </Grid>
         </Grid>
