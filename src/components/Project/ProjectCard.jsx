@@ -51,8 +51,6 @@ export default function ProjectCard({
   const permissions = useSelector((state) => state.auth?.role?.permissions);
   const [showProjectEditForm, setShowProjectEditForm] = useState(false);
 
-  console.log(url, "url in project card");
-
   // Remaining things to do :
   // const handleViewInMap = () => {
   //   navigate(`/map/project/${id}`);
@@ -68,7 +66,6 @@ export default function ProjectCard({
 
   const handleDeleteProject = () => {
     fetchTifDataByProjectId(id).then((res) => {
-      console.log(res, "res.data");
       if (res.length > 0) {
         dispatch(setshowDeletePopup(true));
         dispatch(setdeleteId(null));

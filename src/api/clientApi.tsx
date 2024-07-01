@@ -13,7 +13,6 @@ export const clientApi = createApi({
     // Get all clients
     getClients: builder.query<any, string>({
       queryFn: async (client_id, _api, _extraOptions, baseQuery) => {
-        console.log(_extraOptions, "_extraOptions");
         _extraOptions = {
           refetchOnMountOrArgChange: true,
           refetchOnReconnect: true,
