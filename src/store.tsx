@@ -21,6 +21,7 @@ import Inspections from "./reducers/Inspections";
 import EditClassification from "./reducers/EditClassification";
 import { projectApi } from "./api/projectApi";
 import { clientApi } from "./api/clientApi";
+import { measuringFileUploadApi } from "./api/measuringFileUpload";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 export const store = configureStore({
@@ -47,11 +48,13 @@ export const store = configureStore({
     editClassification: EditClassification,
     [projectApi.reducerPath]: projectApi.reducer,
     [clientApi.reducerPath]: clientApi.reducer,
+    [measuringFileUploadApi.reducerPath]: measuringFileUploadApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       projectApi.middleware as any,
-      clientApi.middleware as any
+      clientApi.middleware as any,
+      measuringFileUploadApi.middleware as any
     ),
 });
 
