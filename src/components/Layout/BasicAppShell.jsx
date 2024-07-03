@@ -18,14 +18,14 @@ export function BasicAppShell() {
           <div className="text-3xl font-bold underline">B3D Aps</div>
         </Group>
       </AppShell.Header>
-      {/* <AppShell.Navbar p="md">
+      <AppShell.Navbar p="md">
         Navbar
         {Array(15)
           .fill(0)
           .map((_, index) => (
             <Skeleton key={index} h={28} mt="sm" animate={false} />
           ))}
-      </AppShell.Navbar> */}
+      </AppShell.Navbar>
       <AppShell.Main>Main</AppShell.Main>
     </AppShell>
   );
