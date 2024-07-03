@@ -11,30 +11,33 @@ import { useTranslation } from "react-i18next";
 export default function MeasuringUploadButton({ measuringsUploadingCount }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const project_id = useSelector((state) => state.project.project_id);
   const showMeasuringFileUploadPanel = useSelector(
     (state) => state.showMeasuringUploadPanel
   );
 
   return (
     <div>
-      <Box>
-        <IconButton
-          onClick={() => {
-            dispatch(
-              setShowMeasuringFileUploadPanel(!showMeasuringFileUploadPanel)
-            );
-            console.log("MeasuringUploadButton clicked");
-          }}
-        >
-          <Tooltip
-            title={t("Measurings") + " " + t("Upload") + " " + t("Status")}
+      {project_id ? (
+        <Box>
+          <IconButton
+            onClick={() => {
+              dispatch(
+                setShowMeasuringFileUploadPanel(!showMeasuringFileUploadPanel)
+              );
+              console.log("MeasuringUploadButton clicked");
+            }}
           >
-            <Badge badgeContent={measuringsUploadingCount} color="secondary">
-              <DriveFolderUploadIcon sx={{ color: "red", fontSize: 24 }} />
-            </Badge>
-          </Tooltip>
-        </IconButton>
-      </Box>
+            <Tooltip
+              title={t("Measurings") + " " + t("Upload") + " " + t("Status")}
+            >
+              <Badge badgeContent={measuringsUploadingCount} color="secondary">
+                <DriveFolderUploadIcon sx={{ color: "red", fontSize: 24 }} />
+              </Badge>
+            </Tooltip>
+          </IconButton>
+        </Box>
+      ) : null}
     </div>
   );
 }

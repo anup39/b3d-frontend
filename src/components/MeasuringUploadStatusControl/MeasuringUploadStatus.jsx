@@ -9,6 +9,8 @@ export default function MeasuringUploadStatus() {
     (state) => state.mapView.showMeasuringFileUploadPanel
   );
 
+  console.log(showMeasuringFileUploadPanel, "showMeasuringFileUploadPanel");
+
   const project_id = useSelector((state) => state.project.project_id);
   const client_id = useSelector((state) => state.client.clientDetail.client_id);
 
@@ -24,7 +26,9 @@ export default function MeasuringUploadStatus() {
     }
   );
 
-  let measuringsUploadingCount = project_id ? measuringsUploads?.length : 0;
+  let measuringsUploadsCount = measuringsUploads?.filter(
+    (measuring) => measuring.status === "Uploading"
+  ).length;
 
   return (
     <div>
@@ -35,7 +39,7 @@ export default function MeasuringUploadStatus() {
         </div>
       ) : (
         <MeasuringUploadButton
-          measuringsUploadingCount={measuringsUploadingCount}
+          measuringsUploadingCount={measuringsUploadsCount}
         />
       )}
     </div>

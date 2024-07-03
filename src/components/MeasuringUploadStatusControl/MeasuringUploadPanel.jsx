@@ -1,12 +1,9 @@
-import { useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import React from "react";
 import PropTypes from "prop-types";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
@@ -47,7 +44,6 @@ export default function MeasuringUploadPanel({ measuringsUploads }) {
             ({
               id,
               task_id,
-              name,
               file_name,
               total_features,
               progress,
