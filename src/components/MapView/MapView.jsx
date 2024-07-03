@@ -137,8 +137,6 @@ export default function MapView() {
     showUploadingCategories,
   } = useSelector((state) => state.mapView);
 
-  console.log("mapview");
-
   const current_tif = useSelector(
     (state) => state.mapView.currentMapDetail.current_tif
   );
@@ -166,7 +164,6 @@ export default function MapView() {
   const showThreeDFrame = useSelector((state) => state.mapView.showThreeDFrame);
 
   const handleDrawerClose = () => {
-    console.log(!openSidebar);
     dispatch(setOpenSidebar(!openSidebar));
   };
 
@@ -207,7 +204,6 @@ export default function MapView() {
       fetchTifDataByClientId(client_id).then((res) => {
         const tifs = res;
         tifs.map((tif) => {
-          console.log(tif);
           AddRasterToMap({
             map: map,
             layerId: `${tif.id}-layer`,
@@ -284,7 +280,6 @@ export default function MapView() {
       fetchTifDataByClientId(client_id).then((res) => {
         const tifs = res;
         tifs.map((tif) => {
-          console.log(tif);
           RemoveSourceAndLayerFromMap({
             map: map,
             layerId: `${tif.id}-layer`,

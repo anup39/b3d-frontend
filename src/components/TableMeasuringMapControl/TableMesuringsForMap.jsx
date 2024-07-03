@@ -92,7 +92,6 @@ export default function TableMeasuringsForMap({
       row?.count !== 0
   );
 
-  console.log(rows, "rows");
   useEffect(() => {
     if (rows.length > 0) {
       if (rows.length < 4 || mode === "print") {
