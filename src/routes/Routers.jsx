@@ -19,7 +19,7 @@ export default function Routers() {
   return (
     <Router>
       <Routes>
-        <Route path="/layout" element={<LayoutNew />} />
+        <Route path="/layoutnew" element={<LayoutNew />} />
         <Route exact path="/" element={<Login />} />
         <Route exact path="/class" element={<Classification />} />
         <Route exact path="/inspection-type" element={<InspectionTypes />} />
