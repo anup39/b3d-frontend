@@ -36,6 +36,7 @@ import { fetchIndoorsByProjectId } from "../api/api";
 import LanguageSwitcher from "../components/LanguageSwitcher/LanguageSwitcher";
 
 export default function Map({ popUpRef }) {
+  console.log("Map component");
   const dispatch = useDispatch();
   const mapContainer = useRef(null);
   const [map, setMap] = useState();
