@@ -13,11 +13,13 @@ import ReportPrint from "../components/MapView/ReportPrint";
 import Inspection from "../pages/Inspection";
 import InspectionFlow from "../pages/InspectionFlow";
 import InspectionReport from "../pages/InspectionReport";
+import LayoutNew from "../pages/LayoutNew";
 
 export default function Routers() {
   return (
     <Router>
       <Routes>
+        <Route path="/layout" element={<LayoutNew />} />
         <Route exact path="/" element={<Login />} />
         <Route exact path="/class" element={<Classification />} />
         <Route exact path="/inspection-type" element={<InspectionTypes />} />
