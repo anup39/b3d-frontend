@@ -4,6 +4,7 @@ import { MantineLogo } from "@mantinex/mantine-logo";
 // import { useRef } from "react";
 import MapNew from "../../map/MapNew";
 import ThemeSwitcher from "../Mantine/common/ThemeSwitcher";
+import { HeaderTabs } from "../Mantine/common/HeaderTabs";
 
 export function BasicAppShell() {
   const [opened, { toggle }] = useDisclosure();
@@ -26,6 +27,7 @@ export function BasicAppShell() {
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <MantineLogo size={30} />
           <ThemeSwitcher />
+          {/* <HeaderTabs /> */}
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">
