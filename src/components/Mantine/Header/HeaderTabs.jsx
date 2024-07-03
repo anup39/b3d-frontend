@@ -17,11 +17,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconLogout,
-  IconHeart,
-  IconStar,
-  IconMessage,
   IconSettings,
-  IconPlayerPause,
   IconTrash,
   IconSwitchHorizontal,
   IconChevronDown,
