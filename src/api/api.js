@@ -36,7 +36,7 @@ const fetchClientDetailsByClientId = async (client_id) => {
       },
     }
   );
-  return response.data;
+  return await response.data;
 };
 
 const fetchTifDataByProjectId = async (project_id) => {

@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Button } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setclients } from "../../reducers/Client";
@@ -25,7 +25,6 @@ export default function ClientForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
-  const [roles, setRoles] = useState([]);
 
   // useEffect(() => {
   //   axios
@@ -37,7 +36,7 @@ export default function ClientForm() {
   // }, []);
 
   const handleCreateClient = (event) => {
-    // TODO : Here handle the error since username and email  are checked in backend
+    // TODO : Here handle the error since username and email  are checked in backend, also group is hardcore for role admin, since both id represens admin group for client
     event.preventDefault();
     setLoading(true);
     const data_ = new FormData(event.currentTarget);

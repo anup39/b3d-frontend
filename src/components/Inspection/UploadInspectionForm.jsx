@@ -181,12 +181,12 @@ const UploadInspectionForm = ({ project_id }) => {
         <form
           // onSubmit={handleUploadPhotos}
           style={{
-            width: "80%",
-            maxWidth: "800px",
+            width: "90%",
+            maxWidth: "1200px",
             background: "#fff",
             padding: "20px",
             zIndex: 10000,
-            height: "400px",
+            height: "500px",
             margin: "120px auto",
             overflow: "auto",
           }}

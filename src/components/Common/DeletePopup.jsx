@@ -11,6 +11,7 @@ import {
   setshowToast,
   settoastMessage,
   settoastType,
+  setshowDeleteLoader,
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -26,17 +27,19 @@ export default function DeletePopup() {
   const deleteTarget = useSelector(
     (state) => state.displaySettings.deleteTarget
   );
-  const [loading, setLoading] = useState(false);
+  const showDeleteLoader = useSelector(
+    (state) => state.displaySettings.showDeleteLoader
+  );
 
   const handleDeleteProject = (event) => {
     event.preventDefault();
-    setLoading(true);
+    dispatch(setshowDeleteLoader(true));
     axios
       .delete(
         `${import.meta.env.VITE_API_DASHBOARD_URL}/${deleteTarget}/${deleteId}/`
       )
       .then(() => {
-        setLoading(false);
+        dispatch(setshowDeleteLoader(false));
         dispatch(setshowDeletePopup(false));
         dispatch(setdeletePopupMessage("Are you sure you want to delete?"));
         dispatch(setdeleteId(null));
@@ -47,7 +50,7 @@ export default function DeletePopup() {
         window.location.reload(true);
       })
       .catch(() => {
-        setLoading(false);
+        dispatch(setshowDeleteLoader(false));
         dispatch(setshowDeletePopup(false));
         dispatch(setdeletePopupMessage("Are you sure you want to delete?"));
         dispatch(setdeleteId(null));
@@ -96,11 +99,11 @@ export default function DeletePopup() {
                   disabled={deleteId === null || deleteTarget === null}
                   type="submit"
                   fullWidth
-                  variant={loading ? "outlined" : "contained"}
+                  variant={showDeleteLoader ? "outlined" : "contained"}
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  {loading ? null : `Delete`}
-                  {loading ? <CircularProgress /> : null}
+                  {showDeleteLoader ? null : `Delete`}
+                  {showDeleteLoader ? <CircularProgress /> : null}
                 </Button>
               </Grid>
               <Grid item xs={12}>

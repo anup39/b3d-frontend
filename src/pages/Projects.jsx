@@ -22,8 +22,6 @@ export default function Projects() {
   const projects = useSelector((state) => state.project.projects);
   const group_name = useSelector((state) => state.auth.role.group_name);
   const projects_ = useSelector((state) => state.auth.role.project);
-  console.log("projects_", projects_);
-  console.log("group_name", group_name);
   // console.log("projects", projects);
 
   // const { data: projects } = useGetProjectsQuery(client);
@@ -74,7 +72,6 @@ export default function Projects() {
 
     if (client_id) {
       fetchClientDetailsByClientId(client_id).then((res) => {
-        console.log(res, "res");
         const client_detail = {
           client_id: client_id,
           client_name: res.name,

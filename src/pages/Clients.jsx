@@ -1,34 +1,51 @@
 import { useSelector } from "react-redux";
 import AppBar from "../components/Common/AppBar";
 import ClientCard from "../components/Client/ClientCard";
-import ClientForm from "../components/Client/ClientForm";
-import { useGetClientsQuery } from "../api/clientApi";
-import { useState, useEffect } from "react";
-import { CircularProgress, Typography, Box } from "@mui/material";
+import {
+  useGetClientsQuery,
+  useGetClientsByClientIdQuery,
+} from "../api/clientApi";
+import {
+  CircularProgress,
+  Typography,
+  Box,
+  Alert,
+  AlertTitle,
+} from "@mui/material";
+import NewClientForm from "../components/Client/NewClientForm";
+import { useTranslation } from "react-i18next";
 
 export default function Clients() {
-  // const user_id = useSelector((state) => state.auth.user_id);
+  const { t } = useTranslation();
   const permissions = useSelector((state) => state.auth?.role?.permissions);
-  // const group_name = useSelector((state) => state.auth.role.group_name);
   const client = useSelector((state) => state.auth?.role?.client);
-  const [loading, setLoading] = useState(true);
 
-  const { data: clients } = useGetClientsQuery(client);
-  useEffect(() => {
-    if (permissions) {
-      setLoading(false);
+  const {
+    data: allClients,
+    isLoading: loadingAll,
+    error: errorAll,
+  } = useGetClientsQuery(client, {
+    skip: !!client,
+  });
+
+  const {
+    data: clientById,
+    isLoading: loadingSingle,
+    error: errorSingle,
+  } = useGetClientsByClientIdQuery(
+    { client_id: client },
+    {
+      skip: !client,
     }
-  }, [permissions]);
+  );
 
-  if (loading) {
+  const isLoading = loadingAll || loadingSingle;
+  const error = errorAll || errorSingle;
+  const data = client ? clientById : allClients;
+
+  if (isLoading) {
     return (
-      <Box
-        sx={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-        }}
-      >
+      <Box sx={{ position: "fixed", top: "50%", left: "50%" }}>
         <Box
           sx={{
             display: "flex",
@@ -36,32 +53,37 @@ export default function Clients() {
             alignItems: "center",
           }}
         >
-          <CircularProgress></CircularProgress>
-          <Typography>Loading</Typography>
+          <CircularProgress />
+          <Typography>{t("Loading")}</Typography>
         </Box>
       </Box>
-    ); // or your loading spinner
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert severity="error">
+        <AlertTitle>{error?.message ?? "Error"}</AlertTitle>
+        <strong>{t("Error") + " " + t("Loading") + " " + t("Data")}</strong>
+      </Alert>
+    );
   }
 
   return (
     <div>
       <AppBar />
-      {permissions && permissions.includes("add_client") ? (
-        <ClientForm />
-      ) : null}
-
+      {permissions && permissions.includes("add_client") && <NewClientForm />}
       <div style={{ backgroundColor: "#F2F6F8" }}>
-        {clients
-          ? clients.map((client) => (
-              <ClientCard
-                key={client.id}
-                id={client.id}
-                name={client.name}
-                description={client.description}
-                created_at={client.created_at}
-              />
-            ))
-          : null}
+        {data &&
+          data.map((client) => (
+            <ClientCard
+              key={client.id}
+              id={client.id}
+              name={client.name}
+              description={client.description}
+              created_at={client.created_at}
+            />
+          ))}
       </div>
     </div>
   );
