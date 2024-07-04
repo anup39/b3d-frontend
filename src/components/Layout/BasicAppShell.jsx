@@ -4,7 +4,11 @@ import { MantineLogo } from "@mantinex/mantine-logo";
 // import { useRef } from "react";
 import MapNew from "../../map/MapNew";
 import ThemeSwitcher from "../Mantine/common/ThemeSwitcher";
+<<<<<<< HEAD
 import { HeaderTabs } from "../Mantine/common/HeaderTabs";
+=======
+import { HeaderTabs } from "../Mantine/Header/HeaderTabs";
+>>>>>>> 6dda7f11b4f2482b170079027959d311cbefd76d
 
 export function BasicAppShell() {
   const [opened, { toggle }] = useDisclosure();
@@ -23,11 +27,15 @@ export function BasicAppShell() {
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
+        <Group h="100%">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+<<<<<<< HEAD
           <MantineLogo size={30} />
           <ThemeSwitcher />
           {/* <HeaderTabs /> */}
+=======
+          <HeaderTabs w="100%" />
+>>>>>>> 6dda7f11b4f2482b170079027959d311cbefd76d
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">
@@ -40,7 +48,7 @@ export function BasicAppShell() {
             <Skeleton key={index} h={28} mt="sm" animate={false} />
           ))}
       </AppShell.Navbar>
-      <AppShell.Main>
+      <AppShell.Main p="0">
         <MapNew />
       </AppShell.Main>
       <AppShell.Aside p="md">Aside</AppShell.Aside>

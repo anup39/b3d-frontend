@@ -5,45 +5,34 @@ import {
   Avatar,
   UnstyledButton,
   Group,
+  Flex,
   Text,
   Menu,
   Tabs,
   Burger,
   rem,
   useMantineTheme,
+  Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconLogout,
-  IconHeart,
-  IconStar,
-  IconMessage,
   IconSettings,
-  IconPlayerPause,
   IconTrash,
   IconSwitchHorizontal,
   IconChevronDown,
 } from "@tabler/icons-react";
-import { MantineLogo } from "@mantinex/mantine-logo";
 import classes from "./HeaderTabs.module.css";
+import ThemeSwitcher from "../common/ThemeSwitcher";
 
 const user = {
-  name: "Jane Spoonfighter",
+  name: "New User",
   email: "janspoon@fighter.dev",
   image:
     "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
 };
 
-const tabs = [
-  "Home",
-  "Orders",
-  "Education",
-  "Community",
-  "Forums",
-  "Support",
-  "Account",
-  "Helpdesk",
-];
+const tabs = ["Clients", "Classifications"];
 
 export function HeaderTabs() {
   const theme = useMantineTheme();
@@ -59,10 +48,28 @@ export function HeaderTabs() {
   return (
     <div className={classes.header}>
       <Container className={classes.mainSection} size="md">
-        <Group justify="space-between">
-          <MantineLogo size={28} />
+        <Flex justify="space-around" align="center">
+          <Image
+            style={{ scale: "4" }}
+            fit="contain"
+            h="34px"
+            w="34px"
+            src={"src/assets/b3dLogo.svg"}
+          ></Image>
 
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+          <Tabs
+            defaultValue="Home"
+            variant="outline"
+            visibleFrom="sm"
+            classNames={{
+              root: classes.tabs,
+              list: classes.tabsList,
+              tab: classes.tab,
+            }}
+          >
+            <Tabs.List>{items}</Tabs.List>
+          </Tabs>
 
           <Menu
             width={260}
@@ -96,40 +103,6 @@ export function HeaderTabs() {
               </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item
-                leftSection={
-                  <IconHeart
-                    style={{ width: rem(16), height: rem(16) }}
-                    color={theme.colors.red[6]}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Liked posts
-              </Menu.Item>
-              <Menu.Item
-                leftSection={
-                  <IconStar
-                    style={{ width: rem(16), height: rem(16) }}
-                    color={theme.colors.yellow[6]}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Saved posts
-              </Menu.Item>
-              <Menu.Item
-                leftSection={
-                  <IconMessage
-                    style={{ width: rem(16), height: rem(16) }}
-                    color={theme.colors.blue[6]}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Your comments
-              </Menu.Item>
-
               <Menu.Label>Settings</Menu.Label>
               <Menu.Item
                 leftSection={
@@ -165,16 +138,7 @@ export function HeaderTabs() {
               <Menu.Divider />
 
               <Menu.Label>Danger zone</Menu.Label>
-              <Menu.Item
-                leftSection={
-                  <IconPlayerPause
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-              >
-                Pause subscription
-              </Menu.Item>
+
               <Menu.Item
                 color="red"
                 leftSection={
@@ -188,21 +152,8 @@ export function HeaderTabs() {
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
-        </Group>
-      </Container>
-      <Container size="md">
-        <Tabs
-          defaultValue="Home"
-          variant="outline"
-          visibleFrom="sm"
-          classNames={{
-            root: classes.tabs,
-            list: classes.tabsList,
-            tab: classes.tab,
-          }}
-        >
-          <Tabs.List>{items}</Tabs.List>
-        </Tabs>
+          <ThemeSwitcher />
+        </Flex>
       </Container>
     </div>
   );
