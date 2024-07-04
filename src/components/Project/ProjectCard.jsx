@@ -180,12 +180,12 @@ export default function ProjectCard({
                   </Tooltip>
                 </Grid>
                 <Grid item>
-                  <Tooltip title="Inspection">
-                    <RoofingIcon
-                      onClick={handleInspection}
-                      sx={{ "&:hover": { cursor: "pointer" } }}
-                    />
-                  </Tooltip>
+                  {/* <Tooltip title="Inspection">
+                  <RoofingIcon
+                    onClick={handleInspection}
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                  />
+                </Tooltip> */}
                 </Grid>
                 {group_name === "super_admin" || group_name === "admin" ? (
                   <>
