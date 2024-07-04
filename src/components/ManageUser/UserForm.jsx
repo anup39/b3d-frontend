@@ -247,7 +247,7 @@ export default function UserForm({ client_id }) {
                   id="user-roles"
                   options={roles}
                   getOptionLabel={(option) => option.name}
-                  style={{ width: 300 }}
+                  style={{ width: 260 }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
