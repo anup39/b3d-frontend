@@ -154,7 +154,12 @@ export default function InspectionReport() {
           >
             Inspection
           </Button>
-          <Button onClick={handlePrint} variant="contained" color="primary">
+          <Button
+            disabled
+            onClick={handlePrint}
+            variant="contained"
+            color="primary"
+          >
             Print
           </Button>
         </Box>
