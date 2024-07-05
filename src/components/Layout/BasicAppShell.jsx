@@ -9,8 +9,11 @@ export function BasicAppShell() {
   const [activeTab, setActiveTab] = useState("Map");
 
   return (
-    <AppShell header={{ height: "110px" }}>
-      <AppShell.Header>
+    <AppShell
+      px={{ mobileSmall: "1rem", lg: "1rem", xl: "2rem" }}
+      header={{ height: "110px" }}
+    >
+      <AppShell.Header style={{ paddingTop: "1rem" }}>
         <HeaderSection
           activeTab={activeTab}
           setActiveTab={setActiveTab}
