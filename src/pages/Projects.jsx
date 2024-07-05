@@ -96,7 +96,6 @@ export default function Projects() {
           >
             {group_name === "super_admin" || group_name === "admin" ? (
               <>
-                {" "}
                 <ProjectForm client_id={client_id} />
                 <URL3d client_id={client_id} />
                 <IndoorForm client_id={client_id} />
