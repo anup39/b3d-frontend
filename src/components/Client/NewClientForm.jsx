@@ -268,25 +268,6 @@ export default function NewClientForm({ id, closeEditForm }) {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  id="description"
-                  name="description"
-                  label={t("Description")}
-                  variant="outlined"
-                  size="small"
-                  InputLabelProps={{ shrink: true }}
-                  required
-                  fullWidth
-                  value={clientData?.description || ""}
-                  onChange={(e) =>
-                    setClientData({
-                      ...clientData,
-                      description: e.target.value,
-                    })
-                  }
-                />
-              </Grid>
-              <Grid item xs={12}>
                 <Button
                   type="submit"
                   fullWidth

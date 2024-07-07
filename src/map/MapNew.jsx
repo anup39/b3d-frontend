@@ -17,5 +17,5 @@ export default function MapNew() {
     map.addControl(new maplibregl.NavigationControl(), "top-right");
   }, []);
 
-  return <div ref={mapContainer} className="h-screen" />;
+  return <div ref={mapContainer} className="h-[100%]" />;
 }

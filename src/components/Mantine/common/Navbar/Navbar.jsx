@@ -1,6 +1,4 @@
 import { Tabs, Button, Flex, Drawer, Group } from "@mantine/core";
-// import "./index.css";
-import { useState } from "react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
 const NavBar = ({ activeTab, setActiveTab }) => {

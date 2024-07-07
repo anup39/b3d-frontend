@@ -84,17 +84,6 @@ export default function ProjectEditForm({
 
   return (
     <>
-      <Tooltip title={t("Create") + " " + t("Property")}>
-        <Button
-          onClick={openForm}
-          sx={{ margin: "5px" }}
-          variant="contained"
-          color="error"
-        >
-          {t("Create") + " " + t("Property")}
-        </Button>
-      </Tooltip>
-
       <div
         style={{
           position: "fixed",

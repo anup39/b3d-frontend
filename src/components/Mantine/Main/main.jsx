@@ -4,19 +4,17 @@ import MapNew from "../../../map/MapNew";
 const Main = ({ activeTab }) => {
   return (
     <Tabs value={activeTab}>
-      <Tabs.Panel value="Map">
-        <div style={{ height: "600px", width: "100%" }}>
+      <Tabs.Panel w={"100%"} value="Map">
+        <div style={{ height: "500px", border: "1px solid red" }}>
           <MapNew />
         </div>
       </Tabs.Panel>
-      <Tabs.Panel h value="Clients">
-        <div style={{ height: "600px", width: "100%", background: "#38806b" }}>
-          Clients
-        </div>
+      <Tabs.Panel w={"100%"} value="Clients">
+        <div style={{ height: "100%", border: "1px solid red" }}>Clients</div>
       </Tabs.Panel>
-      <Tabs.Panel value="Classifications">
-        <div style={{ height: "600px", width: "100%", background: "#38806b" }}>
-          Classification panel
+      <Tabs.Panel w={"100%"} value="Classifications">
+        <div style={{ height: "100%", border: "1px solid red" }}>
+          Classifications
         </div>
       </Tabs.Panel>
     </Tabs>
