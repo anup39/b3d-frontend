@@ -1,6 +1,7 @@
 import { Tabs, Button, Flex, Drawer, Group } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
+// we use useNav here and provide link to route
 const Navbar = ({ activeTab, setActiveTab }) => {
   const [opened, { open, close }] = useDisclosure(false);
   const isMd = useMediaQuery("(max-width: 768px)");

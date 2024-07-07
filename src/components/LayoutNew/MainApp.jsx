@@ -4,6 +4,7 @@ import HeaderSection from "../MantineComponents/Header/Header";
 import { useState } from "react";
 import MainSection from "../MantineComponents/MainSection/MainSection";
 
+// It is treated as app.jsx
 export function MainApp() {
   const [opened, { toggle }] = useDisclosure();
   const [activeTab, setActiveTab] = useState("Map");

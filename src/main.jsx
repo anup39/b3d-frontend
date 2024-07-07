@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import "./i18n.js";
 import "@mantine/core/styles.css";
 import { Container, MantineProvider, createTheme, rem } from "@mantine/core";
+import { MainApp } from "./components/LayoutNew/MainApp.jsx";
 
 const CONTAINER_SIZES = {
   xxs: rem(300),
@@ -47,6 +48,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
       <MantineProvider theme={theme}>
+        {/* <MainApp /> */}
         <App />
       </MantineProvider>
     </Provider>
