@@ -23,6 +23,9 @@ import { projectApi } from "./api/projectApi";
 import { clientApi } from "./api/clientApi";
 import { measuringFileUploadApi } from "./api/measuringFileUpload";
 import { setupListeners } from "@reduxjs/toolkit/query";
+import { indoorApi } from "./api/indoorApi";
+import { rasterDataApi } from "./api/rasterDataApi";
+import { rolesApi } from "./api/rolesApi";
 
 export const store = configureStore({
   reducer: {
@@ -49,12 +52,18 @@ export const store = configureStore({
     [projectApi.reducerPath]: projectApi.reducer,
     [clientApi.reducerPath]: clientApi.reducer,
     [measuringFileUploadApi.reducerPath]: measuringFileUploadApi.reducer,
+    [indoorApi.reducerPath]: indoorApi.reducer,
+    [rolesApi.reducerPath]: rolesApi.reducer,
+    [rasterDataApi.reducerPath]: rasterDataApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       projectApi.middleware as any,
       clientApi.middleware as any,
-      measuringFileUploadApi.middleware as any
+      measuringFileUploadApi.middleware as any,
+      indoorApi.middleware as any,
+      rolesApi.middleware as any,
+      rasterDataApi.middleware as any
     ),
 });
 

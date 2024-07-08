@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -9,10 +9,19 @@ import {
   CircularProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deleteIndoorById, fetchIndoorsByProjectId } from "../../api/api";
 import { useSelector, useDispatch } from "react-redux";
 import { setIndoors } from "../../reducers/Project";
 import { useTranslation } from "react-i18next";
+import {
+  useDeleteIndoorByIdMutation,
+  useGetIndoorByProjectIdQuery,
+} from "../../api/indoorApi";
+import { notifications } from "@mantine/notifications";
+import {
+  setshowToast,
+  settoastMessage,
+  settoastType,
+} from "../../reducers/DisplaySettings";
 
 export default function IndoorCard({ indoor }) {
   const { t } = useTranslation();
@@ -21,17 +30,37 @@ export default function IndoorCard({ indoor }) {
   const projectId = useSelector((state) => state.project.editIndoorProjectId);
   const [loading, setLoading] = useState(false);
 
-  const handleDeleteIndoor = () => {
+  const [deleteIndoorById] = useDeleteIndoorByIdMutation();
+
+  const { data: indoors, refetch } = useGetIndoorByProjectIdQuery(
+    { project_id: projectId },
+    { refetchOnMountOrArgChange: true }
+  );
+
+  const handleDeleteIndoor = async () => {
     setLoading(true);
-    deleteIndoorById(id).then((res) => {
-      console.log(res, "res delete indoor");
-      fetchIndoorsByProjectId(projectId).then((res) => {
-        console.log(res, "res fetch indoors");
-        dispatch(setIndoors(res));
-        setLoading(false);
+    deleteIndoorById({ indoor_id: id })
+      .unwrap()
+      .then(() => {
+        refetch();
+      })
+      .catch((error) => {
+        dispatch(setshowToast(true));
+        dispatch(
+          settoastMessage(
+            error?.error
+              ? error?.error
+              : `${t("Failed")} +" "+ ${t("To")} +" "+ ${t("Delete")}`
+          )
+        );
+        dispatch(settoastType("error"));
       });
-    });
   };
+
+  useEffect(() => {
+    dispatch(setIndoors(indoors));
+  }, [refetch, indoors]);
+
   return (
     <Box
       sx={{
