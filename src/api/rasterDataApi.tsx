@@ -4,6 +4,7 @@ interface rasterDataApiParams {
   project: string;
   isDisplay: number;
   client: string;
+  data: any;
 }
 
 export const rasterDataApi = createApi({
@@ -27,7 +28,20 @@ export const rasterDataApi = createApi({
         method: "GET",
       }),
     }),
+    // upload rasterData
+    uploadRasterData: builder.mutation<any, rasterDataApiParams>({
+      query: ({ data }) => ({
+        url: `/raster-data/`,
+        method: "POST",
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"),
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams(data).toString(),
+      }),
+    }),
   }),
 });
 
-export const { useGetRasterDataByProjectIdQuery } = rasterDataApi;
+export const { useGetRasterDataByProjectIdQuery, useUploadRasterDataMutation } =
+  rasterDataApi;
