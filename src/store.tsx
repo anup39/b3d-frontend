@@ -26,6 +26,9 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { indoorApi } from "./api/indoorApi";
 import { rasterDataApi } from "./api/rasterDataApi";
 import { rolesApi } from "./api/rolesApi";
+import { globalCategoryApi } from "./api/globalCategoryApi";
+import { globalCategoryStyleApi } from "./api/globalCategoryStyleApi";
+import { globalSubCategoryApi } from "./api/globalSubCategoryAPi";
 
 export const store = configureStore({
   reducer: {
@@ -55,6 +58,9 @@ export const store = configureStore({
     [indoorApi.reducerPath]: indoorApi.reducer,
     [rolesApi.reducerPath]: rolesApi.reducer,
     [rasterDataApi.reducerPath]: rasterDataApi.reducer,
+    [globalCategoryApi.reducerPath]: globalCategoryApi.reducer,
+    [globalCategoryStyleApi.reducerPath]: globalCategoryStyleApi.reducer,
+    [globalSubCategoryApi.reducerPath]: globalSubCategoryApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -63,7 +69,10 @@ export const store = configureStore({
       measuringFileUploadApi.middleware as any,
       indoorApi.middleware as any,
       rolesApi.middleware as any,
-      rasterDataApi.middleware as any
+      rasterDataApi.middleware as any,
+      globalCategoryApi.middleware as any,
+      globalCategoryStyleApi.middleware as any,
+      globalSubCategoryApi.middleware as any
     ),
 });
 

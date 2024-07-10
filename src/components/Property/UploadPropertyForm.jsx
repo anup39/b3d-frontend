@@ -2,7 +2,6 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button, CircularProgress } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
-import axios from "axios";
 import { createImagePNG } from "../../maputils/createMapImage";
 import {
   setshowTifUpload,
@@ -137,19 +136,6 @@ export default function UploadPropertyForm() {
         chunkFormData.append("file_name", fileName);
         chunkFormData.append("created_by", user_id);
 
-        // await axios.post(
-        //   `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/`,
-        //   chunkFormData,
-        //   {
-        //     onUploadProgress: (progressEvent) => {
-        //       const percentCompleted = Math.round(
-        //         (currentChunk / CHUNKS_COUNT) * 100
-        //       );
-
-        //       dispatch(setProgress(percentCompleted));
-        //     },
-        //   }
-        // );
         try {
           await uploadRasterData({
             data: formData,

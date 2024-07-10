@@ -1,8 +1,9 @@
 import { AppShell } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import HeaderSection from "../MantineComponents/Header/Header";
+import HeaderSection from "../MantineComponents/HeaderSection/Header";
 import { useState } from "react";
 import MainSection from "../MantineComponents/MainSection/MainSection";
+import FooterSection from "../MantineComponents/FooterSection/Footer";
 
 // It is treated as app.jsx
 export function MainApp() {
@@ -12,7 +13,7 @@ export function MainApp() {
   return (
     <AppShell
       px={{ mobileSmall: "1rem", lg: "1rem", xl: "2rem" }}
-      header={{ height: "110px" }}
+      header={{ height: "120px" }}
     >
       <HeaderSection
         activeTab={activeTab}
@@ -23,6 +24,7 @@ export function MainApp() {
       <AppShell.Main>
         <MainSection activeTab={activeTab} />
       </AppShell.Main>
+      <FooterSection />
     </AppShell>
   );
 }
