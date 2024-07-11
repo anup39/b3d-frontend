@@ -19,11 +19,30 @@ export const globalCategoryApi = createApi({
   }),
   tagTypes: ["globalCategoryApi"],
   endpoints: (builder) => ({
+    // create global category
+    createGlobalCategory: builder.mutation<any, globalCategoryApiParams>({
+      query: ({ data }) => ({
+        url: `/global-category/`,
+        method: "POST",
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"),
+        },
+        body: data,
+      }),
+    }),
     // fetch global categories
     getGlobalCategory: builder.query<any, globalCategoryApiParams>({
       query: () => ({
         url: `/global-category/`,
         method: "GET",
+      }),
+    }),
+    // fetch global categories by id
+    getGlobalCategoryById: builder.query<any, globalCategoryApiParams>({
+      query: ({ category_id }) => ({
+        url: `/global-category/`,
+        method: "GET",
+        params: { category_id },
       }),
     }),
     // update global category by category_id
@@ -40,5 +59,9 @@ export const globalCategoryApi = createApi({
   }),
 });
 
-export const { useGetGlobalCategoryQuery, useUpdateGlobalCategoryMutation } =
-  globalCategoryApi;
+export const {
+  useCreateGlobalCategoryMutation,
+  useGetGlobalCategoryQuery,
+  useGetGlobalCategoryByIdQuery,
+  useUpdateGlobalCategoryMutation,
+} = globalCategoryApi;

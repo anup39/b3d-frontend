@@ -14,6 +14,11 @@ import {
   settoastType,
 } from "../../reducers/DisplaySettings";
 import { useTranslation } from "react-i18next";
+import {
+  useCreateGlobalCategoryMutation,
+  useGetGlobalCategoryQuery,
+} from "../../api/globalCategoryApi";
+import { useCreateGlobalCategoryStyleMutation } from "../../api/globalCategoryStyleApi";
 
 export default function CategoryForm() {
   const { t } = useTranslation();
@@ -28,6 +33,12 @@ export default function CategoryForm() {
   const [selectedStrokeColor, setSelectedStrokeColor] = useState("#d71414");
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
+
+  const { data: globalCategories, refetch: refetchGlobalCategories } =
+    useGetGlobalCategoryQuery();
+
+  const [createGlobalCategory] = useCreateGlobalCategoryMutation();
+  const [createGlobalCategoryStyle] = useCreateGlobalCategoryStyleMutation();
 
   const handleCreateCategory = (event) => {
     event.preventDefault();
@@ -47,27 +58,31 @@ export default function CategoryForm() {
         created_by: user_id,
       };
 
-      axios
-        .post(
-          `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`,
-          data
-        )
+      // axios
+      //   .post(
+      //     `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`,
+      //     data
+      //   )
+      createGlobalCategory({ data })
+        .unwrap()
         .then((res) => {
           const style_data = {
             fill: selectedFillColor,
             fill_opacity: fillOpacityInput.value,
             stroke: selectedStrokeColor,
             stroke_width: strokeWidthInput.value,
-            category: res.data.id,
+            category: res.id,
             created_by: user_id,
           };
-          axios
-            .post(
-              `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/global-category-style/`,
-              style_data
-            )
+          // axios
+          //   .post(
+          //     `${
+          //       import.meta.env.VITE_API_DASHBOARD_URL
+          //     }/global-category-style/`,
+          //     style_data
+          //   )
+          createGlobalCategoryStyle({ style_data })
+            .unwrap()
             .then(() => {
               setLoading(false);
               dispatch(setshowToast(true));
@@ -78,12 +93,14 @@ export default function CategoryForm() {
               );
               dispatch(settoastType("success"));
               closeForm();
-              axios
-                .get(
-                  `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
-                )
+              // axios
+              //   .get(
+              //     `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
+              //   )
+              refetchGlobalCategories()
+                .unwrap()
                 .then((res) => {
-                  dispatch(setCategorys(res.data));
+                  dispatch(setCategorys(res));
                 })
                 .catch(() => {});
             });

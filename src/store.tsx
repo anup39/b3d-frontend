@@ -29,6 +29,9 @@ import { rolesApi } from "./api/rolesApi";
 import { globalCategoryApi } from "./api/globalCategoryApi";
 import { globalCategoryStyleApi } from "./api/globalCategoryStyleApi";
 import { globalSubCategoryApi } from "./api/globalSubCategoryAPi";
+import { categoryApi } from "./api/categoryApi";
+import { updateExtraFieldsApi } from "./api/updateExtraFieldsApi";
+import { polygonDataApi } from "./api/polygonDataApi";
 
 export const store = configureStore({
   reducer: {
@@ -61,6 +64,9 @@ export const store = configureStore({
     [globalCategoryApi.reducerPath]: globalCategoryApi.reducer,
     [globalCategoryStyleApi.reducerPath]: globalCategoryStyleApi.reducer,
     [globalSubCategoryApi.reducerPath]: globalSubCategoryApi.reducer,
+    [categoryApi.reducerPath]: categoryApi.reducer,
+    [updateExtraFieldsApi.reducerPath]: updateExtraFieldsApi.reducer,
+    [polygonDataApi.reducerPath]: polygonDataApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -72,7 +78,10 @@ export const store = configureStore({
       rasterDataApi.middleware as any,
       globalCategoryApi.middleware as any,
       globalCategoryStyleApi.middleware as any,
-      globalSubCategoryApi.middleware as any
+      globalSubCategoryApi.middleware as any,
+      polygonDataApi.middleware as any,
+      categoryApi.middleware as any,
+      updateExtraFieldsApi.middleware as any
     ),
 });
 

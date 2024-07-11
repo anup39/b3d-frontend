@@ -9,6 +9,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { setshowGeomFormPopup } from "../../reducers/DisplaySettings";
 import { setWKTGeometry } from "../../reducers/DrawnGeometry";
 import AutoCompleteMap from "../MapView/AutoCompleteMap";
+import { useCreatePolygonDataMutation } from "../../api/polygonDataApi";
+import { useGetCategoryDataByIdQuery } from "../../api/categoryApi";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -29,32 +31,40 @@ export default function CategoryGeomForm() {
   const client_id = useSelector((state) => state.client.clientDetail.client_id);
   const project_id = useSelector((state) => state.project.project_id);
 
+  const [createPolygonData] = useCreatePolygonDataMutation();
+  const { data: categoryDataById, refetch: refetchCategoryDataById } =
+    useGetCategoryDataByIdQuery({ category_id }, { skip: !!category_id });
+
   const handleCreateCategoryStyle = (event) => {
     event.preventDefault();
 
     if (selectedCategoryId !== null) {
       if (selectedCategoryId) {
-        axios
-          .get(
-            `${
-              import.meta.env.VITE_API_DASHBOARD_URL
-            }/category/${selectedCategoryId}/`
-          )
+        // axios
+        //   .get(
+        //     `${
+        //       import.meta.env.VITE_API_DASHBOARD_URL
+        //     }/category/${selectedCategoryId}/`
+        //   )
+        refetchCategoryDataById()
+          .unwrap()
           .then((res) => {
             const data = {
               client: parseInt(client_id),
               project: parseInt(project_id),
-              standard_category: res.data.standard_category,
-              sub_category: res.data.sub_category,
+              standard_category: res.standard_category,
+              sub_category: res.sub_category,
               category: selectedCategoryId,
               geom: wkt_geometry,
             };
 
-            axios
-              .post(
-                `${import.meta.env.VITE_API_DASHBOARD_URL}/polygon-data/`,
-                data
-              )
+            // axios
+            //   .post(
+            //     `${import.meta.env.VITE_API_DASHBOARD_URL}/polygon-data/`,
+            //     data
+            //   )
+            createPolygonData({ data })
+              .unwrap()
               .then(() => {
                 setOpenCategoryStyleSuccessToast(true);
                 setOpenCategoryStyleErrorToast(false);
@@ -69,7 +79,8 @@ export default function CategoryGeomForm() {
                   }
                 }, 3000);
               })
-              .catch(() => {
+              .catch((error) => {
+                console.log(error);
                 setOpenCategoryStyleErrorToast(true);
                 setOpenCategoryStyleSuccessToast(false);
                 setTimeout(() => {

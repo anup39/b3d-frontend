@@ -1,13 +1,6 @@
 import Grid from "@mui/material/Grid";
 import React from "react";
-import {
-  Button,
-  CircularProgress,
-  Checkbox,
-  Box,
-  Typography,
-  Tooltip,
-} from "@mui/material";
+import { Button, CircularProgress, Checkbox, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setTypeOfElement } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
@@ -18,12 +11,14 @@ import {
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
-import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
-import { Delete } from "@mui/icons-material";
+import {
+  useGetGlobalCategoryQuery,
+  useUpdateGlobalCategoryMutation,
+} from "../../api/globalCategoryApi";
+import { useAddExtraFieldsMutation } from "../../api/updateExtraFieldsApi";
 
 export default function Field() {
-  console.log("in field");
   const [checkedBox, setCheckedBox] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -39,6 +34,11 @@ export default function Field() {
   const categoryEditData = useSelector(
     (state) => state.editClassification.categoryEditData
   );
+
+  const { data: globalCategories, refetch: refetchGlobalCategories } =
+    useGetGlobalCategoryQuery();
+  const [updateGlobalCategory] = useUpdateGlobalCategoryMutation();
+  const [addExtraFields] = useAddExtraFieldsMutation();
 
   const handleEditCategory = (event) => {
     event.preventDefault();
@@ -85,26 +85,34 @@ export default function Field() {
     const data = {
       extra_fields: { data: newData },
     };
-    axios
-      .patch(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
-          categoryEditData.id
-        }/`,
-        data
-      )
+    // axios
+    //   .patch(
+    //     `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
+    //       categoryEditData.id
+    //     }/`,
+    //     data
+    //   )
+    updateGlobalCategory({ category_id: categoryEditData.id, data })
+      .unwrap()
       .then(() => {
         // Here update all  the annotations with new extra fields related to this category
-        axios
-          .post(
-            `${import.meta.env.VITE_API_DASHBOARD_URL}/update-extra-fields/`,
-            {
-              user_id: user_id,
-              category_edit_data: categoryEditData,
-              extra_fields: { data: newData },
-            }
-          )
+        // axios
+        //   .post(
+        //     `${import.meta.env.VITE_API_DASHBOARD_URL}/update-extra-fields/`,
+        //     {
+        //       user_id: user_id,
+        //       category_edit_data: categoryEditData,
+        //       extra_fields: { data: newData },
+        //     }
+        //   )
+        const data = {
+          user_id: user_id,
+          category_edit_data: categoryEditData,
+          extraFields: { data: newData },
+        };
+        addExtraFields({ data })
           .then((res) => {
-            console.log(res.data);
+            console.log(res);
           })
           .catch((err) => {
             console.log(err);
@@ -114,11 +122,12 @@ export default function Field() {
         dispatch(settoastMessage(`${t("Successfully")} ${t("Created")}`));
         dispatch(settoastType("success"));
         closeForm();
-        axios
-          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
+        // axios
+        //   .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
+        refetchGlobalCategories()
+          .unwrap()
           .then((res) => {
-            console.log(res.data);
-            dispatch(setCategorys(res.data));
+            dispatch(setCategorys(res));
           })
           .catch(() => {});
       })

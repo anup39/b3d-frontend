@@ -41,8 +41,6 @@ export default function CategoryCard({
   //     });
   // }, [id]);
 
-  console.log("extra_fields", extra_fields);
-
   return (
     <Paper
       sx={{

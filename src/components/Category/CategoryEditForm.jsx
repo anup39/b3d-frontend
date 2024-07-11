@@ -70,8 +70,6 @@ export default function CategoryEditForm() {
         type_of_geometry: inputValue,
         created_by: user_id,
       };
-      console.log(data, "data");
-
       // axios
       //   .patch(
       //     `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
@@ -167,7 +165,6 @@ export default function CategoryEditForm() {
       .unwrap()
       .then((response) => {
         setOptions(response);
-        console.log(response);
         setValue(
           response.find(
             (option) => option.id === categoryEditData?.sub_category

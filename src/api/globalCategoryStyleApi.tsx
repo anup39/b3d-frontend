@@ -19,6 +19,20 @@ export const globalCategoryStyleApi = createApi({
   }),
   tagTypes: ["globalCategoryStyleApi"],
   endpoints: (builder) => ({
+    // create global category style
+    createGlobalCategoryStyle: builder.mutation<
+      any,
+      globalCategoryStyleApiParams
+    >({
+      query: ({ style_data }) => ({
+        url: `/global-category-style/`,
+        method: "POST",
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"),
+        },
+        body: style_data,
+      }),
+    }),
     // fetch global categories styles
     getGlobalCategoryStyle: builder.query<any, globalCategoryStyleApiParams>({
       query: () => ({
@@ -44,6 +58,7 @@ export const globalCategoryStyleApi = createApi({
 });
 
 export const {
+  useCreateGlobalCategoryStyleMutation,
   useGetGlobalCategoryStyleQuery,
   useUpdateGlobalCategoryStyleMutation,
 } = globalCategoryStyleApi;
