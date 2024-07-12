@@ -20,10 +20,12 @@ import { useTranslation } from "react-i18next";
 import AddCustomField from "../components/Category/AddCustomField";
 import Field from "../components/Category/Field";
 import EditCustomFieldForm from "../components/Category/EditCustomFieldForm";
+import { useGetGlobalCategoryQuery } from "../api/globalCategoryApi";
+import { useGetGlobalSubCategoryQuery } from "../api/globalSubCategoryAPi";
+import { useGetGlobalStandardCategoryQuery } from "../api/globalStandardCategoryApi";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-
   return (
     <div
       role="tabpanel"
@@ -65,31 +67,46 @@ export default function Classification() {
   const subCategorys = useSelector((state) => state.subCategory.subCategorys);
   const categorys = useSelector((state) => state.category.categorys);
 
-  useEffect(() => {
-    axios
-      .get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/global-standard-category/`
-      )
-      .then((res) => {
-        dispatch(setStandardCategorys(res.data));
-      });
-  }, [dispatch]);
+  const { data: globalCategoryData } = useGetGlobalCategoryQuery();
+  const { data: globalSubCategoryData } = useGetGlobalSubCategoryQuery();
+  const { data: globalStandardCategoryData } =
+    useGetGlobalStandardCategoryQuery();
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`)
-      .then((res) => {
-        dispatch(setSubCategorys(res.data));
-      });
-  }, [dispatch]);
-
+    dispatch(setStandardCategorys(globalStandardCategoryData));
+  }, [globalStandardCategoryData]);
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
-      .then((res) => {
-        dispatch(setCategorys(res.data));
-      });
-  }, [dispatch]);
+    dispatch(setSubCategorys(globalSubCategoryData));
+  }, [globalSubCategoryData]);
+  useEffect(() => {
+    dispatch(setCategorys(globalCategoryData));
+  }, [globalCategoryData]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(
+  //       `${import.meta.env.VITE_API_DASHBOARD_URL}/global-standard-category/`
+  //     )
+  //     .then((res) => {
+  //       dispatch(setStandardCategorys(res.data));
+  //     });
+  // }, [dispatch]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`)
+  //     .then((res) => {
+  //       dispatch(setSubCategorys(res.data));
+  //     });
+  // }, [dispatch]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
+  //     .then((res) => {
+  //       dispatch(setCategorys(res.data));
+  //     });
+  // }, [dispatch]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

@@ -35,8 +35,7 @@ export default function Field() {
     (state) => state.editClassification.categoryEditData
   );
 
-  const { data: globalCategories, refetch: refetchGlobalCategories } =
-    useGetGlobalCategoryQuery();
+  const { refetch: refetchGlobalCategories } = useGetGlobalCategoryQuery();
   const [updateGlobalCategory] = useUpdateGlobalCategoryMutation();
   const [addExtraFields] = useAddExtraFieldsMutation();
 
@@ -85,31 +84,16 @@ export default function Field() {
     const data = {
       extra_fields: { data: newData },
     };
-    // axios
-    //   .patch(
-    //     `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
-    //       categoryEditData.id
-    //     }/`,
-    //     data
-    //   )
+    //  add extra fields
     updateGlobalCategory({ category_id: categoryEditData.id, data })
       .unwrap()
       .then(() => {
-        // Here update all  the annotations with new extra fields related to this category
-        // axios
-        //   .post(
-        //     `${import.meta.env.VITE_API_DASHBOARD_URL}/update-extra-fields/`,
-        //     {
-        //       user_id: user_id,
-        //       category_edit_data: categoryEditData,
-        //       extra_fields: { data: newData },
-        //     }
-        //   )
         const data = {
           user_id: user_id,
           category_edit_data: categoryEditData,
           extraFields: { data: newData },
         };
+        // add extra fields
         addExtraFields({ data })
           .then((res) => {
             console.log(res);
@@ -122,8 +106,7 @@ export default function Field() {
         dispatch(settoastMessage(`${t("Successfully")} ${t("Created")}`));
         dispatch(settoastType("success"));
         closeForm();
-        // axios
-        //   .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
+        // refetch global categories
         refetchGlobalCategories()
           .unwrap()
           .then((res) => {
@@ -138,10 +121,6 @@ export default function Field() {
         dispatch(settoastType("error"));
         closeForm();
       });
-  };
-
-  const openForm = () => {
-    // dispatch(setOpenCategoryEditForm(true));
   };
 
   const closeForm = () => {

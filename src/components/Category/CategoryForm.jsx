@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid";
 import { Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
 import AutoCompleteCustom from "../StandardCategory/AutoCompleteCustom";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -34,8 +33,7 @@ export default function CategoryForm() {
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
 
-  const { data: globalCategories, refetch: refetchGlobalCategories } =
-    useGetGlobalCategoryQuery();
+  const { refetch: refetchGlobalCategories } = useGetGlobalCategoryQuery();
 
   const [createGlobalCategory] = useCreateGlobalCategoryMutation();
   const [createGlobalCategoryStyle] = useCreateGlobalCategoryStyleMutation();
@@ -57,12 +55,7 @@ export default function CategoryForm() {
         type_of_geometry: inputValue,
         created_by: user_id,
       };
-
-      // axios
-      //   .post(
-      //     `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`,
-      //     data
-      //   )
+      // create global category
       createGlobalCategory({ data })
         .unwrap()
         .then((res) => {
@@ -74,13 +67,7 @@ export default function CategoryForm() {
             category: res.id,
             created_by: user_id,
           };
-          // axios
-          //   .post(
-          //     `${
-          //       import.meta.env.VITE_API_DASHBOARD_URL
-          //     }/global-category-style/`,
-          //     style_data
-          //   )
+          // create global category style
           createGlobalCategoryStyle({ style_data })
             .unwrap()
             .then(() => {
@@ -93,13 +80,11 @@ export default function CategoryForm() {
               );
               dispatch(settoastType("success"));
               closeForm();
-              // axios
-              //   .get(
-              //     `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
-              //   )
+              //  refetch global categories
               refetchGlobalCategories()
                 .unwrap()
                 .then((res) => {
+                  console.log(res);
                   dispatch(setCategorys(res));
                 })
                 .catch(() => {});

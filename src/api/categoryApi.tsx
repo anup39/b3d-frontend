@@ -19,35 +19,22 @@ export const categoryApi = createApi({
   }),
   tagTypes: ["categoryApi"],
   endpoints: (builder) => ({
-    // fetch CategoryData
+    // fetch category data
     getCategoryData: builder.query<any, categoryApiParams>({
       query: () => ({
-        url: `/polygon-data/`,
+        url: `/category/`,
         method: "GET",
       }),
     }),
+    // fetch category data by id
     getCategoryDataById: builder.query<any, categoryApiParams>({
       query: ({ category_id }) => ({
-        url: `/polygon-data/${category_id}/`,
+        url: `/category/${category_id}/`,
         method: "GET",
       }),
     }),
-    // // fetch category data by id
-    // updateGlobalCategory: builder.mutat}ion<any, categoryApiParams>({
-    //   query: ({ category_id, data }) => ({
-    //     url: `/polygon-data/${category_id}/`,
-    //     method: "PATCH",
-    //     headers: {
-    //       Authorization: "Token " + localStorage.getItem("token"),
-    //     },
-    //     body: data,
-    //   }),
-    // }),
   }),
 });
 
-export const {
-  useGetCategoryDataQuery,
-  useGetCategoryDataByIdQuery,
-  //   useUpdateCategoryDataMutation,
-} = categoryApi;
+export const { useGetCategoryDataQuery, useGetCategoryDataByIdQuery } =
+  categoryApi;

@@ -25,6 +25,7 @@ export const globalSubCategoryApi = createApi({
         url: `/global-sub-category/`,
         method: "GET",
       }),
+      providesTags: ["globalSubCategoryApi"],
     }),
     // update global sub category by category_id
     updateGlobalSubCategory: builder.mutation<any, globalSubCategoryApiParams>({
@@ -36,6 +37,7 @@ export const globalSubCategoryApi = createApi({
         },
         body: style_data,
       }),
+      invalidatesTags: ["globalSubCategoryApi"],
     }),
   }),
 });

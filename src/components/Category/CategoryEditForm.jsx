@@ -3,7 +3,6 @@ import Grid from "@mui/material/Grid";
 import { Button, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
 import Autocomplete from "@mui/material/Autocomplete";
 import {
@@ -17,10 +16,7 @@ import {
   useGetGlobalCategoryQuery,
   useUpdateGlobalCategoryMutation,
 } from "../../api/globalCategoryApi";
-import {
-  useGetGlobalCategoryStyleQuery,
-  useUpdateGlobalCategoryStyleMutation,
-} from "../../api/globalCategoryStyleApi";
+import { useUpdateGlobalCategoryStyleMutation } from "../../api/globalCategoryStyleApi";
 import { useGetGlobalSubCategoryQuery } from "../../api/globalSubCategoryAPi";
 
 export default function CategoryEditForm() {
@@ -43,11 +39,9 @@ export default function CategoryEditForm() {
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
 
-  const { data: globalCategoryData, refetch: refetchGlobalCategory } =
-    useGetGlobalCategoryQuery();
+  const { refetch: refetchGlobalCategory } = useGetGlobalCategoryQuery();
 
-  const { data: globalSubCategory, refetch: refetchGlobalSubCategory } =
-    useGetGlobalSubCategoryQuery();
+  const { refetch: refetchGlobalSubCategory } = useGetGlobalSubCategoryQuery();
 
   const [updateGlobalCategory] = useUpdateGlobalCategoryMutation();
 
@@ -70,13 +64,7 @@ export default function CategoryEditForm() {
         type_of_geometry: inputValue,
         created_by: user_id,
       };
-      // axios
-      //   .patch(
-      //     `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
-      //       categoryEditData.id
-      //     }/`,
-      //     data
-      //   )
+      // Updating global category
       updateGlobalCategory({ data, category_id: categoryEditData?.id })
         .unwrap()
         .then((res) => {
@@ -88,13 +76,7 @@ export default function CategoryEditForm() {
             category: res.id,
             created_by: user_id,
           };
-          // axios
-          //   .patch(
-          //     `${
-          //       import.meta.env.VITE_API_DASHBOARD_URL
-          //     }/global-category-style/${categoryEditData.style.id}/`,
-          //     style_data
-          //   )
+          // updating global category style
           updateGlobalCategoryStyle({
             style_data,
             category_style_id: categoryEditData?.style?.id,
@@ -110,10 +92,7 @@ export default function CategoryEditForm() {
               );
               dispatch(settoastType("success"));
               closeForm();
-              // axios
-              //   .get(
-              //     `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
-              //   )
+              // refetching global category after updating
               refetchGlobalCategory()
                 .unwrap()
                 .then((res) => {
@@ -159,8 +138,6 @@ export default function CategoryEditForm() {
   };
 
   useEffect(() => {
-    // axios
-    //   .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`)
     refetchGlobalSubCategory()
       .unwrap()
       .then((response) => {

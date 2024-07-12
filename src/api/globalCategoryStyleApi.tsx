@@ -32,6 +32,7 @@ export const globalCategoryStyleApi = createApi({
         },
         body: style_data,
       }),
+      invalidatesTags: ["globalCategoryStyleApi"],
     }),
     // fetch global categories styles
     getGlobalCategoryStyle: builder.query<any, globalCategoryStyleApiParams>({
@@ -39,6 +40,7 @@ export const globalCategoryStyleApi = createApi({
         url: `/global-category-style/`,
         method: "GET",
       }),
+      providesTags: ["globalCategoryStyleApi"],
     }),
     // update global category style by category_id
     updateGlobalCategoryStyle: builder.mutation<
@@ -53,6 +55,7 @@ export const globalCategoryStyleApi = createApi({
         },
         body: style_data,
       }),
+      invalidatesTags: ["globalCategoryStyleApi"],
     }),
   }),
 });

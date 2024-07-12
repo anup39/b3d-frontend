@@ -32,6 +32,7 @@ import { globalSubCategoryApi } from "./api/globalSubCategoryAPi";
 import { categoryApi } from "./api/categoryApi";
 import { updateExtraFieldsApi } from "./api/updateExtraFieldsApi";
 import { polygonDataApi } from "./api/polygonDataApi";
+import { globalStandardCategoryApi } from "./api/globalStandardCategoryApi";
 
 export const store = configureStore({
   reducer: {
@@ -67,6 +68,7 @@ export const store = configureStore({
     [categoryApi.reducerPath]: categoryApi.reducer,
     [updateExtraFieldsApi.reducerPath]: updateExtraFieldsApi.reducer,
     [polygonDataApi.reducerPath]: polygonDataApi.reducer,
+    [globalStandardCategoryApi.reducerPath]: globalStandardCategoryApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -81,7 +83,8 @@ export const store = configureStore({
       globalSubCategoryApi.middleware as any,
       polygonDataApi.middleware as any,
       categoryApi.middleware as any,
-      updateExtraFieldsApi.middleware as any
+      updateExtraFieldsApi.middleware as any,
+      globalStandardCategoryApi.middleware as any
     ),
 });
 

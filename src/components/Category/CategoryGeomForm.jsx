@@ -4,7 +4,6 @@ import { useState } from "react";
 import MuiAlert from "@mui/material/Alert";
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
-import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setshowGeomFormPopup } from "../../reducers/DisplaySettings";
 import { setWKTGeometry } from "../../reducers/DrawnGeometry";
@@ -32,20 +31,17 @@ export default function CategoryGeomForm() {
   const project_id = useSelector((state) => state.project.project_id);
 
   const [createPolygonData] = useCreatePolygonDataMutation();
-  const { data: categoryDataById, refetch: refetchCategoryDataById } =
-    useGetCategoryDataByIdQuery({ category_id }, { skip: !!category_id });
+  const { refetch: refetchCategoryDataById } = useGetCategoryDataByIdQuery(
+    { category_id },
+    { skip: !!category_id }
+  );
 
   const handleCreateCategoryStyle = (event) => {
     event.preventDefault();
 
     if (selectedCategoryId !== null) {
       if (selectedCategoryId) {
-        // axios
-        //   .get(
-        //     `${
-        //       import.meta.env.VITE_API_DASHBOARD_URL
-        //     }/category/${selectedCategoryId}/`
-        //   )
+        // refetching category data
         refetchCategoryDataById()
           .unwrap()
           .then((res) => {
@@ -57,12 +53,7 @@ export default function CategoryGeomForm() {
               category: selectedCategoryId,
               geom: wkt_geometry,
             };
-
-            // axios
-            //   .post(
-            //     `${import.meta.env.VITE_API_DASHBOARD_URL}/polygon-data/`,
-            //     data
-            //   )
+            // create polygon data
             createPolygonData({ data })
               .unwrap()
               .then(() => {

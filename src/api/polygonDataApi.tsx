@@ -18,6 +18,14 @@ export const polygonDataApi = createApi({
   }),
   tagTypes: ["polygonDataApi"],
   endpoints: (builder) => ({
+    // fetch polygon data
+    getPolygonData: builder.query<any, polygonDataApiParams>({
+      query: () => ({
+        url: `/polygon-data/`,
+        method: "GET",
+      }),
+      providesTags: ["polygonDataApi"],
+    }),
     // create polygon data
     createPolygonData: builder.mutation<any, polygonDataApiParams>({
       query: ({ data }) => ({
@@ -28,30 +36,10 @@ export const polygonDataApi = createApi({
         },
         body: data,
       }),
+      invalidatesTags: ["polygonDataApi"],
     }),
-    // fetch polygonData
-    getPolygonData: builder.query<any, polygonDataApiParams>({
-      query: () => ({
-        url: `/polygon-data/`,
-        method: "GET",
-      }),
-    }),
-    // // update polygon data by category_id
-    // updateGlobalCategory: builder.mutation<any, polygonDataApiParams>({
-    //   query: ({ category_id, data }) => ({
-    //     url: `/polygon-data/${category_id}/`,
-    //     method: "PATCH",
-    //     headers: {
-    //       Authorization: "Token " + localStorage.getItem("token"),
-    //     },
-    //     body: data,
-    //   }),
-    // }),
   }),
 });
 
-export const {
-  useCreatePolygonDataMutation,
-  useGetPolygonDataQuery,
-  //   useUpdatePolygonDataMutation,
-} = polygonDataApi;
+export const { useCreatePolygonDataMutation, useGetPolygonDataQuery } =
+  polygonDataApi;

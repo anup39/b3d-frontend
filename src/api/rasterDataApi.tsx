@@ -27,8 +27,9 @@ export const rasterDataApi = createApi({
         url: `/raster-data/?project=${project}`,
         method: "GET",
       }),
+      providesTags: ["rasterDataApi"],
     }),
-    // upload rasterData
+    // upload raster data
     uploadRasterData: builder.mutation<any, rasterDataApiParams>({
       query: ({ data }) => ({
         url: `/raster-data/`,
@@ -39,6 +40,7 @@ export const rasterDataApi = createApi({
         },
         body: new URLSearchParams(data).toString(),
       }),
+      invalidatesTags: ["rasterDataApi"],
     }),
   }),
 });
