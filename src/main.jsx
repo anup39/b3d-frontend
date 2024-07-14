@@ -8,6 +8,8 @@ import "./i18n.js";
 import "@mantine/core/styles.css";
 import { Container, MantineProvider, createTheme, rem } from "@mantine/core";
 import { MainApp } from "./components/LayoutNew/MainApp.jsx";
+import { Notifications } from "@mantine/notifications";
+import "@mantine/notifications/styles.css";
 
 const CONTAINER_SIZES = {
   xxs: rem(300),
@@ -48,6 +50,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
       <MantineProvider theme={theme}>
+        <Notifications position="top-right" zIndex={10000} autoClose={1200} />
         {/* <MainApp /> */}
         <App />
       </MantineProvider>

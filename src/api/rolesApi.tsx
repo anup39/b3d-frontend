@@ -27,7 +27,17 @@ export const rolesApi = createApi({
         method: "GET",
       }),
     }),
+    // fetch roles data by projectId
+    getRolesDataByClientId: builder.query<any, rolesApiParams>({
+      query: ({ client }) => ({
+        url: `/roles/?client=${client}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetRolesDataByProjectIdQuery } = rolesApi;
+export const {
+  useGetRolesDataByProjectIdQuery,
+  useGetRolesDataByClientIdQuery,
+} = rolesApi;

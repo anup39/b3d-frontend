@@ -61,6 +61,14 @@ export const projectApi = createApi({
         },
       }),
     }),
+    getProjectByClientId: builder.query<any, string>({
+      query: (client_id: string) => ({
+        url: `/projects/?client=${client_id}/`,
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"),
+        },
+      }),
+    }),
     createProject: builder.mutation({
       query: ({ data }) => ({
         url: `/projects/`,
@@ -106,5 +114,6 @@ export const {
   useGetProjectsByClientIdAndProjectIdQuery,
   useGetClientDetailsByClientIdQuery,
   useGetProjectsByClientIdAndIdsQuery,
+  useLazyGetProjectByClientIdQuery,
   useUpdateProjectByIdMutation,
 } = projectApi;

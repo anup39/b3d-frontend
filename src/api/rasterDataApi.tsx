@@ -29,6 +29,14 @@ export const rasterDataApi = createApi({
       }),
       providesTags: ["rasterDataApi"],
     }),
+    // fetch raster data by clientId
+    getRasterDataByClientId: builder.query<any, rasterDataApiParams>({
+      query: ({ client }) => ({
+        url: `/raster-data/?client=${client}`,
+        method: "GET",
+      }),
+      providesTags: ["rasterDataApi"],
+    }),
     // upload raster data
     uploadRasterData: builder.mutation<any, rasterDataApiParams>({
       query: ({ data }) => ({
@@ -45,5 +53,8 @@ export const rasterDataApi = createApi({
   }),
 });
 
-export const { useGetRasterDataByProjectIdQuery, useUploadRasterDataMutation } =
-  rasterDataApi;
+export const {
+  useGetRasterDataByProjectIdQuery,
+  useUploadRasterDataMutation,
+  useGetRasterDataByClientIdQuery,
+} = rasterDataApi;
