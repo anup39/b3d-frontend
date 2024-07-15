@@ -50,7 +50,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
       <MantineProvider theme={theme}>
-        <Notifications position="top-right" zIndex={10000} autoClose={1200} />
+        <Notifications position="top-right" zIndex={10000} autoClose={2000} />
         {/* <MainApp /> */}
         <App />
       </MantineProvider>
