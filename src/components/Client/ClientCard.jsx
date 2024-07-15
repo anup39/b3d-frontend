@@ -25,10 +25,7 @@ import { useTranslation } from "react-i18next";
 import { fetchProjectsByClientId } from "../../api/api";
 import NewClientForm from "./NewClientForm";
 import { useGetRasterDataByClientIdQuery } from "../../api/rasterDataApi";
-import {
-  useGetRolesDataByClientIdQuery,
-  useGetRolesDataByProjectIdQuery,
-} from "../../api/rolesApi";
+import { useGetRolesDataByClientIdQuery } from "../../api/rolesApi";
 import { useGetProjectsByClientIdQuery } from "../../api/projectApi";
 
 export default function ClientCard({ id, name, description }) {
