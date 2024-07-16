@@ -2,7 +2,6 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button, CircularProgress } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
-import axios from "axios";
 import { createImagePNG } from "../../maputils/createMapImage";
 import {
   setshowTifUpload,
@@ -21,6 +20,10 @@ import maplibregl from "maplibre-gl";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { v4 as uuidv4 } from "uuid";
+import {
+  useGetRasterDataByProjectIdQuery,
+  useUploadRasterDataMutation,
+} from "../../api/rasterDataApi";
 
 export default function UploadPropertyForm() {
   const { t } = useTranslation();
@@ -36,6 +39,8 @@ export default function UploadPropertyForm() {
   const user_id = useSelector((state) => state.auth.user_id);
   const [map, setMap] = useState(null);
 
+  const [uploadRasterData] = useUploadRasterDataMutation();
+
   const client_id_property = useSelector(
     (state) => state.property.client_id_property
   );
@@ -43,6 +48,11 @@ export default function UploadPropertyForm() {
     (state) => state.property.project_id_property
   );
 
+  const { data: rasterDataByProjectId, refetch: refetchRasterDataByProjectId } =
+    useGetRasterDataByProjectIdQuery(
+      { project: client_id_property },
+      { polingInterval: 1000 }
+    );
   const closeForm = () => {
     dispatch(setshowTifUpload(false));
     setUploadedFile(null);
@@ -126,19 +136,20 @@ export default function UploadPropertyForm() {
         chunkFormData.append("file_name", fileName);
         chunkFormData.append("created_by", user_id);
 
-        await axios.post(
-          `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/`,
-          chunkFormData,
-          {
-            onUploadProgress: (progressEvent) => {
+        try {
+          await uploadRasterData({
+            data: formData,
+            onUploadProgress: (event) => {
               const percentCompleted = Math.round(
-                (currentChunk / CHUNKS_COUNT) * 100
+                (event.loaded / event.total) * 100
               );
-
               dispatch(setProgress(percentCompleted));
             },
-          }
-        );
+          });
+          console.log("Upload successful");
+        } catch (error) {
+          console.error("Error uploading file:", error);
+        }
       }
 
       // After all chunks uploaded
@@ -153,15 +164,9 @@ export default function UploadPropertyForm() {
       );
       dispatch(settoastType("success"));
       closeForm();
-      axios
-        .get(
-          `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/raster-data/?project=${client_id_property}`
-        )
-        .then((res) => {
-          dispatch(setproperties(res.data));
-        });
+      refetchRasterDataByProjectId().then((res) => {
+        dispatch(setproperties(res.data));
+      });
     } catch (error) {
       setLoading(false);
       dispatch(setshowToast(true));

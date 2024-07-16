@@ -23,6 +23,16 @@ import { projectApi } from "./api/projectApi";
 import { clientApi } from "./api/clientApi";
 import { measuringFileUploadApi } from "./api/measuringFileUpload";
 import { setupListeners } from "@reduxjs/toolkit/query";
+import { indoorApi } from "./api/indoorApi";
+import { rasterDataApi } from "./api/rasterDataApi";
+import { rolesApi } from "./api/rolesApi";
+import { globalCategoryApi } from "./api/globalCategoryApi";
+import { globalCategoryStyleApi } from "./api/globalCategoryStyleApi";
+import { globalSubCategoryApi } from "./api/globalSubCategoryAPi";
+import { categoryApi } from "./api/categoryApi";
+import { updateExtraFieldsApi } from "./api/updateExtraFieldsApi";
+import { polygonDataApi } from "./api/polygonDataApi";
+import { globalStandardCategoryApi } from "./api/globalStandardCategoryApi";
 
 export const store = configureStore({
   reducer: {
@@ -49,12 +59,32 @@ export const store = configureStore({
     [projectApi.reducerPath]: projectApi.reducer,
     [clientApi.reducerPath]: clientApi.reducer,
     [measuringFileUploadApi.reducerPath]: measuringFileUploadApi.reducer,
+    [indoorApi.reducerPath]: indoorApi.reducer,
+    [rolesApi.reducerPath]: rolesApi.reducer,
+    [rasterDataApi.reducerPath]: rasterDataApi.reducer,
+    [globalCategoryApi.reducerPath]: globalCategoryApi.reducer,
+    [globalCategoryStyleApi.reducerPath]: globalCategoryStyleApi.reducer,
+    [globalSubCategoryApi.reducerPath]: globalSubCategoryApi.reducer,
+    [categoryApi.reducerPath]: categoryApi.reducer,
+    [updateExtraFieldsApi.reducerPath]: updateExtraFieldsApi.reducer,
+    [polygonDataApi.reducerPath]: polygonDataApi.reducer,
+    [globalStandardCategoryApi.reducerPath]: globalStandardCategoryApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       projectApi.middleware as any,
       clientApi.middleware as any,
-      measuringFileUploadApi.middleware as any
+      measuringFileUploadApi.middleware as any,
+      indoorApi.middleware as any,
+      rolesApi.middleware as any,
+      rasterDataApi.middleware as any,
+      globalCategoryApi.middleware as any,
+      globalCategoryStyleApi.middleware as any,
+      globalSubCategoryApi.middleware as any,
+      polygonDataApi.middleware as any,
+      categoryApi.middleware as any,
+      updateExtraFieldsApi.middleware as any,
+      globalStandardCategoryApi.middleware as any
     ),
 });
 

@@ -1,10 +1,8 @@
-import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
 import Autocomplete from "@mui/material/Autocomplete";
 import {
@@ -14,6 +12,12 @@ import {
 } from "../../reducers/DisplaySettings";
 import { setOpenCategoryEditForm } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
+import {
+  useGetGlobalCategoryQuery,
+  useUpdateGlobalCategoryMutation,
+} from "../../api/globalCategoryApi";
+import { useUpdateGlobalCategoryStyleMutation } from "../../api/globalCategoryStyleApi";
+import { useGetGlobalSubCategoryQuery } from "../../api/globalSubCategoryAPi";
 
 export default function CategoryEditForm() {
   const dispatch = useDispatch();
@@ -35,6 +39,14 @@ export default function CategoryEditForm() {
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
 
+  const { refetch: refetchGlobalCategory } = useGetGlobalCategoryQuery();
+
+  const { refetch: refetchGlobalSubCategory } = useGetGlobalSubCategoryQuery();
+
+  const [updateGlobalCategory] = useUpdateGlobalCategoryMutation();
+
+  const [updateGlobalCategoryStyle] = useUpdateGlobalCategoryStyleMutation();
+
   const handleEditCategory = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -52,31 +64,24 @@ export default function CategoryEditForm() {
         type_of_geometry: inputValue,
         created_by: user_id,
       };
-      console.log(data, "data");
-
-      axios
-        .patch(
-          `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
-            categoryEditData.id
-          }/`,
-          data
-        )
+      // Updating global category
+      updateGlobalCategory({ data, category_id: categoryEditData?.id })
+        .unwrap()
         .then((res) => {
           const style_data = {
             fill: selectedFillColor,
             fill_opacity: fillOpacityInput.value,
             stroke: selectedStrokeColor,
             stroke_width: strokeWidthInput.value,
-            category: res.data.id,
+            category: res.id,
             created_by: user_id,
           };
-          axios
-            .patch(
-              `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/global-category-style/${categoryEditData.style.id}/`,
-              style_data
-            )
+          // updating global category style
+          updateGlobalCategoryStyle({
+            style_data,
+            category_style_id: categoryEditData?.style?.id,
+          })
+            .unwrap()
             .then(() => {
               setLoading(false);
               dispatch(setshowToast(true));
@@ -87,18 +92,19 @@ export default function CategoryEditForm() {
               );
               dispatch(settoastType("success"));
               closeForm();
-              axios
-                .get(
-                  `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
-                )
+              // refetching global category after updating
+              refetchGlobalCategory()
+                .unwrap()
                 .then((res) => {
-                  console.log(res.data);
-                  dispatch(setCategorys(res.data));
+                  dispatch(setCategorys(res));
                 })
-                .catch(() => {});
+                .catch(() => {
+                  console.log(error);
+                });
             });
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log("Error", error);
           setLoading(false);
           dispatch(setshowToast(true));
           dispatch(
@@ -132,13 +138,12 @@ export default function CategoryEditForm() {
   };
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`)
+    refetchGlobalSubCategory()
+      .unwrap()
       .then((response) => {
-        setOptions(response.data);
-        console.log(categoryEditData);
+        setOptions(response);
         setValue(
-          response.data.find(
+          response.find(
             (option) => option.id === categoryEditData?.sub_category
           ) || null
         );

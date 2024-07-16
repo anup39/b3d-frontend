@@ -1,21 +1,13 @@
-import {
-  Container,
-  Image,
-  Flex,
-  Burger,
-  Menu,
-  Button,
-  Divider,
-} from "@mantine/core";
-import ThemeSwitcher from "../ThemeSwitcher";
-import NavBar from "../Navbar/Navbar";
+import { Image, Flex, Menu, Divider, AppShell } from "@mantine/core";
+import ThemeSwitcher from "../common/ThemeSwitcher/ThemeSwitcher";
 import { useState } from "react";
-import LanguageSwitcher from "../../../LanguageSwitcher/LanguageSwitcher";
+import LanguageSwitcher from "../../LanguageSwitcher/LanguageSwitcher";
+import Navbar from "./Navbar/Navbar";
 
-const HeaderSection = ({ activeTab, setActiveTab }) => {
+const Header = ({ activeTab, setActiveTab }) => {
   const [menu, setMenuOpened] = useState(false);
   return (
-    <>
+    <AppShell.Header style={{ paddingTop: "1rem" }}>
       <Flex style={{ padding: "0rem 2rem" }} direction={"column"}>
         <Flex align={"center"} h="100%" justify="space-between">
           <Image
@@ -33,7 +25,7 @@ const HeaderSection = ({ activeTab, setActiveTab }) => {
             justify={"space-between"}
             align={"center"}
           >
-            {/* <LanguageSwitcher /> */}
+            <LanguageSwitcher />
             <ThemeSwitcher />
             <Menu
               width={260}
@@ -67,10 +59,10 @@ const HeaderSection = ({ activeTab, setActiveTab }) => {
           </Flex>
         </Flex>
         <Divider my="5px" />
-        <NavBar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
       </Flex>
-    </>
+    </AppShell.Header>
   );
 };
 
-export default HeaderSection;
+export default Header;

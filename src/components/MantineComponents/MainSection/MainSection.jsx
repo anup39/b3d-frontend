@@ -1,8 +1,11 @@
 import { Tabs } from "@mantine/core";
 import MapNew from "../../../map/MapNew";
+import LayoutRouters from "../LayoutRouters/LayoutRouters";
 
-const Main = ({ activeTab }) => {
+const MainSection = ({ activeTab }) => {
   return (
+    // This is main section, we render each route component
+    // <LayoutRouters />
     <Tabs value={activeTab}>
       <Tabs.Panel w={"100%"} value="Map">
         <div style={{ height: "500px", border: "1px solid red" }}>
@@ -21,4 +24,4 @@ const Main = ({ activeTab }) => {
   );
 };
 
-export default Main;
+export default MainSection;

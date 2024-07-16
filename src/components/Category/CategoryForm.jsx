@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid";
 import { Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
 import AutoCompleteCustom from "../StandardCategory/AutoCompleteCustom";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -14,6 +13,11 @@ import {
   settoastType,
 } from "../../reducers/DisplaySettings";
 import { useTranslation } from "react-i18next";
+import {
+  useCreateGlobalCategoryMutation,
+  useGetGlobalCategoryQuery,
+} from "../../api/globalCategoryApi";
+import { useCreateGlobalCategoryStyleMutation } from "../../api/globalCategoryStyleApi";
 
 export default function CategoryForm() {
   const { t } = useTranslation();
@@ -28,6 +32,11 @@ export default function CategoryForm() {
   const [selectedStrokeColor, setSelectedStrokeColor] = useState("#d71414");
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
+
+  const { refetch: refetchGlobalCategories } = useGetGlobalCategoryQuery();
+
+  const [createGlobalCategory] = useCreateGlobalCategoryMutation();
+  const [createGlobalCategoryStyle] = useCreateGlobalCategoryStyleMutation();
 
   const handleCreateCategory = (event) => {
     event.preventDefault();
@@ -46,28 +55,21 @@ export default function CategoryForm() {
         type_of_geometry: inputValue,
         created_by: user_id,
       };
-
-      axios
-        .post(
-          `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`,
-          data
-        )
+      // create global category
+      createGlobalCategory({ data })
+        .unwrap()
         .then((res) => {
           const style_data = {
             fill: selectedFillColor,
             fill_opacity: fillOpacityInput.value,
             stroke: selectedStrokeColor,
             stroke_width: strokeWidthInput.value,
-            category: res.data.id,
+            category: res.id,
             created_by: user_id,
           };
-          axios
-            .post(
-              `${
-                import.meta.env.VITE_API_DASHBOARD_URL
-              }/global-category-style/`,
-              style_data
-            )
+          // create global category style
+          createGlobalCategoryStyle({ style_data })
+            .unwrap()
             .then(() => {
               setLoading(false);
               dispatch(setshowToast(true));
@@ -78,12 +80,12 @@ export default function CategoryForm() {
               );
               dispatch(settoastType("success"));
               closeForm();
-              axios
-                .get(
-                  `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`
-                )
+              //  refetch global categories
+              refetchGlobalCategories()
+                .unwrap()
                 .then((res) => {
-                  dispatch(setCategorys(res.data));
+                  console.log(res);
+                  dispatch(setCategorys(res));
                 })
                 .catch(() => {});
             });

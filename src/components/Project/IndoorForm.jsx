@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import { Button, Box, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Button, Typography } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import {
@@ -10,10 +10,7 @@ import {
   setshowToast,
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
-import {
-  createIndoorByProjectId,
-  fetchIndoorsByProjectId,
-} from "../../api/api";
+
 import {
   setOpenIndoorForm,
   setEditIndoorProjectId,
@@ -21,24 +18,45 @@ import {
 import IndoorCard from "./IndoorCard";
 import { setIndoors } from "../../reducers/Project";
 import { useTranslation } from "react-i18next";
+import {
+  useCreateIndoorByProjectIdMutation,
+  useGetIndoorByProjectIdQuery,
+} from "../../api/indoorApi";
 
 export default function IndoorForm({ client_id }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const openForm = useSelector((state) => state.project.openIndoorForm);
   const project_id = useSelector((state) => state.project.editIndoorProjectId);
-  const indoors = useSelector((state) => state.project.indoors);
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
   const user_id = useSelector((state) => state.auth.user_id);
+  const [createIndoorByProjectId] = useCreateIndoorByProjectIdMutation();
 
-  console.log("project_id", project_id);
+  const { data: indoorsByIdData, refetch } = useGetIndoorByProjectIdQuery({
+    project_id,
+  });
 
-  const closeForm = () => {
+  useEffect(() => {
+    if (project_id) {
+      refetch();
+    }
+  }, [project_id, refetch]);
+
+  useEffect(() => {
+    if (indoorsByIdData) {
+      dispatch(setIndoors(indoorsByIdData));
+    }
+    return () => {
+      dispatch(setIndoors([]));
+    };
+  }, [indoorsByIdData, dispatch]);
+
+  const closeForm = useCallback(() => {
     dispatch(setOpenIndoorForm(false));
     dispatch(setEditIndoorProjectId(null));
-  };
+  }, [dispatch]);
 
   const handleCreateIndoor = (event) => {
     event.preventDefault();
@@ -51,14 +69,9 @@ export default function IndoorForm({ client_id }) {
       created_by: user_id,
       is_display: true,
     };
-    createIndoorByProjectId(data)
+    createIndoorByProjectId({ data })
+      .unwrap()
       .then((res) => {
-        console.log(res, "res patch of indoor");
-        fetchIndoorsByProjectId(project_id).then((res) => {
-          console.log(res, "res fetch indoors");
-          dispatch(setIndoors(res));
-        });
-
         setLoading(false);
         dispatch(setshowToast(true));
         dispatch(
@@ -78,18 +91,6 @@ export default function IndoorForm({ client_id }) {
         dispatch(settoastType("error"));
       });
   };
-
-  useEffect(() => {
-    if (project_id) {
-      fetchIndoorsByProjectId(project_id).then((res) => {
-        console.log(res, "res fetch indoors");
-        dispatch(setIndoors(res));
-      });
-    }
-    return () => {
-      dispatch(setIndoors([]));
-    };
-  }, [project_id, dispatch]);
 
   return (
     <>
@@ -148,9 +149,9 @@ export default function IndoorForm({ client_id }) {
               </Grid>
 
               <Grid item xs={12}>
-                {indoors.length > 0 ? (
+                {indoorsByIdData?.length > 0 ? (
                   <>
-                    {indoors.map((indoor) => (
+                    {indoorsByIdData?.map((indoor) => (
                       <IndoorCard key={indoor.id} indoor={indoor} />
                     ))}
                   </>

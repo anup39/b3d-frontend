@@ -1,7 +1,8 @@
 import { Tabs, Button, Flex, Drawer, Group } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
-const NavBar = ({ activeTab, setActiveTab }) => {
+// we use useNav here and provide link to route
+const Navbar = ({ activeTab, setActiveTab }) => {
   const [opened, { open, close }] = useDisclosure(false);
   const isMd = useMediaQuery("(max-width: 768px)");
 
@@ -56,4 +57,4 @@ const NavBar = ({ activeTab, setActiveTab }) => {
   );
 };
 
-export default NavBar;
+export default Navbar;

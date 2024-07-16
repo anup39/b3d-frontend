@@ -1,32 +1,27 @@
 import { useEffect } from "react";
-import axios from "axios";
 import PropTypes from "prop-types";
 import { setproperties } from "../../reducers/Property";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import PropertyCard from "./PropertyCard";
+import { useGetRasterDataByProjectIdQuery } from "../../api/rasterDataApi";
 
 export default function PropertyContainer({ project_id }) {
   const dispatch = useDispatch();
-  const properties = useSelector((state) => state.property.properties);
+  const { data: properties, refetch: refetchProperties } =
+    useGetRasterDataByProjectIdQuery(
+      { project: project_id },
+      { pollingInterval: 10000 }
+    );
 
   useEffect(() => {
-    const fetchData = () => {
-      axios
-        .get(
-          `${
-            import.meta.env.VITE_API_DASHBOARD_URL
-          }/raster-data/?project=${project_id}`
-        )
-        .then((res) => {
-          dispatch(setproperties(res.data));
-        });
-    };
-    fetchData();
-    const interval = setInterval(fetchData, 10000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [project_id, dispatch]);
+    refetchProperties()
+      .then((res) => {
+        dispatch(setproperties(res?.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [refetchProperties, dispatch, project_id]);
 
   // #Remaning things to work on
 
