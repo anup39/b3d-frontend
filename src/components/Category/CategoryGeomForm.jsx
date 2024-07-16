@@ -32,8 +32,8 @@ export default function CategoryGeomForm() {
 
   const [createPolygonData] = useCreatePolygonDataMutation();
   const { refetch: refetchCategoryDataById } = useGetCategoryDataByIdQuery(
-    { category_id },
-    { skip: !!category_id }
+    { selectedCategoryId },
+    { skip: !!selectedCategoryId }
   );
 
   const handleCreateCategoryStyle = (event) => {

@@ -138,7 +138,7 @@ export default function UploadPropertyForm() {
 
         try {
           await uploadRasterData({
-            data: formData,
+            data: chunkFormData,
             onUploadProgress: (event) => {
               const percentCompleted = Math.round(
                 (currentChunk / CHUNKS_COUNT) * 100
