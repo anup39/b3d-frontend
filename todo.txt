@@ -42,4 +42,3 @@ November 17 TODO:
 
 
 
-     // (currentChunk / CHUNKS_COUNT) * 100
