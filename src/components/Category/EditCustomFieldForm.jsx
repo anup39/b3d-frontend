@@ -1,12 +1,6 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
-import {
-  Button,
-  CircularProgress,
-  Box,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, CircularProgress, Box, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenEditCustomFieldForm } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
@@ -16,9 +10,11 @@ import {
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
-import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
-import Delete from "@mui/icons-material/Delete";
+import {
+  useGetGlobalCategoryQuery,
+  useUpdateGlobalCategoryMutation,
+} from "../../api/globalCategoryApi";
 
 export default function EditCustomFieldForm() {
   const dispatch = useDispatch();
@@ -33,9 +29,9 @@ export default function EditCustomFieldForm() {
   );
   const extra_fields = categoryEditData?.extra_fields;
   const [extraFields, setExtraFields] = useState([]);
-  const [inputValue, setInputValue] = useState("");
 
-  console.log(extraFields, "extraFields");
+  const { refetch: refetchGlobalCategoryData } = useGetGlobalCategoryQuery();
+  const [updateGlobalCategory] = useUpdateGlobalCategoryMutation();
 
   const handleEditCategory = (event) => {
     event.preventDefault();
@@ -49,26 +45,21 @@ export default function EditCustomFieldForm() {
     const data = {
       extra_fields: { data: newExtraFields },
     };
-    axios
-      .patch(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
-          categoryEditData.id
-        }/`,
-        data
-      )
+    // update global category
+    updateGlobalCategory({ category_id: categoryEditData.id, data })
+      .unwrap()
       .then(() => {
         setLoading(false);
         dispatch(setshowToast(true));
         dispatch(settoastMessage(`${t("Successfully")} ${t("Edited")}`));
         dispatch(settoastType("success"));
         closeForm();
-        axios
-          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
+        // refetch global category
+        refetchGlobalCategoryData()
+          .unwrap()
           .then((res) => {
-            // console.log(res.data);
-            dispatch(setCategorys(res.data));
-          })
-          .catch(() => {});
+            dispatch(setCategorys(res));
+          });
       })
       .catch(() => {
         setLoading(false);
@@ -80,7 +71,6 @@ export default function EditCustomFieldForm() {
   };
 
   const closeForm = () => {
-    console.log("close form");
     dispatch(setOpenEditCustomFieldForm(null));
   };
 

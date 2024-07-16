@@ -24,6 +24,12 @@ import PeopleIcon from "@mui/icons-material/People";
 import { useTranslation } from "react-i18next";
 import { fetchProjectsByClientId } from "../../api/api";
 import NewClientForm from "./NewClientForm";
+import { useGetRasterDataByClientIdQuery } from "../../api/rasterDataApi";
+import {
+  useGetRolesDataByClientIdQuery,
+  useGetRolesDataByProjectIdQuery,
+} from "../../api/rolesApi";
+import { useGetProjectsByClientIdQuery } from "../../api/projectApi";
 
 export default function ClientCard({ id, name, description }) {
   const { t } = useTranslation();
@@ -35,6 +41,13 @@ export default function ClientCard({ id, name, description }) {
   const [totalProjects, setTotalProjects] = useState([]);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const permissions = useSelector((state) => state.auth?.role?.permissions);
+
+  const { refetch: refetchProjectDataByClientId } =
+    useGetProjectsByClientIdQuery(id);
+  const { refetch: refetchRasterDataByClientId } =
+    useGetRasterDataByClientIdQuery({ client: id });
+  const { refetch: refetchRolesDataByClientId } =
+    useGetRolesDataByClientIdQuery({ client: id });
 
   const handleViewInMap = () => {
     // dispatch(setshowMeasuringsPanel(false));
@@ -106,27 +119,26 @@ export default function ClientCard({ id, name, description }) {
   };
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/projects/?client=${id}`)
+    refetchProjectDataByClientId()
+      .unwrap()
       .then((res) => {
-        setprojects(res.data);
+        setprojects(res);
       });
-    axios
-      .get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?client=${id}`
-      )
+
+    refetchRasterDataByClientId()
+      .unwrap()
       .then((res) => {
-        setproperties(res.data);
+        setproperties(res);
       });
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?client=${id}`)
+    refetchRolesDataByClientId()
+      .unwrap()
       .then((res) => {
-        setusers(res.data);
+        setusers(res);
       });
   }, [id, dispatch]);
 
   useEffect(() => {
-    fetchProjectsByClientId(id).then((res) => {
+    refetchProjectDataByClientId().then((res) => {
       setTotalProjects(res);
     });
   }, [id]);

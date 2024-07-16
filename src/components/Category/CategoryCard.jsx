@@ -3,7 +3,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import TabIcon from "@mui/icons-material/Tab";
-import { Button, Box, Link } from "@mui/material";
+import { Button, Box } from "@mui/material";
 import {
   setCategoryEditData,
   setOpenCategoryEditForm,
@@ -40,8 +40,6 @@ export default function CategoryCard({
   //       setStyle(style);
   //     });
   // }, [id]);
-
-  console.log("extra_fields", extra_fields);
 
   return (
     <Paper

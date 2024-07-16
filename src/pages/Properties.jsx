@@ -70,7 +70,7 @@ export default function Properties() {
           ) : null}
           {showTifUpload ? <UploadPropertyForm /> : null}
           {showProgressFormOpen ? <UploadProgress /> : null}
-          <PropertyContainer project_id={project_id} />{" "}
+          <PropertyContainer project_id={project_id} />
         </>
       ) : (
         <MapView />

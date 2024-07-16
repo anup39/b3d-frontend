@@ -10,17 +10,18 @@ import {
   setshowToast,
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
-import {
-  fetchProjectsByClientIdAndIds,
-  fetchProjectsByClientId,
-  updateProjectById,
-} from "../../api/api";
+
 import {
   setprojects,
   setOpenEditProjectForm,
   setEditProjectId,
 } from "../../reducers/Project";
 import { useTranslation } from "react-i18next";
+import {
+  useUpdateProjectByIdMutation,
+  useGetProjectsByClientIdQuery,
+  useGetProjectsByClientIdAndIdsQuery,
+} from "../../api/projectApi";
 
 export default function URL3d({ client_id }) {
   const { t } = useTranslation();
@@ -31,75 +32,74 @@ export default function URL3d({ client_id }) {
   const [loading, setLoading] = useState(false);
   const projects_ = useSelector((state) => state.auth.role.project);
   const project_id = useSelector((state) => state.project.editProjectId);
+  const [updateProjectById] = useUpdateProjectByIdMutation();
 
-  console.log("project_id", project_id);
+  const { data: projectsById, refetch: refetchProjectsByClientId } =
+    useGetProjectsByClientIdQuery(client_id, {
+      skip: !(
+        (group_name && group_name === "super_admin") ||
+        group_name === "admin"
+      ),
+    });
 
-  const handleEditRole = (event) => {
+  const { refetch: refetchProjectsByClientIdAndIds } =
+    useGetProjectsByClientIdAndIdsQuery(
+      { client_id: client_id, ids: projects_ },
+      { skip: true }
+    );
+
+  const handleEditRole = async (event) => {
     event.preventDefault();
     setLoading(true);
     const data = {
       url: url,
     };
-    updateProjectById(project_id, data)
-      .then((res) => {
-        console.log(res, "res patch of url");
 
-        if (
-          (group_name && group_name === "super_admin") ||
-          group_name === "admin"
-        ) {
-          fetchProjectsByClientId(client_id).then((res) => {
-            const updatedProjects = res.map((project) => {
-              return {
-                ...project,
-                checked: false,
-                openProperties: false,
-              };
-            });
+    try {
+      await updateProjectById({ project_id, data }).unwrap();
 
-            dispatch(setprojects(updatedProjects));
-          });
+      if (group_name === "super_admin" || group_name === "admin") {
+        const res = await refetchProjectsByClientId();
+        const updatedProjects = res?.data?.map((project) => ({
+          ...project,
+          checked: false,
+          openProperties: false,
+        }));
+        dispatch(setprojects(updatedProjects));
+      }
+
+      if (["editor", "viewer", "inspektor"].includes(group_name)) {
+        if (projects_.length > 0) {
+          const res = await refetchProjectsByClientIdAndIds();
+          const updatedProjects = res.map((project) => ({
+            ...project,
+            checked: false,
+            openProperties: false,
+          }));
+          dispatch(setprojects(updatedProjects));
         }
+      }
 
-        if (
-          group_name === "editor" ||
-          group_name === "viewer" ||
-          group_name === "inspektor"
-        ) {
-          if (projects_.length > 0) {
-            fetchProjectsByClientIdAndIds(client_id, projects_).then((res) => {
-              const updatedProjects = res.map((project) => {
-                return {
-                  ...project,
-                  checked: false,
-                  openProperties: false,
-                };
-              });
-
-              dispatch(setprojects(updatedProjects));
-            });
-          }
-        }
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(
-          settoastMessage(
-            `${t("Successfully")}  ${t("Created")} ${t("ThreeDurl")}  `
-          )
-        );
-        dispatch(settoastType("success"));
-        closeForm();
-      })
-      .catch(() => {
-        setLoading(false);
-        dispatch(setshowToast(true));
-        dispatch(
-          settoastMessage(
-            `${t("Failed")}  ${t("To")} ${t("Create")} ${t("ThreeDurl")} `
-          )
-        );
-        dispatch(settoastType("error"));
-      });
+      setLoading(false);
+      dispatch(setshowToast(true));
+      dispatch(
+        settoastMessage(
+          `${t("Successfully")} ${t("Created")} ${t("ThreeDurl")}`
+        )
+      );
+      dispatch(settoastType("success"));
+      closeForm();
+    } catch (error) {
+      setLoading(false);
+      dispatch(setshowToast(true));
+      dispatch(
+        settoastMessage(
+          `${t("Failed")} ${t("To")} ${t("Create")} ${t("ThreeDurl")}`
+        )
+      );
+      dispatch(settoastType("error"));
+      console.error("Error creating ThreeDurl:", error);
+    }
   };
 
   const closeForm = () => {

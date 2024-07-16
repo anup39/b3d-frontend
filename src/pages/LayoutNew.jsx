@@ -1,9 +1,9 @@
-import { BasicAppShell } from "../components/Layout/BasicAppShell";
+import { MainApp } from "../components/LayoutNew/MainApp";
 
 export default function LayoutNew() {
   return (
     <>
-      <BasicAppShell />
+      <MainApp />
     </>
   );
 }
