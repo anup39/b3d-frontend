@@ -44,9 +44,10 @@ export const rasterDataApi = createApi({
         method: "POST",
         headers: {
           Authorization: "Token " + localStorage.getItem("token"),
-          "Content-Type": "application/x-www-form-urlencoded",
+          // "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: new URLSearchParams(data).toString(),
+        // body: new URLSearchParams(data).toString(),
+        body: data,
       }),
       invalidatesTags: ["rasterDataApi"],
     }),
