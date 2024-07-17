@@ -38,18 +38,13 @@ export default function ClientCard({ id, name, description }) {
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const permissions = useSelector((state) => state.auth?.role?.permissions);
 
-  const { data: projectsByClientId, refetch: refetchProjectDataByClientId } =
-    useGetProjectsByClientIdQuery(id);
-  const { data: rasterDataByClientId, refetch: refetchRasterDataByClientId } =
-    useGetRasterDataByClientIdQuery({ client: id });
-  const { data: rolesDataByClientId, refetch: refetchRolesDataByClientId } =
-    useGetRolesDataByClientIdQuery({ client: id });
-
-  useEffectOnlyAfterMount(() => {
-    refetchProjectDataByClientId();
-    refetchRasterDataByClientId();
-    refetchRolesDataByClientId();
-  }, [id]);
+  const { data: projectsByClientId } = useGetProjectsByClientIdQuery(id);
+  const { data: rasterDataByClientId } = useGetRasterDataByClientIdQuery({
+    client: id,
+  });
+  const { data: rolesDataByClientId } = useGetRolesDataByClientIdQuery({
+    client: id,
+  });
 
   const handleViewInMap = () => {
     // dispatch(setshowMeasuringsPanel(false));
