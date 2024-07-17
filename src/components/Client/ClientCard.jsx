@@ -113,7 +113,7 @@ export default function ClientCard({ id, name, description }) {
       }
     } else {
       dispatch(setshowToast(true));
-      dispatch(settoastMessage("Failed to load total properties"));
+      dispatch(settoastMessage("Failed to load total properties, Try again !"));
       dispatch(settoastType(error));
     }
   };

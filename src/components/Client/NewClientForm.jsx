@@ -11,7 +11,6 @@ import {
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
-import { fetchClientDetailsByClientId } from "../../api/api";
 import PropTypes from "prop-types";
 import {
   useCreateClientMutation,
