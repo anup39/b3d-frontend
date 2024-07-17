@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setStandardCategorys } from "../reducers/StandardCategory";
 import { setSubCategorys } from "../reducers/SubCategory";
 import { setCategorys } from "../reducers/Category";
@@ -81,38 +80,6 @@ export default function Classification() {
   useEffect(() => {
     dispatch(setCategorys(globalCategoryData));
   }, [globalCategoryData]);
-
-  console.log(
-    isGlobalCategoryLoading,
-    isGlobalStandardCategoryLoading,
-    isGlobalSubCategoryLoading
-  );
-
-  // useEffect(() => {
-  //   axios
-  //     .get(
-  //       `${import.meta.env.VITE_API_DASHBOARD_URL}/global-standard-category/`
-  //     )
-  //     .then((res) => {
-  //       dispatch(setStandardCategorys(res.data));
-  //     });
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`)
-  //     .then((res) => {
-  //       dispatch(setSubCategorys(res.data));
-  //     });
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
-  //     .then((res) => {
-  //       dispatch(setCategorys(res.data));
-  //     });
-  // }, [dispatch]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
