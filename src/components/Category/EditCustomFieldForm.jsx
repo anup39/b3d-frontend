@@ -37,13 +37,13 @@ export default function EditCustomFieldForm() {
     event.preventDefault();
     setLoading(true);
 
-    console.log(extra_fields, "extra_fields");
+    // console.log(extra_fields, "extra_fields");
     console.log(extraFields, "extraFields");
 
     const newExtraFields = extraFields.filter((field) => !field.delete);
 
     const data = {
-      extra_fields: { data: newExtraFields },
+      extra_fields: JSON.stringify(newExtraFields),
     };
     // update global category
     updateGlobalCategory({ category_id: categoryEditData.id, data })
@@ -111,15 +111,13 @@ export default function EditCustomFieldForm() {
   };
 
   useEffect(() => {
-    if (openEditCustomFieldForm && categoryEditData.extra_fields) {
-      setExtraFields(
-        JSON.parse(JSON.stringify(categoryEditData.extra_fields.data))
-      );
+    if (openEditCustomFieldForm && extra_fields) {
+      setExtraFields(JSON.parse(extra_fields));
     }
     return () => {
       setExtraFields([]);
     };
-  }, [openEditCustomFieldForm, categoryEditData]);
+  }, [openEditCustomFieldForm, extra_fields]);
 
   return (
     <>

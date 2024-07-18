@@ -57,7 +57,15 @@ This command will start the development server, and you can access B3d at http:/
     Real-time collaboration features similar to Google Docs.
 
 ## Notes
-
     Ensure that backend API configurations in the .env file are accurate.
     For optimal performance, it is recommended to run B3d on a system with a capable GPU.
     Feel free to explore the B3d platform and leverage its rich set of features for efficient drone data processing and visualization. If you encounter any issues or have questions, please refer to the documentation or reach out to our support team. Happy droning!
+
+## Programming Guide Lines
+    [Main] branch is the production branch
+    [ReleaseVx] is the test branch
+    For each card in Trello that takes more than a hour, there must be a branch that can be linked to the task.
+    For each tag or feature we make multiple segment commits.
+    When finishing a working day, if you have not comittet any changes that day do an "End of day" commit.
+    This means that the comment starts with "EoD:" + a descriptive comment on what was changed.
+    The code must be able to compile, but need not be finished.

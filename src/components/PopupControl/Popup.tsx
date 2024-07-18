@@ -46,6 +46,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingAdditional, setLoadingAdditional] = useState(false);
 
   const dispatch = useDispatch();
   // const state = useSelector((state) => state.drawnPolygon);
@@ -76,7 +77,6 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
             key !== "component"
         ) // Exclude 'perimeter' and 'area'
         .map(([key, value]) => {
-          console.log(key, "key");
           const language = localStorage.getItem("i18nextLng");
           if (key === "view_name") {
             if (language === "en") {
@@ -100,94 +100,11 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
           }
           return (
             <div key={key}>
-              {key !== "extra_fields" ? (
+              {key !== "extra_fields" && key !== "extra_fields_value" ? (
                 <>
                   {" "}
                   <strong>{key}:</strong> {value}
                 </>
-              ) : null}
-
-              {key === "extra_fields" && JSON.parse(value)?.data?.length > 0 ? (
-                <React.Fragment>
-                  <Typography variant="body2" gutterBottom>
-                    <b>{t("Additional")}</b>
-                  </Typography>
-                  {JSON.parse(value)?.data?.map((field, index) => {
-                    switch (field.type) {
-                      case "Text":
-                        return (
-                          <Typography key={index}>
-                            {field.label}: {field.value}
-                          </Typography>
-                        );
-                      case "Checkbox":
-                        return (
-                          <Box
-                            key={index}
-                            sx={{
-                              display: "flex",
-                              gap: 1,
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography>{field.label}:</Typography>
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              disabled
-                            />
-                          </Box>
-                        );
-                      case "Url":
-                        return (
-                          <Box
-                            key={index}
-                            sx={{
-                              display: "flex",
-                              gap: 1,
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography>{field.label}:</Typography>
-                            <Link href={field.value} target="_blank">
-                              {field.value}
-                            </Link>
-                          </Box>
-                        );
-                      case "Number":
-                        return (
-                          <Typography key={index}>
-                            {field.label}: {field.value}
-                          </Typography>
-                        );
-                      case "Dropdown":
-                        return (
-                          <Box
-                            key={index}
-                            sx={{
-                              display: "flex",
-                              gap: 1,
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography>{field.label}:</Typography>
-                            {field.value && field.value.length > 0
-                              ? field.value.map((item, index) => {
-                                  return item.selected ? (
-                                    <Typography key={index}>
-                                      {item.value}
-                                    </Typography>
-                                  ) : null;
-                                })
-                              : null}
-                          </Box>
-                        );
-
-                      default:
-                        return null;
-                    }
-                  })}
-                </React.Fragment>
               ) : null}
             </div>
           );
@@ -472,14 +389,345 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     }
   };
 
-  console.log(options, "options");
+  console.log(properties, "properties");
+
+  const [extra_fields, setExtraFields] = useState([]);
+  // console.log(extra_fields, "extra_fields");
+  console.log(extra_fields, "extra_fields");
+
+  useEffect(() => {
+    if (feature_id) {
+      const type_of_geometry = properties.type_of_geometry;
+
+      if (type_of_geometry === "Polygon") {
+        axios
+          .get(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/polygon-data/${feature_id}/`
+          )
+          .then((res) => {
+            const extraFields = JSON.parse(res.data.extra_fields_category);
+            const extra_fields_value = JSON.parse(res.data.extra_fields);
+
+            console.log(extra_fields_value, "extra_fields_value");
+            const updatedExtraFields = extraFields.map((field) => {
+              const value = extra_fields_value.find(
+                (item) => item.id === field.id
+              );
+              return { ...field, value: value ? value.value : field.value };
+            });
+            setExtraFields(updatedExtraFields);
+          });
+      }
+      if (type_of_geometry === "LineString") {
+        axios
+          .get(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/linestring-data/${feature_id}/`
+          )
+          .then((res) => {
+            const extraFields = JSON.parse(res.data.extra_fields_category);
+            const extra_fields_value = JSON.parse(res.data.extra_fields);
+            const updatedExtraFields = extraFields.map((field) => {
+              const value = extra_fields_value.find(
+                (item) => item.id === field.id
+              );
+              return { ...field, value: value ? value.value : field.value };
+            });
+            setExtraFields(updatedExtraFields);
+          });
+      }
+
+      if (type_of_geometry === "Point") {
+        axios
+          .get(
+            `${
+              import.meta.env.VITE_API_DASHBOARD_URL
+            }/point-data/${feature_id}/`
+          )
+          .then((res) => {
+            const extraFields = JSON.parse(res.data.extra_fields_category);
+            const extra_fields_value = JSON.parse(res.data.extra_fields);
+            const updatedExtraFields = extraFields.map((field) => {
+              const value = extra_fields_value.find(
+                (item) => item.id === field.id
+              );
+              return { ...field, value: value ? value.value : field.value };
+            });
+            setExtraFields(updatedExtraFields);
+          });
+      }
+
+      return () => {
+        setExtraFields([]);
+      };
+    }
+  }, [properties, feature_id]);
+
+  const handleFieldChange = (id, name, value) => {
+    const newExtraFields = [...extra_fields];
+    const index = newExtraFields.findIndex((field) => field.id === id);
+    newExtraFields[index][name] = value;
+    setExtraFields(newExtraFields);
+  };
+
+  const handleSelectChange = (id, name, event) => {
+    const selectedOptionId = parseInt(
+      event.target.options[event.target.selectedIndex].getAttribute("id")
+    );
+    const newExtraFields = [...extra_fields];
+    const index = newExtraFields.findIndex((field) => field.id === id);
+    newExtraFields[index][name].map((option) => {
+      if (option.id === selectedOptionId) {
+        option.selected = true;
+      } else {
+        option.selected = false;
+      }
+    });
+    setExtraFields(newExtraFields);
+  };
+
+  const handleSubmtitEditAlternative = (e) => {
+    setLoadingAdditional(true);
+    e.preventDefault();
+    console.log(extra_fields, "extra_fields");
+    const type_of_geometry = properties.type_of_geometry;
+    if (type_of_geometry === "Polygon") {
+      axios
+        .patch(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/polygon-data/${feature_id}/`,
+          {
+            extra_fields: JSON.stringify(extra_fields),
+          }
+        )
+        .then((res) => {
+          setLoadingAdditional(false);
+        });
+    }
+    if (type_of_geometry === "LineString") {
+      axios
+        .patch(
+          `${
+            import.meta.env.VITE_API_DASHBOARD_URL
+          }/linestring-data/${feature_id}/`,
+          {
+            extra_fields: JSON.stringify(extra_fields),
+          }
+        )
+        .then((res) => {
+          setLoadingAdditional(false);
+        });
+    }
+    if (type_of_geometry === "Point") {
+      axios
+        .patch(
+          `${import.meta.env.VITE_API_DASHBOARD_URL}/point-data/${feature_id}/`,
+          {
+            extra_fields: JSON.stringify(extra_fields),
+          }
+        )
+        .then((res) => {
+          setLoadingAdditional(false);
+        });
+    }
+  };
   return (
     <>
       {properties ? (
         <div>
           <div>{propertyElements}</div>
-          <br></br>
 
+          {extra_fields?.length > 0 ? (
+            <form onSubmit={handleSubmtitEditAlternative}>
+              <Typography variant="body2" gutterBottom>
+                <b>{t("Additional")}</b>
+              </Typography>
+              {extra_fields?.map((field) => {
+                const id = field.id;
+
+                switch (field.type) {
+                  case "Text":
+                    return (
+                      <div key={id}>
+                        {!field.delete ? (
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Typography>{field.label} </Typography>:
+                            <input
+                              onChange={(e) =>
+                                handleFieldChange(id, "value", e.target.value)
+                              }
+                              defaultValue={
+                                extra_fields?.find((item) => item.id === id)
+                                  .value
+                              }
+                              placeholder="Enter value"
+                            />
+                          </Box>
+                        ) : null}
+                      </div>
+                    );
+                  case "Checkbox":
+                    return (
+                      <div key={id}>
+                        {!field.deleted ? (
+                          <Box
+                            key={id}
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 1,
+                            }}
+                          >
+                            <Typography>{field.label}:</Typography>
+                            <input
+                              onChange={(e) =>
+                                handleFieldChange(id, "value", e.target.checked)
+                              }
+                              type="checkbox"
+                              defaultChecked={
+                                extra_fields?.find((item) => item.id === id)
+                                  .value
+                              }
+                            />
+                          </Box>
+                        ) : null}
+                      </div>
+                    );
+                  case "Url":
+                    return (
+                      <div key={id}>
+                        {!field.delete ? (
+                          <Box
+                            key={id}
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              marginButtom: "20px",
+                            }}
+                          >
+                            <Typography>{field.label}:</Typography>
+                            <input
+                              onChange={(e) =>
+                                handleFieldChange(id, "value", e.target.value)
+                              }
+                              defaultValue={
+                                extra_fields?.find((item) => item.id === id)
+                                  .value
+                              }
+                              placeholder="Enter value"
+                            ></input>
+                          </Box>
+                        ) : null}
+                      </div>
+                    );
+                  case "Number":
+                    return (
+                      <div key={id}>
+                        {!field.delete ? (
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              marginButtom: "20px",
+                            }}
+                            key={id}
+                          >
+                            <Typography>{field.label}</Typography>
+                            <input
+                              onChange={(e) =>
+                                handleFieldChange(id, "value", e.target.value)
+                              }
+                              type="number"
+                              defaultValue={parseInt(
+                                extra_fields?.find((item) => item.id === id)
+                                  .value
+                              )}
+                              placeholder="Enter value"
+                            ></input>
+                          </Box>
+                        ) : null}
+                      </div>
+                    );
+                  case "Dropdown":
+                    return (
+                      <div key={id}>
+                        {!field.delete ? (
+                          <Box
+                            key={id}
+                            sx={{
+                              display: "flex",
+                              gap: 1,
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography>{field.label}:</Typography>
+                            <select
+                              onChange={(e) =>
+                                handleSelectChange(id, "value", e)
+                              }
+                            >
+                              <option value="">--select an option--</option>
+                              {field.value && field.value.length > 0
+                                ? field.value.map((item, index) => {
+                                    return (
+                                      <option
+                                        id={item.id}
+                                        selected={extra_fields
+                                          .find((item) => item.id === id)
+                                          .value.find(
+                                            (option) => option.selected
+                                          )}
+                                        key={index}
+                                        value={item.value}
+                                      >
+                                        {item.value}
+                                      </option>
+                                    );
+                                  })
+                                : null}
+                            </select>
+                          </Box>
+                        ) : (
+                          "null"
+                        )}
+                      </div>
+                    );
+
+                  default:
+                    return null;
+                }
+              })}
+
+              {group_name === "super_admin" ||
+              group_name === "admin" ||
+              group_name === "editor" ||
+              (group_name === "inspektor" && project_id !== "All") ? (
+                <>
+                  {loadingAdditional ? (
+                    <CircularProgress sx={{ p: 1 }} size={40} />
+                  ) : (
+                    <Button type="submit" variant="contained">
+                      Edit Additional
+                    </Button>
+                  )}
+                </>
+              ) : null}
+            </form>
+          ) : null}
+
+          <br></br>
           {group_name === "super_admin" ||
           group_name === "admin" ||
           group_name === "editor" ||
