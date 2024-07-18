@@ -100,94 +100,11 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
           }
           return (
             <div key={key}>
-              {key !== "extra_fields" ? (
+              {key !== "extra_fields" && key !== "extra_fields_value" ? (
                 <>
                   {" "}
                   <strong>{key}:</strong> {value}
                 </>
-              ) : null}
-
-              {key === "extra_fields" && JSON.parse(value)?.data?.length > 0 ? (
-                <React.Fragment>
-                  <Typography variant="body2" gutterBottom>
-                    <b>{t("Additional")}</b>
-                  </Typography>
-                  {JSON.parse(value)?.data?.map((field, index) => {
-                    switch (field.type) {
-                      case "Text":
-                        return (
-                          <Typography key={index}>
-                            {field.label}: {field.value}
-                          </Typography>
-                        );
-                      case "Checkbox":
-                        return (
-                          <Box
-                            key={index}
-                            sx={{
-                              display: "flex",
-                              gap: 1,
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography>{field.label}:</Typography>
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              disabled
-                            />
-                          </Box>
-                        );
-                      case "Url":
-                        return (
-                          <Box
-                            key={index}
-                            sx={{
-                              display: "flex",
-                              gap: 1,
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography>{field.label}:</Typography>
-                            <Link href={field.value} target="_blank">
-                              {field.value}
-                            </Link>
-                          </Box>
-                        );
-                      case "Number":
-                        return (
-                          <Typography key={index}>
-                            {field.label}: {field.value}
-                          </Typography>
-                        );
-                      case "Dropdown":
-                        return (
-                          <Box
-                            key={index}
-                            sx={{
-                              display: "flex",
-                              gap: 1,
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography>{field.label}:</Typography>
-                            {field.value && field.value.length > 0
-                              ? field.value.map((item, index) => {
-                                  return item.selected ? (
-                                    <Typography key={index}>
-                                      {item.value}
-                                    </Typography>
-                                  ) : null;
-                                })
-                              : null}
-                          </Box>
-                        );
-
-                      default:
-                        return null;
-                    }
-                  })}
-                </React.Fragment>
               ) : null}
             </div>
           );
@@ -472,14 +389,140 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
     }
   };
 
+  console.log(properties.extra_fields, "properties");
+  console.log(properties.extra_fields_value, "properties");
+
+  const extra_fields = JSON.parse(properties.extra_fields);
+  const extra_fields_value = JSON.parse(properties.extra_fields_value);
+
   console.log(options, "options");
+
+  const handleSubmtitEditAlternative = (e) => {
+    e.preventDefault();
+    console.log("submitting form");
+  };
   return (
     <>
       {properties ? (
         <div>
           <div>{propertyElements}</div>
-          <br></br>
 
+          {extra_fields?.length > 0 ? (
+            <form onSubmit={handleSubmtitEditAlternative}>
+              <Typography variant="body2" gutterBottom>
+                <b>{t("Additional")}</b>
+              </Typography>
+              {extra_fields?.map((field) => {
+                const id = field.id;
+                switch (field.type) {
+                  case "Text":
+                    return (
+                      <Box
+                        key={id}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography>{field.label} </Typography>:
+                        <input
+                          value={
+                            extra_fields_value[id] ? extra_fields_value[id] : ""
+                          }
+                          placeholder="Enter value"
+                        />
+                      </Box>
+                    );
+                  case "Checkbox":
+                    return (
+                      <Box
+                        key={id}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                        }}
+                      >
+                        <Typography>{field.label}:</Typography>
+                        <input type="checkbox" checked={field.value} disabled />
+                      </Box>
+                    );
+                  case "Url":
+                    return (
+                      <Box
+                        key={id}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          marginButtom: "20px",
+                        }}
+                      >
+                        <Typography>{field.label}:</Typography>
+                        <input
+                          value={
+                            extra_fields_value[id] ? extra_fields_value[id] : ""
+                          }
+                          placeholder="Enter value"
+                        ></input>
+                      </Box>
+                    );
+                  case "Number":
+                    return (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          marginButtom: "20px",
+                        }}
+                        key={id}
+                      >
+                        <Typography>
+                          {field.label}: {field.value}
+                        </Typography>
+                        <input
+                          type="number"
+                          value={extra_fields_value[id]}
+                          placeholder="Enter value"
+                        ></input>
+                      </Box>
+                    );
+                  case "Dropdown":
+                    return (
+                      <Box
+                        key={id}
+                        sx={{
+                          display: "flex",
+                          gap: 1,
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography>{field.label}:</Typography>
+                        {field.value && field.value.length > 0
+                          ? field.value.map((item, index) => {
+                              return item.selected ? (
+                                <Typography key={index}>
+                                  {item.value}
+                                </Typography>
+                              ) : null;
+                            })
+                          : null}
+                      </Box>
+                    );
+
+                  default:
+                    return null;
+                }
+              })}
+              <Button type="submit" variant="contained">
+                Edit Alternative
+              </Button>
+            </form>
+          ) : null}
+
+          <br></br>
           {group_name === "super_admin" ||
           group_name === "admin" ||
           group_name === "editor" ||
