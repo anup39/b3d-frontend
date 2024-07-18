@@ -69,38 +69,42 @@ export default function Field() {
         delete: false,
       };
     }
+    let extra_fields = categoryEditData.extra_fields;
+    let extra_fields_arrray = JSON.parse(extra_fields);
 
-    let extra_fields = { ...categoryEditData.extra_fields };
-
-    let newData = [];
-
-    if (extra_fields.data) {
-      console.log(extra_fields.data, "extra_fields.data");
-      newData = [...extra_fields.data, new_item];
+    if (extra_fields_arrray.length === 0) {
+      extra_fields_arrray.push({ ...new_item, id: 1 });
     } else {
-      newData = [new_item];
+      let last_id = extra_fields_arrray[extra_fields_arrray.length - 1].id;
+      extra_fields_arrray.push({ ...new_item, id: last_id + 1 });
     }
 
+    console.log(extra_fields_arrray, "extra_fields_arrray");
+
+    let extra_fields_string = JSON.stringify(extra_fields_arrray);
+
+    console.log(extra_fields_string, "extra_fields_string");
+
     const data = {
-      extra_fields: { data: newData },
+      extra_fields: extra_fields_string,
     };
-    //  add extra fields
+
     updateGlobalCategory({ category_id: categoryEditData.id, data })
       .unwrap()
       .then(() => {
-        const data = {
-          user_id: user_id,
-          category_edit_data: categoryEditData,
-          extraFields: { data: newData },
-        };
+        // const data = {
+        //   user_id: user_id,
+        //   category_edit_data: categoryEditData,
+        //   extraFields: { data: newData },
+        // };
         // add extra fields
-        addExtraFields({ data })
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        // addExtraFields({ data })
+        //   .then((res) => {
+        //     console.log(res);
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //   });
         setLoading(false);
         dispatch(setshowToast(true));
         dispatch(settoastMessage(`${t("Successfully")} ${t("Created")}`));
@@ -188,7 +192,7 @@ export default function Field() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px",
+              width: "350px",
               background: "#fff",
               padding: "20px",
               zIndex: 10000,
