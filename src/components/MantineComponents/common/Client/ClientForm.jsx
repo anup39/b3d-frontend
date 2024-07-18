@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Form, useForm } from "@mantine/form";
+import { useForm } from "@mantine/form";
 import { Button, Group, TextInput } from "@mantine/core";
 import CustomModal from "../CustomModal";
 import { useTranslation } from "react-i18next";
@@ -12,11 +12,9 @@ import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { fetchClientDetailsByClientId } from "../../../../api/api";
 
-const ClientForm = () => {
-  const id = 133;
+const ClientForm = ({ id }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const [clientData, setClientData] = useState(null);
   const user_id = useSelector((state) => state.auth.user_id);
 
   const [updateClientById] = useUpdateClientByIdMutation();
@@ -31,7 +29,15 @@ const ClientForm = () => {
       lbf_number: "",
       cvr_number: "",
     },
+    validateInputOnBlur: true,
+    clearInputErrorOnChange: true,
+    validate: {
+      name: (value) => (value.length < 1 ? "Name is required" : null),
+      // remaining validations for other fields
+    },
   });
+
+  const typeOfOperation = id ? "Edit" : "Create";
 
   useEffect(() => {
     if (id) {
@@ -54,8 +60,6 @@ const ClientForm = () => {
         });
     }
   }, [id, dispatch, t, opened]);
-
-  console.log(clientData);
 
   const createNewClient = useCallback(
     (data) => {
@@ -107,20 +111,33 @@ const ClientForm = () => {
 
   const handleSubmit = useCallback(
     (close) => {
-      const values = form.getValues();
-      const data_ = new FormData();
-      Object.keys(values).forEach((key) => {
-        data_.append(key, values[key]);
-      });
-      if (id) {
-        editClient(data_);
-      } else {
-        createNewClient(data_);
+      if (form.isValid()) {
+        console.log(form.values);
+        const values = form.getValues();
+        const data_ = new FormData();
+        Object.keys(values).forEach((key) => {
+          data_.append(key, values[key]);
+        });
+        if (id) {
+          editClient(data_);
+        } else {
+          createNewClient(data_);
+        }
+        form.reset();
+        form.clearErrors();
+        close();
       }
+    },
+    [id, form, close, editClient, createNewClient]
+  );
+
+  const onCancelForm = useCallback(
+    (close) => {
       form.reset();
+      form.clearErrors();
       close();
     },
-    [id, close, editClient, createNewClient]
+    [close, form]
   );
 
   return (
@@ -128,57 +145,47 @@ const ClientForm = () => {
       opened={opened}
       open={open}
       close={close}
-      buttonContent="Create Client"
+      buttonContent={`${typeOfOperation} client`}
       title="Client Details"
     >
-      {/* <Form
-        onSubmit={() => {
-          handleSubmit();
-        }}
-      > */}
-      <TextInput
-        label="Name"
-        placeholder="Name"
-        key={form.key("name")}
-        {...form.getInputProps("name")}
-      />
-      <TextInput
-        mt="sm"
-        label="Administrator"
-        placeholder="Administrator"
-        key={form.key("administrator")}
-        {...form.getInputProps("administrator")}
-      />
-      <TextInput
-        mt="sm"
-        label="LBF-Number"
-        placeholder="LBF-Number"
-        key={form.key("lbf_number")}
-        {...form.getInputProps("lbf_number")}
-      />
-      <TextInput
-        mt="sm"
-        label="CVR-Number"
-        placeholder="CVR-Number"
-        key={form.key("cvr_number")}
-        {...form.getInputProps("cvr_number")}
-      />
+      <form onSubmit={form.onSubmit(() => handleSubmit(close))}>
+        <TextInput
+          label="Name"
+          placeholder="Name"
+          key={form.key("name")}
+          {...form.getInputProps("name")}
+        />
+        <TextInput
+          mt="sm"
+          label="Administrator"
+          placeholder="Administrator"
+          key={form.key("administrator")}
+          {...form.getInputProps("administrator")}
+        />
+        <TextInput
+          mt="sm"
+          label="LBF-Number"
+          placeholder="LBF-Number"
+          key={form.key("lbf_number")}
+          {...form.getInputProps("lbf_number")}
+        />
+        <TextInput
+          mt="sm"
+          label="CVR-Number"
+          placeholder="CVR-Number"
+          key={form.key("cvr_number")}
+          {...form.getInputProps("cvr_number")}
+        />
 
-      <Group justify="center" mt="md">
-        <Button
-          w="100%"
-          type="submit"
-          onClick={() => {
-            handleSubmit(close);
-          }}
-        >
-          {id ? "Edit Client" : "Create Client"}
-        </Button>
-        <Button w="100%" bg="red" onClick={close}>
-          Cancel
-        </Button>
-      </Group>
-      {/* </Form> */}
+        <Group justify="center" mt="md">
+          <Button w="100%" type="submit">
+            {`${typeOfOperation} client`}
+          </Button>
+          <Button w="100%" bg="red" onClick={() => onCancelForm(close)}>
+            Cancel
+          </Button>
+        </Group>
+      </form>
     </CustomModal>
   );
 };
