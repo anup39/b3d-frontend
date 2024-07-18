@@ -1,6 +1,5 @@
 import { useRef, useEffect } from "react";
 
-
 //useEffect which runs only after mounting
 function useEffectOnlyAfterMount(fn, inputs) {
   const isMountingRef = useRef(false);
@@ -15,7 +14,7 @@ function useEffectOnlyAfterMount(fn, inputs) {
     } else {
       isMountingRef.current = false;
     }
-  }, inputs);
+  }, [inputs, fn]);
 }
 
 export default useEffectOnlyAfterMount;
