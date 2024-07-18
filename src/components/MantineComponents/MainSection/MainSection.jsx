@@ -1,8 +1,7 @@
 import { Tabs } from "@mantine/core";
 import MapNew from "../../../map/MapNew";
 import LayoutRouters from "../LayoutRouters/LayoutRouters";
-import ClientCard from "../common/Client/ClientCard";
-import ClientForm from "../common/Client/ClientForm";
+import Clients from "./pages/Clients";
 
 const MainSection = ({ activeTab }) => {
   return (
@@ -16,13 +15,11 @@ const MainSection = ({ activeTab }) => {
       </Tabs.Panel>
       <Tabs.Panel w={"100%"} value="Clients">
         <div>
-          <ClientForm />
+          <Clients />
         </div>
       </Tabs.Panel>
       <Tabs.Panel w={"100%"} value="Classifications">
-        <div>
-          <ClientCard />
-        </div>
+        <div>Classifications</div>
       </Tabs.Panel>
     </Tabs>
   );

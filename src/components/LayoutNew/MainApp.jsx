@@ -8,7 +8,7 @@ import FooterSection from "../MantineComponents/FooterSection/Footer";
 // It is treated as app.jsx
 export function MainApp() {
   const [opened, { toggle }] = useDisclosure();
-  const [activeTab, setActiveTab] = useState("Map");
+  const [activeTab, setActiveTab] = useState("Clients");
 
   return (
     <AppShell

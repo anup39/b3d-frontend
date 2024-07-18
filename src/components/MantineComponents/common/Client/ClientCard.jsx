@@ -1,141 +1,31 @@
-import { Card, Group, Image, Text } from "@mantine/core";
+import { Button, Card, Grid, Group, Text } from "@mantine/core";
+import ClientForm from "./ClientForm";
 
-const ClientCard = () => {
+const ClientCard = ({ id, name, description, created_at }) => {
   return (
-    <Group px={"auto"}>
-      <Card
-        shadow="sm"
-        padding="xl"
-        component="a"
-        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-        target="_blank"
-        className="w-[20rem]"
-      >
-        <Text fw={500} size="lg" mt="md">
-          Client Name
-        </Text>
+    <>
+      <Grid.Col span={3}>
+        <Card shadow="sm" component="a" target="_blank" className="w-[100%]">
+          <Text fw={500} size="lg" mt="md">
+            {name}
+          </Text>
 
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Properties : 4
-        </Text>
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Maps : 14
-        </Text>
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Users : 2
-        </Text>
-      </Card>
-      <Card
-        shadow="sm"
-        padding="xl"
-        component="a"
-        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-        target="_blank"
-        className="w-[20rem]"
-      >
-        <Text fw={500} size="lg" mt="md">
-          Client Name
-        </Text>
-
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Properties : 4
-        </Text>
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Maps : 14
-        </Text>
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Users : 2
-        </Text>
-      </Card>
-      <Card
-        shadow="sm"
-        padding="xl"
-        component="a"
-        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-        target="_blank"
-        className="w-[20rem]"
-      >
-        <Text fw={500} size="lg" mt="md">
-          Client Name
-        </Text>
-
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Properties : 4
-        </Text>
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Maps : 14
-        </Text>
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Users : 2
-        </Text>
-      </Card>
-      <Card
-        shadow="sm"
-        padding="xl"
-        component="a"
-        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-        target="_blank"
-        className="w-[20rem]"
-      >
-        <Text fw={500} size="lg" mt="md">
-          Client Name
-        </Text>
-
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Properties : 4
-        </Text>
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Maps : 14
-        </Text>
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Users : 2
-        </Text>
-      </Card>
-      <Card
-        shadow="sm"
-        padding="xl"
-        component="a"
-        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-        target="_blank"
-        className="w-[20rem]"
-      >
-        <Text fw={500} size="lg" mt="md">
-          Client Name
-        </Text>
-
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Properties : 4
-        </Text>
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Maps : 14
-        </Text>
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Users : 2
-        </Text>
-      </Card>
-      <Card
-        shadow="sm"
-        padding="xl"
-        component="a"
-        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-        target="_blank"
-        className="w-[20rem]"
-      >
-        <Text fw={500} size="lg" mt="md">
-          Client Name
-        </Text>
-
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Properties : 4
-        </Text>
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Maps : 14
-        </Text>
-        <Text mt="xs" c="dimmed" size="sm">
-          Total Users : 2
-        </Text>
-      </Card>
-    </Group>
+          <Text mt="xs" c="dimmed" size="sm">
+            Total Properties : 4
+          </Text>
+          <Text mt="xs" c="dimmed" size="sm">
+            Total Maps : 14
+          </Text>
+          <Text mt="xs" c="dimmed" size="sm">
+            Total Users : 2
+          </Text>
+          <Group mt="md">
+            <ClientForm id={id} />
+            <Button>Delete Client</Button>
+          </Group>
+        </Card>
+      </Grid.Col>
+    </>
   );
 };
 
