@@ -393,7 +393,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
   console.log(properties.extra_fields_value, "properties");
 
   const extra_fields = JSON.parse(properties.extra_fields);
-  const extra_fields_value = JSON.parse(properties.extra_fields_value);
+  const extra_fields_value = extra_fields;
 
   console.log(options, "options");
 
@@ -414,6 +414,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
               </Typography>
               {extra_fields?.map((field) => {
                 const id = field.id;
+
                 switch (field.type) {
                   case "Text":
                     return (
@@ -428,7 +429,11 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                         <Typography>{field.label} </Typography>:
                         <input
                           value={
-                            extra_fields_value[id] ? extra_fields_value[id] : ""
+                            extra_fields_value.find((item) => item.id === id)
+                              ? extra_fields_value.find(
+                                  (item) => item.id === id
+                                ).value
+                              : ""
                           }
                           placeholder="Enter value"
                         />
@@ -445,7 +450,16 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                         }}
                       >
                         <Typography>{field.label}:</Typography>
-                        <input type="checkbox" checked={field.value} disabled />
+                        <input
+                          type="checkbox"
+                          checked={
+                            extra_fields_value.find((item) => item.id === id)
+                              ? extra_fields_value.find(
+                                  (item) => item.id === id
+                                ).value
+                              : false
+                          }
+                        />
                       </Box>
                     );
                   case "Url":
@@ -462,7 +476,11 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                         <Typography>{field.label}:</Typography>
                         <input
                           value={
-                            extra_fields_value[id] ? extra_fields_value[id] : ""
+                            extra_fields_value.find((item) => item.id === id)
+                              ? extra_fields_value.find(
+                                  (item) => item.id === id
+                                ).value
+                              : ""
                           }
                           placeholder="Enter value"
                         ></input>
@@ -479,12 +497,16 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                         }}
                         key={id}
                       >
-                        <Typography>
-                          {field.label}: {field.value}
-                        </Typography>
+                        <Typography>{field.label}</Typography>
                         <input
                           type="number"
-                          value={extra_fields_value[id]}
+                          value={
+                            extra_fields_value.find((item) => item.id === id)
+                              ? extra_fields_value.find(
+                                  (item) => item.id === id
+                                ).value
+                              : ""
+                          }
                           placeholder="Enter value"
                         ></input>
                       </Box>
@@ -500,7 +522,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                         }}
                       >
                         <Typography>{field.label}:</Typography>
-                        {field.value && field.value.length > 0
+                        {/* {field.value && field.value.length > 0
                           ? field.value.map((item, index) => {
                               return item.selected ? (
                                 <Typography key={index}>
@@ -508,7 +530,33 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
                                 </Typography>
                               ) : null;
                             })
-                          : null}
+                          : null} */}
+
+                        <select>
+                          <option value="">--select an option--</option>
+                          {field.value && field.value.length > 0
+                            ? field.value.map((item, index) => {
+                                return (
+                                  <option
+                                    selected={
+                                      extra_fields_value.find(
+                                        (i) => i.id === id
+                                      )
+                                        ? extra_fields_value
+                                            .find((i) => i.id === id)
+                                            .value.find((j) => item.id === j.id)
+                                            .selected
+                                        : false
+                                    }
+                                    key={index}
+                                    value={item.value}
+                                  >
+                                    {item.value}
+                                  </option>
+                                );
+                              })
+                            : null}
+                        </select>
                       </Box>
                     );
 
