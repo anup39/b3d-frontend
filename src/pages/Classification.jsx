@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setStandardCategorys } from "../reducers/StandardCategory";
 import { setSubCategorys } from "../reducers/SubCategory";
 import { setCategorys } from "../reducers/Category";
@@ -23,6 +22,7 @@ import EditCustomFieldForm from "../components/Category/EditCustomFieldForm";
 import { useGetGlobalCategoryQuery } from "../api/globalCategoryApi";
 import { useGetGlobalSubCategoryQuery } from "../api/globalSubCategoryAPi";
 import { useGetGlobalStandardCategoryQuery } from "../api/globalStandardCategoryApi";
+import { CircularProgress } from "@mui/material";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -61,16 +61,15 @@ export default function Classification() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [value, setValue] = useState(0);
-  const standardCategorys = useSelector(
-    (state) => state.standardCategory.standardCategorys
-  );
-  const subCategorys = useSelector((state) => state.subCategory.subCategorys);
-  const categorys = useSelector((state) => state.category.categorys);
 
-  const { data: globalCategoryData } = useGetGlobalCategoryQuery();
-  const { data: globalSubCategoryData } = useGetGlobalSubCategoryQuery();
-  const { data: globalStandardCategoryData } =
-    useGetGlobalStandardCategoryQuery();
+  const { data: globalCategoryData, isLoading: isGlobalCategoryLoading } =
+    useGetGlobalCategoryQuery();
+  const { data: globalSubCategoryData, isLoading: isGlobalSubCategoryLoading } =
+    useGetGlobalSubCategoryQuery();
+  const {
+    data: globalStandardCategoryData,
+    isLoading: isGlobalStandardCategoryLoading,
+  } = useGetGlobalStandardCategoryQuery();
 
   useEffect(() => {
     dispatch(setStandardCategorys(globalStandardCategoryData));
@@ -81,32 +80,6 @@ export default function Classification() {
   useEffect(() => {
     dispatch(setCategorys(globalCategoryData));
   }, [globalCategoryData]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(
-  //       `${import.meta.env.VITE_API_DASHBOARD_URL}/global-standard-category/`
-  //     )
-  //     .then((res) => {
-  //       dispatch(setStandardCategorys(res.data));
-  //     });
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-sub-category/`)
-  //     .then((res) => {
-  //       dispatch(setSubCategorys(res.data));
-  //     });
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
-  //     .then((res) => {
-  //       dispatch(setCategorys(res.data));
-  //     });
-  // }, [dispatch]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -141,32 +114,37 @@ export default function Classification() {
         </Tabs>
         <TabPanel value={value} index={0}>
           <StandardCategoryForm />
-          {standardCategorys
-            ? standardCategorys.map((sc) => (
-                <StandardCategoryCard
-                  key={sc.id}
-                  id={sc.id}
-                  name={sc.name}
-                  description={sc.description}
-                  created_at={sc.created_at}
-                />
-              ))
-            : null}
+          {globalStandardCategoryData ? (
+            globalStandardCategoryData?.map((sc) => (
+              <StandardCategoryCard
+                key={sc.id}
+                id={sc.id}
+                name={sc.name}
+                description={sc.description}
+                created_at={sc.created_at}
+              />
+            ))
+          ) : (
+            <CircularProgress />
+          )}
         </TabPanel>
+
         <TabPanel value={value} index={1}>
           <SubCategoryForm />
-          {subCategorys
-            ? subCategorys.map((subc) => (
-                <SubCategoryCard
-                  key={subc.id}
-                  id={subc.id}
-                  name={subc.name}
-                  full_name={subc.full_name}
-                  description={subc.description}
-                  created_at={subc.created_at}
-                />
-              ))
-            : null}
+          {globalSubCategoryData ? (
+            globalSubCategoryData?.map((subc) => (
+              <SubCategoryCard
+                key={subc.id}
+                id={subc.id}
+                name={subc.name}
+                full_name={subc.full_name}
+                description={subc.description}
+                created_at={subc.created_at}
+              />
+            ))
+          ) : (
+            <CircularProgress />
+          )}
         </TabPanel>
         <TabPanel value={value} index={2}>
           <CategoryForm />
@@ -174,23 +152,25 @@ export default function Classification() {
           <AddCustomField />
           <Field />
           <EditCustomFieldForm />
-          {categorys
-            ? categorys.map((c) => (
-                <CategoryCard
-                  key={c.id}
-                  id={c.id}
-                  name={c.name}
-                  full_name={c.full_name}
-                  description={c.description}
-                  type_of_geometry={c.type_of_geometry}
-                  created_at={c.created_at}
-                  sub_category={c.sub_category}
-                  standard_category={c.standard_category}
-                  style={c.style}
-                  extra_fields={c.extra_fields}
-                />
-              ))
-            : null}
+          {globalCategoryData ? (
+            globalCategoryData?.map((c) => (
+              <CategoryCard
+                key={c.id}
+                id={c.id}
+                name={c.name}
+                full_name={c.full_name}
+                description={c.description}
+                type_of_geometry={c.type_of_geometry}
+                created_at={c.created_at}
+                sub_category={c.sub_category}
+                standard_category={c.standard_category}
+                style={c.style}
+                extra_fields={c.extra_fields}
+              />
+            ))
+          ) : (
+            <CircularProgress />
+          )}
         </TabPanel>
       </Box>
     </>

@@ -24,7 +24,7 @@ export default function AutoCompleteCustom({ onItemSelected, category }) {
       id="category-select"
       options={options}
       getOptionLabel={(option) => option.full_name}
-      sx={{ width: 300 }}
+      sx={{ width: 310 }}
       renderInput={(params) => (
         <TextField
           {...params}
