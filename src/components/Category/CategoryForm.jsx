@@ -153,7 +153,7 @@ export default function CategoryForm() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px",
+              width: "350px",
               background: "#fff",
               padding: "20px",
               zIndex: 10000,
@@ -199,7 +199,7 @@ export default function CategoryForm() {
                   id="type-of-geometry"
                   options={["Polygon", "LineString", "Point"]}
                   getOptionLabel={(option) => option}
-                  style={{ width: 300 }}
+                  style={{ width: 310 }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
