@@ -352,6 +352,7 @@ const Popup = ({ properties, feature_id, features }: PopupProps) => {
       standard_category: value.standard_category,
       sub_category: value.sub_category,
       category: value.id,
+      global_category: value.global_category,
       standard_category_name: value.standard_category_name,
       sub_category_name: value.sub_category_name,
       category_name: value.name,

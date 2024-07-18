@@ -78,7 +78,7 @@ export default function NewClientForm({ id, closeEditForm }) {
           closeForm();
         });
     }
-  }, [id, closeForm, dispatch, t]);
+  }, [id, closeForm, dispatch, t, refetchClientsById]);
 
   const createNewClient = useCallback(
     (data) => {

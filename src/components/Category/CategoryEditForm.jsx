@@ -153,7 +153,7 @@ export default function CategoryEditForm() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [categoryEditData]);
+  }, [categoryEditData, refetchGlobalSubCategory]);
 
   return (
     <>
@@ -216,7 +216,7 @@ export default function CategoryEditForm() {
                   id="autocomplete-sub-category"
                   options={options}
                   getOptionLabel={(option) => option.full_name}
-                  sx={{ width: 300 }}
+                  sx={{ width: 260 }}
                   value={value}
                   renderInput={(params) => (
                     <TextField
@@ -238,7 +238,7 @@ export default function CategoryEditForm() {
                   id="type-of-geometry"
                   options={["Polygon", "LineString", "Point"]}
                   getOptionLabel={(option) => option}
-                  style={{ width: 300 }}
+                  style={{ width: 260 }}
                   defaultValue={categoryEditData?.type_of_geometry}
                   renderInput={(params) => (
                     <TextField

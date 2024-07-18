@@ -29,7 +29,7 @@ export default function AutoCompleteRole({ onItemSelected }) {
       id="role-select"
       options={options}
       getOptionLabel={(option) => option.name}
-      sx={{ width: 300 }}
+      sx={{ width: 260 }}
       renderInput={(params) => (
         <TextField
           {...params}

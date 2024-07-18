@@ -73,13 +73,13 @@ export default function Classification() {
 
   useEffect(() => {
     dispatch(setStandardCategorys(globalStandardCategoryData));
-  }, [globalStandardCategoryData]);
+  }, [globalStandardCategoryData, dispatch]);
   useEffect(() => {
     dispatch(setSubCategorys(globalSubCategoryData));
-  }, [globalSubCategoryData]);
+  }, [globalSubCategoryData, dispatch]);
   useEffect(() => {
     dispatch(setCategorys(globalCategoryData));
-  }, [globalCategoryData]);
+  }, [globalCategoryData, dispatch]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -125,7 +125,13 @@ export default function Classification() {
               />
             ))
           ) : (
-            <CircularProgress />
+            <CircularProgress
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+              }}
+            />
           )}
         </TabPanel>
 
@@ -143,7 +149,13 @@ export default function Classification() {
               />
             ))
           ) : (
-            <CircularProgress />
+            <CircularProgress
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+              }}
+            />
           )}
         </TabPanel>
         <TabPanel value={value} index={2}>
@@ -169,7 +181,13 @@ export default function Classification() {
               />
             ))
           ) : (
-            <CircularProgress />
+            <CircularProgress
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+              }}
+            />
           )}
         </TabPanel>
       </Box>

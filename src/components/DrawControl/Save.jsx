@@ -186,6 +186,7 @@ export default function Save({ popUpRef }) {
                 standard_category: res.data.standard_category,
                 sub_category: res.data.sub_category,
                 category: selectedCategoryId,
+                global_category: res.data.global_category,
                 geom: wkt_geometry,
               };
               if (type_of_geometry === "Point") {

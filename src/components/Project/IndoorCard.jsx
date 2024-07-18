@@ -16,7 +16,6 @@ import {
   useDeleteIndoorByIdMutation,
   useGetIndoorByProjectIdQuery,
 } from "../../api/indoorApi";
-import { notifications } from "@mantine/notifications";
 import {
   setshowToast,
   settoastMessage,
@@ -59,7 +58,7 @@ export default function IndoorCard({ indoor }) {
 
   useEffect(() => {
     dispatch(setIndoors(indoors));
-  }, [refetch, indoors]);
+  }, [refetch, indoors, dispatch]);
 
   return (
     <Box

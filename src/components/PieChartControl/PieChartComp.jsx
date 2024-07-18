@@ -41,4 +41,5 @@ export default function PieChartComp({ showCloseButton, showHeading }) {
 
 PieChartComp.propTypes = {
   showCloseButton: PropTypes.bool,
+  showHeading: PropTypes.bool,
 };

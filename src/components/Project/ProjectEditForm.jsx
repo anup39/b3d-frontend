@@ -14,6 +14,7 @@ import {
   useUpdateProjectByIdMutation,
   useGetProjectsByClientIdQuery,
 } from "../../api/projectApi";
+import { setprojects } from "../../reducers/Project";
 
 export default function ProjectEditForm({
   client_id,

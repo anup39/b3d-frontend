@@ -73,7 +73,7 @@ export default function AddCustomField() {
                   id="type-of-element"
                   options={["Text", "Checkbox", "Url", "Number", "Dropdown"]}
                   getOptionLabel={(option) => option}
-                  style={{ width: 300 }}
+                  style={{ width: 260 }}
                   defaultValue={"Text"}
                   renderInput={(params) => (
                     <TextField
