@@ -14,11 +14,13 @@ import {
 } from "../../../../api/clientApi";
 import ClientCard from "../../common/Client/ClientCard";
 import { Grid } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 
 export default function Clients() {
   const { t } = useTranslation();
   const permissions = useSelector((state) => state.auth?.role?.permissions);
   const client = useSelector((state) => state.auth?.role?.client);
+  const [opened, { open, close }] = useDisclosure(false);
 
   const {
     data: allClients,
@@ -71,7 +73,11 @@ export default function Clients() {
 
   return (
     <div>
-      {permissions && permissions.includes("add_client") && <ClientForm />}
+      {permissions && permissions.includes("add_client") && (
+        <div className="w-[200px]">
+          <ClientForm opened={opened} open={open} close={close} />
+        </div>
+      )}
       <Grid mt="md">
         {data &&
           data.map((client) => {

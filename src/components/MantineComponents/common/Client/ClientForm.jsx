@@ -8,18 +8,18 @@ import {
   useCreateClientMutation,
   useUpdateClientByIdMutation,
 } from "../../../../api/clientApi";
-import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { fetchClientDetailsByClientId } from "../../../../api/api";
+import { CircularProgress } from "@mui/material";
 
-const ClientForm = ({ id }) => {
+const ClientForm = ({ id, opened, open, close }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const user_id = useSelector((state) => state.auth.user_id);
 
+  const [isLoading, setIsLoading] = useState(id ? true : false);
   const [updateClientById] = useUpdateClientByIdMutation();
   const [createClient] = useCreateClientMutation();
-  const [opened, { open, close }] = useDisclosure(false);
 
   const form = useForm({
     mode: "uncontrolled",
@@ -49,6 +49,7 @@ const ClientForm = ({ id }) => {
             lbf_number: response.lbf_number,
             cvr_number: response.cvr_number,
           });
+          setIsLoading(false);
         })
         .catch((error) => {
           const error_message = error?.message;
@@ -179,7 +180,11 @@ const ClientForm = ({ id }) => {
 
         <Group justify="center" mt="md">
           <Button w="100%" type="submit">
-            {`${typeOfOperation} client`}
+            {isLoading ? (
+              <CircularProgress sx={{ color: "#FFF" }} />
+            ) : (
+              `${typeOfOperation} client`
+            )}
           </Button>
           <Button w="100%" bg="red" onClick={() => onCancelForm(close)}>
             Cancel
