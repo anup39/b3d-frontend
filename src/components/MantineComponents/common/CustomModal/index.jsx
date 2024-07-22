@@ -19,10 +19,13 @@ const CustomModal = ({
           backgroundOpacity: 0.55,
           blur: 3,
         }}
+        centered
       >
         {children}
       </Modal>
-      <Button onClick={open}>{buttonContent}</Button>
+      <Button fullWidth onClick={open}>
+        {buttonContent}
+      </Button>
     </>
   );
 };
