@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import GridNoRowsOverlay from "./Norows";
 import { useTranslation } from "react-i18next";
+import CustomToolbar from "./CustomToolbar/CustomToolbar";
 
 const renderCell = (params) => {
   const { color, type_of_geometry } = params.value;
@@ -168,7 +169,10 @@ export default function TableMeasuringsForMap({
               pageSizeOptions={[5]}
               // checkboxSelection={checkboxSelection}
               disableRowSelectionOnClick
-              slots={{ noRowsOverlay: GridNoRowsOverlay }}
+              slots={{
+                noRowsOverlay: GridNoRowsOverlay,
+                toolbar: CustomToolbar,
+              }}
             />
           </Box>
         </>
