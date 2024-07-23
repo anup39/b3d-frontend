@@ -108,7 +108,7 @@ export default function TableMeasuringsForMap({
     <>
       {showTableMeasurings && columns ? (
         <>
-          <Box
+          {/* <Box
             sx={{
               padding: 1,
               minHeight: "60px",
@@ -145,7 +145,7 @@ export default function TableMeasuringsForMap({
                 />
               </Tooltip>
             ) : null}
-          </Box>
+          </Box> */}
           <Box
             sx={{
               height: height,
