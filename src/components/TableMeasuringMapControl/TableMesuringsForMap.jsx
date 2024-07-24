@@ -110,44 +110,6 @@ export default function TableMeasuringsForMap({
         <>
           <Box
             sx={{
-              padding: 1,
-              minHeight: "60px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            {showHeading ? (
-              <Typography
-                sx={{
-                  padding: 0,
-                  color: "#2B8AFF",
-                  fontWeight: 600,
-                  ml: `${marginLeftOfTitle}`,
-                }}
-              >
-                {t("Table")} {t("Represents")} {t("Area")} in meter square(m²)
-              </Typography>
-            ) : null}
-
-            {showCloseButton ? (
-              <Tooltip placement="top-end" title={t("Close")}>
-                <HighlightOffIcon
-                  onClick={() => {
-                    dispatch(setshowTableMeasurings(false));
-                  }}
-                  sx={{
-                    float: "right",
-                    color: "#E91E62",
-                    "&:hover": { cursor: "pointer" },
-                    mt: 0.5,
-                  }}
-                />
-              </Tooltip>
-            ) : null}
-          </Box>
-          <Box
-            sx={{
               height: height,
               width: width,
               bottom: 5,
@@ -171,7 +133,7 @@ export default function TableMeasuringsForMap({
               disableRowSelectionOnClick
               slots={{
                 noRowsOverlay: GridNoRowsOverlay,
-                toolbar: CustomToolbar,
+                toolbar: showHeading ? CustomToolbar : null,
               }}
             />
           </Box>
