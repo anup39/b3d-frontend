@@ -151,7 +151,7 @@ export default function TableMeasuringsForMap({
         checked: true,
         length: totalLength.toFixed(2) == 0 ? "-" : totalLength.toFixed(2),
         count: groupedData[subCategory].length, //
-        trimmed: "Total",
+        trimmed: totalLength.toFixed(2) == 0 ? "Total Area" : "Total Length",
         category: subCategory,
         subCategory: subCategory,
         standardCategory: groupedData[subCategory][0].standardCategory,
