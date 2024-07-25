@@ -119,7 +119,11 @@ export default function TableMeasuringsForMap({
       if (!groupedData[subCategory]) {
         groupedData[subCategory] = [];
       }
-      groupedData[subCategory].push({ ...item, trimmed: item.category });
+      groupedData[subCategory].push({
+        ...item,
+        trimmed: item.category,
+        count: "",
+      });
     });
 
     // Calculate total area / length
@@ -145,11 +149,11 @@ export default function TableMeasuringsForMap({
         view_name: "",
         description: `Summary for ${subCategory}`,
         name: `Summary for ${subCategory}`,
-        value: totalArea.toFixed(2) == 0 ? "-" : totalArea.toFixed(2),
-        symbol: { color: "-", type_of_geometry: `Total ${subCategory}` },
-        color: "#000000",
+        value: totalArea.toFixed(2) == 0 ? "" : totalArea.toFixed(2),
+        symbol: { color: "#ffffff", type_of_geometry: `Total` },
+        color: "#ffffff",
         checked: true,
-        length: totalLength.toFixed(2) == 0 ? "-" : totalLength.toFixed(2),
+        length: totalLength.toFixed(2) == 0 ? "" : totalLength.toFixed(2),
         count: groupedData[subCategory].length,
         trimmed: "Total",
         category: subCategory,
@@ -157,22 +161,21 @@ export default function TableMeasuringsForMap({
         standardCategory: groupedData[subCategory][0].standardCategory,
       });
     });
-
     return mainRow;
   }
 
   const rowsWithSummedData = getRowsWithSummedData();
 
   useEffect(() => {
-    if (rows.length > 0) {
-      if (rows.length < 4 || mode === "print") {
-        const height = 52 * (rows.length + 1);
+    if (rowsWithSummedData.length > 0) {
+      if (rowsWithSummedData.length < 4 || mode === "print") {
+        const height = 53 * (rowsWithSummedData.length + 1);
         setHeight(height);
       } else {
         setHeight(260);
       }
     }
-  }, [rows, mode]);
+  }, [rowsWithSummedData, mode]);
 
   return (
     <>
