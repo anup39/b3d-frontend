@@ -119,7 +119,7 @@ export default function TableMeasuringsForMap({
       if (!groupedData[subCategory]) {
         groupedData[subCategory] = [];
       }
-      groupedData[subCategory].push(item);
+      groupedData[subCategory].push({ ...item, trimmed: item.category });
     });
 
     // Calculate total area / length
@@ -150,8 +150,8 @@ export default function TableMeasuringsForMap({
         color: "#000000",
         checked: true,
         length: totalLength.toFixed(2) == 0 ? "-" : totalLength.toFixed(2),
-        count: groupedData[subCategory].length, //
-        trimmed: totalLength.toFixed(2) == 0 ? "Total Area" : "Total Length",
+        count: groupedData[subCategory].length,
+        trimmed: "Total",
         category: subCategory,
         subCategory: subCategory,
         standardCategory: groupedData[subCategory][0].standardCategory,
