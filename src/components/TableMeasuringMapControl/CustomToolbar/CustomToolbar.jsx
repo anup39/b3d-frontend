@@ -13,7 +13,7 @@ import { setshowTableMeasurings } from "../../../reducers/MapView";
 import { useDispatch } from "react-redux";
 import SaveALtIcon from "@mui/icons-material/SaveAlt";
 
-function CustomToolbar(props) {
+function CustomToolbar(props, showCloseButton) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const apiRef = useGridApiContext();
@@ -111,19 +111,21 @@ function CustomToolbar(props) {
           </Button>
         </Tooltip>
 
-        <Tooltip placement="top-end" title={t("Close")}>
-          <HighlightOffIcon
-            onClick={() => {
-              dispatch(setshowTableMeasurings(false));
-            }}
-            sx={{
-              float: "right",
-              color: "#E91E62",
-              "&:hover": { cursor: "pointer" },
-              // ml: "2rem",
-            }}
-          />
-        </Tooltip>
+        {showCloseButton && (
+          <Tooltip placement="top-end" title={t("Close")}>
+            <HighlightOffIcon
+              onClick={() => {
+                dispatch(setshowTableMeasurings(false));
+              }}
+              sx={{
+                float: "right",
+                color: "#E91E62",
+                "&:hover": { cursor: "pointer" },
+                // ml: "2rem",
+              }}
+            />
+          </Tooltip>
+        )}
       </div>
     </GridToolbarContainer>
   );
