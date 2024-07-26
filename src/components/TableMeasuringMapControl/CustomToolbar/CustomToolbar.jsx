@@ -41,11 +41,12 @@ function CustomToolbar(props, showCloseButton) {
       const mRow = {};
       for (const key of config.keys) {
         if (key == "type_of_geometry" || key == "color") {
-          if (key == "type_of_geometry")
+          if (key == "type_of_geometry") {
             mRow["type_of_geometry"] =
               row["symbol"]["type_of_geometry"] == ""
-                ? "title"
+                ? " "
                 : row["symbol"]["type_of_geometry"];
+          }
           if (key == "color") mRow["color"] = row["symbol"]["color"];
           continue;
         }

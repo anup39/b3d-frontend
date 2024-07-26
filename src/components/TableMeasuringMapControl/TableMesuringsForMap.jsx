@@ -229,7 +229,7 @@ export default function TableMeasuringsForMap({
       // empty row after subCategory name row
       mainRow.push({
         id: `empty-after-summary-${subCategory}`,
-        type_of_geometry: "-",
+        type_of_geometry: "",
         view_name: "",
         name: "",
         value: "",
