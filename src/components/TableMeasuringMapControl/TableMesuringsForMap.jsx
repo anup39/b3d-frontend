@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import GridNoRowsOverlay from "./Norows";
 import { useTranslation } from "react-i18next";
 import CustomToolbar from "./CustomToolbar/CustomToolbar";
+import "./index.css";
 
 const capitalizeFirstLetter = (string) => {
   if (!string) return "";
@@ -30,7 +31,7 @@ const renderCell = (params) => {
   }
   if (type_of_geometry == subCategory) {
     return (
-      <p style={{ color: "#2B8AFF", fontWeight: 500 }}>
+      <p style={{ color: "#FFFFFF", fontWeight: 500 }}>
         {capitalizeFirstLetter(subCategory)}
       </p>
     );
@@ -99,7 +100,6 @@ export default function TableMeasuringsForMap({
       headerName: `${t("Count")}`,
     },
   ];
-  const dispatch = useDispatch();
   const [height, setHeight] = useState(260);
   const showTableMeasurings = useSelector(
     (state) => state.mapView.showTableMeasurings
@@ -188,7 +188,7 @@ export default function TableMeasuringsForMap({
 
       // Empty row for SubCategory
       mainRow.push({
-        id: `empty-${subCategory}`,
+        id: `empty-row-${subCategory}`,
         type_of_geometry: "-",
         view_name: "",
         name: "",
@@ -206,10 +206,10 @@ export default function TableMeasuringsForMap({
         standardCategory: "",
       });
 
-      // Insert the current row
+      // Current row
       mainRow.push(...groupedData[subCategory]);
 
-      // Insert new row which includes sum of a subCategory
+      // new row for sum of subCategory
       mainRow.push({
         id: `summary-${subCategory}`,
         type_of_geometry: "-",
@@ -224,6 +224,23 @@ export default function TableMeasuringsForMap({
         category: subCategory,
         subCategory: subCategory,
         standardCategory: standardCategory,
+      });
+
+      // empty row after subCategory name row
+      mainRow.push({
+        id: `empty-after-summary-${subCategory}`,
+        type_of_geometry: "-",
+        view_name: "",
+        name: "",
+        value: "",
+        symbol: { color: "", type_of_geometry: "" },
+        color: "",
+        checked: true,
+        length: "",
+        trimmed: "",
+        category: "",
+        subCategory: "",
+        standardCategory: "",
       });
     });
 
@@ -243,6 +260,15 @@ export default function TableMeasuringsForMap({
     }
   }, [rowsWithSummedData, mode]);
 
+  // for styling subCategory row adding classname to the dataGrid Row
+  const getRowClassName = (params) => {
+    const rowId = String(params.row.id);
+    if (rowId.startsWith("empty-row-")) {
+      return "subCategoryRow";
+    }
+    return "";
+  };
+
   return (
     <>
       {showTableMeasurings && columns ? (
@@ -257,6 +283,7 @@ export default function TableMeasuringsForMap({
             }}
           >
             <DataGrid
+              getRowClassName={(params) => getRowClassName(params)}
               hideFooter={true}
               rows={rowsWithSummedData}
               columns={columns}

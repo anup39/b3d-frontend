@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import { setshowTableMeasurings } from "../../../reducers/MapView";
 import { useDispatch } from "react-redux";
 import SaveALtIcon from "@mui/icons-material/SaveAlt";
-import SubCategory from "../../../reducers/SubCategory";
 
 function CustomToolbar(props, showCloseButton) {
   const { t } = useTranslation();
@@ -54,8 +53,6 @@ function CustomToolbar(props, showCloseButton) {
       }
       return mRow;
     });
-
-    console.log(rows, "rows");
 
     const worksheet = XLSX.utils.json_to_sheet(rows);
     XLSX.utils.sheet_add_aoa(worksheet, [[...config.columnNames]], {
@@ -127,7 +124,6 @@ function CustomToolbar(props, showCloseButton) {
                 float: "right",
                 color: "#E91E62",
                 "&:hover": { cursor: "pointer" },
-                // ml: "2rem",
               }}
             />
           </Tooltip>
