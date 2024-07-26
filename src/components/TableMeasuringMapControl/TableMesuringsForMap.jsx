@@ -10,14 +10,37 @@ import { useEffect, useState } from "react";
 import GridNoRowsOverlay from "./Norows";
 import { useTranslation } from "react-i18next";
 import CustomToolbar from "./CustomToolbar/CustomToolbar";
-import AddIcon from "@mui/icons-material/Add";
+
+const capitalizeFirstLetter = (string) => {
+  if (!string) return "";
+  const newString = string.trim();
+  return newString.charAt(0).toUpperCase() + newString.slice(1);
+};
 
 const renderCell = (params) => {
   const { color, type_of_geometry } = params.value;
+  const { subCategory } = params.row;
   let icon;
+  if (type_of_geometry == `Standard Category: ${subCategory}`) {
+    return (
+      <p style={{ color: "#2B8AFF", fontWeight: 500 }}>
+        {capitalizeFirstLetter(subCategory)}
+      </p>
+    );
+  }
+  if (type_of_geometry == subCategory) {
+    return (
+      <p style={{ color: "#2B8AFF", fontWeight: 500 }}>
+        {capitalizeFirstLetter(subCategory)}
+      </p>
+    );
+  }
   if (type_of_geometry.startsWith("Total")) {
-    icon = <AddIcon sx={{ color: color }} />;
-    return icon;
+    return (
+      <p style={{ color: "#2B8AFF", fontWeight: 500 }}>
+        {`${capitalizeFirstLetter(subCategory)} Total`}
+      </p>
+    );
   }
   if (type_of_geometry === "Polygon") {
     icon = <Pentagon sx={{ color: color }} />;
@@ -43,7 +66,7 @@ export default function TableMeasuringsForMap({
       field: "symbol",
       headerName: `${t("Symbol")}`,
       type: "string",
-      width: 100,
+      width: 150,
       renderCell: renderCell,
     },
 
@@ -111,6 +134,7 @@ export default function TableMeasuringsForMap({
 
   function getRowsWithSummedData() {
     let mainRow = [];
+    let displayedStandardCategories = new Set();
 
     // items grouped with subCategory
     let groupedData = {};
@@ -122,7 +146,6 @@ export default function TableMeasuringsForMap({
       groupedData[subCategory].push({
         ...item,
         trimmed: item.category,
-        count: "",
       });
     });
 
@@ -130,6 +153,7 @@ export default function TableMeasuringsForMap({
     Object.keys(groupedData).forEach((subCategory) => {
       let totalLength = 0;
       let totalArea = 0;
+      let standardCategory = groupedData[subCategory][0].standardCategory;
 
       groupedData[subCategory].forEach((item) => {
         if (item.type_of_geometry === "LineString") {
@@ -139,28 +163,70 @@ export default function TableMeasuringsForMap({
         }
       });
 
+      // Insert a row for the standardCategory if not already inserted
+      if (!displayedStandardCategories.has(standardCategory)) {
+        displayedStandardCategories.add(standardCategory);
+        mainRow.push({
+          id: `standardCategory-${standardCategory}`,
+          type_of_geometry: "-",
+          view_name: "",
+          name: `Standard Category: ${standardCategory}`,
+          value: "",
+          symbol: {
+            color: "",
+            type_of_geometry: `Standard Category: ${standardCategory}`,
+          },
+          color: "",
+          checked: true,
+          length: "",
+          trimmed: "",
+          category: "",
+          subCategory: standardCategory,
+          standardCategory: "",
+        });
+      }
+
+      // Empty row for SubCategory
+      mainRow.push({
+        id: `empty-${subCategory}`,
+        type_of_geometry: "-",
+        view_name: "",
+        name: "",
+        value: "",
+        symbol: {
+          color: "",
+          type_of_geometry: subCategory,
+        },
+        color: "",
+        checked: true,
+        length: "",
+        trimmed: "",
+        category: "",
+        subCategory: subCategory,
+        standardCategory: "",
+      });
+
       // Insert the current row
       mainRow.push(...groupedData[subCategory]);
 
-      //Insert new row which includes sum of a subCategory
+      // Insert new row which includes sum of a subCategory
       mainRow.push({
         id: `summary-${subCategory}`,
         type_of_geometry: "-",
         view_name: "",
-        description: `Summary for ${subCategory}`,
         name: `Summary for ${subCategory}`,
-        value: totalArea.toFixed(2) == 0 ? "" : totalArea.toFixed(2),
-        symbol: { color: "#ffffff", type_of_geometry: `Total` },
-        color: "#ffffff",
+        value: totalArea.toFixed(2) === "0.00" ? "" : totalArea.toFixed(2),
+        symbol: { color: "", type_of_geometry: `Total` },
+        color: "",
         checked: true,
-        length: totalLength.toFixed(2) == 0 ? "" : totalLength.toFixed(2),
-        count: groupedData[subCategory].length,
-        trimmed: "Total",
+        length: totalLength.toFixed(2) === "0.00" ? "" : totalLength.toFixed(2),
+        trimmed: "",
         category: subCategory,
         subCategory: subCategory,
-        standardCategory: groupedData[subCategory][0].standardCategory,
+        standardCategory: standardCategory,
       });
     });
+
     return mainRow;
   }
 
@@ -197,11 +263,11 @@ export default function TableMeasuringsForMap({
               initialState={{
                 pagination: {
                   paginationModel: {
-                    pageSize: 10,
+                    pageSize: rowsWithSummedData.length,
                   },
                 },
               }}
-              pageSizeOptions={[5]}
+              // pageSizeOptions={[5]}
               // checkboxSelection={checkboxSelection}
               disableRowSelectionOnClick
               slots={{
@@ -224,5 +290,5 @@ TableMeasuringsForMap.propTypes = {
   width: PropTypes.number,
   showCloseButton: PropTypes.bool,
   showHeading: PropTypes.bool,
-  marginLeftOfTitle: PropTypes.number,
+  marginLeftOfTitle: PropTypes.string,
 };

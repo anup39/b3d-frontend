@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { setshowTableMeasurings } from "../../../reducers/MapView";
 import { useDispatch } from "react-redux";
 import SaveALtIcon from "@mui/icons-material/SaveAlt";
+import SubCategory from "../../../reducers/SubCategory";
 
 function CustomToolbar(props, showCloseButton) {
   const { t } = useTranslation();
@@ -42,7 +43,10 @@ function CustomToolbar(props, showCloseButton) {
       for (const key of config.keys) {
         if (key == "type_of_geometry" || key == "color") {
           if (key == "type_of_geometry")
-            mRow["type_of_geometry"] = row["symbol"]["type_of_geometry"];
+            mRow["type_of_geometry"] =
+              row["symbol"]["type_of_geometry"] == ""
+                ? "title"
+                : row["symbol"]["type_of_geometry"];
           if (key == "color") mRow["color"] = row["symbol"]["color"];
           continue;
         }
@@ -50,6 +54,8 @@ function CustomToolbar(props, showCloseButton) {
       }
       return mRow;
     });
+
+    console.log(rows, "rows");
 
     const worksheet = XLSX.utils.json_to_sheet(rows);
     XLSX.utils.sheet_add_aoa(worksheet, [[...config.columnNames]], {
