@@ -1,13 +1,14 @@
 const config = {
   columnNames: [
-    'type_of_geometry',
-    'color',
+    'Label',
+    'Type of Geometry',
+    'Color',
     'Category',
     'Area(m²)',
     'Length(m)',
     'Count',
   ],
-  keys: ['type_of_geometry','color', 'trimmed', 'value', 'length', 'count'],
+  keys: ['label','type_of_geometry','color', 'trimmed', 'value', 'length', 'count'],
   fileName: 'tableReport.xlsx',
   sheetName: 'sheet1',
 };

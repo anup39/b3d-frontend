@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import CircleIcon from "@mui/icons-material/Circle";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import Pentagon from "@mui/icons-material/Pentagon";
@@ -11,37 +11,24 @@ import GridNoRowsOverlay from "./Norows";
 import { useTranslation } from "react-i18next";
 import CustomToolbar from "./CustomToolbar/CustomToolbar";
 import "./index.css";
+import StandardCategory from "../../reducers/StandardCategory";
 
-const capitalizeFirstLetter = (string) => {
-  if (!string) return "";
-  const newString = string.trim();
+const capitalizeFirstLetter = (value) => {
+  if (!value) return "";
+  const newString = value.toString().trim();
   return newString.charAt(0).toUpperCase() + newString.slice(1);
 };
 
 const renderCell = (params) => {
   const { color, type_of_geometry } = params.value;
-  const { subCategory } = params.row;
+  const { subCategory, standardCategory, label } = params.row;
   let icon;
-  if (type_of_geometry == `Standard Category: ${subCategory}`) {
-    return (
-      <p style={{ color: "#2B8AFF", fontWeight: 500 }}>
-        {capitalizeFirstLetter(subCategory)}
-      </p>
-    );
-  }
-  if (type_of_geometry == subCategory) {
-    return (
-      <p style={{ color: "#FFFFFF", fontWeight: 500 }}>
-        {capitalizeFirstLetter(subCategory)}
-      </p>
-    );
-  }
-  if (type_of_geometry.startsWith("Total")) {
-    return (
-      <p style={{ color: "#2B8AFF", fontWeight: 500 }}>
-        {`${capitalizeFirstLetter(subCategory)} Total`}
-      </p>
-    );
+  if (
+    label == capitalizeFirstLetter(subCategory) ||
+    label == capitalizeFirstLetter(StandardCategory) ||
+    label == `${capitalizeFirstLetter(subCategory)} Total`
+  ) {
+    return "";
   }
   if (type_of_geometry === "Polygon") {
     icon = <Pentagon sx={{ color: color }} />;
@@ -64,19 +51,25 @@ export default function TableMeasuringsForMap({
 
   const columns = [
     {
-      field: "symbol",
-      headerName: `${t("Symbol")}`,
+      field: "label",
       type: "string",
       width: 150,
-      renderCell: renderCell,
+      editable: false,
+      headerName: `${t("Label")}`,
     },
-
     {
       field: "trimmed",
       type: "string",
       width: 170,
       editable: false,
       headerName: `${t("Category")}`,
+    },
+    {
+      field: "symbol",
+      headerName: `${t("Symbol")}`,
+      type: "string",
+      width: 150,
+      renderCell: renderCell,
     },
     {
       field: "value",
@@ -126,6 +119,7 @@ export default function TableMeasuringsForMap({
     }
     return {
       ...item,
+      label: "",
       category: categories[2],
       subCategory: categories[1],
       standardCategory: categories[0],
@@ -174,7 +168,7 @@ export default function TableMeasuringsForMap({
           value: "",
           symbol: {
             color: "",
-            type_of_geometry: `Standard Category: ${standardCategory}`,
+            type_of_geometry: "",
           },
           color: "",
           checked: true,
@@ -182,7 +176,9 @@ export default function TableMeasuringsForMap({
           trimmed: "",
           category: "",
           subCategory: standardCategory,
-          standardCategory: "",
+          standardCategory: standardCategory,
+          label: capitalizeFirstLetter(standardCategory),
+          colSpan: "2",
         });
       }
 
@@ -195,7 +191,7 @@ export default function TableMeasuringsForMap({
         value: "",
         symbol: {
           color: "",
-          type_of_geometry: subCategory,
+          type_of_geometry: "",
         },
         color: "",
         checked: true,
@@ -203,7 +199,8 @@ export default function TableMeasuringsForMap({
         trimmed: "",
         category: "",
         subCategory: subCategory,
-        standardCategory: "",
+        standardCategory: standardCategory,
+        label: capitalizeFirstLetter(subCategory),
       });
 
       // Current row
@@ -216,7 +213,7 @@ export default function TableMeasuringsForMap({
         view_name: "",
         name: `Summary for ${subCategory}`,
         value: totalArea.toFixed(2) === "0.00" ? "" : totalArea.toFixed(2),
-        symbol: { color: "", type_of_geometry: `Total` },
+        symbol: { color: "", type_of_geometry: "" },
         color: "",
         checked: true,
         length: totalLength.toFixed(2) === "0.00" ? "" : totalLength.toFixed(2),
@@ -224,6 +221,7 @@ export default function TableMeasuringsForMap({
         category: subCategory,
         subCategory: subCategory,
         standardCategory: standardCategory,
+        label: `${capitalizeFirstLetter(subCategory)} Total`,
       });
 
       // empty row after subCategory name row
@@ -240,7 +238,8 @@ export default function TableMeasuringsForMap({
         trimmed: "",
         category: "",
         subCategory: "",
-        standardCategory: "",
+        standardCategory: standardCategory,
+        label: "",
       });
     });
 
