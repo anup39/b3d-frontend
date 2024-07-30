@@ -18,12 +18,11 @@ function CustomToolbar(props, showCloseButton) {
   const dispatch = useDispatch();
   const apiRef = useGridApiContext();
   const { hideMenu } = props;
+
   function getExcelData(apiRef) {
-    // Select rows and columns
     const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
     const visibleColumnsField = gridVisibleColumnFieldsSelector(apiRef);
 
-    // Format the data. Here we only keep the value
     const data = filteredSortedRowIds.map((id) => {
       const row = {};
       visibleColumnsField.forEach((field) => {
@@ -32,22 +31,24 @@ function CustomToolbar(props, showCloseButton) {
       return row;
     });
 
-    return data;
+    const headers = visibleColumnsField.map((field) => {
+      const column = apiRef.current.getColumn(field);
+      return column.headerName || column.field;
+    });
+
+    return { data, headers };
   }
 
   function handleExport(apiRef) {
-    const data = getExcelData(apiRef);
+    const { data } = getExcelData(apiRef);
     const rows = data.map((row) => {
       const mRow = {};
       for (const key of config.keys) {
-        if (key == "type_of_geometry" || key == "color") {
-          if (key == "type_of_geometry") {
-            mRow["type_of_geometry"] =
-              row["symbol"]["type_of_geometry"] == ""
-                ? " "
-                : row["symbol"]["type_of_geometry"];
+        if (key === "type_of_geometry" || key === "color") {
+          if (key === "type_of_geometry") {
+            mRow["type_of_geometry"] = row["symbol"]["type_of_geometry"];
           }
-          if (key == "color") mRow["color"] = row["symbol"]["color"];
+          if (key === "color") mRow["color"] = row["symbol"]["color"];
           continue;
         }
         mRow[key] = row[key];
