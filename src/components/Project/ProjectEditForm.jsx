@@ -1,11 +1,8 @@
-import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { setprojects } from "../../reducers/Project";
 import PropTypes from "prop-types";
 import {
   setshowToast,
@@ -13,6 +10,11 @@ import {
   settoastType,
 } from "../../reducers/DisplaySettings";
 import { useTranslation } from "react-i18next";
+import {
+  useUpdateProjectByIdMutation,
+  useGetProjectsByClientIdQuery,
+} from "../../api/projectApi";
+import { setprojects } from "../../reducers/Project";
 
 export default function ProjectEditForm({
   client_id,
@@ -26,16 +28,17 @@ export default function ProjectEditForm({
   const [loading, setLoading] = useState(false);
   const user_id = useSelector((state) => state.auth.user_id);
 
+  const [updateProjectById] = useUpdateProjectByIdMutation();
+
+  const { refetch: refetchProjectsByClientId } =
+    useGetProjectsByClientIdQuery(client_id);
+
   const handleCreateProject = (event) => {
     event.preventDefault();
     setLoading(true);
     const data = new FormData(event.currentTarget);
-
-    axios
-      .patch(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/projects/${project_id}/`,
-        data
-      )
+    updateProjectById({ project_id, data })
+      .unwrap()
       .then(() => {
         setLoading(false);
         dispatch(setshowToast(true));
@@ -46,22 +49,12 @@ export default function ProjectEditForm({
         );
         dispatch(settoastType("success"));
         closeForm();
-        axios
-          .get(
-            `${
-              import.meta.env.VITE_API_DASHBOARD_URL
-            }/projects/?client=${client_id}`,
-            {
-              headers: {
-                Authorization: "Token " + localStorage.getItem("token"),
-              },
-            }
-          )
-          .then((res) => {
-            dispatch(setprojects(res.data));
-          });
+        refetchProjectsByClientId().then((res) => {
+          dispatch(setprojects(res.data));
+        });
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         setLoading(false);
         dispatch(setshowToast(true));
         dispatch(
@@ -84,17 +77,6 @@ export default function ProjectEditForm({
 
   return (
     <>
-      <Tooltip title={t("Create") + " " + t("Property")}>
-        <Button
-          onClick={openForm}
-          sx={{ margin: "5px" }}
-          variant="contained"
-          color="error"
-        >
-          {t("Create") + " " + t("Property")}
-        </Button>
-      </Tooltip>
-
       <div
         style={{
           position: "fixed",

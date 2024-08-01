@@ -19,7 +19,6 @@ export default function AddCustomField() {
   const [loading, setLoading] = useState(false);
 
   const handleEditCategory = (event) => {
-    console.log(inputValue, "inputValue");
     event.preventDefault();
     setLoading(true);
     dispatch(setTypeOfElement(inputValue));
@@ -28,7 +27,6 @@ export default function AddCustomField() {
   };
 
   const closeForm = () => {
-    console.log("close form");
     dispatch(setOpenCustomFieldForm(false));
     dispatch(setTypeOfElement(null));
     setInputValue("Text");
@@ -75,7 +73,7 @@ export default function AddCustomField() {
                   id="type-of-element"
                   options={["Text", "Checkbox", "Url", "Number", "Dropdown"]}
                   getOptionLabel={(option) => option}
-                  style={{ width: 300 }}
+                  style={{ width: 260 }}
                   defaultValue={"Text"}
                   renderInput={(params) => (
                     <TextField

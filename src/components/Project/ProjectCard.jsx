@@ -2,14 +2,12 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
-import { Button, TextField } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import FolderIcon from "@mui/icons-material/Folder";
 import MapIcon from "@mui/icons-material/Map";
 import Tooltip from "@mui/material/Tooltip";
-import RoofingIcon from "@mui/icons-material/Roofing";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setEditProjectId,
@@ -24,15 +22,9 @@ import {
   setdeletePopupMessage,
   setdeleteTarget,
 } from "../../reducers/DisplaySettings";
-import { fetchTifDataByProjectId } from "../../api/api";
 import ProjectEditForm from "./ProjectEditForm";
-
-// import {
-//   setdeleteId,
-//   setdeletePopupMessage,
-//   setdeleteTarget,
-//   setshowDeletePopup,
-// } from "../../reducers/DisplaySettings";
+import { useGetRasterDataByProjectIdQuery } from "../../api/rasterDataApi";
+import { useGetRolesDataByProjectIdQuery } from "../../api/rolesApi";
 
 export default function ProjectCard({
   id,
@@ -51,6 +43,34 @@ export default function ProjectCard({
   const permissions = useSelector((state) => state.auth?.role?.permissions);
   const [showProjectEditForm, setShowProjectEditForm] = useState(false);
 
+  const { data: rasterDataByProjectId, refetch: refetchRasterData } =
+    useGetRasterDataByProjectIdQuery({
+      project: id,
+    });
+
+  const { data: rolesDataByProjectId, refetch: refetchRolesData } =
+    useGetRolesDataByProjectIdQuery({
+      project: id,
+    });
+
+  useEffect(() => {
+    refetchRasterData()
+      .then((res) => {
+        setproperties(res.data);
+      })
+      .catch((error) => {
+        console.log("refetchRasterData", error);
+      });
+
+    refetchRolesData()
+      .then((res) => {
+        setusers(res.data);
+      })
+      .catch((error) => {
+        console.log("refetchRolesDataError", error);
+      });
+  }, [id, refetchRasterData, refetchRolesData]);
+
   // Remaining things to do :
   // const handleViewInMap = () => {
   //   navigate(`/map/project/${id}`);
@@ -64,24 +84,29 @@ export default function ProjectCard({
     setShowProjectEditForm(value);
   };
 
+  // remaining: to implement delete using rtk
   const handleDeleteProject = () => {
-    fetchTifDataByProjectId(id).then((res) => {
-      if (res.length > 0) {
-        dispatch(setshowDeletePopup(true));
-        dispatch(setdeleteId(null));
-        dispatch(setdeleteTarget(null));
-        dispatch(
-          setdeletePopupMessage(
-            `You cannot delete this Project when there is map?`
-          )
-        );
-      } else {
-        dispatch(setshowDeletePopup(true));
-        dispatch(setdeletePopupMessage("Are you sure you want to delete?"));
-        dispatch(setdeleteId(id));
-        dispatch(setdeleteTarget("projects"));
-      }
-    });
+    refetchRasterData()
+      .then((res) => {
+        if (res?.data?.length > 0) {
+          dispatch(setshowDeletePopup(true));
+          dispatch(setdeleteId(null));
+          dispatch(setdeleteTarget(null));
+          dispatch(
+            setdeletePopupMessage(
+              `You cannot delete this Project when there is map?`
+            )
+          );
+        } else {
+          dispatch(setshowDeletePopup(true));
+          dispatch(setdeletePopupMessage("Are you sure you want to delete?"));
+          dispatch(setdeleteId(id));
+          dispatch(setdeleteTarget("projects"));
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleEditProject = () => {
@@ -91,21 +116,6 @@ export default function ProjectCard({
   const handleInspection = () => {
     navigate(`/projects/${client_id}/inspections/${id}`);
   };
-
-  useEffect(() => {
-    axios
-      .get(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/raster-data/?project=${id}`
-      )
-      .then((res) => {
-        setproperties(res.data);
-      });
-    axios
-      .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/roles/?project=${id}`)
-      .then((res) => {
-        setusers(res.data);
-      });
-  }, [id]);
 
   const handleViewInMap = () => {
     // dispatch(setshowMeasuringsPanel(false));
@@ -179,14 +189,7 @@ export default function ProjectCard({
                     />
                   </Tooltip>
                 </Grid>
-                <Grid item>
-                  {/* <Tooltip title="Inspection">
-                  <RoofingIcon
-                    onClick={handleInspection}
-                    sx={{ "&:hover": { cursor: "pointer" } }}
-                  />
-                </Tooltip> */}
-                </Grid>
+                <Grid item></Grid>
                 {group_name === "super_admin" || group_name === "admin" ? (
                   <>
                     {" "}
@@ -214,16 +217,6 @@ export default function ProjectCard({
                     </Grid>
                   </>
                 ) : null}
-
-                {/* <Grid item>
-                <button
-                  disabled
-                  className="btn-main"
-                  // onClick={handleManageUsers}
-                >
-                  Manage Users
-                </button>
-              </Grid> */}
 
                 <Grid item>
                   {permissions && permissions.includes("delete_project") ? (

@@ -3,7 +3,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import TabIcon from "@mui/icons-material/Tab";
-import { Button, Box, Link } from "@mui/material";
+import { Button, Box } from "@mui/material";
 import {
   setCategoryEditData,
   setOpenCategoryEditForm,
@@ -40,8 +40,6 @@ export default function CategoryCard({
   //       setStyle(style);
   //     });
   // }, [id]);
-
-  console.log("extra_fields", extra_fields);
 
   return (
     <Paper
@@ -120,12 +118,13 @@ export default function CategoryCard({
                 </>
               ) : null}
 
-              {extra_fields.data && extra_fields.data.length > 0 ? (
+              {JSON.parse(extra_fields) &&
+              JSON.parse(extra_fields).length > 0 ? (
                 <>
                   <Typography variant="body2" gutterBottom>
                     <b>{t("Additional")}</b>
                   </Typography>
-                  {extra_fields.data.map((field, index) => {
+                  {JSON.parse(extra_fields).map((field, index) => {
                     switch (field.type) {
                       case "Text":
                         return (
@@ -247,7 +246,8 @@ export default function CategoryCard({
                 {t("Add") + " " + t("Custom" + " " + t("Field"))}
               </Button>
 
-              {extra_fields.data && extra_fields.data.length > 0 ? (
+              {JSON.parse(extra_fields) &&
+              JSON.parse(extra_fields).length > 0 ? (
                 <Button
                   onClick={() => {
                     dispatch(setOpenEditCustomFieldForm(true));
@@ -288,5 +288,5 @@ CategoryCard.propTypes = {
   sub_category: PropTypes.number,
   standard_category: PropTypes.number,
   style: PropTypes.object,
-  extra_fields: PropTypes.object,
+  extra_fields: PropTypes.string,
 };

@@ -15,16 +15,15 @@ import {
 } from "../api/api";
 import URL3d from "../components/Project/URL3d";
 import IndoorForm from "../components/Project/IndoorForm";
+import { useGetProjectsByClientIdQuery } from "../api/projectApi";
 
 export default function Projects() {
   const { client_id, view } = useParams();
   const dispatch = useDispatch();
-  const projects = useSelector((state) => state.project.projects);
   const group_name = useSelector((state) => state.auth.role.group_name);
   const projects_ = useSelector((state) => state.auth.role.project);
-  // console.log("projects", projects);
 
-  // const { data: projects } = useGetProjectsQuery(client);
+  const { data: projects } = useGetProjectsByClientIdQuery(client_id);
 
   useEffect(() => {
     if (
@@ -96,7 +95,6 @@ export default function Projects() {
           >
             {group_name === "super_admin" || group_name === "admin" ? (
               <>
-                {" "}
                 <ProjectForm client_id={client_id} />
                 <URL3d client_id={client_id} />
                 <IndoorForm client_id={client_id} />

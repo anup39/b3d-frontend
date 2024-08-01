@@ -1,13 +1,6 @@
 import Grid from "@mui/material/Grid";
 import React from "react";
-import {
-  Button,
-  CircularProgress,
-  Checkbox,
-  Box,
-  Typography,
-  Tooltip,
-} from "@mui/material";
+import { Button, CircularProgress, Checkbox, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setTypeOfElement } from "../../reducers/EditClassification";
 import { useTranslation } from "react-i18next";
@@ -18,12 +11,14 @@ import {
   settoastMessage,
   settoastType,
 } from "../../reducers/DisplaySettings";
-import axios from "axios";
 import { setCategorys } from "../../reducers/Category";
-import { Delete } from "@mui/icons-material";
+import {
+  useGetGlobalCategoryQuery,
+  useUpdateGlobalCategoryMutation,
+} from "../../api/globalCategoryApi";
+import { useAddExtraFieldsMutation } from "../../api/updateExtraFieldsApi";
 
 export default function Field() {
-  console.log("in field");
   const [checkedBox, setCheckedBox] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -39,6 +34,10 @@ export default function Field() {
   const categoryEditData = useSelector(
     (state) => state.editClassification.categoryEditData
   );
+
+  const { refetch: refetchGlobalCategories } = useGetGlobalCategoryQuery();
+  const [updateGlobalCategory] = useUpdateGlobalCategoryMutation();
+  const [addExtraFields] = useAddExtraFieldsMutation();
 
   const handleEditCategory = (event) => {
     event.preventDefault();
@@ -70,55 +69,52 @@ export default function Field() {
         delete: false,
       };
     }
+    let extra_fields = categoryEditData.extra_fields;
+    let extra_fields_arrray = JSON.parse(extra_fields);
 
-    let extra_fields = { ...categoryEditData.extra_fields };
-
-    let newData = [];
-
-    if (extra_fields.data) {
-      console.log(extra_fields.data, "extra_fields.data");
-      newData = [...extra_fields.data, new_item];
+    if (extra_fields_arrray.length === 0) {
+      extra_fields_arrray.push({ ...new_item, id: 1 });
     } else {
-      newData = [new_item];
+      let last_id = extra_fields_arrray[extra_fields_arrray.length - 1].id;
+      extra_fields_arrray.push({ ...new_item, id: last_id + 1 });
     }
 
+    console.log(extra_fields_arrray, "extra_fields_arrray");
+
+    let extra_fields_string = JSON.stringify(extra_fields_arrray);
+
+    console.log(extra_fields_string, "extra_fields_string");
+
     const data = {
-      extra_fields: { data: newData },
+      extra_fields: extra_fields_string,
     };
-    axios
-      .patch(
-        `${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/${
-          categoryEditData.id
-        }/`,
-        data
-      )
+
+    updateGlobalCategory({ category_id: categoryEditData.id, data })
+      .unwrap()
       .then(() => {
-        // Here update all  the annotations with new extra fields related to this category
-        axios
-          .post(
-            `${import.meta.env.VITE_API_DASHBOARD_URL}/update-extra-fields/`,
-            {
-              user_id: user_id,
-              category_edit_data: categoryEditData,
-              extra_fields: { data: newData },
-            }
-          )
-          .then((res) => {
-            console.log(res.data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        // const data = {
+        //   user_id: user_id,
+        //   category_edit_data: categoryEditData,
+        //   extraFields: { data: newData },
+        // };
+        // add extra fields
+        // addExtraFields({ data })
+        //   .then((res) => {
+        //     console.log(res);
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //   });
         setLoading(false);
         dispatch(setshowToast(true));
         dispatch(settoastMessage(`${t("Successfully")} ${t("Created")}`));
         dispatch(settoastType("success"));
         closeForm();
-        axios
-          .get(`${import.meta.env.VITE_API_DASHBOARD_URL}/global-category/`)
+        // refetch global categories
+        refetchGlobalCategories()
+          .unwrap()
           .then((res) => {
-            console.log(res.data);
-            dispatch(setCategorys(res.data));
+            dispatch(setCategorys(res));
           })
           .catch(() => {});
       })
@@ -129,10 +125,6 @@ export default function Field() {
         dispatch(settoastType("error"));
         closeForm();
       });
-  };
-
-  const openForm = () => {
-    // dispatch(setOpenCategoryEditForm(true));
   };
 
   const closeForm = () => {
@@ -200,7 +192,7 @@ export default function Field() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px",
+              width: "350px",
               background: "#fff",
               padding: "20px",
               zIndex: 10000,

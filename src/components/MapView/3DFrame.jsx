@@ -120,7 +120,7 @@ export default function ThreeDFrame() {
                   fontWeight: "bold",
                 }}
               >
-                No 3D infromation
+                No 3D information available
               </Box>
             )}
           </Box>

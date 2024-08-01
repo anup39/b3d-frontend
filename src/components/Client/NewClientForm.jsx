@@ -11,10 +11,10 @@ import {
 } from "../../reducers/DisplaySettings";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
-import { fetchClientDetailsByClientId } from "../../api/api";
 import PropTypes from "prop-types";
 import {
   useCreateClientMutation,
+  useGetClientsByClientIdQuery,
   useUpdateClientByIdMutation,
 } from "../../api/clientApi";
 
@@ -38,6 +38,12 @@ export default function NewClientForm({ id, closeEditForm }) {
 
   const [updateClientById] = useUpdateClientByIdMutation();
   const [createClient] = useCreateClientMutation();
+  const { refetch: refetchClientsById } = useGetClientsByClientIdQuery(
+    {
+      client_id: id,
+    },
+    { skip: !id }
+  );
 
   const closeForm = useCallback(() => {
     if (closeEditForm) {
@@ -49,10 +55,11 @@ export default function NewClientForm({ id, closeEditForm }) {
   useEffect(() => {
     if (id) {
       setLoading(true);
-      fetchClientDetailsByClientId(id)
+      refetchClientsById()
+        .unwrap()
         .then((response) => {
           setLoading(false);
-          setClientData(response);
+          setClientData(response[0]);
         })
         .catch((error) => {
           const error_message = error?.message;
@@ -71,7 +78,7 @@ export default function NewClientForm({ id, closeEditForm }) {
           closeForm();
         });
     }
-  }, [id, closeForm, dispatch, t]);
+  }, [id, closeForm, dispatch, t, refetchClientsById]);
 
   const createNewClient = useCallback(
     (data) => {
@@ -264,25 +271,6 @@ export default function NewClientForm({ id, closeEditForm }) {
                   value={clientData?.cvr_number || ""}
                   onChange={(e) =>
                     setClientData({ ...clientData, cvr_number: e.target.value })
-                  }
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  id="description"
-                  name="description"
-                  label={t("Description")}
-                  variant="outlined"
-                  size="small"
-                  InputLabelProps={{ shrink: true }}
-                  required
-                  fullWidth
-                  value={clientData?.description || ""}
-                  onChange={(e) =>
-                    setClientData({
-                      ...clientData,
-                      description: e.target.value,
-                    })
                   }
                 />
               </Grid>
