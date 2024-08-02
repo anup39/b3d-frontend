@@ -25,8 +25,7 @@ import {
 import ProjectEditForm from "./ProjectEditForm";
 import { useGetRasterDataByProjectIdQuery } from "../../api/rasterDataApi";
 import { useGetRolesDataByProjectIdQuery } from "../../api/rolesApi";
-import AddPublicBordersForm from "../PublicBorders/AddPublicBordersForm";
-
+import AddPublicLayerForm from "../PublicLayers/AddPublicLayerForm";
 export default function ProjectCard({
   id,
   client_id,
@@ -206,7 +205,7 @@ export default function ProjectCard({
                       </Tooltip>
                     </Grid>
                     <Grid item>
-                      <AddPublicBordersForm />
+                      <AddPublicLayerForm />
                     </Grid>
                     <Grid item>
                       <Tooltip title={t("Indoor")}>
