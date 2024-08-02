@@ -8,7 +8,7 @@ const token = localStorage.getItem("token");
 const targetUrl = `https://api.dataforsyningen.dk/wms/MatGaeldendeOgForeloebigWMS_DAF?service=WMS&request=GetCapabilities&token=${token}`;
 // "http://87.62.99.220:5051/geoserver/b3d/gwc/service/wmts?service=WMTS&version=1.1.1&request=GetCapabilities";
 
-const AddPublicBordersForm = () => {
+const AddPublicLayerForm = () => {
   const [labels, setLabels] = useState([]);
   const [showLabels, setShowLabels] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
@@ -83,7 +83,7 @@ const AddPublicBordersForm = () => {
       <Modal
         opened={opened}
         onClose={handleCloseForm}
-        title={"Add Public Borders"}
+        title={"Add Public Layer"}
         overlayProps={{
           backgroundOpacity: 0.55,
           blur: 3,
@@ -158,10 +158,10 @@ const AddPublicBordersForm = () => {
         </div>
       </Modal>
       <Button bg="#1976d2" px="5px" h="1.6rem" onClick={open}>
-        ADD PUBLIC BORDERS
+        ADD PUBLIC LAYERS
       </Button>
     </div>
   );
 };
 
-export default AddPublicBordersForm;
+export default AddPublicLayerForm;
