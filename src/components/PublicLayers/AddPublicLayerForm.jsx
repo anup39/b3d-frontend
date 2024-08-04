@@ -1,75 +1,101 @@
 import { Modal, Button, TextInput, Group } from "@mantine/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import Map from "../../map/Map";
+import xml2js from "xml2js";
 
 const token = localStorage.getItem("token");
-// const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+
 const targetUrl = `https://api.dataforsyningen.dk/wms/MatGaeldendeOgForeloebigWMS_DAF?service=WMS&request=GetCapabilities&token=${token}`;
-// "http://87.62.99.220:5051/geoserver/b3d/gwc/service/wmts?service=WMTS&version=1.1.1&request=GetCapabilities";
 
 const AddPublicBordersForm = () => {
-  const map = window.map_global;
-
   const [labels, setLabels] = useState([]);
   const [showLabels, setShowLabels] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
   const [error, setError] = useState();
+  const [boundingBoxs, setBoundingBoxs] = useState([]);
+  const [layers, setLayers] = useState([]);
+
+  const map = window.map_global;
 
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
       name: "test",
-      xmlUrl:
-        "https://api.dataforsyningen.dk/wms/MatGaeldendeOgForeloebigWMS_DAF?service=WMS&request=GetCapabilities&token=",
+      xmlUrl: targetUrl,
     },
   });
 
   const handleSubmit = async (values) => {
     const { name, xmlUrl } = values;
-    const token = localStorage.getItem("token");
-    // adding token
-    const withToken = xmlUrl + token;
+    const withToken = `${xmlUrl}&token=${token}`;
+
     try {
-      // Fetch the XML file
-      const response = await fetch(withToken, {
-        method: "get",
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
-      });
+      const response = await fetch(withToken);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorMessage = await response.text();
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${errorMessage}`
+        );
       }
       const xmlText = await response.text();
 
-      // Parse the XML
+      xml2js.parseString(xmlText, (err, result) => {
+        if (err) {
+          console.error("Error parsing XML:", err);
+          setError(err);
+          return;
+        } else {
+          const layersFromXmlParsed =
+            result?.WMS_Capabilities?.Capability[0]?.Layer[0]?.Layer;
+          setLayers(layersFromXmlParsed);
+        }
+      });
+
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(xmlText, "text/xml");
 
       const FeatureList = xmlDoc.getElementsByTagName("Layer");
 
       const itemsArray = [];
+      Array.from(FeatureList).forEach((item) => {
+        const layerName = item.getElementsByTagName("Name")[0].textContent;
+        const boundingBox = item.getElementsByTagName(
+          "EX_GeographicBoundingBox"
+        )[0];
+        const west =
+          boundingBox.getElementsByTagName("westBoundLongitude")[0].textContent;
+        const east =
+          boundingBox.getElementsByTagName("eastBoundLongitude")[0].textContent;
+        const south =
+          boundingBox.getElementsByTagName("southBoundLatitude")[0].textContent;
+        const north =
+          boundingBox.getElementsByTagName("northBoundLatitude")[0].textContent;
 
-      Object.entries(FeatureList).forEach((item) => {
-        const childNodes = item[1].childNodes;
-        const childNodesObj = {};
-        const title = item[1].getElementsByTagName("Name")[0].textContent;
+        const wmsUrl = `https://api.dataforsyningen.dk/wms/MatGaeldendeOgForeloebigWMS_DAF?token=${"061e2302db3bc927353b010889585017"}&version=1.3.0&service=WMS&request=GetMap&layers=${layerName}&styles=default&bbox=${west},${south},${east},${north}&width=256&height=256&crs=EPSG:25832&format=image/png`;
 
-        for (let i = 0; i < childNodes.length; i++) {
-          const { localName, textContent } = childNodes[i];
-          if (localName) {
-            // childNodesObj.push({ [localName]: textContent });
-            childNodesObj[localName] = textContent;
-          }
-        }
-        itemsArray.push({ title, childNodesObj });
+        setBoundingBoxs([
+          [parseFloat(west), parseFloat(north)],
+          [parseFloat(east), parseFloat(north)],
+          [parseFloat(east), parseFloat(south)],
+          [parseFloat(west), parseFloat(south)],
+        ]);
+
+        itemsArray.push({
+          title: layerName,
+          layerUrl: wmsUrl,
+          coordinates: [
+            [west, south],
+            [east, north],
+          ],
+        });
       });
+
       setLabels(itemsArray);
       setShowLabels(true);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching WMS layers:", error);
       setError(error);
     }
   };
@@ -79,6 +105,39 @@ const AddPublicBordersForm = () => {
     setLabels([]);
     setShowLabels(false);
     close();
+  };
+
+  const addLayers = () => {
+    if (map) {
+      try {
+        layers.forEach((layer, index) => {
+          if (layer?.Name && layer?.Style) {
+            const layerId = `layer-${index}`;
+            const layerName = layer?.Name;
+
+            // source
+            map.addSource(layerId, {
+              type: "raster",
+              tiles: [
+                `https://api.dataforsyningen.dk/wms/MatGaeldendeOgForeloebigWMS_DAF?service=WMS&request=GetMap&version=1.3.0&crs=EPSG:4326&bbox=-180,-90,180,90&width=800&height=600&layers=${layerName}&format=image/png&token=061e2302db3bc927353b010889585017`,
+              ],
+              tileSize: 256,
+            });
+
+            map.addLayer({
+              id: layerId,
+              type: "raster",
+              source: layerId,
+              paint: {
+                "raster-opacity": 0.4,
+              },
+            });
+          }
+        });
+      } catch (error) {
+        console.error("Error adding layer:", error);
+      }
+    }
   };
 
   return (
@@ -114,7 +173,6 @@ const AddPublicBordersForm = () => {
             />
             <div className="flex justify-center">
               <Button type="submit" mt="2rem">
-                {/* {labels?.length > 0 ? "Post Layers" : "Get Layers"} */}
                 Get Layers
               </Button>
             </div>
@@ -122,81 +180,34 @@ const AddPublicBordersForm = () => {
           {showLabels && (
             <div className="pb-[1rem]">
               {labels?.length > 0 ? (
-                <Group className="mt-[1rem]">
+                <Group className="mt-[1rem] flex fle">
                   {error ? (
-                    <h1>{error}</h1>
+                    <h1>{error.message}</h1>
                   ) : (
                     <h1>
                       <span className="font-semibold">
                         Total {form.getValues().name} layers :
                       </span>{" "}
-                      {labels?.length}
+                      {layers?.length}
                     </h1>
                   )}
-                  {labels.map((label, index) => {
-                    const boundingBox =
-                      label.childNodesObj?.EX_GeographicBoundingBox.trim()
-                        .split("\n")
-                        .map((item) => item.trim());
-
-                    return (
-                      <li
-                        onClick={() => {
-                          map.fitBounds(boundingBox);
-
-                          const polygonCoordinates = [
-                            [boundingBox[0], boundingBox[1]],
-                            [boundingBox[0], boundingBox[3]],
-                            [boundingBox[2], boundingBox[3]],
-                            [boundingBox[2], boundingBox[1]],
-                            [boundingBox[0], boundingBox[1]],
-                          ];
-
-                          const sourceId = "polygon-source";
-                          const layerId = "polygon-layer";
-
-                          if (!map.getSource(sourceId)) {
-                            map.addSource(sourceId, {
-                              type: "geojson",
-                              data: {
-                                type: "Feature",
-                                geometry: {
-                                  type: "Polygon",
-                                  coordinates: [polygonCoordinates],
-                                },
-                              },
-                            });
-                          }
-
-                          if (!map.getLayer(layerId)) {
-                            map.addLayer({
-                              id: layerId,
-                              type: "fill",
-                              source: sourceId,
-                              layout: {},
-                              paint: {
-                                "fill-color": "#000000",
-                                "fill-opacity": 0.4,
-                              },
-                            });
-                          }
-                        }}
-                        className="text-[#444343] bg-[#d2cfcf] w-[100%] px-2 py-[1rem] list-none"
-                        key={index}
-                      >
-                        <span>
-                          <span className="font-semibold">Layer Name: </span>
-                          {label?.childNodesObj?.Name}
-                        </span>
-                        <span className="block">
-                          <span className="font-semibold">
-                            EX_GeographicBoundingBox:
-                          </span>
-                          {label?.childNodesObj?.EX_GeographicBoundingBox}
-                        </span>
-                      </li>
-                    );
-                  })}
+                  {/* {labels.map((label, index) => (
+                    <li
+                      className="text-[#444343] bg-[#d2cfcf] w-[100%] px-2 py-[1rem] list-none"
+                      key={index}
+                    >
+                      <span>
+                        <span className="font-semibold">Layer Name: </span>
+                        {label.title}
+                      </span>
+                    </li>
+                  ))} */}
+                  <button
+                    className="bg-blue-500 text-white px-2 py-1 "
+                    onClick={addLayers}
+                  >
+                    Add layers
+                  </button>
                 </Group>
               ) : (
                 <div>No Layers Found</div>
