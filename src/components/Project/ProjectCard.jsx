@@ -204,9 +204,9 @@ export default function ProjectCard({
                         </Button>
                       </Tooltip>
                     </Grid>
-                    <Grid item>
+                    {/* <Grid item>
                       <AddPublicBordersForm />
-                    </Grid>
+                    </Grid> */}
                     <Grid item>
                       <Tooltip title={t("Indoor")}>
                         <Button

@@ -14,6 +14,7 @@ import Inspection from "../pages/Inspection";
 import InspectionFlow from "../pages/InspectionFlow";
 import InspectionReport from "../pages/InspectionReport";
 import MainApp from "../pages/LayoutNew";
+import Public from "../pages/Public";
 
 export default function Routers() {
   return (
@@ -23,6 +24,7 @@ export default function Routers() {
         <Route exact path="/" element={<Login />} />
         <Route exact path="/class" element={<Classification />} />
         <Route exact path="/inspection-type" element={<InspectionTypes />} />
+        <Route exact path="/public" element={<Public />} />
         <Route exact path="/dashboard" element={<Clients />} />
         <Route exact path="/projects/:client_id/:view" element={<Projects />} />
         <Route

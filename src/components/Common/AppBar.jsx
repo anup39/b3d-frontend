@@ -26,6 +26,7 @@ function Appbar() {
     `${t("Inspection") + " " + t("Type")}`,
     `${t("About")}`,
     `${t("Contact")}`,
+    `${t("Public")}`,
   ];
 
   const pagesAdmin = [`${t("Clients")}`, `${t("About")}`, `${t("Contact")}`];
@@ -66,6 +67,9 @@ function Appbar() {
     if (page === `${t("Inspection") + " " + t("Type")}`) {
       navigate("/inspection-type");
     }
+    if (page === `${t("Public")}`) {
+      navigate("/public");
+    }
     setAnchorElNav(null);
   };
 
@@ -80,6 +84,9 @@ function Appbar() {
     }
     if (page === `${t("Inspection") + " " + t("Type")}`) {
       navigate("/inspection-type");
+    }
+    if (page === `${t("Public")}`) {
+      navigate("/public");
     }
     setAnchorElNav(null);
   };
