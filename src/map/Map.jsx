@@ -354,8 +354,8 @@ export default function Map({ popUpRef }) {
           top={"4px"}
           right={"42px"}
           zIndex={9999}
-          margin={1}
-          padding={0}
+          margin={"1"}
+          padding={"0"}
           backgroundColor={"white"}
           borderRadius={"5px"}
         />

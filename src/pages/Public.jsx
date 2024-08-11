@@ -1,21 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Tooltip from "@mui/material/Tooltip";
-// import Grid from "@mui/material/Grid";
-import CircularProgress from "@mui/material/CircularProgress";
 import { Button, Flex, Grid, Modal, TextInput, Select } from "@mantine/core";
-// import { ComboboxItem, Select } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useToggle } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import xml2js from "xml2js";
 import Map from "../map/Map";
 import MapLibreGL from "maplibre-gl";
+import AddRasterToMap from "../maputils/AddRasterToMap";
+import RemoveSourceAndLayerFromMap from "../maputils/RemoveSourceAndLayerFromMap";
 
 const Public = () => {
   const token = "061e2302db3bc927353b010889585017";
-  const targetUrl =
-    //  `https://api.dataforsyningen.dk/wms/MatGaeldendeOgForeloebigWMS_DAF?service=WMS&request=GetCapabilities&token=${token}`;
-    `https://api.dataforsyningen.dk/wfs/MatGaeldendeOgForeloebigWFS_DAF?service=WFS&request=GetCapabilities&token=${token}`;
+  const targetUrl = `https://api.dataforsyningen.dk/wms/MatGaeldendeOgForeloebigWMS_DAF?service=WMS&request=GetCapabilities&token=061e2302db3bc927353b010889585017`;
+  // `https://api.dataforsyningen.dk/wfs/MatGaeldendeOgForeloebigWFS_DAF?service=WFS&request=GetCapabilities&token=061e2302db3bc927353b010889585017`;
 
   const [layers, setLayers] = useState([]);
 
@@ -29,14 +26,36 @@ const Public = () => {
     isLayersModalOpened,
     { open: openLayersModal, close: closeLayersModal },
   ] = useDisclosure(false);
-  const [value, setValue] = useState(null);
+  const [value, toggle] = useToggle(["add", "remove"]);
 
+  // parse url
+  function parseUrl(url) {
+    const urlObj = new URL(url);
+    const baseUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+    const queryParams = {};
+    urlObj.searchParams.forEach((value, key) => {
+      queryParams[key] = value;
+    });
+    let serviceType = "";
+    if (baseUrl.includes("/wfs/")) {
+      serviceType = "WFS";
+    } else if (baseUrl.includes("/wms/")) {
+      serviceType = "WMS";
+    } else {
+      serviceType = "Unknown";
+    }
+    return {
+      baseUrl,
+      queryParams,
+      serviceType,
+    };
+  }
+
+  // get layerDetails from xml
   const fetchLayers = async (xmlUrl) => {
-    const withToken = `${xmlUrl}&token=${token}`;
-    console.log(xmlUrl);
-
+    const { baseUrl, queryParams, serviceType } = parseUrl(xmlUrl);
     try {
-      const response = await fetch(withToken);
+      const response = await fetch(xmlUrl);
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(
@@ -44,24 +63,72 @@ const Public = () => {
         );
       }
       const xmlText = await response.text();
-      //   console.log(xmlText);
-
       xml2js.parseString(xmlText, (err, result) => {
-        // console.log(result);
         if (err) {
           console.error("Error parsing XML:", err);
           setError(err);
           return;
         } else {
-          //   const featuresFromXmlParsed =
+          console.log(result);
+          let version = "1.1.1";
+          let layersFromXmlParsed = [];
+          // if (result["wfs:WFS_Capabilities"]) {
+          //   layersFromXmlParsed =
           //     result["wfs:WFS_Capabilities"]["wfs:FeatureTypeList"][0][
           //       "wfs:FeatureType"
           //     ];
-          //   console.log(featuresFromXmlParsed, "result");
-          //   setFeatures(featuresFromXmlParsed);
-          const layersFromXmlParsed =
-            result?.WMS_Capabilities?.Capability[0]?.Layer[0]?.Layer;
-          setLayers(layersFromXmlParsed);
+          // }
+          if (result?.WMS_Capabilities) {
+            layersFromXmlParsed =
+              result?.WMS_Capabilities?.Capability[0]?.Layer[0]?.Layer;
+            version = result?.WMS_Capabilities.$.version;
+          }
+          if (result?.WMT_MS_Capabilities) {
+            layersFromXmlParsed =
+              result?.WMT_MS_Capabilities?.Capability[0]?.Layer[0]?.Layer;
+            version = result?.WMT_MS_Capabilities.$.version;
+          }
+          const layerDetails = layersFromXmlParsed.map((layer, index) => {
+            let bboxParams;
+            const layerName = layer.Name[0];
+            const crs = layer.CRS ? layer.CRS[0] : null;
+            const srs = layer.SRS ? layer.SRS[0] : null;
+
+            // use BoundingBox
+            if (layer.LatLonBoundingBox && layer.LatLonBoundingBox.length > 0) {
+              // use LatLonBoundingBox
+              const latLonBbox = layer.LatLonBoundingBox[0].$;
+              bboxParams = [
+                latLonBbox.minx,
+                latLonBbox.miny,
+                latLonBbox.maxx,
+                latLonBbox.maxy,
+              ];
+            } else if (
+              layer.EX_GeographicBoundingBox &&
+              layer.EX_GeographicBoundingBox.length > 0
+            ) {
+              // Use EX_GeographicBoundingBox
+              const exGeoBbox = layer.EX_GeographicBoundingBox[0];
+              bboxParams = [
+                exGeoBbox.westBoundLongitude[0],
+                exGeoBbox.southBoundLatitude[0],
+                exGeoBbox.eastBoundLongitude[0],
+                exGeoBbox.northBoundLatitude[0],
+              ];
+            }
+            return {
+              version,
+              crs,
+              srs,
+              layerName,
+              bbox: bboxParams,
+              baseUrl,
+              ...queryParams,
+              isAdded: false,
+            };
+          });
+          setLayers(layerDetails);
         }
       });
     } catch (error) {
@@ -69,11 +136,38 @@ const Public = () => {
     }
   };
 
+  const getlayerUrl = (layerParams) => {
+    const { baseUrl, service, version, layerName, bbox } = layerParams;
+    console.log(layerParams, "layerparams");
+    const url = new URL(baseUrl);
+    url.searchParams.append("service", service);
+    url.searchParams.append("request", "GetMap");
+    url.searchParams.append("version", version);
+    url.searchParams.append("layers", layerName);
+    url.searchParams.append("bbox", bbox);
+    url.searchParams.append("format", "image/png");
+    url.searchParams.append("transparent", "TRUE");
+    url.searchParams.append("width", "800");
+    url.searchParams.append("height", "600");
+    if (layerParams.crs) {
+      url.searchParams.append("crs", layerParams?.crs);
+    } else {
+      url.searchParams.append("srs", layerParams?.srs);
+    }
+    if (layerParams.token) {
+      url.searchParams.append("token", layerParams?.token);
+    }
+    const layerUrl = decodeURIComponent(url.toString());
+    console.log(layerUrl, "layerUrl");
+    return layerUrl;
+  };
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      service: "",
-      xmlUrl: "",
+      service: "WMS",
+      xmlUrl:
+        "https://api.dataforsyningen.dk/wms/MatGaeldendeOgForeloebigWMS_DAF?service=WMS&request=GetCapabilities&token=061e2302db3bc927353b010889585017",
     },
   });
 
@@ -84,6 +178,41 @@ const Public = () => {
       closeLayersForm();
       openLayersModal();
     });
+  };
+
+  const toggleLayer = (layer) => {
+    const { layerName, bbox, isAdded } = layer;
+    const layerUrl = getlayerUrl(layer);
+    if (map) {
+      if (isAdded) {
+        RemoveSourceAndLayerFromMap({
+          map,
+          layerId: `${layerName}`,
+          source: `${layerName}`,
+        });
+      } else {
+        AddRasterToMap({
+          map,
+          layerId: `${layerName}`,
+          sourceId: `${layerName}`,
+          url: layerUrl,
+          zoomToLayer: true,
+          extent: bbox,
+          type: "raster",
+          component: "Public",
+        });
+      }
+      setLayers(
+        layers?.map((layer) => {
+          if (layerName === layer?.layerName) {
+            return { ...layer, isAdded: !isAdded };
+          }
+          return layer;
+        })
+      );
+    } else {
+      console.log("map not loaded");
+    }
   };
 
   return (
@@ -173,10 +302,15 @@ const Public = () => {
             <Flex direction={"column"} gap="0.5rem" className="pt-[1rem]">
               {layers?.map((layer, index) => (
                 <div
-                  className="bg-[#4b4a42] text-[#ffffff] px-[0.5rem] py-[0.3rem] text-[0.8rem] cursor-pointer"
+                  onClick={() => {
+                    toggleLayer(layer);
+                  }}
+                  className={`${
+                    layer?.isAdded ? "bg-[#c44646]" : "bg-[#4b4a42]"
+                  } text-[#ffffff] px-[0.5rem] py-[0.3rem] text-[0.8rem] cursor-pointer`}
                   key={index}
                 >
-                  {layer?.Name[0]}
+                  {layer?.layerName}
                 </div>
               ))}
             </Flex>
