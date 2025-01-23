@@ -25,7 +25,7 @@ import {
 import ProjectEditForm from "./ProjectEditForm";
 import { useGetRasterDataByProjectIdQuery } from "../../api/rasterDataApi";
 import { useGetRolesDataByProjectIdQuery } from "../../api/rolesApi";
-
+import AddPublicLayerForm from "../PublicLayers/AddPublicLayerForm";
 export default function ProjectCard({
   id,
   client_id,
@@ -203,6 +203,9 @@ export default function ProjectCard({
                           {t("ThreeDurl")}
                         </Button>
                       </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <AddPublicLayerForm />
                     </Grid>
                     <Grid item>
                       <Tooltip title={t("Indoor")}>
