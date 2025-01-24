@@ -128,6 +128,10 @@ export default function ProjectCard({
     dispatch(setEditProjectId(id));
   };
 
+  const handleProcess = () => {
+    window.open("http://localhost:3000", "_blank");
+  };
+
   const handleIndoor = () => {
     dispatch(setOpenIndoorForm(true));
     dispatch(setEditIndoorProjectId(id));
@@ -201,6 +205,17 @@ export default function ProjectCard({
                           sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
                         >
                           {t("ThreeDurl")}
+                        </Button>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip title={t("Process")}>
+                        <Button
+                          variant="contained"
+                          onClick={handleProcess}
+                          sx={{ p: 0, "&:hover": { cursor: "pointer" } }}
+                        >
+                          {t("Process")}
                         </Button>
                       </Tooltip>
                     </Grid>
