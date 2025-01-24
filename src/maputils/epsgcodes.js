@@ -4,6 +4,7 @@ const epsgDefinitions = {
   25832:
     "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
   25833: "+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs",
+  32617: "+proj=utm +zone=17 +ellps=GRS80 +units=m +no_defs",
 };
 
 export default epsgDefinitions;
